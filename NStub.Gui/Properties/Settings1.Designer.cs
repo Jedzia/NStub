@@ -34,5 +34,29 @@ namespace NStub.Gui.Properties {
                 this["Setting"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentInputAssembly {
+            get {
+                return ((string)(this["CurrentInputAssembly"]));
+            }
+            set {
+                this["CurrentInputAssembly"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string CurrentOutputDirectory {
+            get {
+                return ((string)(this["CurrentOutputDirectory"]));
+            }
+            set {
+                this["CurrentOutputDirectory"] = value;
+            }
+        }
     }
 }

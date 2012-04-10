@@ -343,5 +343,30 @@ namespace NStub.Gui
 		}
 
 		#endregion Helper Methods (Private)
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            global::NStub.Gui.Properties.Settings.Default.Reload();
+            if (!string.IsNullOrEmpty(_inputAssemblyTextBox.Text))
+            {
+                _browseOutputDirectoryButton.Enabled = true;
+                _inputAssemblyOpenFileDialog.FileName = _inputAssemblyTextBox.Text;
+                //Cursor swapCursor = Cursor.Current;
+                //Cursor.Current = Cursors.WaitCursor;
+
+                LoadAssembly();
+
+                if (!string.IsNullOrEmpty(_outputDirectoryTextBox.Text))
+                {
+                    _goButton.Enabled = true;
+                }
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            global::NStub.Gui.Properties.Settings.Default.Save();
+
+        }
 	}
 }

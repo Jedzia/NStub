@@ -14,6 +14,12 @@ namespace NStub.Gui
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new MainForm());
+            Application.ApplicationExit += new EventHandler(Application_ApplicationExit);
 		}
+
+        static void Application_ApplicationExit(object sender, EventArgs e)
+        {
+            //global::NStub.Gui.Properties.Settings.Default.Save();
+        }
 	}
 }
