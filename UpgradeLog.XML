@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="NStub">
+</Property><Property Name="Solution File" Value="D:\E\Projects\CSharp\nstub\NStub.sln">
+</Property><Property Name="Date" Value="Mittwoch, 14. Dezember 2011">
+</Property><Property Name="Time" Value="00:54">
+</Property></Properties><Event ErrorLevel="0" Project="NStub.CSharp" Source="NStub.CSharp\NStub.CSharp.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NStub.CSharp" Source="NStub.CSharp\NStub.CSharp.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NStub.Core.Tests" Source="NStub.Core.Tests\NStub.Core.Tests.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NStub.Core.Tests" Source="NStub.Core.Tests\NStub.Core.Tests.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NStub.CSharp.Tests" Source="NStub.CSharp.Tests\NStub.CSharp.Tests.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NStub.CSharp.Tests" Source="NStub.CSharp.Tests\NStub.CSharp.Tests.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NStub.Core" Source="NStub.Core\NStub.Core.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NStub.Core" Source="NStub.Core\NStub.Core.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NStub.Gui" Source="NStub.Gui\NStub.Gui.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="NStub.Gui" Source="NStub.Gui\NStub.Gui.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="NStub.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="NStub.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="NStub.CSharp" Source="NStub.CSharp\NStub.CSharp.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="NStub.Core.Tests" Source="NStub.Core.Tests\NStub.Core.Tests.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="NStub.CSharp.Tests" Source="NStub.CSharp.Tests\NStub.CSharp.Tests.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="NStub.Core" Source="NStub.Core\NStub.Core.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="NStub.Gui" Source="NStub.Gui\NStub.Gui.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>
