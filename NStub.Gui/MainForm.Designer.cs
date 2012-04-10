@@ -41,20 +41,23 @@ namespace NStub.Gui
             this._inputAssemblyLabel = new System.Windows.Forms.Label();
             this._outputDirectoryTextBox = new System.Windows.Forms.TextBox();
             this._inputAssemblyTextBox = new System.Windows.Forms.TextBox();
+            this.logText = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel1.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // _assemblyGraphTreeView
             // 
-            this._assemblyGraphTreeView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
             this._assemblyGraphTreeView.CheckBoxes = true;
+            this._assemblyGraphTreeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this._assemblyGraphTreeView.ImageIndex = 0;
             this._assemblyGraphTreeView.ImageList = this._objectIconsImageList;
-            this._assemblyGraphTreeView.Location = new System.Drawing.Point(15, 58);
+            this._assemblyGraphTreeView.Location = new System.Drawing.Point(0, 0);
             this._assemblyGraphTreeView.Name = "_assemblyGraphTreeView";
             this._assemblyGraphTreeView.SelectedImageIndex = 0;
-            this._assemblyGraphTreeView.Size = new System.Drawing.Size(490, 265);
+            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 510);
             this._assemblyGraphTreeView.TabIndex = 15;
             this._assemblyGraphTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvAssemblyGraph_AfterCheck);
             this._assemblyGraphTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvAssemblyGraph_BeforeSelect);
@@ -73,7 +76,7 @@ namespace NStub.Gui
             // 
             this._browseOutputDirectoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._browseOutputDirectoryButton.Enabled = false;
-            this._browseOutputDirectoryButton.Location = new System.Drawing.Point(430, 30);
+            this._browseOutputDirectoryButton.Location = new System.Drawing.Point(518, 30);
             this._browseOutputDirectoryButton.Name = "_browseOutputDirectoryButton";
             this._browseOutputDirectoryButton.Size = new System.Drawing.Size(75, 23);
             this._browseOutputDirectoryButton.TabIndex = 14;
@@ -94,7 +97,7 @@ namespace NStub.Gui
             // 
             this._goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._goButton.Enabled = false;
-            this._goButton.Location = new System.Drawing.Point(430, 329);
+            this._goButton.Location = new System.Drawing.Point(518, 575);
             this._goButton.Name = "_goButton";
             this._goButton.Size = new System.Drawing.Size(75, 23);
             this._goButton.TabIndex = 11;
@@ -105,7 +108,7 @@ namespace NStub.Gui
             // _browseInputAssemblyButton
             // 
             this._browseInputAssemblyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._browseInputAssemblyButton.Location = new System.Drawing.Point(430, 4);
+            this._browseInputAssemblyButton.Location = new System.Drawing.Point(518, 4);
             this._browseInputAssemblyButton.Name = "_browseInputAssemblyButton";
             this._browseInputAssemblyButton.Size = new System.Drawing.Size(75, 23);
             this._browseInputAssemblyButton.TabIndex = 8;
@@ -135,7 +138,7 @@ namespace NStub.Gui
             this._outputDirectoryTextBox.Location = new System.Drawing.Point(102, 32);
             this._outputDirectoryTextBox.Name = "_outputDirectoryTextBox";
             this._outputDirectoryTextBox.ReadOnly = true;
-            this._outputDirectoryTextBox.Size = new System.Drawing.Size(322, 20);
+            this._outputDirectoryTextBox.Size = new System.Drawing.Size(410, 20);
             this._outputDirectoryTextBox.TabIndex = 13;
             this._outputDirectoryTextBox.Text = global::NStub.Gui.Properties.Settings.Default.CurrentOutputDirectory;
             // 
@@ -147,16 +150,50 @@ namespace NStub.Gui
             this._inputAssemblyTextBox.Location = new System.Drawing.Point(102, 6);
             this._inputAssemblyTextBox.Name = "_inputAssemblyTextBox";
             this._inputAssemblyTextBox.ReadOnly = true;
-            this._inputAssemblyTextBox.Size = new System.Drawing.Size(322, 20);
+            this._inputAssemblyTextBox.Size = new System.Drawing.Size(410, 20);
             this._inputAssemblyTextBox.TabIndex = 9;
             this._inputAssemblyTextBox.Text = global::NStub.Gui.Properties.Settings.Default.CurrentInputAssembly;
+            // 
+            // logText
+            // 
+            this.logText.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.logText.Location = new System.Drawing.Point(3, 16);
+            this.logText.Multiline = true;
+            this.logText.Name = "logText";
+            this.logText.ReadOnly = true;
+            this.logText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.logText.Size = new System.Drawing.Size(583, 135);
+            this.logText.TabIndex = 16;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Controls.Add(this._assemblyGraphTreeView);
+            this.panel1.Location = new System.Drawing.Point(4, 59);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(589, 510);
+            this.panel1.TabIndex = 17;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.logText);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.groupBox1.Location = new System.Drawing.Point(0, 356);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(589, 154);
+            this.groupBox1.TabIndex = 16;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Log";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(512, 366);
-            this.Controls.Add(this._assemblyGraphTreeView);
+            this.ClientSize = new System.Drawing.Size(600, 612);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this._browseOutputDirectoryButton);
             this.Controls.Add(this._outputDirectoryLabel);
             this.Controls.Add(this._outputDirectoryTextBox);
@@ -168,6 +205,9 @@ namespace NStub.Gui
             this.Text = "NStub";
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
+            this.panel1.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -186,6 +226,9 @@ namespace NStub.Gui
 		private System.Windows.Forms.OpenFileDialog _inputAssemblyOpenFileDialog;
 		private System.Windows.Forms.Label _inputAssemblyLabel;
 		private System.Windows.Forms.ImageList _objectIconsImageList;
+        private System.Windows.Forms.TextBox logText;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.GroupBox groupBox1;
 
 	}
 }

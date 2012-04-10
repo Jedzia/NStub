@@ -108,13 +108,13 @@ namespace NStub.Gui
 			{
 				string outputDirectory = _outputDirectoryTextBox.Text +
 				                         Path.DirectorySeparatorChar +
-				                         Path.GetFileNameWithoutExtension(_assemblyGraphTreeView.Nodes[h].Text) + "Test";
+				                         Path.GetFileNameWithoutExtension(_assemblyGraphTreeView.Nodes[h].Text) + ".Tests";
 				Directory.CreateDirectory(outputDirectory);
 
 				// Create our project generator
 				CSharpProjectGenerator cSharpProjectGenerator =
 					new CSharpProjectGenerator(
-						Path.GetFileNameWithoutExtension(_inputAssemblyTextBox.Text) + "Test",
+						Path.GetFileNameWithoutExtension(_inputAssemblyTextBox.Text) + ".Tests",
 						outputDirectory);
 
 				// Add our referenced assemblies to the project generator so we
@@ -158,12 +158,21 @@ namespace NStub.Gui
 									{
 										if (_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Checked)
 										{
-											// Retrieve the MethodInfo object from this TreeNode's tag
-											CodeMemberMethod codeMemberMethod =
-												CreateMethod(
-													_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Text,
-													(MethodInfo) _assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Tag);
-											testClass.Members.Add(codeMemberMethod);
+                                            try
+                                            {
+                                                // Retrieve the MethodInfo object from this TreeNode's tag
+                                                CodeMemberMethod codeMemberMethod =
+                                                    CreateMethod(
+                                                        _assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Text,
+                                                        (MethodInfo)_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Tag);
+                                                testClass.Members.Add(codeMemberMethod);
+
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                //MessageBox.Show(ex.Message + Environment.NewLine + ex.ToString());
+                                                Log(ex.Message + Environment.NewLine + ex.ToString()+ Environment.NewLine);
+                                            }
 										}
 									}
 									catch (Exception)
@@ -173,11 +182,14 @@ namespace NStub.Gui
 								}
 							}
 						}
-						// Now write the test file
-						NStubCore nStub =
-							new NStubCore(codeNamespace, outputDirectory,
-							              new CSharpCodeGenerator(codeNamespace, outputDirectory));
-						nStub.GenerateCode();
+                        // Now write the test file 
+                        //NStubCore nStub =
+                        //    new NStubCore(codeNamespace, outputDirectory,
+                        //                  new CSharpCodeGenerator(codeNamespace, outputDirectory));
+                        NStubCore nStub =
+                            new NStubCore(codeNamespace, outputDirectory,
+                                new CSharpMbUnitCodeGenerator(codeNamespace, outputDirectory));
+                        nStub.GenerateCode();
 
 						// Add all of our classes to the project
 						foreach (CodeTypeDeclaration codeType in nStub.CodeNamespace.Types)
@@ -186,6 +198,7 @@ namespace NStub.Gui
 							fileName = fileName.Remove(0, (fileName.LastIndexOf(".") + 1));
 							fileName += ".cs";
 							cSharpProjectGenerator.ClassFiles.Add(fileName);
+                            this.Log("Writing '" + fileName + "'");
 						}
 					}
 				}
@@ -197,6 +210,11 @@ namespace NStub.Gui
 			_browseOutputDirectoryButton.Enabled = true;
 			Cursor.Current = Cursors.Arrow;
 		}
+
+        private void Log(string p)
+        {
+            this.logText.AppendText(DateTime.Now + ": " + p + Environment.NewLine);
+        }
 
 		/// <summary>
 		/// Handles the AfterCheck event of the tvAssemblyGraph control.
@@ -354,13 +372,46 @@ namespace NStub.Gui
                 //Cursor swapCursor = Cursor.Current;
                 //Cursor.Current = Cursors.WaitCursor;
 
-                LoadAssembly();
-
-                if (!string.IsNullOrEmpty(_outputDirectoryTextBox.Text))
+                try
                 {
-                    _goButton.Enabled = true;
+
+                    LoadAssembly();
+
+                }
+                catch (Exception ex)
+                {
+                    Log(ex.Message);
+                }
+                finally
+                {
+                    if (!string.IsNullOrEmpty(_outputDirectoryTextBox.Text))
+                    {
+                        _goButton.Enabled = true;
+                    }
                 }
             }
+            
+            AppDomain ad = AppDomain.CurrentDomain;
+            //ad.AssemblyResolve += new ResolveEventHandler(ad_AssemblyResolve);
+            //ad.TypeResolve += new ResolveEventHandler(ad_TypeResolve);
+            ad.AssemblyResolve += new ResolveEventHandler(ad_AssemblyResolve);
+
+        }
+
+        Assembly ad_AssemblyResolve(object sender, ResolveEventArgs args)
+        {
+            var finfo = new FileInfo(_inputAssemblyOpenFileDialog.FileName);
+
+            var assName = args.Name.Split(new[] { ',' })[0] + ".dll";
+            var path = Path.Combine(finfo.Directory.FullName, assName);
+            int depp = 6;
+            var ass = Assembly.LoadFile(path);
+            return ass;
+        }
+
+        Assembly ad_TypeResolve(object sender, ResolveEventArgs args)
+        {
+            return null;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)

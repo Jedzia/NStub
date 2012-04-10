@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NStub.Gui", "NStub.Gui\NStu
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NStub.Deployment", "NStub.Deployment\NStub.Deployment.vdproj", "{EF32DA6E-0EE5-4535-A0AA-48FD1207CBC9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MbUnitTestProject1", "MbUnitTestProject1\MbUnitTestProject1.csproj", "{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{EF32DA6E-0EE5-4535-A0AA-48FD1207CBC9}.Debug|Any CPU.ActiveCfg = Debug
 		{EF32DA6E-0EE5-4535-A0AA-48FD1207CBC9}.Release|Any CPU.ActiveCfg = Release
 		{EF32DA6E-0EE5-4535-A0AA-48FD1207CBC9}.Release|Any CPU.Build.0 = Release
+		{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
