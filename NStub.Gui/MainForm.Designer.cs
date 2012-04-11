@@ -44,6 +44,8 @@ namespace NStub.Gui
             this.logText = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbGenerators = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -57,7 +59,7 @@ namespace NStub.Gui
             this._assemblyGraphTreeView.Location = new System.Drawing.Point(0, 0);
             this._assemblyGraphTreeView.Name = "_assemblyGraphTreeView";
             this._assemblyGraphTreeView.SelectedImageIndex = 0;
-            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 510);
+            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 449);
             this._assemblyGraphTreeView.TabIndex = 15;
             this._assemblyGraphTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvAssemblyGraph_AfterCheck);
             this._assemblyGraphTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvAssemblyGraph_BeforeSelect);
@@ -172,29 +174,48 @@ namespace NStub.Gui
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this._assemblyGraphTreeView);
-            this.panel1.Location = new System.Drawing.Point(4, 59);
+            this.panel1.Location = new System.Drawing.Point(4, 120);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(589, 510);
+            this.panel1.Size = new System.Drawing.Size(589, 449);
             this.panel1.TabIndex = 17;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.logText);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox1.Location = new System.Drawing.Point(0, 356);
+            this.groupBox1.Location = new System.Drawing.Point(0, 295);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(589, 154);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Log";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 60);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(82, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Code Generator";
+            // 
+            // cbGenerators
+            // 
+            this.cbGenerators.FormattingEnabled = true;
+            this.cbGenerators.Location = new System.Drawing.Point(102, 57);
+            this.cbGenerators.Name = "cbGenerators";
+            this.cbGenerators.Size = new System.Drawing.Size(410, 21);
+            this.cbGenerators.TabIndex = 18;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 612);
+            this.Controls.Add(this.cbGenerators);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._browseOutputDirectoryButton);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this._outputDirectoryLabel);
             this.Controls.Add(this._outputDirectoryTextBox);
             this.Controls.Add(this._goButton);
@@ -229,6 +250,8 @@ namespace NStub.Gui
         private System.Windows.Forms.TextBox logText;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbGenerators;
 
 	}
 }

@@ -66,12 +66,14 @@
     <Compile Include="BaseCSharpCodeGenerator.cs" />
     <Compile Include="CSharpMbUnitCodeGenerator.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
+    <Compile Include="CSharpMbUnitRhinoMocksCodeGenerator.cs" />
     <Compile Include="CSharpProjectGenerator.cs" />
     <Compile Include="Exceptions.Designer.cs">
       <DependentUpon>Exceptions.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="ImplicitVariableDeclarationStatement.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +88,11 @@
       <Project>{7A2B767A-715C-480D-A4CF-0510A5052C7D}</Project>
       <Name>NStub.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Settings.StyleCop">
+      <Link>Settings.StyleCop</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

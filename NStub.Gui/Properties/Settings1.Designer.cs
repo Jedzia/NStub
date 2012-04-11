@@ -58,5 +58,17 @@ namespace NStub.Gui.Properties {
                 this["CurrentOutputDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SelectedGenerator {
+            get {
+                return ((int)(this["SelectedGenerator"]));
+            }
+            set {
+                this["SelectedGenerator"] = value;
+            }
+        }
     }
 }
