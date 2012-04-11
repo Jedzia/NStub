@@ -149,6 +149,8 @@ namespace NStub.Gui
 								CodeTypeDeclaration testClass =
 									new CodeTypeDeclaration(_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Text);
 								codeNamespace.Types.Add(testClass);
+                                var testObjectClassType = (Type)_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Tag;
+                                testClass.UserData.Add("TestObjectClassType", testObjectClassType);
 
 								// At the method level
 								// Create a test method for each method in this type
@@ -161,10 +163,12 @@ namespace NStub.Gui
                                             try
                                             {
                                                 // Retrieve the MethodInfo object from this TreeNode's tag
+                                                var memberInfo = (MethodInfo)_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Tag;
                                                 CodeMemberMethod codeMemberMethod =
                                                     CreateMethod(
                                                         _assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Text,
-                                                        (MethodInfo)_assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Tag);
+                                                        memberInfo);
+                                                codeMemberMethod.UserData.Add("MethodMemberInfo", memberInfo);
                                                 testClass.Members.Add(codeMemberMethod);
 
                                             }
@@ -292,8 +296,11 @@ namespace NStub.Gui
 					for (int theClass = 0; theClass < containedTypes.Length; theClass++)
 					{
 						// Add a node to the tree to represent the class
+                        var classType = containedTypes[theClass];
+                        var classNode = CreateTreeNode(classType.FullName, "imgClass");
+                        classNode.Tag = classType;
 						_assemblyGraphTreeView.Nodes[theAssembly].Nodes[theModule].Nodes.Add(
-							CreateTreeNode(containedTypes[theClass].FullName, "imgClass"));
+                            classNode);
 
 						// Create a test method for each method in this type
 						MethodInfo[] methods = containedTypes[theClass].GetMethods();

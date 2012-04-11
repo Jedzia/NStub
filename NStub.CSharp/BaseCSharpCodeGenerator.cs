@@ -105,7 +105,7 @@ namespace NStub.CSharp
         public void GenerateCode()
         {
             // We want to write a separate file for each type
-            foreach (CodeTypeDeclaration codeTypeDeclaration in CodeNamespace.Types)
+            foreach (CodeTypeDeclaration testClassDeclaration in CodeNamespace.Types)
             {
                 // Create a namespace for the Type in order to put it in scope
                 CodeNamespace codeNamespace =
@@ -113,71 +113,149 @@ namespace NStub.CSharp
 
                 // add using imports.
                 codeNamespace.Imports.AddRange(RetrieveNamespaceImports().ToArray());
-                var indexcodeNs = codeTypeDeclaration.Name.LastIndexOf('.');
+                var indexcodeNs = testClassDeclaration.Name.LastIndexOf('.');
                 if (indexcodeNs > 0)
                 {
                     // try to import the namespace for the object under test.
-                    var codeNs = codeTypeDeclaration.Name.Substring(0, indexcodeNs);
+                    var codeNs = testClassDeclaration.Name.Substring(0, indexcodeNs);
                     codeNamespace.Imports.Add(new CodeNamespaceImport(codeNs));
                 }
 
                 // Clean the type name
-                codeTypeDeclaration.Name =
-                    Utility.ScrubPathOfIllegalCharacters(codeTypeDeclaration.Name);
+                testClassDeclaration.Name =
+                    Utility.ScrubPathOfIllegalCharacters(testClassDeclaration.Name);
 
-                var codeTypeDeclarationName = Utility.GetUnqualifiedTypeName(codeTypeDeclaration.Name);
-                // Create our test type
-                codeTypeDeclaration.Name = codeTypeDeclarationName + "Test";
-                codeTypeDeclaration.IsPartial = true;
+                var testObjectName = Utility.GetUnqualifiedTypeName(testClassDeclaration.Name);
                 
                 // Add testObject field
-                var testObjectMemberField = AddTestObjectField(codeTypeDeclaration, codeTypeDeclarationName);
+                CodeMemberField testObjectMemberField = AddTestMemberField(testClassDeclaration, testObjectName, "testObject");
 
                 // Give it a default public constructor
                 var codeConstructor = new CodeConstructor();
                 codeConstructor.Attributes = MemberAttributes.Public;
-                codeTypeDeclaration.Members.Add(codeConstructor);
+                testClassDeclaration.Members.Add(codeConstructor);
 
                 // Set out member names correctly
-                foreach (CodeTypeMember typeMember in codeTypeDeclaration.Members)
+                foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
                 {
                     GenerateCodeTypeMember(typeMember);
                 }
 
                 // Setup and TearDown
-                GenerateSetupAndTearDown(codeTypeDeclaration, codeTypeDeclarationName, testObjectMemberField);
+                GenerateSetupAndTearDown(codeNamespace,testClassDeclaration, testObjectName, testObjectMemberField);
+
+                // Create our test type
+                testClassDeclaration.Name = testObjectName + "Test";
+                testClassDeclaration.IsPartial = true;
 
                 // Add test class to the CodeNamespace.
-                codeNamespace.Types.Add(codeTypeDeclaration);
+                codeNamespace.Types.Add(testClassDeclaration);
 
-                RemoveDuplicatedMembers(codeTypeDeclaration);
-                SortMembers(codeTypeDeclaration);
-                WriteClassFile(codeTypeDeclaration.Name, codeNamespace);
+                RemoveDuplicatedMembers(testClassDeclaration);
+                SortMembers(testClassDeclaration);
+                WriteClassFile(testClassDeclaration.Name, codeNamespace);
             }
         }
 
-        private void GenerateSetupAndTearDown(CodeTypeDeclaration codeTypeDeclaration, string codeTypeDeclarationName, CodeMemberField testObjectMemberField)
+        private void GenerateSetupAndTearDown(
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration codeTypeDeclaration, 
+            string testObjectName, 
+            CodeMemberField testObjectMemberField)
         {
             var setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("Setup");
-            ComposeTestSetupMethod(setUpMethod, testObjectMemberField, codeTypeDeclarationName);
-            //ComposeTestSetupMockery(codeTypeDeclaration, setUpMethod, testObjectMemberField, codeTypeDeclarationName);
+            var testObjectMemberFieldCreate = ComposeTestSetupMethod(setUpMethod, testObjectMemberField, testObjectName);
+            var assignedMockObjects = ComposeTestSetupMockery(codeTypeDeclaration, setUpMethod, testObjectMemberField, testObjectName);
+            if (assignedMockObjects.Count() > 0)
+            {
+                foreach (var mockObject in assignedMockObjects)
+                {
+                    testObjectMemberFieldCreate.Parameters.Add(mockObject.Left);
+                }
+
+                // Todo: move this to the implementing class.
+                var rhinoImport = "Rhino.Mocks";
+                codeNamespace.Imports.Add(new CodeNamespaceImport(rhinoImport));
+            }
             codeTypeDeclaration.Members.Add(setUpMethod);
             var tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
-            ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, codeTypeDeclarationName);
+            ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
             codeTypeDeclaration.Members.Add(tearDownMethod);
         }
 
-        protected virtual void ComposeTestSetupMethod(CodeMemberMethod setUpMethod, CodeMemberField testObjectMemberField, string codeTypeDeclarationName)
-        { }
-        protected virtual void ComposeTestTearDownMethod(CodeMemberMethod teardownMethod, CodeMemberField testObjectMemberField, string codeTypeDeclarationName)
-        { }
-        private static CodeMemberField AddTestObjectField(CodeTypeDeclaration codeTypeDeclaration, string codeTypeDeclarationName)
+        /// <summary>
+        /// Compose additional items of the test setup method.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
+        /// <param name="setUpMethod">The test setup method.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        /// <returns>The list of assigned mock objects.</returns>
+        /// <remarks>
+        /// Till the execution of the <see cref="RemoveDuplicatedMembers"/> method, the
+        /// <paramref name="testClassDeclaration"/> parameter is identical to the test object.
+        /// </remarks>
+        protected virtual IEnumerable<CodeAssignStatement> ComposeTestSetupMockery(
+            CodeTypeDeclaration testClassDeclaration, 
+            CodeMemberMethod setUpMethod, 
+            CodeMemberField testObjectMemberField, 
+            string testObjectName)
+        {
+            return new CodeAssignStatement[0];
+        }
+
+        /// <summary>
+        /// Compose additional items of the test setup method.
+        /// </summary>
+        /// <param name="setUpMethod">A reference to the test setup method.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        /// <returns>The initialization expression of the object under test.
+        /// Is <c>null</c>, when none is created.</returns>
+        protected virtual CodeObjectCreateExpression ComposeTestSetupMethod(CodeMemberMethod setUpMethod, CodeMemberField testObjectMemberField, string testObjectName)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Compose additional items of the test teardown method.
+        /// </summary>
+        /// <param name="teardownMethod">A reference to the teardown method of the test.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        protected virtual void ComposeTestTearDownMethod(CodeMemberMethod teardownMethod, CodeMemberField testObjectMemberField, string testObjectName)
+        { 
+        }
+
+        /*private Dictionary<string, CodeMemberField> testMemberFieldLookup =
+            new Dictionary<string, CodeMemberField>();
+
+        protected IDictionary<string, CodeMemberField> TestMemberFieldLookup
+        {
+            get
+            {
+                return this.testMemberFieldLookup;
+            }
+        }*/
+
+        /// <summary>
+        /// Add a member field to the test method.
+        /// </summary>
+        /// <param name="codeTypeDeclaration">The code type declaration of the test class.</param>
+        /// <param name="testObjectType">Type of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        /// <returns></returns>
+        protected CodeMemberField AddTestMemberField(
+            CodeTypeDeclaration codeTypeDeclaration,
+            string testObjectType, 
+            string testObjectName)
         {
             var memberField = new CodeMemberField(
-                codeTypeDeclarationName, "testObject");
+                testObjectType, testObjectName);
             memberField.Attributes = MemberAttributes.Private;
             //typeMember.Statements.Add(variableDeclaration);
             codeTypeDeclaration.Members.Add(memberField);
+            //testMemberFieldLookup.Add(testObjectName, memberField);
             return memberField;
         }
 
