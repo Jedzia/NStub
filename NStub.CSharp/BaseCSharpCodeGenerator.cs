@@ -111,16 +111,27 @@ namespace NStub.CSharp
                 CodeNamespace codeNamespace =
                     new CodeNamespace((CodeNamespace.Name));
 
+                // add using imports.
                 codeNamespace.Imports.AddRange(RetrieveNamespaceImports().ToArray());
+                var indexcodeNs = codeTypeDeclaration.Name.LastIndexOf('.');
+                if (indexcodeNs > 0)
+                {
+                    // try to import the namespace for the object under test.
+                    var codeNs = codeTypeDeclaration.Name.Substring(0, indexcodeNs);
+                    codeNamespace.Imports.Add(new CodeNamespaceImport(codeNs));
+                }
 
                 // Clean the type name
                 codeTypeDeclaration.Name =
                     Utility.ScrubPathOfIllegalCharacters(codeTypeDeclaration.Name);
 
+                var codeTypeDeclarationName = Utility.GetUnqualifiedTypeName(codeTypeDeclaration.Name);
                 // Create our test type
-                codeTypeDeclaration.Name =
-                    Utility.GetUnqualifiedTypeName(codeTypeDeclaration.Name) + "Test";
+                codeTypeDeclaration.Name = codeTypeDeclarationName + "Test";
                 codeTypeDeclaration.IsPartial = true;
+                
+                // Add testObject field
+                var testObjectMemberField = AddTestObjectField(codeTypeDeclaration, codeTypeDeclarationName);
 
                 // Give it a default public constructor
                 var codeConstructor = new CodeConstructor();
@@ -133,15 +144,41 @@ namespace NStub.CSharp
                     GenerateCodeTypeMember(typeMember);
                 }
 
-                codeTypeDeclaration.Members.Add(CreateCustomCodeMemberMethodWithSameNameAsAttribute("Setup"));
-                codeTypeDeclaration.Members.Add(CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown"));
+                // Setup and TearDown
+                GenerateSetupAndTearDown(codeTypeDeclaration, codeTypeDeclarationName, testObjectMemberField);
 
+                // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(codeTypeDeclaration);
 
                 RemoveDuplicatedMembers(codeTypeDeclaration);
                 SortMembers(codeTypeDeclaration);
                 WriteClassFile(codeTypeDeclaration.Name, codeNamespace);
             }
+        }
+
+        private void GenerateSetupAndTearDown(CodeTypeDeclaration codeTypeDeclaration, string codeTypeDeclarationName, CodeMemberField testObjectMemberField)
+        {
+            var setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("Setup");
+            ComposeTestSetupMethod(setUpMethod, testObjectMemberField, codeTypeDeclarationName);
+            //ComposeTestSetupMockery(codeTypeDeclaration, setUpMethod, testObjectMemberField, codeTypeDeclarationName);
+            codeTypeDeclaration.Members.Add(setUpMethod);
+            var tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
+            ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, codeTypeDeclarationName);
+            codeTypeDeclaration.Members.Add(tearDownMethod);
+        }
+
+        protected virtual void ComposeTestSetupMethod(CodeMemberMethod setUpMethod, CodeMemberField testObjectMemberField, string codeTypeDeclarationName)
+        { }
+        protected virtual void ComposeTestTearDownMethod(CodeMemberMethod teardownMethod, CodeMemberField testObjectMemberField, string codeTypeDeclarationName)
+        { }
+        private static CodeMemberField AddTestObjectField(CodeTypeDeclaration codeTypeDeclaration, string codeTypeDeclarationName)
+        {
+            var memberField = new CodeMemberField(
+                codeTypeDeclarationName, "testObject");
+            memberField.Attributes = MemberAttributes.Private;
+            //typeMember.Statements.Add(variableDeclaration);
+            codeTypeDeclaration.Members.Add(memberField);
+            return memberField;
         }
 
         /// <summary>

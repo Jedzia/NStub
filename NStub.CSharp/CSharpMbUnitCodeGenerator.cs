@@ -27,6 +27,7 @@ namespace NStub.CSharp
 
         }
     }
+
     /// <summary>
     /// The CSharpCodeGenerator is responsible for the generation of the individual
     /// class files which will make up the actual test project.  For information
@@ -126,6 +127,57 @@ namespace NStub.CSharp
             typeMember.Statements.Add(invokeExpression);
         }
 
+        protected override void ComposeTestTearDownMethod(CodeMemberMethod teardownMethod, CodeMemberField testObjectMemberField, string codeTypeDeclarationName)
+        {
+            /*var invokeExpression = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                //new CodePrimitiveExpression("expected")
+                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
+                , new CodeVariableReferenceExpression("actual"));*/
+
+            CodeFieldReferenceExpression fieldRef1 =
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
+
+            CodeObjectCreateExpression objectCreate1 =
+                new CodeObjectCreateExpression(codeTypeDeclarationName, new CodeExpression[] { });
+            CodeAssignStatement as1 =
+                new CodeAssignStatement(fieldRef1, new CodePrimitiveExpression(null));
+            //new CodeAssignStatement(fieldRef1, objectCreate1);
+
+
+            // Creates a statement using a code expression.
+            //var expressionStatement = new CodeExpressionStatement(fieldRef1);
+            teardownMethod.Statements.Add(as1);
+        }
+
+        protected override void ComposeTestSetupMethod(
+                    CodeMemberMethod setUpMethod,
+                    CodeMemberField testObjectMemberField,
+                    string codeTypeDeclarationName)
+        {
+            /*var invokeExpression = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                //new CodePrimitiveExpression("expected")
+                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
+                , new CodeVariableReferenceExpression("actual"));*/
+
+            CodeFieldReferenceExpression fieldRef1 =
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
+
+            CodeObjectCreateExpression objectCreate1 =
+                new CodeObjectCreateExpression(codeTypeDeclarationName, new CodeExpression[] { });
+            CodeAssignStatement as1 =
+                //new CodeAssignStatement(fieldRef1, new CodePrimitiveExpression(10));
+            new CodeAssignStatement(fieldRef1, objectCreate1);
+
+
+            // Creates a statement using a code expression.
+            //var expressionStatement = new CodeExpressionStatement(fieldRef1);
+            setUpMethod.Statements.Add(as1);
+        }
+
         /// <summary>
         /// Handle event related stuff before type generation.
         /// </summary>
@@ -156,7 +208,13 @@ namespace NStub.CSharp
         /// </returns>
         protected override IEnumerable<CodeNamespaceImport> RetrieveNamespaceImports()
         {
-            return new[] { new CodeNamespaceImport(typeof(TestAttribute).Namespace) };
+            return new[] 
+            { 
+                new CodeNamespaceImport("System"),
+                new CodeNamespaceImport("System.Collections.Generic"),
+                new CodeNamespaceImport("System.Linq"),
+                new CodeNamespaceImport(typeof(TestAttribute).Namespace),
+            };
         }
 
         #endregion Helper Methods (Private)
