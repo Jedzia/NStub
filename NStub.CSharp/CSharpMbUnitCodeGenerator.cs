@@ -15,6 +15,8 @@ namespace NStub.CSharp
     using System.IO;
     using MbUnit.Framework;
     using NStub.Core;
+    using System;
+    using System.Linq;
 
     /// <summary>
     /// The <see cref="CSharpMbUnitCodeGenerator"/> is responsible for the generation of the individual
@@ -86,8 +88,8 @@ namespace NStub.CSharp
             // typeMember.Name += "NormalBehavior";
             // ReplaceTestInTestName(typeMember, "NormalBehavior");
             var variableDeclaration = new CodeVariableDeclarationStatement(
-                "var", 
-                "expected", 
+                "var",
+                "expected",
                 new CodePrimitiveExpression("Testing"));
 
             typeMember.Statements.Add(variableDeclaration);
@@ -98,9 +100,9 @@ namespace NStub.CSharp
 
             // Creates a code expression for a CodeExpressionStatement to contain.
             var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"), 
-                "AreEqual", 
-                new CodeVariableReferenceExpression("expected"), 
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                new CodeVariableReferenceExpression("expected"),
                 new CodeVariableReferenceExpression("actual"));
 
             // Creates a statement using a code expression.
@@ -128,5 +130,125 @@ namespace NStub.CSharp
                            new CodeNamespaceImport(typeof(TestAttribute).Namespace), 
                        };
         }
+
+
+        /// <summary>
+        /// Generates additional members of the test class.
+        /// </summary>
+        /// <param name="codeNamespace">The code namespace of the test class.</param>
+        /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        protected override void GenerateAdditional(
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration testClassDeclaration,
+            string testObjectName,
+            CodeMemberField testObjectMemberField,
+            CodeMemberMethod setUpMethod,
+             CodeMemberMethod tearDownMethod,
+            CodeObjectCreateExpression testObjectMemberFieldCreate)
+        {
+            GenerateSetupAndTearDownAdditional(
+        codeNamespace,
+        testClassDeclaration,
+        testObjectName,
+        testObjectMemberField,
+        setUpMethod,
+        tearDownMethod,
+        testObjectMemberFieldCreate);
+        }
+
+
+        protected virtual void GenerateSetupAndTearDownAdditional(
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration codeTypeDeclaration,
+            string testObjectName,
+            CodeMemberField testObjectMemberField,
+            CodeMemberMethod setUpMethod,
+            CodeMemberMethod tearDownMethod,
+            CodeObjectCreateExpression testObjectMemberFieldCreate)
+        {
+        }
+
+
+        /// <summary>
+        /// Compose additional items of the test setup method.
+        /// </summary>
+        /// <param name="setUpMethod">The test setup method.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        /// <param name="testObjectType">Type of the test object.</param>
+        /// <returns>
+        /// The initialization expression of the object under test.
+        /// Is <c>null</c>, when none is created.
+        /// </returns>
+        protected override CodeObjectCreateExpression ComposeTestSetupMethod(
+            CodeMemberMethod setUpMethod,
+            CodeMemberField testObjectMemberField,
+            string testObjectName,
+            Type testObjectType)
+        {
+            var cr = new TestObjectCreator(setUpMethod, testObjectMemberField, testObjectName, testObjectType);
+            var testObjectCreation = cr.ComposeTestSetupMethod();
+            if (cr.HasCreationMembers)
+            {
+                foreach (var item in cr.CreationMembers)
+                {
+                    CurrentTestClassDeclaration.Members.Add(item);
+                }
+            }
+            return testObjectCreation;
+            /*var invokeExpression = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                //new CodePrimitiveExpression("expected")
+                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
+                , new CodeVariableReferenceExpression("actual"));*/
+
+            /*var fieldRef1 =
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
+
+            var testObjectMemberFieldCreate = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
+            var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
+
+            // Creates a statement using a code expression.
+            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
+            setUpMethod.Statements.Add(as1);
+            return testObjectMemberFieldCreate;*/
+        }
+
+        /// <summary>
+        /// Compose additional items of the test TearDown method.
+        /// </summary>
+        /// <param name="teardownMethod">A reference to the TearDown method of the test.</param>
+        /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="testObjectName">The name of the object under test.</param>
+        protected override void ComposeTestTearDownMethod(
+            CodeMemberMethod teardownMethod,
+            CodeMemberField testObjectMemberField,
+            string testObjectName)
+        {
+            /*var invokeExpression = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                //new CodePrimitiveExpression("expected")
+                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
+                , new CodeVariableReferenceExpression("actual"));*/
+            var fieldRef1 =
+                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
+
+            // var objectCreate1 = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
+            var as1 =
+                new CodeAssignStatement(fieldRef1, new CodePrimitiveExpression(null));
+
+            // new CodeAssignStatement(fieldRef1, objectCreate1);
+
+            // Creates a statement using a code expression.
+            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
+            teardownMethod.Statements.Add(as1);
+        }
+
+
+
     }
 }

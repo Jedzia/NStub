@@ -59,7 +59,7 @@ namespace NStub.Gui
             this._assemblyGraphTreeView.Location = new System.Drawing.Point(0, 0);
             this._assemblyGraphTreeView.Name = "_assemblyGraphTreeView";
             this._assemblyGraphTreeView.SelectedImageIndex = 0;
-            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 449);
+            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 331);
             this._assemblyGraphTreeView.TabIndex = 15;
             this._assemblyGraphTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvAssemblyGraph_AfterCheck);
             this._assemblyGraphTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvAssemblyGraph_BeforeSelect);
@@ -172,18 +172,18 @@ namespace NStub.Gui
             this.panel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Controls.Add(this._assemblyGraphTreeView);
-            this.panel1.Location = new System.Drawing.Point(4, 120);
+            this.panel1.Controls.Add(this.groupBox1);
+            this.panel1.Location = new System.Drawing.Point(4, 84);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(589, 449);
+            this.panel1.Size = new System.Drawing.Size(589, 485);
             this.panel1.TabIndex = 17;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.logText);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox1.Location = new System.Drawing.Point(0, 295);
+            this.groupBox1.Location = new System.Drawing.Point(0, 331);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(589, 154);
             this.groupBox1.TabIndex = 16;

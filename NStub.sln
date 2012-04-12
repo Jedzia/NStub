@@ -7,6 +7,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\NStub.FxCop = Solution Items\NStub.FxCop
 		Solution Items\NStub.NDepend.xml = Solution Items\NStub.NDepend.xml
 		Solution Items\NStub.nunit = Solution Items\NStub.nunit
+		nstub.tws = nstub.tws
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Dependencies", "External Dependencies", "{C498BE3D-7D06-4FED-848E-2CAEE491A5A9}"

@@ -47,7 +47,7 @@ namespace NStub.CSharp
 
         #endregion
 
-        /// <summary>
+        /*/// <summary>
         /// Compose additional items of the test setup method.
         /// </summary>
         /// <param name="setUpMethod">The test setup method.</param>
@@ -62,12 +62,12 @@ namespace NStub.CSharp
             CodeMemberField testObjectMemberField,
             string testObjectName)
         {
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
+            //var invokeExpression = new CodeMethodInvokeExpression(
+              //  new CodeTypeReferenceExpression("Assert"),
+              //  "AreEqual",
                 //new CodePrimitiveExpression("expected")
-                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
-                , new CodeVariableReferenceExpression("actual"));*/
+             //   new CodeFieldReferenceExpression(testObjectMemberField, "bla")
+             //   , new CodeVariableReferenceExpression("actual"));
             var fieldRef1 =
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
 
@@ -78,7 +78,7 @@ namespace NStub.CSharp
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
             setUpMethod.Statements.Add(as1);
             return testObjectMemberFieldCreate;
-        }
+        }*/
 
         /// <summary>
         /// Compose additional items of the test setup method.
@@ -90,12 +90,13 @@ namespace NStub.CSharp
         /// <returns>
         /// The list of assigned mock objects.
         /// </returns>
-        protected override IEnumerable<CodeAssignStatement> ComposeTestSetupMockery(
+        protected virtual IEnumerable<CodeAssignStatement> ComposeTestSetupMockery(
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
             string testObjectName)
         {
+            // Todo: only the Type is necs, the CodeTypeDeclaration is to much knowledge.
             var testObjectClassType = (Type)testClassDeclaration.UserData["TestObjectClassType"];
 
             Type[] parameters = { /*typeof(int)*/ };
@@ -165,54 +166,6 @@ namespace NStub.CSharp
             return mockAssignments;
         }
 
-        /// <summary>
-        /// Compose additional items of the test TearDown method.
-        /// </summary>
-        /// <param name="teardownMethod">A reference to the TearDown method of the test.</param>
-        /// <param name="testObjectMemberField">The member field of the object under test.</param>
-        /// <param name="testObjectName">The name of the object under test.</param>
-        protected override void ComposeTestTearDownMethod(
-            CodeMemberMethod teardownMethod,
-            CodeMemberField testObjectMemberField,
-            string testObjectName)
-        {
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
-                //new CodePrimitiveExpression("expected")
-                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
-                , new CodeVariableReferenceExpression("actual"));*/
-            var fieldRef1 =
-                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testObjectMemberField.Name);
-
-            // var objectCreate1 = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
-            var as1 =
-                new CodeAssignStatement(fieldRef1, new CodePrimitiveExpression(null));
-
-            // new CodeAssignStatement(fieldRef1, objectCreate1);
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-            teardownMethod.Statements.Add(as1);
-        }
-
-        /// <summary>
-        /// Generates additional members of the test class.
-        /// </summary>
-        /// <param name="codeNamespace">The code namespace of the test class.</param>
-        /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
-        /// <param name="testObjectName">The name of the object under test.</param>
-        /// <param name="testObjectMemberField">The member field of the object under test.</param>
-        protected override void GenerateAdditional(
-            CodeNamespace codeNamespace,
-            CodeTypeDeclaration testClassDeclaration,
-            string testObjectName,
-            CodeMemberField testObjectMemberField)
-        {
-            this.GenerateSetupAndTearDown(
-                codeNamespace, testClassDeclaration, testObjectName, testObjectMemberField);
-        }
-
         private CodeAssignStatement AddMockObject(
             CodeMemberMethod setUpMethod,
             CodeMemberField mockRepositoryMemberField,
@@ -275,15 +228,26 @@ namespace NStub.CSharp
             return mockMemberField;
         }
 
-        private void GenerateSetupAndTearDown(
+        /*private void GenerateSetupAndTearDown(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration codeTypeDeclaration,
             string testObjectName,
             CodeMemberField testObjectMemberField)
         {
-            var setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("Setup");
+            var setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
             var testObjectMemberFieldCreate = this.ComposeTestSetupMethod(
                 setUpMethod, testObjectMemberField, testObjectName);
+            
+            GenerateSetupAndTearDownAdditional(codeNamespace, codeTypeDeclaration, testObjectName, testObjectMemberField, setUpMethod, testObjectMemberFieldCreate);
+
+            codeTypeDeclaration.Members.Add(setUpMethod);
+            var tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
+            this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
+            codeTypeDeclaration.Members.Add(tearDownMethod);
+        }*/
+
+        protected override void GenerateSetupAndTearDownAdditional(CodeNamespace codeNamespace, CodeTypeDeclaration codeTypeDeclaration, string testObjectName, CodeMemberField testObjectMemberField, CodeMemberMethod setUpMethod, CodeMemberMethod tearDownMethod, CodeObjectCreateExpression testObjectMemberFieldCreate)
+        {
             var assignedMockObjects = this.ComposeTestSetupMockery(
                 codeTypeDeclaration, setUpMethod, testObjectMemberField, testObjectName);
             if (assignedMockObjects.Count() > 0)
@@ -296,11 +260,6 @@ namespace NStub.CSharp
                 string rhinoImport = typeof(MockRepository).Namespace;
                 codeNamespace.Imports.Add(new CodeNamespaceImport(rhinoImport));
             }
-
-            codeTypeDeclaration.Members.Add(setUpMethod);
-            var tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
-            this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
-            codeTypeDeclaration.Members.Add(tearDownMethod);
         }
     }
 }
