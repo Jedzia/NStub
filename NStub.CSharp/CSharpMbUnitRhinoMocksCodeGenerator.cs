@@ -246,15 +246,20 @@ namespace NStub.CSharp
             codeTypeDeclaration.Members.Add(tearDownMethod);
         }*/
 
-        protected override void GenerateSetupAndTearDownAdditional(CodeNamespace codeNamespace, CodeTypeDeclaration codeTypeDeclaration, string testObjectName, CodeMemberField testObjectMemberField, CodeMemberMethod setUpMethod, CodeMemberMethod tearDownMethod, CodeObjectCreateExpression testObjectMemberFieldCreate)
+        protected override void GenerateSetupAndTearDownAdditional(
+            CodeNamespace codeNamespace, 
+            CodeTypeDeclaration codeTypeDeclaration, 
+            string testObjectName, 
+            CodeMemberField testObjectMemberField, 
+            ISetupAndTearDownContext context)
         {
             var assignedMockObjects = this.ComposeTestSetupMockery(
-                codeTypeDeclaration, setUpMethod, testObjectMemberField, testObjectName);
+                codeTypeDeclaration, context.SetUpMethod, testObjectMemberField, testObjectName);
             if (assignedMockObjects.Count() > 0)
             {
                 foreach (var mockObject in assignedMockObjects)
                 {
-                    testObjectMemberFieldCreate.Parameters.Add(mockObject.Left);
+                    context.TestObjectMemberFieldCreate.Parameters.Add(mockObject.Left);
                 }
 
                 string rhinoImport = typeof(MockRepository).Namespace;

@@ -96,6 +96,10 @@ namespace NStub.CSharp
         /// <value>The directory the new source files will be output to.</value>
         public string OutputDirectory { get; set; }
 
+        /// <summary>
+        /// Gets the current test class declaration. The value is only valid during execution of 
+        /// the <see cref="GenerateCode"/> method.
+        /// </summary>
         protected CodeTypeDeclaration CurrentTestClassDeclaration { get; private set; }
         #endregion
 
@@ -145,12 +149,18 @@ namespace NStub.CSharp
                 }
 
                 // Setup and TearDown
-                CodeMemberMethod setUpMethod;
-                CodeMemberMethod tearDownMethod;
-                CodeObjectCreateExpression testObjectMemberFieldCreate;
-                this.GenerateSetupAndTearDown(codeNamespace, testClassDeclaration, testObjectName, testObjectMemberField, out  setUpMethod, out  tearDownMethod,out testObjectMemberFieldCreate);
+                var setTearContext = this.GenerateSetupAndTearDown(
+                    codeNamespace, 
+                    testClassDeclaration,
+                    testObjectName, 
+                    testObjectMemberField);
 
-                this.GenerateAdditional(codeNamespace, testClassDeclaration, testObjectName, testObjectMemberField, setUpMethod, tearDownMethod, testObjectMemberFieldCreate);
+                this.GenerateAdditional(
+                    codeNamespace, 
+                    testClassDeclaration,
+                    testObjectName, 
+                    testObjectMemberField,
+                    setTearContext);
 
                 // Create our test type
                 testClassDeclaration.Name = testObjectName + "Test";
@@ -172,14 +182,13 @@ namespace NStub.CSharp
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="context">Contains data specific to SetUp and TearDown test-method generation.</param>
         protected virtual void GenerateAdditional(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration testClassDeclaration,
             string testObjectName,
             CodeMemberField testObjectMemberField,
-            CodeMemberMethod setUpMethod,
-            CodeMemberMethod tearDownMethod,
-            CodeObjectCreateExpression testObjectMemberFieldCreate)
+            ISetupAndTearDownContext context)
         {
 
         }
@@ -191,29 +200,26 @@ namespace NStub.CSharp
         /// <param name="testClassDeclaration">The test class declaration.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
-        /// <param name="setUpMethod">A reference to the test setup method.</param>
-        /// <param name="tearDownMethod">The tear down method.</param>
-        /// <param name="testObjectMemberFieldCreate">The test object member field create.</param>
-        private void GenerateSetupAndTearDown(
+        /// <returns>Data specific to SetUp and TearDown test-method generation.</returns>
+        private ISetupAndTearDownContext GenerateSetupAndTearDown(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration testClassDeclaration,
             string testObjectName,
-            CodeMemberField testObjectMemberField, 
-            out CodeMemberMethod setUpMethod, 
-            out CodeMemberMethod tearDownMethod,
-            out CodeObjectCreateExpression testObjectMemberFieldCreate)
+            CodeMemberField testObjectMemberField)
         {
-            setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
+            var setUpMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
             var testObjectType = testClassDeclaration.UserData["TestObjectClassType"] as Type;
 
-            testObjectMemberFieldCreate = this.ComposeTestSetupMethod(
+            var testObjectMemberFieldCreate = this.ComposeTestSetupMethod(
                 setUpMethod, testObjectMemberField, testObjectName, testObjectType);
 
             testClassDeclaration.Members.Add(setUpMethod);
-            tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
+            var tearDownMethod = CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
             this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
             testClassDeclaration.Members.Add(tearDownMethod);
 
+            var result = new SetupAndTearDownContext(setUpMethod, tearDownMethod, testObjectMemberFieldCreate);
+            return result;
 
             /*var assignedMockObjects = this.ComposeTestSetupMockery(
                 codeTypeDeclaration, setUpMethod, testObjectMemberField, testObjectName);

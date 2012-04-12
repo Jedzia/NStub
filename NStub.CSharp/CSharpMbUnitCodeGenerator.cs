@@ -139,34 +139,30 @@ namespace NStub.CSharp
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
+        /// <param name="context">Contains data specific to SetUp and TearDown test-method generation.</param>
         protected override void GenerateAdditional(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration testClassDeclaration,
             string testObjectName,
             CodeMemberField testObjectMemberField,
-            CodeMemberMethod setUpMethod,
-             CodeMemberMethod tearDownMethod,
-            CodeObjectCreateExpression testObjectMemberFieldCreate)
+            ISetupAndTearDownContext context)
         {
             GenerateSetupAndTearDownAdditional(
         codeNamespace,
         testClassDeclaration,
         testObjectName,
         testObjectMemberField,
-        setUpMethod,
-        tearDownMethod,
-        testObjectMemberFieldCreate);
+        context);
         }
 
 
+        /// <param name="context">Contains data specific to SetUp and TearDown test-method generation.</param>
         protected virtual void GenerateSetupAndTearDownAdditional(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration codeTypeDeclaration,
             string testObjectName,
             CodeMemberField testObjectMemberField,
-            CodeMemberMethod setUpMethod,
-            CodeMemberMethod tearDownMethod,
-            CodeObjectCreateExpression testObjectMemberFieldCreate)
+            ISetupAndTearDownContext context)
         {
         }
 
@@ -189,15 +185,9 @@ namespace NStub.CSharp
             Type testObjectType)
         {
             var cr = new TestObjectCreator(setUpMethod, testObjectMemberField, testObjectName, testObjectType);
-            var testObjectCreation = cr.ComposeTestSetupMethod();
-            if (cr.HasCreationMembers)
-            {
-                foreach (var item in cr.CreationMembers)
-                {
-                    CurrentTestClassDeclaration.Members.Add(item);
-                }
-            }
-            return testObjectCreation;
+            var testObjectConstructor = cr.BuildTestObject();
+            cr.AssignParameters(this.CurrentTestClassDeclaration, testObjectConstructor);
+            return testObjectConstructor;
             /*var invokeExpression = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
                 "AreEqual",
@@ -216,6 +206,7 @@ namespace NStub.CSharp
             setUpMethod.Statements.Add(as1);
             return testObjectMemberFieldCreate;*/
         }
+
 
         /// <summary>
         /// Compose additional items of the test TearDown method.

@@ -117,21 +117,13 @@ namespace NStub.CSharp
 
 
         /// <summary>
-        /// Compose additional items of the test setup method.
+        /// Creates a code generation expression for an object to test with a member field and initialization
+        /// in the previous specified <see cref="SetUpMethod"/> method.
         /// </summary>
-        /// <param name="setUpMethod">The test setup method.</param>
-        /// <param name="testObjectMemberField">The member field of the object under test.</param>
-        /// <param name="testObjectName">The name of the object under test.</param>
         /// <returns>
         /// The initialization expression of the object under test.
-        /// Is <c>null</c>, when none is created.
         /// </returns>
-        //public virtual CodeObjectCreateExpression ComposeTestSetupMethod(
-        public virtual CodeObjectCreateExpression ComposeTestSetupMethod(
-            /*CodeMemberMethod setUpMethod,
-            CodeMemberField testObjectMemberField,
-            string testObjectName*/
-                                   )
+        public virtual CodeObjectCreateExpression BuildTestObject()
         {
             /*var invokeExpression = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
@@ -143,48 +135,71 @@ namespace NStub.CSharp
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), this.TestObjectMemberField.Name);
 
             var testObjectMemberFieldCreate = new CodeObjectCreateExpression(this.TestObjectName, new CodeExpression[] { });
+            this.testObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
             var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-            this.creationMembers = AddParametersToConstructor(as1);
+            this.assignments = AddParametersToConstructor(as1);
 
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
             AddCreationStatement(as1);
+
+
             return testObjectMemberFieldCreate;
             //return mms;
         }
 
-        /// <summary>
-        /// The summary.
-        /// </summary>
-        private List<CodeMemberField> creationMembers;
 
         /// <summary>
-        /// Gets or sets the CreationMembers.
+        /// Gets a value indicating whether this instance has ready initialized parameter assignments.
         /// </summary>
-        /// <value>The CreationMembers.</value>
-        public IEnumerable<CodeMemberField> CreationMembers
+        /// <value>
+        /// <c>true</c> if this instance has parameter assignments; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasParameterAssignments
         {
             get
             {
-                return this.creationMembers;
+                return assignments != null && assignments.Count > 0;
             }
         }
 
-        public bool HasCreationMembers
+        private ConstructorAssignmentList assignments;
+
+        /// <summary>
+        /// Gets the assignments related to this instance.
+        /// </summary>
+        public IEnumerable<AssignmentInfo> Assignments
         {
             get
             {
-                return creationMembers != null && creationMembers.Count > 0;
+                return this.assignments;
             }
         }
 
+        private CodeObjectCreateExpression testObjectMemberFieldCreateExpression;
 
-        private List<CodeMemberField> AddParametersToConstructor(CodeAssignStatement as1)
+        /// <summary>
+        /// Gets the member field create expression for the object under test.
+        /// </summary>
+        public CodeObjectCreateExpression TestObjectMemberFieldCreateExpression
+        {
+            get
+            {
+                return this.testObjectMemberFieldCreateExpression;
+            }
+        }
+
+        /// <summary>
+        /// Add the parameter assignments to the specified constructor expression.
+        /// </summary>
+        /// <param name="as1">The expression with the constructor to add parameter initialization to.</param>
+        /// <returns>A structure with data about parameter initialization for the type of test object of this instance.</returns>
+        private ConstructorAssignmentList AddParametersToConstructor(CodeAssignStatement as1)
         {
 
-            Type[] parameters = { /*typeof(int)*/ };
+            //Type[] parameters = { /*typeof(int)*/ };
 
-            // Get the constructor that takes an integer as a parameter.
+            /*// Get the constructor that takes an integer as a parameter.
             var ctor = this.TestObjectType.GetConstructor(
                 BindingFlags.Instance | BindingFlags.Public,
                 Type.DefaultBinder,
@@ -199,8 +214,8 @@ namespace NStub.CSharp
             else
             {
                 // there's only a default ctor, return.
-                return new List<CodeMemberField>();
-            }
+                return assignments;
+            }*/
 
             // else
             // {
@@ -210,100 +225,220 @@ namespace NStub.CSharp
             // }
             var testObjectConstructors = this.TestObjectType.GetConstructors(
                 BindingFlags.Instance | BindingFlags.Public);
-            bool hasInterfaceInCtorParameters = false;
-            var ctorParameterTypesInterface = new List<ParameterInfo>();
-            var ctorParameterTypesStd = new List<ParameterInfo>();
             //var ctorParameterTypes = new List<ParameterInfo>();
 
+            if (testObjectConstructors.Length < 1)
+            {
+                return null;
+            }
+
+
+            // for now, use to ctor with the most parameters.
+            // foreach testObjectConstructors
+            //var most = testObjectConstructors.Max(e => e.GetParameters().Length);
+            //var constructor = testObjectConstructors.Where(e => e.GetParameters().Length == most).First();
+            var tempAssignments = new List<AssignmentInfo>();
+            int most = -1;
+            AssignmentInfo mostAssignmentInfo = null;
             foreach (var constructor in testObjectConstructors)
             {
-                var ctorParameters = constructor.GetParameters();
-                foreach (var para in ctorParameters)
+                var assignments = BuildAssignmentInfoForConstructor(constructor);
+                int parameterAmount = constructor.GetParameters().Length;
+                if (parameterAmount > most)
                 {
-                    if (!para.ParameterType.IsGenericType)
-                    {
-                        if (para.ParameterType.IsInterface)
-                        {
-                            hasInterfaceInCtorParameters = true;
-                            ctorParameterTypesInterface.Add(para);
-                        }
-                        else
-                        {
-                            ctorParameterTypesStd.Add(para);
-                        }
-                    }
+                    most = parameterAmount;
+                    mostAssignmentInfo = assignments;
+                }
+                else
+                {
+                    tempAssignments.Add(assignments);
                 }
             }
 
-            if (ctorParameterTypesStd.Count > 0)
+            if (mostAssignmentInfo == null)
             {
-
+                throw new InvalidOperationException("No preferred constructor found, but there should one.");
             }
 
-            if (!hasInterfaceInCtorParameters)
+            var result = new ConstructorAssignmentList(mostAssignmentInfo);
+            result.AddConstructorAssignment(tempAssignments);
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// Builds a assignment info for the specified constructor.
+        /// </summary>
+        /// <param name="constructor">The constructor to build the parameter assignment info's for.</param>
+        /// <returns>An <see cref="AssignmentInfo"/> intitialized with the data from the specified 
+        /// <paramref name="constructor"/>.</returns>
+        private AssignmentInfo BuildAssignmentInfoForConstructor(ConstructorInfo constructor)
+        {
+            //var ctorParameterTypesInterface = new List<ParameterInfo>();
+            //var ctorParameterTypesStd = new List<ParameterInfo>();
+            var ctorParameterTypes = new ParameterInfoList();
+            var ctorParameters = constructor.GetParameters();
+            foreach (var para in ctorParameters)
+            {
+                if (!para.ParameterType.IsGenericType)
+                {
+                    ctorParameterTypes.AddParameterInfo(para);
+                    /*if (para.ParameterType.IsInterface)
+                    {
+                        hasInterfaceInCtorParameters = true;
+                        ctorParameterTypesInterface.Add(para);
+                    }
+                    else
+                    {
+                        ctorParameterTypesStd.Add(para);
+                    }*/
+                }
+            }
+
+
+            /*if (ctorParameterTypes.CountOfStandardTypes > 0)
+            {
+
+            }*/
+
+            /*if (!ctorParameterTypes.HasInterfaces)
             {
                 //return new CodeAssignStatement[0];
-                return new List<CodeMemberField>();
-            }
+                return assignments;
+            }*/
 
-            //var testObjectInitializerPosition = setUpMethod.Statements.Count - 1;
 
             //var mockRepositoryMemberField = this.AddMockRepository(
             //    testClassDeclaration, setUpMethod, testObjectName, null, "mocks");
 
-            var mockMemberFields = new List<CodeMemberField>();
-            var mockAssignments = new List<CodeAssignStatement>();
-            foreach (var paraInfo in ctorParameterTypesStd)
+            // BuildAssignmentInfoForConstructor
+
+            var assignments = new AssignmentInfo();
+            assignments.UsedConstructor = constructor;
+            foreach (var paraInfo in ctorParameterTypes.StandardTypes)
             {
-                var mockMemberField = BaseCSharpCodeGenerator.CreateMemberField(
+                var memberField = BaseCSharpCodeGenerator.CreateMemberField(
                     paraInfo.ParameterType.FullName, paraInfo.Name);
-                var mockAssignment = this.AddConstructorObject(
-                    this.SetUpMethod, mockMemberField, this.TestObjectName, paraInfo, paraInfo.Name);
-                //mockAssignments.Add(mockAssignment);
-                mockMemberFields.Add(mockMemberField);
+                var fieldAssignment = this.CreateInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
+                var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
+                assignments.AddAssignment(assignment);
             }
 
-            // reorder the testObject initializer to the bottom of the SetUp method.
-            //var removedTypedec = setUpMethod.Statements[testObjectInitializerPosition];
-            //setUpMethod.Statements.RemoveAt(testObjectInitializerPosition);
-            //setUpMethod.Statements.Add(removedTypedec);
 
-            //return mockAssignments;
-            return mockMemberFields;
 
+            return assignments;
         }
 
-        private CodeAssignStatement AddConstructorObject(
-CodeMemberMethod setUpMethod,
-CodeMemberField mockRepositoryMemberField,
-string testObjectName,
-ParameterInfo paraInfo,
-string paraName)
+
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the constructor create
+        /// expression stored in <see cref="TestObjectMemberFieldCreateExpression"/>.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        public void AssignParameters(CodeTypeDeclaration testClassDeclaration)
         {
-            var paraType = paraInfo.ParameterType;
+            this.AssignParameters(testClassDeclaration, this.TestObjectMemberFieldCreateExpression);
+        }
 
-            var mockRef =
-                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), mockRepositoryMemberField.Name);
+        /// <summary>
+        /// Gets a value indicating whether this instance constructor parameters are completely assigned.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is completely assigned; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsCompletelyAssigned
+        {
+            get
+            {
+                if (!this.HasParameterAssignments)
+                {
+                    return true;
+                }
 
-            var fieldRef1 =
-                new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), paraName);
+                var result = true;
+                var ctorparameters = this.assignments.PreferredConstructor.UsedConstructor.GetParameters();
+                foreach (var para in ctorparameters)
+                {
+                    var assignment = this.assignments.PreferredConstructor[para.Name];
+                    if (assignment == null)
+                    {
+                        return false;
+                    }
+                }
 
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
+                return result;
+            }
+        }
 
-            // Creates a code expression for a CodeExpressionStatement to contain.
-            //var invokeExpression = new CodeMethodInvokeExpression(mockRef, "StrictMock");
-            //invokeExpression.Method.TypeArguments.Add(paraType.FullName);
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
+        /// expression.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        public void AssignParameters(CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor)
+        {
+            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
+            Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
+            //Guard.NotNull(() => this.assignments, this.assignments);
+            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
+            {
 
-            // Creates a statement using a code expression.
-            //var expressionStatement = new CodeExpressionStatement(invokeExpression);
-            var objectCreate1 = new CodeObjectCreateExpression(paraType.FullName, new CodeExpression[] { });
-            var as1 = new CodeAssignStatement(fieldRef1, objectCreate1);
-            setUpMethod.Statements.Add(as1);
+            }
 
-            // var testObject = TestMemberFieldLookup["testObject"];
-            // setUpMethod.Statements.Add(as1);
-            return as1;
+            if (this.HasParameterAssignments)
+            {
+                var testObjectInitializerPosition = SetUpMethod.Statements.Count - 1;
+
+                var ctorparameters = this.assignments.PreferredConstructor.UsedConstructor.GetParameters();
+                foreach (var para in ctorparameters)
+                {
+                    var assignment = this.assignments.PreferredConstructor[para.Name];
+                    if (assignment == null)
+                    {
+                        continue;
+                    }
+
+                    // Add the member field to the test class.
+                    testClassDeclaration.Members.Add(assignment.MemberField);
+                    // Add a local variable for the constructor parameter.
+                    AddCreationStatement(assignment.AssignStatement);
+                    // Add the local variable to the constructor initializer in the object create expression 
+                    // (e.g. SetUp method, test object constructor) of the specified method.
+                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
+                }
+
+                // reorder the testObject initializer to the bottom of the SetUp method.
+                ReorderSetupStatement(testObjectInitializerPosition);
+            }
+        }
+
+        /// <summary>
+        /// Reorders the statement at the specified position to the last position of the code generation statements
+        /// in the <see cref="SetUpMethod"/>.
+        /// </summary>
+        /// <param name="testObjectInitializerPosition">The position of the statement to push to the bottom.</param>
+        private void ReorderSetupStatement(int testObjectInitializerPosition)
+        {
+            var removedTypedec = this.SetUpMethod.Statements[testObjectInitializerPosition];
+            this.SetUpMethod.Statements.RemoveAt(testObjectInitializerPosition);
+            this.SetUpMethod.Statements.Add(removedTypedec);
+        }
+
+        /// <summary>
+        /// Creates a reference to a member field and initializes it with a new instance of the specified parameter type.
+        /// </summary>
+        /// <param name="type">Defines the type of the new object.</param>
+        /// <param name="memberField">Name of the referenced member field.</param>
+        /// <returns></returns>
+        /// <remarks>Produces a statement like: 
+        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.</remarks>
+        private CodeAssignStatement CreateInitializeMemberField(Type type, string memberField)
+        {
+            var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
+            var objectCreate1 = new CodeObjectCreateExpression(type.FullName, new CodeExpression[] { });
+            return new CodeAssignStatement(fieldRef1, objectCreate1);
         }
 
 
