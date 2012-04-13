@@ -21,15 +21,25 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
-        /// Gets the handler, that checks, if the associated <see cref="Type"/> can process an <see cref="IMemberBuildContext"/> arbeit Todo: translate.
+        /// Gets the handler, that checks, if the associated <see cref="Type"/> can process an <see cref="IMemberBuildContext"/> assignment.
         /// </summary>
         Func<IMemberBuildContext, bool> Handler { get; }
 
         /// <summary>
-        /// Gets the associated <see cref="IMemberBuilder"/> type.
+        /// Gets the associated <see cref="IMemberBuilder"/> type that can handle the request specified in the <see cref="Handler"/> method.
         /// </summary>
         Type Type { get; }
 
         #endregion
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="IMemberBuilder"/> specified in the <see cref="Type"/> property with 
+        /// the specified context data.
+        /// </summary>
+        /// <param name="context">The context of the current test object.</param>
+        /// <returns>
+        /// A test member builder that can handle the request specified in the <see cref="Handler"/> method.
+        /// </returns>
+        IMemberBuilder CreateInstance(IMemberBuildContext context);
     }
 }

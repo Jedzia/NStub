@@ -28,9 +28,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// Determines the name of the test method.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">The initial name of the test method member.</param>
         /// <returns>
         /// The name of the test method.
         /// </returns>
-        string GetTestName(IMemberBuildContext context);
+        string GetTestName(IMemberBuildContext context, string originalName);
+
     }
 }

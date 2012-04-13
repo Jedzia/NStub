@@ -54,6 +54,8 @@ namespace NStub.CSharp.ObjectGeneration
         public TestBuilderFactory()
         {
             this.handlers.Add(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext));
+            this.handlers.Add(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext));
+            this.handlers.Add(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext));
             this.handlers.Add(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext));
         }
 
@@ -115,8 +117,7 @@ namespace NStub.CSharp.ObjectGeneration
                 var canHandleContext = buildHandler.Handler(context);
                 if (canHandleContext)
                 {
-                    var memberBuilder =
-                        (IMemberBuilder)Activator.CreateInstance(buildHandler.Type, new object[] { context });
+                    var memberBuilder = buildHandler.CreateInstance(context);
                     yield return memberBuilder;
                 }
             }

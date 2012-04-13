@@ -20,6 +20,7 @@ namespace NStub.CSharp
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration;
+    using System.Reflection;
 
     /// <summary>
     /// The <see cref="BaseCSharpCodeGenerator"/> is responsible for the generation of the individual
@@ -249,12 +250,52 @@ namespace NStub.CSharp
                 // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(testClassDeclaration);
 
+                // pre calculate property data.
+                var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
+                //var propertyData = new Dictionary<string, IBuilderData>();
+                var propertyData = new BuildDataCollection();
+                //buildData.AddDataItem(propertyData);
+                foreach (CodeTypeMember typeMember in initialMembers)
+                {
+                    var memberBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, typeMember, propertyData, null);
+
+                    // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
+                    // if i put the stuff here into this.GenerateCodeTypeMember(...)
+                    var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
+                    var composedTestName = memberBuildContext.TypeMember.Name;
+                    foreach (var memberBuilder in builders)
+                    {
+                        composedTestName = ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
+                    }
+                    memberBuildContext.TestKey = composedTestName;
+
+                    contextLookup.Add(typeMember, memberBuildContext);
+
+                    if (memberBuildContext.IsProperty)
+                    {
+                        IBuilderData propertyDataItem;
+                        var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
+                        if (found)
+                        {
+                            propertyDataItem.SetData(memberBuildContext.MemberInfo);
+                        }
+                        else
+                        {
+                            var propdata = new PropertyBuilderData();
+                            propdata.SetData(memberBuildContext.MemberInfo);
+                            propertyData.AddDataItem("Property", composedTestName, propdata);
+                        }
+                    }                    
+                }
+
                 // Set out member names correctly 
                 // foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
                 foreach(CodeTypeMember typeMember in initialMembers)
                 {
-                    var memberBuildContext = new MemberBuildContext(
-                        codeNamespace, testClassDeclaration, typeMember, null, null);
+                    /*var memberBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, typeMember, null, null);*/
+                    var memberBuildContext = contextLookup[typeMember];
                     this.GenerateCodeTypeMember(memberBuildContext);
                 }
 
@@ -505,8 +546,11 @@ namespace NStub.CSharp
                     var builders = this.TestBuilders.GetBuilder(context).ToArray();
                     foreach(var memberBuilder in builders)
                     {
-                        var testName = memberBuilder.GetTestName(context);
-                        typeMember.Name = testName;
+                        // Set the test name from the pre computed one.
+                        //var testName = context.TypeMember.Name;
+                        //testName = ComputeTestName(memberBuilder, context, testName);
+                        //context.TypeMember.Name = testName;
+                        context.TypeMember.Name = context.TestKey;
                     }
 
                     this.CreateStubForCodeMemberMethod(typeMember as CodeMemberMethod);
@@ -535,7 +579,18 @@ namespace NStub.CSharp
         }
 
         /// <summary>
-        /// Computes the code member test method.
+        /// Computes the test method name via an <see cref="IMemberBuilder"/>.
+        /// </summary>
+        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
+        /// <param name="context">The build context of the test method member.</param>
+        protected virtual string ComputeTestName(IMemberBuilder memberBuilder, IMemberBuildContext context, string originalName)
+        {
+            var testName = memberBuilder.GetTestName(context, originalName);
+            return testName;
+        }
+
+        /// <summary>
+        /// Computes the test method code member via an <see cref="IMemberBuilder"/>.
         /// </summary>
         /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
         /// <param name="context">The build context of the test method member.</param>

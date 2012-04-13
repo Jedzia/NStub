@@ -25,7 +25,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="EventBuilder"/> class.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
-        public EventBuilder(IMemberBuildContext context)
+        public EventBuilder(IMemberSetupContext context)
             : base(context)
         {
         }
@@ -66,12 +66,13 @@ namespace NStub.CSharp.ObjectGeneration
         /// Determines the name of the test method.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">The initial name of the test method member.</param>
         /// <returns>
         /// The name of the test method.
         /// </returns>
-        protected override string DetermineTestName(IMemberBuildContext context)
+        protected override string DetermineTestName(IMemberSetupContext context, string originalName)
         {
-            var typeMemberName = context.TypeMember.Name;
+            var typeMemberName = originalName;
             if (typeMemberName.Contains("add_"))
             {
                 typeMemberName = typeMemberName.Replace("add_", "Event");

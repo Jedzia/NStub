@@ -24,9 +24,9 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="MemberBuilder"/> class.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
-        public MemberBuilder(IMemberBuildContext context)
+        public MemberBuilder(IMemberSetupContext context)
         {
-            this.Context = context;
+            this.SetupContext = context;
         }
 
         #endregion
@@ -36,9 +36,30 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Gets build context of the test method member.
         /// </summary>
-        public IMemberBuildContext Context { get; private set; }
+        public IMemberSetupContext SetupContext { get; private set; }
 
         #endregion
+
+        /*/// <summary>
+        /// Gets or sets the <see cref="T:System.Object"/> at the specified index.
+        /// </summary>
+        /// <param name="propertyName">The index of the element to get or set.</param>
+        /// <value>The <see cref="T:System.Object"/> at the specified index.</value>
+        public IBuilderData this[string propertyName]
+        {
+            get
+            {
+                // TODO: return the specified index here
+                var propData = this.Context.BuildData[this.Context.TestKey];
+                var result = propData[propertyName];
+                return result;
+            }
+
+            //set
+            //{
+                // TODO: set the specified index to value here 
+            //}
+        }*/
 
         /// <summary>
         /// Builds the specified context.
@@ -56,12 +77,13 @@ namespace NStub.CSharp.ObjectGeneration
         /// Determines the name of the test method.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">The initial name of the test method member.</param>
         /// <returns>
         /// The name of the test method.
         /// </returns>
-        public string GetTestName(IMemberBuildContext context)
+        public string GetTestName(IMemberBuildContext context, string originalName)
         {
-            return DetermineTestName(context);
+            return DetermineTestName(context, originalName);
         }
 
 
@@ -78,11 +100,14 @@ namespace NStub.CSharp.ObjectGeneration
         /// Determines the name of the test method.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">The initial name of the test method member.</param>
         /// <returns>
         /// The name of the test method.
         /// </returns>
-        protected abstract string DetermineTestName(IMemberBuildContext context);
-
-
+        /// <remarks>The builders are called one after one, so an integral name resolution happens.</remarks>
+        protected virtual string DetermineTestName(IMemberSetupContext context, string originalName)
+        {
+            return originalName;
+        }
     }
 }
