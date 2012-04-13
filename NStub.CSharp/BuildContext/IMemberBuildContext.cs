@@ -34,6 +34,14 @@ namespace NStub.CSharp.BuildContext
         /// <param name="category">Name of the category to request.</param>
         /// <returns>The builder data with the <see cref="Context.TestKey"/> or <c>null</c> if nothing is found.</returns>
         IBuilderData GetBuilderData(string category);
+
+        /// <summary>
+        /// Gets the data specific to SetUp and TearDown test-methods.
+        /// </summary>
+        /// <remarks>
+        /// Contains the SetUp and TearDown initialization.
+        /// </remarks>
+        ISetupAndTearDownContext SetUpTearDownContext { get; }
     }
 
     /// <summary>
@@ -62,16 +70,6 @@ namespace NStub.CSharp.BuildContext
         /// Contains information about the build members in a dictionary form.
         /// </summary>
         BuildDataCollection BuildData { get; }
-
-        /// <summary>
-        /// Gets the test object member field creator.
-        /// </summary>
-        /// <remarks>
-        /// Contains the test object member field initialization expression ( this.testObject = new Foo( ... ) )
-        /// of the test SetUp method.
-        /// </remarks>
-        [Obsolete("This is not defined, only for testing purposes.")]
-        ITestObjectBuilder TestObjectCreator { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is a property.

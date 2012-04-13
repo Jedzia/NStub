@@ -23,18 +23,21 @@ namespace NStub.CSharp.BuildContext
         /// <summary>
         /// Initializes a new instance of the <see cref="SetupAndTearDownContext"/> class.
         /// </summary>
+        /// <param name="buildData">The build data dictionary.</param>
         /// <param name="codeNamespace">The code namespace of the test.</param>
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="setUpMethod">A reference to the test setup method.</param>
         /// <param name="tearDownMethod">The tear down method.</param>
         /// <param name="creator">The test object member field generator of the test SetUp method.</param>
         public SetupAndTearDownContext(
+            BuildDataCollection buildData,
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration, 
             CodeMemberMethod setUpMethod, 
             CodeMemberMethod tearDownMethod, 
             ITestObjectBuilder creator)
             : base(
+                buildData, 
                 codeNamespace, 
                 testClassDeclaration, 
                 setUpMethod, 

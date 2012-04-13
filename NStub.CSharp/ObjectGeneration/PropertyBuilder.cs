@@ -58,7 +58,30 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         protected override bool BuildMember(IMemberBuildContext context)
         {
-            var typeMember = context.TypeMember;
+            // Todo: just placeholders. Use this in the TestConstructor builder.
+            var typeMember = context.TypeMember as CodeMemberMethod;
+            var testClass = context.TestClassDeclaration.Name;
+            var test = context.TestKey;
+            var suMethod = context.SetUpTearDownContext.SetUpMethod;
+            var setupData = context.BuildData["Setup"];
+            if (setupData != null)
+            {
+                IBuilderData bdata;
+                var found = setupData.TryGetValue("bla", out bdata);
+                foreach (var item in setupData)
+                {
+                    var testField = item.Key;
+                    var testDaa = item.Value.GetData() as CodeMemberField;
+                    typeMember.Statements.Add(new CodeSnippetStatement(""));
+                    typeMember.Statements.Add(new CodeCommentStatement("... have a this." + testField + " link."));
+                }
+            }
+            else
+            {
+                
+            }
+            return true;
+            /*var typeMember = context.TypeMember;
             var typeMemberName = typeMember.Name;
             var propertyName = typeMemberName;
             //var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
@@ -67,7 +90,7 @@ namespace NStub.CSharp.ObjectGeneration
             //var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, propertyName);
-            return true;
+            return true;*/
         }
 
         /// <summary>
@@ -111,7 +134,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void ComputeCodeMemberProperty(CodeMemberMethod typeMember, IBuilderData builderData, string propertyName)
         {
-
             var propertyData = builderData as PropertyBuilderData;
 
             var variableDeclaration = new CodeVariableDeclarationStatement(
@@ -193,7 +215,8 @@ namespace NStub.CSharp.ObjectGeneration
             var propertyData = context.GetBuilderData("Property");
             //var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
-            this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, propertyName);
+            var testObjectName = "testObject";
+            this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, testObjectName, propertyName);
             return true;
         }
 
@@ -202,11 +225,56 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         /// <param name="typeMember">The type member.</param>
         /// <param name="builderData">The builder data.</param>
+        /// <param name="testObjectName">Name of the test object member field.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected virtual void ComputeCodeMemberProperty(CodeMemberMethod typeMember, IBuilderData builderData, string propertyName)
+        protected virtual void ComputeCodeMemberProperty(
+            CodeMemberMethod typeMember,
+            IBuilderData builderData,
+            string testObjectName,
+            string propertyName)
         {
 
             var propertyData = builderData as PropertyBuilderData;
+
+            var setAccessor = propertyData.SetAccessor;
+            var getAccessor = propertyData.GetAccessor;
+
+            if (getAccessor != null)
+            {
+                if (setAccessor == null)
+                {
+                    // create the actual and expected var's here.
+                    // actualRef
+                    // expectedRef
+                }
+
+                var propName = getAccessor.Name.Replace("get_", "");
+
+                typeMember.Statements.Add(new CodeSnippetStatement(""));
+                typeMember.Statements.Add(new CodeCommentStatement("Test Set Property"));
+
+                var expectedAsign = new CodeVariableDeclarationStatement("var", "expected",
+                    new CodePrimitiveExpression("From the GET Builder"));
+                typeMember.Statements.Add(expectedAsign);
+
+                var actualRef = new CodeVariableReferenceExpression("actual");
+                var testObjRef = new CodeTypeReferenceExpression(testObjectName);
+                var testPropRef = new CodePropertyReferenceExpression(testObjRef, propName);
+
+                var invoke = new CodeAssignStatement(actualRef, testPropRef);
+                typeMember.Statements.Add(invoke);
+
+                var assertExpr = new CodeMethodInvokeExpression(
+                    new CodeTypeReferenceExpression("Assert"),
+                    "AreEqual",
+                    new CodeVariableReferenceExpression("expected"),
+                    new CodeVariableReferenceExpression("actual"));
+                typeMember.Statements.Add(assertExpr);
+            }
+
+
+            return;
+
 
             var variableDeclaration = new CodeVariableDeclarationStatement(
                 "var",
@@ -315,6 +383,13 @@ namespace NStub.CSharp.ObjectGeneration
 
             if (setAccessor != null)
             {
+                if (getAccessor == null)
+                {
+                    // create the actual and expected var's here.
+                    // actualRef
+                    // expectedRef
+                }
+
                 var propName = setAccessor.Name.Replace("set_","");
 
                 typeMember.Statements.Add(new CodeSnippetStatement(""));

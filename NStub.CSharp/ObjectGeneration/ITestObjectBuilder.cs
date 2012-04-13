@@ -21,6 +21,11 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
+        /// Gets the build data dictionary that stores generation wide category/key/value properties.
+        /// </summary>
+        BuildDataCollection BuildData { get; }
+
+        /// <summary>
         /// Gets the SetUpMethod.
         /// </summary>
         /// <value>The SetUpMethod.</value>

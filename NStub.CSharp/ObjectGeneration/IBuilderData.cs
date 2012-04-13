@@ -33,6 +33,12 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         /// <param name="methodInfo">The method info.</param>
         void SetData(MethodInfo methodInfo);
+
+        /// <summary>
+        /// Gets the data of this instance.
+        /// </summary>
+        /// <returns>The stored data.</returns>
+        object GetData();
     }
 
     /// <summary>
@@ -115,6 +121,16 @@ namespace NStub.CSharp.ObjectGeneration
         public void SetData(MethodInfo methodInfo)
         {
             this.SetViaAccessorName(methodInfo);
+        }
+
+        #endregion
+
+        #region IBuilderData Members
+
+
+        public object GetData()
+        {
+            return this;
         }
 
         #endregion

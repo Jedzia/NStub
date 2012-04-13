@@ -29,19 +29,19 @@ namespace NStub.CSharp.BuildContext
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="typeMember">The current type to create a test method for.</param>
         /// <param name="buildData">The additional build data lookup.</param>
-        /// <param name="creator">The test object member field generator of the test SetUp method.</param>
+        /// <param name="setUpTearDownContext">Contains data specific to SetUp and TearDown test-methods.</param>
         public MemberBuildContext(
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration, 
             CodeTypeMember typeMember,
-            BuildDataCollection buildData, 
-            ITestObjectBuilder creator)
+            BuildDataCollection buildData,
+            ISetupAndTearDownContext setUpTearDownContext)
             : base(
                 codeNamespace, 
                 testClassDeclaration, 
                 typeMember,
-                buildData, 
-                creator)
+                buildData,
+                setUpTearDownContext)
         {
         }
 

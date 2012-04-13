@@ -179,7 +179,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// <param name="testObjectName">Name of the test object.</param>
         /// <param name="testObjectMemberField">The test object member field.</param>
         protected override void GenerateSetupAndTearDownAdditional(
-            ISetupAndTearDownContext context, string testObjectName, CodeMemberField testObjectMemberField)
+            ISetupAndTearDownCreationContext context, string testObjectName, CodeMemberField testObjectMemberField)
         {
             var assignedMockObjects = this.ComposeTestSetupMockery(
                 context.TestClassDeclaration, context.SetUpMethod, testObjectMemberField, testObjectName);

@@ -107,7 +107,7 @@ namespace NStub.CSharp.MbUnit
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         protected override void GenerateAdditional(
-            ISetupAndTearDownContext context, 
+            ISetupAndTearDownCreationContext context, 
             string testObjectName, 
             CodeMemberField testObjectMemberField)
         {
@@ -121,7 +121,7 @@ namespace NStub.CSharp.MbUnit
         /// <param name="testObjectName">Name of the test object.</param>
         /// <param name="testObjectMemberField">The test object member field.</param>
         /// <remarks>Override this to customize the behavior of the generator.</remarks>
-        protected virtual void GenerateSetupAndTearDownAdditional(ISetupAndTearDownContext context, string testObjectName, CodeMemberField testObjectMemberField)
+        protected virtual void GenerateSetupAndTearDownAdditional(ISetupAndTearDownCreationContext context, string testObjectName, CodeMemberField testObjectMemberField)
         {
         }
 

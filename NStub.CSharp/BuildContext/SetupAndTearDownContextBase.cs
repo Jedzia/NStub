@@ -16,33 +16,37 @@ namespace NStub.CSharp.BuildContext
     /// <summary>
     /// Abstract base class for data used in SetUp and TearDown test-method generation.
     /// </summary>
-    public abstract class SetupAndTearDownContextBase : ISetupAndTearDownContext
+    public abstract class SetupAndTearDownContextBase : ISetupAndTearDownCreationContext
     {
         #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetupAndTearDownContextBase"/> class.
         /// </summary>
+        /// <param name="buildData">The build data dictionary.</param>
         /// <param name="codeNamespace">The code namespace.</param>
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="setUpMethod">A reference to the test setup method.</param>
         /// <param name="tearDownMethod">The tear down method.</param>
         /// <param name="creator">The test object member field generator of the test SetUp method.</param>
         protected SetupAndTearDownContextBase(
+            BuildDataCollection buildData, 
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod setUpMethod, 
             CodeMemberMethod tearDownMethod, 
             ITestObjectBuilder creator)
         {
+            Guard.NotNull(() => buildData, buildData);
             Guard.NotNull(() => codeNamespace, codeNamespace);
             Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
             Guard.NotNull(() => setUpMethod, setUpMethod);
             Guard.NotNull(() => tearDownMethod, tearDownMethod);
             Guard.NotNull(() => creator, creator);
 
+            this.BuildData = buildData;
             this.CodeNamespace = codeNamespace;
-            TestClassDeclaration = testClassDeclaration;
+            this.TestClassDeclaration = testClassDeclaration;
             this.SetUpMethod = setUpMethod;
             this.TearDownMethod = tearDownMethod;
             this.TestObjectCreator = creator;
@@ -52,6 +56,11 @@ namespace NStub.CSharp.BuildContext
 
         #region Properties
 
+        /// <summary>
+        /// Gets the build data dictionary that stores generation wide category/key/value properties.
+        /// </summary>
+        public BuildDataCollection BuildData { get; private set; }
+        
         /// <summary>
         /// Gets the code namespace.
         /// </summary>

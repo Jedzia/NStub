@@ -13,10 +13,30 @@ namespace NStub.CSharp.BuildContext
     using System.CodeDom;
     using NStub.CSharp.ObjectGeneration;
 
-    /// <summary>
+        /// <summary>
     /// Represents the data used in SetUp and TearDown test-method generation.
     /// </summary>
-    public interface ISetupAndTearDownContext
+    public interface ISetupAndTearDownCreationContext : ISetupAndTearDownContext
+    {
+        /// <summary>
+        /// Gets the build data dictionary that stores generation wide category/key/value properties.
+        /// </summary>
+        BuildDataCollection BuildData { get; }
+
+        /// <summary>
+        /// Gets the test object member field creator.
+        /// </summary>
+        /// <remarks>
+        /// Contains the test object member field initialization expression ( this.testObject = new Foo( ... ) )
+        /// of the test SetUp method.
+        /// </remarks>
+        ITestObjectBuilder TestObjectCreator { get; }
+    }
+
+    /// <summary>
+    /// Stores data used by SetUp and TearDown test-methods.
+    /// </summary>
+    public interface ISetupAndTearDownContext 
     {
         #region Properties
 
@@ -39,15 +59,6 @@ namespace NStub.CSharp.BuildContext
         /// Gets a reference to the test TearDown method.
         /// </summary>
         CodeMemberMethod TearDownMethod { get; }
-
-        /// <summary>
-        /// Gets the test object member field creator.
-        /// </summary>
-        /// <remarks>
-        /// Contains the test object member field initialization expression ( this.testObject = new Foo( ... ) )
-        /// of the test SetUp method.
-        /// </remarks>
-        ITestObjectBuilder TestObjectCreator { get; }
 
         #endregion
     }

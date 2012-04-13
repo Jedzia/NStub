@@ -29,28 +29,25 @@ namespace NStub.CSharp.BuildContext
         /// <param name="testClassDeclaration">The test class declaration.( early testObject ).</param>
         /// <param name="typeMember">The current type to create a test method for.</param>
         /// <param name="buildData">The additional build data lookup.</param>
-        /// <param name="creator">The test object member field generator of the test SetUp method.</param>
+        /// <param name="setUpTearDownContext">Contains data specific to SetUp and TearDown test-methods.</param>
         protected MemberBuildContextBase(
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration, 
             CodeTypeMember typeMember,
-            BuildDataCollection buildData, 
-            ITestObjectBuilder creator)
+            BuildDataCollection buildData,
+            ISetupAndTearDownContext setUpTearDownContext)
         {
             Guard.NotNull(() => codeNamespace, codeNamespace);
             Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
             Guard.NotNull(() => typeMember, typeMember);
             Guard.NotNull(() => buildData, buildData);
-            
-            // Guard.NotNull(() => creator, creator);
+            Guard.NotNull(() => setUpTearDownContext, setUpTearDownContext);
+
             this.CodeNamespace = codeNamespace;
             this.TestClassDeclaration = testClassDeclaration;
             this.TypeMember = typeMember;
             this.BuildData = buildData;
-            this.TestObjectCreator = creator;
-
-            
-            
+            this.SetUpTearDownContext = setUpTearDownContext;
         }
 
         /// <summary>
@@ -177,10 +174,9 @@ namespace NStub.CSharp.BuildContext
         }
 
         /// <summary>
-        /// Gets the test object member field initialization expression ( this.testObject = new Foo( ... ) )
-        /// of the test SetUp method.
+        /// Gets the data specific to SetUp and TearDown test-methods.
         /// </summary>
-        public ITestObjectBuilder TestObjectCreator { get; private set; }
+        public ISetupAndTearDownContext SetUpTearDownContext { get; private set; }
 
         /// <summary>
         /// Gets the current type to create a test method for.
