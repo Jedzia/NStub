@@ -29,6 +29,12 @@ namespace NStub.CSharp
     /// </summary>
     public abstract class BaseCSharpCodeGenerator
     {
+        #region Fields
+
+        private readonly ITestBuilderFactory testBuilders;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -36,29 +42,41 @@ namespace NStub.CSharp
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
         /// <param name="codeNamespace">The code namespace.</param>
+        /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="outputDirectory">The output directory.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        /// <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
+        ///   
         /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
         protected BaseCSharpCodeGenerator(
-            CodeNamespace codeNamespace,
+            CodeNamespace codeNamespace, 
+            ITestBuilderFactory testBuilders,
             string outputDirectory)
         {
             // Null arguments will not be accepted
             if (codeNamespace == null)
             {
                 throw new ArgumentNullException(
-                    "codeNamespace",
+                    "codeNamespace", 
+                    Exceptions.ParameterCannotBeNull);
+            }
+
+            // Null arguments will not be accepted
+            if (testBuilders == null)
+            {
+                throw new ArgumentNullException(
+                    "testBuilders",
                     Exceptions.ParameterCannotBeNull);
             }
 
             if (outputDirectory == null)
             {
                 throw new ArgumentNullException(
-                    "outputDirectory",
+                    "outputDirectory", 
                     Exceptions.ParameterCannotBeNull);
             }
 
@@ -66,7 +84,7 @@ namespace NStub.CSharp
             if (outputDirectory.Length == 0)
             {
                 throw new ArgumentException(
-                    Exceptions.StringCannotBeEmpty,
+                    Exceptions.StringCannotBeEmpty, 
                     "outputDirectory");
             }
 
@@ -78,6 +96,7 @@ namespace NStub.CSharp
 
             this.CodeNamespace = codeNamespace;
             this.OutputDirectory = outputDirectory;
+            this.testBuilders = testBuilders;
         }
 
         #endregion
@@ -99,6 +118,37 @@ namespace NStub.CSharp
         public string OutputDirectory { get; set; }
 
         /// <summary>
+        /// Gets or sets the test builder repository.
+        /// </summary>
+        /// <value>
+        /// The test builders.
+        /// </value>
+        /// <exception cref="InvalidOperationException">The TestBuilders can only set once.</exception>
+        public ITestBuilderFactory TestBuilders
+        {
+            get
+            {
+                /*if (this.testBuilders == null)
+                {
+                    this.testBuilders = new TestBuilderFactory(
+                        new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
+                }*/
+
+                return this.testBuilders;
+            }
+
+            /*set
+            {
+                if (this.testBuilders != null)
+                {
+                    throw new InvalidOperationException("The TestBuilders can only set once.");
+                }
+
+                this.testBuilders = value;
+            }*/
+        }
+
+        /// <summary>
         /// Gets the current test class declaration. The value is only valid during execution of 
         /// the <see cref="GenerateCode"/> method.
         /// </summary>
@@ -114,8 +164,8 @@ namespace NStub.CSharp
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <returns>A reference to the created member field of the test.</returns>
         public static CodeMemberField AddTestMemberField(
-            CodeTypeDeclaration codeTypeDeclaration,
-            string testObjectType,
+            CodeTypeDeclaration codeTypeDeclaration, 
+            string testObjectType, 
             string testObjectName)
         {
             var memberField = CreateMemberField(testObjectType, testObjectName);
@@ -150,7 +200,7 @@ namespace NStub.CSharp
         public void GenerateCode()
         {
             // We want to write a separate file for each type
-            foreach (CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
+            foreach(CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
             {
                 this.CurrentTestClassDeclaration = testClassDeclaration;
 
@@ -181,17 +231,13 @@ namespace NStub.CSharp
                 var codeConstructor = new CodeConstructor { Attributes = MemberAttributes.Public };
                 testClassDeclaration.Members.Add(codeConstructor);
 
-                // Set out member names correctly
-                foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
-                {
-                    this.GenerateCodeTypeMember(typeMember);
-                }
+                var initialMembers = testClassDeclaration.Members.Cast<CodeTypeMember>().ToArray();
 
                 // Setup and TearDown
                 var setTearContext = this.GenerateSetupAndTearDown(
-                    codeNamespace,
-                    testClassDeclaration,
-                    testObjectName,
+                    codeNamespace, 
+                    testClassDeclaration, 
+                    testObjectName, 
                     testObjectMemberField);
 
                 this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
@@ -202,6 +248,15 @@ namespace NStub.CSharp
 
                 // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(testClassDeclaration);
+
+                // Set out member names correctly 
+                // foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
+                foreach(CodeTypeMember typeMember in initialMembers)
+                {
+                    var memberBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, typeMember, null, null);
+                    this.GenerateCodeTypeMember(memberBuildContext);
+                }
 
                 RemoveDuplicatedMembers(testClassDeclaration);
                 SortMembers(testClassDeclaration);
@@ -214,7 +269,7 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="typeMember">The type member that name gets modified.</param>
         /// <param name="replacement">The replacement string.</param>
-        protected static void ReplaceTestInTestName(CodeTypeMember typeMember, string replacement)
+        public static void ReplaceTestInTestName(CodeTypeMember typeMember, string replacement)
         {
             typeMember.Name = typeMember.Name.Replace("Test", replacement);
         }
@@ -231,21 +286,21 @@ namespace NStub.CSharp
         /// Is <c>null</c>, when none is created.
         /// </returns>
         protected virtual ITestObjectBuilder ComposeTestSetupMethod(
-            CodeMemberMethod setUpMethod,
-            CodeMemberField testObjectMemberField,
-            string testObjectName,
+            CodeMemberMethod setUpMethod, 
+            CodeMemberField testObjectMemberField, 
+            string testObjectName, 
             Type testObjectType)
         {
-            ITestObjectBuilder cr = new TestObjectBuilder(
+            ITestObjectBuilder objectBuilder = new TestObjectBuilder(
                 setUpMethod, testObjectMemberField, testObjectName, testObjectType);
-            
+
             // var testObjectConstructor = cr.BuildTestObject();
             // cr.AssignParameters(this.CurrentTestClassDeclaration, cr.TestObjectMemberFieldCreateExpression);
-            cr.BuildTestObject();
-            cr.AssignParameters(this.CurrentTestClassDeclaration);
+            objectBuilder.BuildTestObject();
+            objectBuilder.AssignParameters(this.CurrentTestClassDeclaration);
 
             // return testObjectConstructor;
-            return cr;
+            return objectBuilder;
 
             /*var invokeExpression = new CodeMethodInvokeExpression(
                             new CodeTypeReferenceExpression("Assert"),
@@ -273,8 +328,8 @@ namespace NStub.CSharp
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         protected virtual void ComposeTestTearDownMethod(
-            CodeMemberMethod teardownMethod,
-            CodeMemberField testObjectMemberField,
+            CodeMemberMethod teardownMethod, 
+            CodeMemberField testObjectMemberField, 
             string testObjectName)
         {
         }
@@ -290,19 +345,19 @@ namespace NStub.CSharp
             }
         }*/
 
-        /// <summary>
+        /*/// <summary>
         /// Handle event related stuff before type generation.
         /// </summary>
         /// <param name="typeMember">The type member.</param>
         /// <param name="eventName">Name of the event.</param>
-        protected abstract void ComputeCodeMemberEvent(CodeMemberMethod typeMember, string eventName);
+        protected abstract void ComputeCodeMemberEvent(CodeMemberMethod typeMember, string eventName);*/
 
-        /// <summary>
+        /*/// <summary>
         /// Handle property related stuff before type generation.
         /// </summary>
         /// <param name="typeMember">The type member.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected abstract void ComputeCodeMemberProperty(CodeMemberMethod typeMember, string propertyName);
+        protected abstract void ComputeCodeMemberProperty(CodeMemberMethod typeMember, string propertyName);*/
 
         /// <summary>
         /// Creates a custom member method with an attribute of the same name.
@@ -313,8 +368,8 @@ namespace NStub.CSharp
         {
             var codeMemberMethod = new CustomCodeMemberMethod
                                        {
-                                           Attributes = MemberAttributes.Public,
-                                           Name = methodName,
+                                           Attributes = MemberAttributes.Public, 
+                                           Name = methodName, 
                                            ReturnType = new CodeTypeReference(typeof(void))
                                        };
 
@@ -341,7 +396,8 @@ namespace NStub.CSharp
         protected virtual void CreateStubForCodeMemberMethod(CodeMemberMethod codeMemberMethod)
         {
             // Clean the member name and append 'Test' to the end of it
-            codeMemberMethod.Name = Utility.ScrubPathOfIllegalCharacters(codeMemberMethod.Name);
+            var origName = Utility.ScrubPathOfIllegalCharacters(codeMemberMethod.Name);
+            codeMemberMethod.Name = origName;
             codeMemberMethod.Name = codeMemberMethod.Name + "Test";
 
             // Standard test methods accept no parameters and return void.
@@ -357,7 +413,7 @@ namespace NStub.CSharp
             codeMemberMethod.Statements.Add(
                 new CodeCommentStatement(
                     "TODO: Implement unit test for " +
-                    codeMemberMethod.Name));
+                    origName));
         }
 
         /// <summary>
@@ -366,7 +422,8 @@ namespace NStub.CSharp
         /// <param name="context">Contains data specific to SetUp and TearDown test-method generation.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
-        protected virtual void GenerateAdditional(ISetupAndTearDownContext context, string testObjectName, CodeMemberField testObjectMemberField)
+        protected virtual void GenerateAdditional(
+            ISetupAndTearDownContext context, string testObjectName, CodeMemberField testObjectMemberField)
         {
         }
 
@@ -429,10 +486,11 @@ namespace NStub.CSharp
         /// <summary>
         /// Processes the code type members of the compilation unit.
         /// </summary>
-        /// <param name="typeMember">The type member to process.</param>
-        private void GenerateCodeTypeMember(CodeTypeMember typeMember)
+        /// <param name="context">The build context for the test to create.</param>
+        private void GenerateCodeTypeMember(IMemberBuildContext context)
         {
-            var typeMemberName = typeMember.Name;
+            var typeMember = context.TypeMember;
+            var initialTypeMemberName = typeMember.Name;
             if (typeMember is CodeMemberMethod)
             {
                 // We don't generate default constructors
@@ -443,24 +501,47 @@ namespace NStub.CSharp
                         // before stub has created.
                         // PreComputeCodeMemberProperty(typeMember);
                     }*/
+
+                    var builders = this.TestBuilders.GetBuilder(context).ToArray();
+                    foreach(var memberBuilder in builders)
+                    {
+                        var testName = memberBuilder.GetTestName(context);
+                        typeMember.Name = testName;
+                    }
+
                     this.CreateStubForCodeMemberMethod(typeMember as CodeMemberMethod);
 
-                    if (typeMember.Name.Contains("get_") || typeMember.Name.Contains("set_"))
+                    foreach (var memberBuilder in builders)
+                    {
+                        ComputeCodeMember(memberBuilder, context);
+                    }
+
+                    /*if (context.IsProperty)
                     {
                         var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
 
                         // hmm Generate to generate new and compute to process existing !?!
                         this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyName);
                     }
-                    else if (typeMember.Name.Contains("add_") || typeMember.Name.Contains("remove_"))
+                    else if (context.IsEvent)
                     {
                         var eventName = typeMemberName.Replace("add_", string.Empty).Replace("remove_", string.Empty);
 
                         // hmm Generate to generate new and compute to process existing !?!
                         this.ComputeCodeMemberEvent(typeMember as CodeMemberMethod, eventName);
-                    }
+                    }*/
                 }
             }
+        }
+
+        /// <summary>
+        /// Computes the code member test method.
+        /// </summary>
+        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
+        /// <param name="context">The build context of the test method member.</param>
+        protected virtual void ComputeCodeMember(IMemberBuilder memberBuilder, IMemberBuildContext context)
+        {
+            memberBuilder.Build(context);
         }
 
         /// <summary>
@@ -472,9 +553,9 @@ namespace NStub.CSharp
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <returns>Data specific to SetUp and TearDown test-method generation.</returns>
         private ISetupAndTearDownContext GenerateSetupAndTearDown(
-            CodeNamespace codeNamespace,
-            CodeTypeDeclaration testClassDeclaration,
-            string testObjectName,
+            CodeNamespace codeNamespace, 
+            CodeTypeDeclaration testClassDeclaration, 
+            string testObjectName, 
             CodeMemberField testObjectMemberField)
         {
             var setUpMethod = this.CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
@@ -488,7 +569,8 @@ namespace NStub.CSharp
             this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
             testClassDeclaration.Members.Add(tearDownMethod);
 
-            var result = new SetupAndTearDownContext(codeNamespace, testClassDeclaration, setUpMethod, tearDownMethod, creator);
+            var result = new SetupAndTearDownContext(
+                codeNamespace, testClassDeclaration, setUpMethod, tearDownMethod, creator);
             return result;
 
             /*var assignedMockObjects = this.ComposeTestSetupMockery(
@@ -522,8 +604,8 @@ namespace NStub.CSharp
                 new IndentedTextWriter(new StreamWriter(sourceFile, false), "  ");
             var codeGenerationOptions = new CodeGeneratorOptions { BracingStyle = "C" };
             csharpCodeProvider.GenerateCodeFromNamespace(
-                codeNamespace,
-                indentedTextWriter,
+                codeNamespace, 
+                indentedTextWriter, 
                 codeGenerationOptions);
             indentedTextWriter.Flush();
             indentedTextWriter.Close();

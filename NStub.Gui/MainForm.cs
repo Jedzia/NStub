@@ -18,6 +18,9 @@ namespace NStub.Gui
     using System.Windows.Forms;
     using NStub.Core;
     using NStub.CSharp;
+    using NStub.CSharp.MbUnit;
+    using NStub.CSharp.MbUnitRhinoMocks;
+    using NStub.CSharp.ObjectGeneration;
     using NStub.Gui.Properties;
 
     /// <summary>e
@@ -207,12 +210,19 @@ namespace NStub.Gui
                         // new NStubCore(codeNamespace, outputDirectory,
                         // new CSharpMbUnitCodeGenerator(codeNamespace, outputDirectory));
                         //var nStub =
-                         //   new NStubCore(
-                         //       codeNamespace,
-                          //      outputDirectory,
-                         //       new CSharpMbUnitRhinoMocksCodeGenerator(codeNamespace, outputDirectory));
+                        //   new NStubCore(
+                        //       codeNamespace,
+                        //      outputDirectory,
+                        //       new CSharpMbUnitRhinoMocksCodeGenerator(codeNamespace, outputDirectory));
 
-                        var codeGenerator = (ICodeGenerator)Activator.CreateInstance((Type)cbGenerators.SelectedItem, new object[] { codeNamespace, outputDirectory });
+                        //var testBuilders = new TestBuilderFactory(new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
+                        var testBuilders = new TestBuilderFactory();
+                        var codeGenerator = (ICodeGenerator)Activator.CreateInstance((Type)cbGenerators
+                            .SelectedItem, new object[]
+                         {
+                             codeNamespace, testBuilders, outputDirectory
+                         });
+
                         var nStub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
                         nStub.GenerateCode();
 

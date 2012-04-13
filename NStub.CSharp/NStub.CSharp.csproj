@@ -64,13 +64,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseCSharpCodeGenerator.cs" />
+    <Compile Include="BuildContext\IMemberBuildContext.cs" />
+    <Compile Include="BuildContext\MemberBuildContext.cs" />
+    <Compile Include="BuildContext\MemberBuildContextBase.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownContext.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBase.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollection.cs" />
+    <Compile Include="ObjectGeneration\BuildHandler.cs" />
     <Compile Include="ObjectGeneration\ConstructorAssignment.cs" />
-    <Compile Include="CSharpMbUnitCodeGenerator.cs" />
+    <Compile Include="MbUnit\CSharpMbUnitCodeGenerator.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
-    <Compile Include="CSharpMbUnitRhinoMocksCodeGenerator.cs" />
+    <Compile Include="MbUnitRhinoMocks\CSharpMbUnitRhinoMocksCodeGenerator.cs" />
     <Compile Include="CSharpProjectGenerator.cs" />
     <Compile Include="Exceptions.Designer.cs">
       <DependentUpon>Exceptions.resx</DependentUpon>
@@ -80,8 +84,16 @@
     <Compile Include="Guard.cs" />
     <Compile Include="ImplicitVariableDeclarationStatement.cs" />
     <Compile Include="ObjectGeneration\ConstructorAssignmentCollection.cs" />
+    <Compile Include="ObjectGeneration\EventBuilder.cs" />
+    <Compile Include="ObjectGeneration\IBuildHandler.cs" />
+    <Compile Include="ObjectGeneration\IMemberBuilder.cs" />
+    <Compile Include="ObjectGeneration\ITestBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />
+    <Compile Include="ObjectGeneration\MemberBuilder.cs" />
+    <Compile Include="ObjectGeneration\MethodBuilder.cs" />
     <Compile Include="ObjectGeneration\ParameterInfoCollection.cs" />
+    <Compile Include="ObjectGeneration\PropertyBuilder.cs" />
+    <Compile Include="ObjectGeneration\TestBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\TestObjectBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContext.cs" />

@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp
+namespace NStub.CSharp.MbUnitRhinoMocks
 {
     using System;
     using System.CodeDom;
@@ -17,6 +17,8 @@ namespace NStub.CSharp
     using System.Linq;
     using System.Reflection;
     using NStub.CSharp.BuildContext;
+    using NStub.CSharp.MbUnit;
+    using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
 
     /// <summary>
@@ -34,15 +36,18 @@ namespace NStub.CSharp
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
         /// <param name="codeNamespace">The code namespace.</param>
+        /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="outputDirectory">The output directory.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        /// <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
+        ///   
         /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
-        public CSharpMbUnitRhinoMocksCodeGenerator(CodeNamespace codeNamespace, string outputDirectory)
-            : base(codeNamespace, outputDirectory)
+        public CSharpMbUnitRhinoMocksCodeGenerator(CodeNamespace codeNamespace, ITestBuilderFactory testBuilders, string outputDirectory)
+            : base(codeNamespace,testBuilders, outputDirectory)
         {
         }
 

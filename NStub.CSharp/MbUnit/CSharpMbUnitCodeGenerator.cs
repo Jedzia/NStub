@@ -8,14 +8,15 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp
+namespace NStub.CSharp.MbUnit
 {
     using System.CodeDom;
     using System.Collections.Generic;
     using System.IO;
-    using MbUnit.Framework;
+    using global::MbUnit.Framework;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
+    using NStub.CSharp.ObjectGeneration;
 
     /// <summary>
     /// The <see cref="CSharpMbUnitCodeGenerator"/> is responsible for the generation of the individual
@@ -32,15 +33,18 @@ namespace NStub.CSharp
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
         /// <param name="codeNamespace">The code namespace.</param>
+        /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="outputDirectory">The output directory.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        /// <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
+        ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
+        ///   
         /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
-        public CSharpMbUnitCodeGenerator(CodeNamespace codeNamespace, string outputDirectory)
-            : base(codeNamespace, outputDirectory)
+        public CSharpMbUnitCodeGenerator(CodeNamespace codeNamespace, ITestBuilderFactory testBuilders, string outputDirectory)
+            : base(codeNamespace, testBuilders, outputDirectory)
         {
         }
 
@@ -77,7 +81,7 @@ namespace NStub.CSharp
             teardownMethod.Statements.Add(as1);
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Handle event related stuff before type generation.
         /// </summary>
         /// <param name="typeMember">The type member.</param>
@@ -94,55 +98,7 @@ namespace NStub.CSharp
             }
 
             ReplaceTestInTestName(typeMember, "AddAndRemove");
-        }
-
-        /// <summary>
-        /// Handle property related stuff before type generation.
-        /// </summary>
-        /// <param name="typeMember">The type member.</param>
-        /// <param name="propertyName">Name of the property.</param>
-        protected override void ComputeCodeMemberProperty(CodeMemberMethod typeMember, string propertyName)
-        {
-            // var methodMemberInfo = typeMember.UserData["MethodMemberInfo"];
-            typeMember.Name = "Property" + propertyName + "NormalBehavior";
-
-            /*if (typeMember.Name.Contains("get_"))
-                        {
-                            typeMember.Name = typeMember.Name.Replace("get_", "Property");
-                        }
-                        else if (typeMember.Name.Contains("set_"))
-                        {
-                            typeMember.Name = typeMember.Name.Replace("set_", "Property");
-                        }*/
-
-            // typeMember.Name += "NormalBehavior";
-            // ReplaceTestInTestName(typeMember, "NormalBehavior");
-            var variableDeclaration = new CodeVariableDeclarationStatement(
-                "var", 
-                "expected", 
-                new CodePrimitiveExpression("Testing"));
-
-            typeMember.Statements.Add(variableDeclaration);
-
-            variableDeclaration = new ImplicitVariableDeclarationStatement(
-                "actual", new CodePrimitiveExpression("Testing"));
-            typeMember.Statements.Add(variableDeclaration);
-
-            // Creates a code expression for a CodeExpressionStatement to contain.
-            var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"), 
-                "AreEqual", 
-                new CodeVariableReferenceExpression("expected"), 
-                new CodeVariableReferenceExpression("actual"));
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(invokeExpression);
-
-            // A C# code generator produces the following source code for the preceeding example code:
-
-            // Console.Write( "Example string" );
-            typeMember.Statements.Add(invokeExpression);
-        }
+        }*/
 
         /// <summary>
         /// Generates additional members of the test class.

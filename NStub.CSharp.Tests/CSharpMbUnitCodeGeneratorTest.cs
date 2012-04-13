@@ -5,7 +5,9 @@ using NUnit.Framework;
 
 namespace NStub.CSharp.Tests
 {
-	/// <summary>
+    using NStub.CSharp.MbUnit;
+
+    /// <summary>
 	/// This class exercises all major functionality found in the 
 	/// CSharpMbUnitCodeGenerator class.
 	/// </summary>
@@ -61,7 +63,7 @@ namespace NStub.CSharp.Tests
 		{
 			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
 			_CSharpMbUnitCodeGenerator =
-				new CSharpMbUnitCodeGenerator(codeNamespace, _outputDirectory);
+				new CSharpMbUnitCodeGenerator(codeNamespace, null, _outputDirectory);
 		} 
 
 		#endregion SetUp (Public)
