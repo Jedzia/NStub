@@ -88,6 +88,14 @@ namespace NStub.CSharp.BuildContext
         bool IsEvent { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is a constructor.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a constructor; otherwise, <c>false</c>.
+        /// </value>
+        bool IsConstructor { get; }
+
+        /// <summary>
         /// Gets the member info about the current test method.
         /// </summary>
         MethodInfo MemberInfo { get; }

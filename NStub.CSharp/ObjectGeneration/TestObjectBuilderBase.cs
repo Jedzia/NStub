@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.CodeDom;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Base class for a test-class member field generator.
@@ -51,6 +52,19 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         #region Properties
+
+        internal ConstructorAssignmentCollection assignments;
+
+        /// <summary>
+        /// Gets the assignments related to this instance.
+        /// </summary>
+        public IEnumerable<AssignmentInfoCollection> Assignments
+        {
+            get
+            {
+                return this.assignments;
+            }
+        }
 
         /// <summary>
         /// Gets the build data dictionary that stores generation wide category/key/value properties.
@@ -108,6 +122,12 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
         public abstract void AssignParameters(
             CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor);
+
+        public abstract void AssignExtra(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod testMethod,
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments);
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization

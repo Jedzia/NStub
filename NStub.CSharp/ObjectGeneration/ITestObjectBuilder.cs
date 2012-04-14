@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.CodeDom;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Has the capability of creating new test objects.
@@ -73,6 +74,17 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
         void AssignParameters(
             CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor);
+
+        void AssignExtra(
+            CodeTypeDeclaration testClassDeclaration, 
+            CodeMemberMethod testMethod, 
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments);
+
+        /// <summary>
+        /// Gets the assignments related to this instance.
+        /// </summary>
+        IEnumerable<AssignmentInfoCollection> Assignments { get; }
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization

@@ -19,7 +19,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// that is preferably used in code generation.
     /// to a assignment, that should be used.
     /// </summary>
-    internal class AssignmentInfoCollection : IEnumerable<ConstructorAssignment>
+    public class AssignmentInfoCollection : IEnumerable<ConstructorAssignment>
     {
         #region Fields
 

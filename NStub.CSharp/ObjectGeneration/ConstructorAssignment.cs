@@ -15,7 +15,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// <summary>
     /// Holds a mapping from parameter name to code creation expressions.
     /// </summary>
-    internal class ConstructorAssignment
+    public class ConstructorAssignment
     {
         #region Constructors
 

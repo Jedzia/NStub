@@ -28,7 +28,6 @@ namespace NStub.CSharp.ObjectGeneration
         internal TestObjectCreator() { }*/
         #region Fields
 
-        private ConstructorAssignmentCollection assignments;
 
         #endregion
 
@@ -55,17 +54,6 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         #region Properties
-
-        /// <summary>
-        /// Gets the assignments related to this instance.
-        /// </summary>
-        public IEnumerable<AssignmentInfoCollection> Assignments
-        {
-            get
-            {
-                return this.assignments;
-            }
-        }
 
         /// <summary>
         /// Gets a value indicating whether this instance has ready initialized parameter assignments.
@@ -113,21 +101,6 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         /// <summary>
-        /// Creates a reference to a member field and initializes it with a new instance of the specified parameter type.
-        /// </summary>
-        /// <param name="type">Defines the type of the new object.</param>
-        /// <param name="memberField">Name of the referenced member field.</param>
-        /// <returns>An assignment statement for the specified member field.</returns>
-        /// <remarks>Produces a statement like: 
-        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.</remarks>
-        public static CodeAssignStatement CreateInitializeMemberField(Type type, string memberField)
-        {
-            var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
-            var objectCreate1 = new CodeObjectCreateExpression(type.FullName, new CodeExpression[] { });
-            return new CodeAssignStatement(fieldRef1, objectCreate1);
-        }
-
-        /// <summary>
         /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
         /// expression.
         /// </summary>
@@ -170,9 +143,64 @@ namespace NStub.CSharp.ObjectGeneration
                 }
 
                 // reorder the testObject initializer to the bottom of the SetUp method.
-                this.ReorderSetupStatement(testObjectInitializerPosition);
+                this.ReorderSetupStatement(SetUpMethod, testObjectInitializerPosition);
             }
         }
+
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
+        /// expression.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        public override void AssignExtra(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod testMethod,
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments)
+        {
+            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
+            Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
+
+            // Guard.NotNull(() => this.assignments, this.assignments);
+            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
+            {
+            }
+
+            if (this.HasParameterAssignments)
+            {
+                var testObjectInitializerPosition = testMethod.Statements.Count - 1;
+
+                var ctorparameters = ctorAssignments.UsedConstructor.GetParameters();
+                if (ctorparameters.Length > 1)
+                {
+                    
+                }
+                foreach (var para in ctorparameters)
+                {
+                    var assignment = ctorAssignments[para.Name];
+                    if (assignment == null)
+                    {
+                        continue;
+                    }
+
+                    // Add the member field to the test class.
+                    testClassDeclaration.Members.Add(assignment.MemberField);
+                    //this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+
+                    // Add a local variable for the constructor parameter.
+                    testMethod.Statements.Add(assignment.AssignStatement);
+
+                    // Add the local variable to the constructor initializer in the object create expression 
+                    // (e.g. SetUp method, test object constructor) of the specified method.
+                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
+                }
+
+                // reorder the testObject initializer to the bottom of the SetUp method.
+                this.ReorderSetupStatement(testMethod, testObjectInitializerPosition);
+            }
+        }
+
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization
@@ -361,6 +389,7 @@ namespace NStub.CSharp.ObjectGeneration
                 {
                     most = parameterAmount;
                     mostAssignmentInfoCollection = assignmentInfoCollection;
+                    tempAssignments.Add(assignmentInfoCollection);
                 }
                 else
                 {
@@ -429,7 +458,7 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 var memberField = BaseCSharpCodeGenerator.CreateMemberField(
                     paraInfo.ParameterType.FullName, paraInfo.Name);
-                var fieldAssignment = CreateInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
+                var fieldAssignment = CodeMethodComposer.CreateInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
                 var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
                 assignmentInfoCollection.AddAssignment(assignment);
             }
@@ -437,16 +466,20 @@ namespace NStub.CSharp.ObjectGeneration
             return assignmentInfoCollection;
         }
 
+        public void TryFindConstructorAssignment(string parameter)
+        {
+        }
+
         /// <summary>
         /// Reorders the statement at the specified position to the last position of the code generation statements
         /// in the <see cref="TestObjectBuilderBase.SetUpMethod"/>.
         /// </summary>
         /// <param name="testObjectInitializerPosition">The position of the statement to push to the bottom.</param>
-        private void ReorderSetupStatement(int testObjectInitializerPosition)
+        private void ReorderSetupStatement(CodeMemberMethod method, int testObjectInitializerPosition)
         {
-            var removedTypedec = SetUpMethod.Statements[testObjectInitializerPosition];
-            SetUpMethod.Statements.RemoveAt(testObjectInitializerPosition);
-            SetUpMethod.Statements.Add(removedTypedec);
+            var removedTypedec = method.Statements[testObjectInitializerPosition];
+            method.Statements.RemoveAt(testObjectInitializerPosition);
+            method.Statements.Add(removedTypedec);
         }
     }
 }

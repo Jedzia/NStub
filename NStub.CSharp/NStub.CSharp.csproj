@@ -72,6 +72,7 @@
     <Compile Include="ObjectGeneration\AssignmentInfoCollection.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollection.cs" />
     <Compile Include="ObjectGeneration\BuildHandler.cs" />
+    <Compile Include="ObjectGeneration\CodeMethodComposer.cs" />
     <Compile Include="ObjectGeneration\ConstructorAssignment.cs" />
     <Compile Include="MbUnit\CSharpMbUnitCodeGenerator.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
@@ -85,6 +86,7 @@
     <Compile Include="Guard.cs" />
     <Compile Include="ImplicitVariableDeclarationStatement.cs" />
     <Compile Include="ObjectGeneration\ConstructorAssignmentCollection.cs" />
+    <Compile Include="ObjectGeneration\ConstructorBuilder.cs" />
     <Compile Include="ObjectGeneration\EventBuilder.cs" />
     <Compile Include="ObjectGeneration\IBuilderData.cs" />
     <Compile Include="ObjectGeneration\IBuildHandler.cs" />

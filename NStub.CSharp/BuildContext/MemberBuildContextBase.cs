@@ -118,6 +118,29 @@ namespace NStub.CSharp.BuildContext
         }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is a constructor.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a constructor; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsConstructor
+        {
+            get
+            {
+                /*if (this.MemberInfo == null)
+                {
+                    return false;
+                }*/
+                /*if (this.TypeMember is CodeConstructor)
+                {
+                    
+                }*/
+                return this.TypeMember is CodeConstructor;
+                //return this.MemberInfo.Name.StartsWith("add_") || this.MemberInfo.Name.StartsWith("remove_");
+            }
+        }
+
+        /// <summary>
         /// Contains information about the build members in a dictionary form.
         /// </summary>
         public BuildDataCollection BuildData { get; private set; }
