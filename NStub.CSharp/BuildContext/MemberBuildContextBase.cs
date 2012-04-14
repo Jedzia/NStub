@@ -188,9 +188,17 @@ namespace NStub.CSharp.BuildContext
         /// Gets the builder data specific to this builders key.
         /// </summary>
         /// <param name="category">Name of the category to request.</param>
-        /// <returns>The builder data with the <see cref="Context.TestKey"/> or <c>null</c> if nothing is found.</returns>
+        /// <returns>
+        /// The builder data with the <see cref="Context.TestKey"/> or <c>null</c> if nothing is found.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">Can't lookup category builder data without a correct TestKey propery.</exception>
         public IBuilderData GetBuilderData(string category)
         {
+            if (string.IsNullOrEmpty(this.TestKey))
+            {
+                throw new InvalidOperationException("Can't lookup category builder data without a correct TestKey propery.");
+            }
+
             IBuilderData result;
             this.BuildData.TryGetValue(category, this.TestKey, out result);
             return result;

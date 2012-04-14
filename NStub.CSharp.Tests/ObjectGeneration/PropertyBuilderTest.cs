@@ -21,7 +21,6 @@ namespace NStub.CSharp.ObjectGeneration
         [SetUp()]
         public void SetUp()
         {
-            // ToDo: Implement SetUp logic here 
             this.mocks = new MockRepository();
             this.context = this.mocks.StrictMock<NStub.CSharp.BuildContext.IMemberSetupContext>();
             this.buildcontext = this.mocks.StrictMock<NStub.CSharp.BuildContext.IMemberBuildContext>();
@@ -31,7 +30,6 @@ namespace NStub.CSharp.ObjectGeneration
         [TearDown()]
         public void TearDown()
         {
-            // ToDo: Implement TearDown logic here 
             this.testObject = null;
         }
 

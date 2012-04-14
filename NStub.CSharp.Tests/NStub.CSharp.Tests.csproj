@@ -64,6 +64,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildContext\MemberBuildContextBaseTest.cs" />
+    <Compile Include="BuildContext\MemberBuildContextTest.cs" />
+    <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
+    <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
+    <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />
     <Compile Include="CSharpProjectGeneratorTest.cs" />
