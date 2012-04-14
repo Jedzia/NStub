@@ -7,8 +7,16 @@ using NStub.Core;
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    /// <summary>
+    /// Provides helper methods for composition of <see cref="CodeMemberMethod"/> method members.
+    /// </summary>
     public static class CodeMethodComposer
     {
+        /// <summary>
+        /// Creates the stub for the specified code member method.  This method actually
+        /// implements the method body for the test method.
+        /// </summary>
+        /// <param name="codeMemberMethod">The code member method.</param>
         public static void CreateTestStubForMethod(CodeMemberMethod codeMemberMethod)
         {
             // Clean the member name and append 'Test' to the end of it
@@ -30,6 +38,27 @@ namespace NStub.CSharp.ObjectGeneration
                 new CodeCommentStatement(
                     "TODO: Implement unit test for " +
                     origName));
+
+            //Assert.Inconclusive("Verify the correctness of this test method.");
+        }
+
+        /// <summary>
+        /// Appends a 'Assert.Inconclusive("Text")' statement to the specified method.
+        /// </summary>
+        /// <param name="codeMemberMethod">The code member method.</param>
+        public static void AppendAssertInconclusive(CodeMemberMethod codeMemberMethod, string inconclusiveText)
+        {
+
+            // add a blank line.
+            codeMemberMethod.Statements.Add(new CodeSnippetStatement(""));
+
+            // builds Assert.Inconclusive("Verify the correctness of this test method.");
+            var assertExpr = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "Inconclusive",
+                new CodePrimitiveExpression(inconclusiveText));
+                //new CodePrimitiveExpression("Verify the correctness of this test method."));
+            codeMemberMethod.Statements.Add(assertExpr);
         }
 
         /// <summary>

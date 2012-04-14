@@ -82,7 +82,14 @@ namespace NStub.CSharp.ObjectGeneration
                 
             }*/
 
+            Guard.NotNull(() => context, context);
             var typeMember = context.TypeMember;
+
+            if (!(typeMember is CodeMemberMethod))
+            {
+                throw new ArgumentOutOfRangeException("context", "The supplied build context is not for a CodeMemberMethod type.");
+            }
+
             var typeMemberName = typeMember.Name;
             var propertyName = typeMemberName;
             //var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
@@ -104,7 +111,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         protected override string DetermineTestName(IMemberSetupContext context, string originalName)
         {
-            var typeMember = context.TypeMember;
+            //var typeMember = context.TypeMember;
             var typeMemberName = originalName;// typeMember.Name;
             var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
             // var methodMemberInfo = typeMember.UserData["MethodMemberInfo"];

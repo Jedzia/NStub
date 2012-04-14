@@ -8,14 +8,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Solution Items\NStub.NDepend.xml = Solution Items\NStub.NDepend.xml
 		Solution Items\NStub.nunit = Solution Items\NStub.nunit
 		nstub.tws = nstub.tws
+		nstubSamCat.tws = nstubSamCat.tws
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External Dependencies", "External Dependencies", "{C498BE3D-7D06-4FED-848E-2CAEE491A5A9}"
 	ProjectSection(SolutionItems) = preProject
 		External Dependencies\nunit.framework.dll = External Dependencies\nunit.framework.dll
 		External Dependencies\nunit.framework.xml = External Dependencies\nunit.framework.xml
-		External Dependencies\Rhino.Mocks.dll = External Dependencies\Rhino.Mocks.dll
-		External Dependencies\Rhino.Mocks.xml = External Dependencies\Rhino.Mocks.xml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NStub.CSharp", "NStub.CSharp\NStub.CSharp.csproj", "{20A2C8B8-3C1E-47C4-AC56-277476293B62}"

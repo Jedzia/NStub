@@ -583,6 +583,13 @@ namespace NStub.CSharp
                     ComputeCodeMember(memberBuilder, context);
                 }
 
+                if (!(typeMember is CodeConstructor))
+                {
+                    CodeMethodComposer.AppendAssertInconclusive(
+                        typeMember as CodeMemberMethod,
+                        "Verify the correctness of this test method.");
+                }
+
                 /*if (context.IsProperty)
                 {
                     var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
