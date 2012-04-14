@@ -68,6 +68,7 @@
     <Compile Include="BuildContext\MemberBuildContextTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
+    <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />

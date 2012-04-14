@@ -72,6 +72,7 @@ namespace NStub.CSharp.ObjectGeneration
 
             testObject.Build(this.buildcontext);
 
+            // Todo: check if only the ending "Test" gets replaced.
             var expected = "TypeMemberNormalBehavior";
             var actual = typeMember.Name;
             Assert.AreEqual(expected, actual);

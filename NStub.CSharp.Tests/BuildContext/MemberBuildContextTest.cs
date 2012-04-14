@@ -8,30 +8,24 @@ namespace NStub.CSharp.ObjectGeneration
     using Rhino.Mocks;
     using System.Reflection;
     using NStub.CSharp.Tests.Stubs;
-    
-    
+
+
     public partial class MemberBuildContextTest
     {
-        
+
         private NStub.CSharp.ObjectGeneration.BuildDataCollection buildData;
-        
         private System.CodeDom.CodeNamespace codeNamespace;
-        
         private MockRepository mocks;
-        
         private NStub.CSharp.BuildContext.ISetupAndTearDownContext setUpTearDownContext;
-        
         private System.CodeDom.CodeTypeDeclaration testClassDeclaration;
-        
         private MemberBuildContext testObject;
-        
         private System.CodeDom.CodeTypeMember typeMember;
-        
-        
+
+
         public MemberBuildContextTest()
         {
         }
-        
+
         [SetUp()]
         public void SetUp()
         {
@@ -40,8 +34,8 @@ namespace NStub.CSharp.ObjectGeneration
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             this.typeMember = new System.CodeDom.CodeTypeMember();
 
-            MethodInfo methodInfo = this.GetType().GetMethod("SetUp");
-            typeMember.UserData["MethodMemberInfo"] = methodInfo;
+            //MethodInfo methodInfo = this.GetType().GetMethod("SetUp");
+            //typeMember.UserData["MethodMemberInfo"] = methodInfo;
 
             this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataCollection();
             this.mocks = new MockRepository();
@@ -49,14 +43,14 @@ namespace NStub.CSharp.ObjectGeneration
             this.testObject = new MemberBuildContext(this.codeNamespace, this.testClassDeclaration, this.typeMember, this.buildData, this.setUpTearDownContext);
 
         }
-        
+
         [TearDown()]
         public void TearDown()
         {
             // ToDo: Implement TearDown logic here 
             this.testObject = null;
         }
-        
+
         [Test()]
         public void ConstructWithParametersCodeNamespaceTestClassDeclarationTypeMemberBuildDataSetUpTearDownContextTest()
         {
@@ -67,7 +61,46 @@ namespace NStub.CSharp.ObjectGeneration
             this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataCollection();
             this.testObject = new MemberBuildContext(this.codeNamespace, this.testClassDeclaration, this.typeMember, this.buildData, this.setUpTearDownContext);
         }
-        
+
+        [Test()]
+        public void ConstructWithAnyParameterIsNullShouldThrow()
+        {
+            Assert.Throws<ArgumentNullException>(() => this.testObject = new MemberBuildContext(
+                null,
+                this.testClassDeclaration,
+                this.typeMember,
+                this.buildData,
+                this.setUpTearDownContext));
+
+            Assert.Throws<ArgumentNullException>(() => this.testObject = new MemberBuildContext(
+                this.codeNamespace,
+                null,
+                this.typeMember,
+                this.buildData,
+                this.setUpTearDownContext));
+
+            Assert.Throws<ArgumentNullException>(() => this.testObject = new MemberBuildContext(
+                this.codeNamespace,
+                this.testClassDeclaration,
+                null,
+                this.buildData,
+                this.setUpTearDownContext));
+
+            Assert.Throws<ArgumentNullException>(() => this.testObject = new MemberBuildContext(
+                this.codeNamespace,
+                this.testClassDeclaration,
+                this.typeMember,
+                null,
+                this.setUpTearDownContext));
+
+            Assert.Throws<ArgumentNullException>(() => this.testObject = new MemberBuildContext(
+                this.codeNamespace,
+                this.testClassDeclaration,
+                this.typeMember,
+                this.buildData,
+                null));
+        }
+
         [Test()]
         public void PropertyBuildDataNormalBehavior()
         {
@@ -78,7 +111,7 @@ namespace NStub.CSharp.ObjectGeneration
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertyCodeNamespaceNormalBehavior()
         {
@@ -89,7 +122,7 @@ namespace NStub.CSharp.ObjectGeneration
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertyIsConstructorNormalBehavior()
         {
@@ -108,7 +141,7 @@ namespace NStub.CSharp.ObjectGeneration
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertyIsEventNormalBehavior()
         {
@@ -121,14 +154,18 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         [Test()]
-        public void PropertyIsEventWhenTypeMemberIsEvent()
+        [Row("--NULL--", false)]
+        [Row("PublicVoidMethodVoid", false)]
+        [Row("add_PublicEventObject", true)]
+        [Row("remove_PublicEventObject", true)]
+        [Row("get_PublicPropertyGetSetInt", false)]
+        [Row("set_PublicPropertyGetSetString", false)]
+        public void PropertyIsEventWhenTypeMemberIsEvent(string signature, bool expected)
         {
-            MethodInfo methodInfo = typeof(InfoApe).GetMethod("add_PublicEventObject");
-            typeMember.UserData["MethodMemberInfo"] = methodInfo;
+            SetUserData(this.typeMember, signature);
 
             // Test read access of 'IsEvent' Property.
             mocks.ReplayAll();
-            var expected = true;
             var actual = testObject.IsEvent;
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
@@ -145,156 +182,150 @@ namespace NStub.CSharp.ObjectGeneration
             mocks.VerifyAll();
         }
 
-        [Test()]
-        public void PropertyIsPropertyWhenTypeMemberIsPropertyGet()
+        /// <summary>
+        /// Set the user data with key 'MethodMemberInfo' of the specified CodeObject to a method 
+        /// from the <see cref="InfoApe"/> class. The MethodInfo resolution is done
+        /// through a <see cref="MethodInfo.GetMethod(string)"/> signature.
+        /// </summary>
+        /// <param name="codeTypeMember">The code type member which gets the <see cref="MethodInfo.UserData"/> 'MethodMemberInfo' set.</param>
+        /// <param name="methodSignature">The signature of the desired method.</param>
+        private static MethodInfo SetUserData(System.CodeDom.CodeObject codeTypeMember, string methodSignature)
         {
-            MethodInfo methodInfo = typeof(InfoApe).GetMethod("get_PublicPropertyGetSetInt");
-            typeMember.UserData["MethodMemberInfo"] = methodInfo;
+            MethodInfo methodInfo = typeof(InfoApe).GetMethod(methodSignature);
+            codeTypeMember.UserData["MethodMemberInfo"] = methodInfo;
+            return methodInfo;
+        }
+
+        [Test()]
+        [Row("--NULL--", false)]
+        [Row("PublicVoidMethodVoid", false)]
+        [Row("add_PublicEventObject", false)]
+        [Row("get_PublicPropertyGetSetInt", true)]
+        [Row("set_PublicPropertyGetSetString", true)]
+        public void PropertyIsPropertyWhenTypeMemberIsProperty(string signature, bool expected)
+        {
+            SetUserData(this.typeMember, signature);
 
             // Test read access of 'IsProperty' Property.
             mocks.ReplayAll();
-            var expected = true;
             var actual = testObject.IsProperty;
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
         }
 
-        [Test()]
-        public void PropertyIsPropertyWhenTypeMemberIsPropertySet()
-        {
-            MethodInfo methodInfo = typeof(InfoApe).GetMethod("set_PublicPropertyGetSetInt");
-            typeMember.UserData["MethodMemberInfo"] = methodInfo;
-
-            // Test read access of 'IsProperty' Property.
-            mocks.ReplayAll();
-            var expected = true;
-            var actual = testObject.IsProperty;
-            Assert.AreEqual(expected, actual);
-            mocks.VerifyAll();
-        }
 
         [Test()]
         public void PropertyMemberInfoNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyMemberInfo
-
             // Test read access of 'MemberInfo' Property.
-            var expected = "Insert expected object here";
+            mocks.ReplayAll();
             var actual = testObject.MemberInfo;
-            //Assert.AreEqual(expected, actual);
+            Assert.IsNull(actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var expected = SetUserData(this.typeMember, "set_PublicPropertyGetSetInt");
+            actual = testObject.MemberInfo;
+            Assert.AreEqual(expected, actual);
+
+            mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertyNormalBehaviorClassDeclarationNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyTestClassDeclaration
-
             // Test read access of 'TestClassDeclaration' Property.
-            var expected = new System.CodeDom.CodeTypeDeclaration();
+            mocks.ReplayAll();
+            var expected = this.testClassDeclaration;
             var actual = testObject.TestClassDeclaration;
-            //Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            mocks.VerifyAll();
         }
-        
-        [Test()]
-        public void PropertyNormalBehaviorKeyNormalBehavior()
-        {
-            // TODO: Implement unit test for PropertyTestKey
 
+        [Test()]
+        public void PropertyTestKeyNormalBehavior()
+        {
             // Test read access of 'TestKey' Property.
-            var expected = "Insert expected object here";
+            mocks.ReplayAll();
             var actual = testObject.TestKey;
-            //Assert.AreEqual(expected, actual);
+            Assert.IsNull(actual);
 
             // Test write access of 'TestKey' Property.
-            expected = "Insert setter object here";
+            var expected = "My Test Key";
             testObject.TestKey = expected;
             actual = testObject.TestKey;
-            //Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expected, actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            mocks.VerifyAll();
         }
-        
+
         [Test()]
-        public void PropertyNormalBehaviorObjectTypeNormalBehavior()
+        public void PropertyTestObjectTypeNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyTestObjectType
-
             // Test read access of 'TestObjectType' Property.
-            var expected = "Insert expected object here";
+            mocks.ReplayAll();
             var actual = testObject.TestObjectType;
-            //Assert.AreEqual(expected, actual);
+            Assert.IsNull(actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var expected = typeof(InfoApe);
+            this.testClassDeclaration.UserData["TestObjectClassType"] = expected;
+            actual = testObject.TestObjectType;
+            Assert.AreEqual(expected, actual);
+
+            mocks.VerifyAll();
         }
-        
+
+        [Test()]
+        public void GetBuilderDataTestThrowsWithOutTestKeySet()
+        {
+            mocks.ReplayAll();
+            Assert.Throws<InvalidOperationException>(() => testObject.GetBuilderData("CAT"));
+            mocks.VerifyAll();
+        }
+
         [Test()]
         public void GetBuilderDataTest()
         {
-            // TODO: Implement unit test for GetBuilderData
+            var expected = this.mocks.StrictMock<IBuilderData>();
+            mocks.ReplayAll();
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            // no data in buildData at all.
+            testObject.TestKey = "TheKey";
+            var actual = testObject.GetBuilderData("CAT");
+            Assert.IsNull(actual);
+
+            // add item with key "TheKey" to category 'CAT' and request it through GetBuilderData.
+            this.buildData.AddDataItem("CAT", "TheKey", expected);
+            actual = testObject.GetBuilderData("CAT");
+            Assert.AreEqual(expected, actual);
+
+            // request with a key that is not in buildData.
+            testObject.TestKey = "OtherKey";
+            actual = testObject.GetBuilderData("CAT");
+            Assert.IsNull(actual);
+
+            mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertySetUpTearDownContextNormalBehavior()
         {
-            // TODO: Implement unit test for PropertySetUpTearDownContext
-
             // Test read access of 'SetUpTearDownContext' Property.
-            var expected = "Insert expected object here";
+            mocks.ReplayAll();
+            var expected = setUpTearDownContext;
             var actual = testObject.SetUpTearDownContext;
-            //Assert.AreEqual(expected, actual);
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.AreEqual(expected, actual);
+            mocks.VerifyAll();
         }
-        
+
         [Test()]
         public void PropertyTypeMemberNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyTypeMember
-
             // Test read access of 'TypeMember' Property.
-            var expected = new System.CodeDom.CodeTypeMember();
+            mocks.ReplayAll();
+            var expected = typeMember;
             var actual = testObject.TypeMember;
-            //Assert.AreEqual(expected, actual);
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void EqualsTest()
-        {
-            // TODO: Implement unit test for Equals
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void GetHashCodeTest()
-        {
-            // TODO: Implement unit test for GetHashCode
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void GetTypeTest()
-        {
-            // TODO: Implement unit test for GetType
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void ToStringTest()
-        {
-            // TODO: Implement unit test for ToString
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.AreEqual(expected, actual);
+            mocks.VerifyAll();
         }
     }
 }

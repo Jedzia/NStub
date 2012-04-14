@@ -12,17 +12,11 @@ namespace NStub.CSharp.ObjectGeneration
     {
 
         private NStub.CSharp.ObjectGeneration.BuildDataCollection buildData;
-
         private System.CodeDom.CodeNamespace codeNamespace;
-
         private MockRepository mocks;
-
         private NStub.CSharp.BuildContext.ISetupAndTearDownContext setUpTearDownContext;
-
         private System.CodeDom.CodeTypeDeclaration testClassDeclaration;
-
         private MemberBuildContextBase testObject;
-
         private System.CodeDom.CodeTypeMember typeMember;
         private IBuilderData builderData;
         
