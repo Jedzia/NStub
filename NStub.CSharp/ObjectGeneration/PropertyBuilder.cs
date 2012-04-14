@@ -218,22 +218,21 @@ namespace NStub.CSharp.ObjectGeneration
             // hmm Generate to generate new and compute to process existing !?!
             var testObjectName = "testObject";
 
-            var co = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
-            var creator = co.TestObjectCreator as TestObjectBuilder;
-            creator.TryFindConstructorAssignment(propertyName);
 
-            this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, testObjectName, propertyName);
+            this.ComputeCodeMemberProperty(context, typeMember as CodeMemberMethod, propertyData, testObjectName, propertyName);
             return true;
         }
 
         /// <summary>
         /// Handle property related stuff before type generation.
         /// </summary>
+        /// <param name="context">The context. Todo: remove it with specialized parameters after devel.</param>
         /// <param name="typeMember">The type member.</param>
         /// <param name="builderData">The builder data.</param>
         /// <param name="testObjectName">Name of the test object member field.</param>
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void ComputeCodeMemberProperty(
+            IMemberBuildContext context,
             CodeMemberMethod typeMember,
             IBuilderData builderData,
             string testObjectName,
@@ -254,13 +253,27 @@ namespace NStub.CSharp.ObjectGeneration
                     // expectedRef
                 }
 
-                var propName = getAccessor.Name.Replace("get_", "");
+                var propName = propertyData.PropertyName;
+
+                    CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
+                {
+                    // devel: how to create a string initializer from possible constructor setups of the 'SetUp' method.
+                    var co = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
+                    var creator = co.TestObjectCreator as TestObjectBuilder;
+                    ConstructorAssignment ctorAssignment;
+                    var found = creator.TryFindConstructorAssignment(propName, out ctorAssignment, false);
+                    if (found)
+                    {
+                        ctorAssignmentRight = ctorAssignment.AssignStatement.Right;
+                    }
+
+                }
 
                 typeMember.Statements.Add(new CodeSnippetStatement(""));
                 typeMember.Statements.Add(new CodeCommentStatement("Test read access of '" + propName + "' Property."));
 
                 var expectedAsign = new CodeVariableDeclarationStatement("var", "expected",
-                    new CodePrimitiveExpression("Insert expected object here"));
+                    ctorAssignmentRight);
                 typeMember.Statements.Add(expectedAsign);
 
 

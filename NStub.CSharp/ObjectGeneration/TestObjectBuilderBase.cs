@@ -53,6 +53,8 @@ namespace NStub.CSharp.ObjectGeneration
 
         #region Properties
 
+        // Todo: this assignments field should be refactered into a protected property and null checks for each usage should be added.
+        // hint: this.assignments = this.AddParametersToConstructor(); in BuildTestObject() creates it.
         internal ConstructorAssignmentCollection assignments;
 
         /// <summary>

@@ -80,6 +80,23 @@ namespace NStub.CSharp.ObjectGeneration
             set { setAccessor = value; }
         }
 
+        public string PropertyName
+        {
+            get 
+            {
+                if (getAccessor != null)
+                {
+                    return getAccessor.Name.Replace("get_", "");
+                }
+                else if (setAccessor != null)
+                {
+                    return setAccessor.Name.Replace("set_", "");
+                }
+
+                throw new InvalidOperationException("Can't get the property name if both, GetAccessor and SetAccessor, aren't set.");
+            }
+        }
+
         /// <summary>
         /// Gets a value indicating whether the information of this instance is complete.
         /// </summary>

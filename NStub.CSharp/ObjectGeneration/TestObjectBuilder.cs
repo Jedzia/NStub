@@ -174,7 +174,7 @@ namespace NStub.CSharp.ObjectGeneration
                 var ctorparameters = ctorAssignments.UsedConstructor.GetParameters();
                 if (ctorparameters.Length > 1)
                 {
-                    
+
                 }
                 foreach (var para in ctorparameters)
                 {
@@ -458,7 +458,7 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 var memberField = BaseCSharpCodeGenerator.CreateMemberField(
                     paraInfo.ParameterType.FullName, paraInfo.Name);
-                var fieldAssignment = CodeMethodComposer.CreateInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
+                var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
                 var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
                 assignmentInfoCollection.AddAssignment(assignment);
             }
@@ -466,8 +466,39 @@ namespace NStub.CSharp.ObjectGeneration
             return assignmentInfoCollection;
         }
 
-        public void TryFindConstructorAssignment(string parameter)
+        public bool TryFindConstructorAssignment(string parameter, out ConstructorAssignment constructorAssignment, bool caseSensitive)
         {
+            Guard.NotNullOrEmpty(() => parameter, parameter);
+            //Guard.NotNull(() => this.assignments, this.assignments);
+            if (assignments == null)
+            {
+                constructorAssignment = null;
+                return false;
+            }
+
+            Func<string, string, bool> comparer;
+            if (caseSensitive)
+            {
+                comparer = (x, y) => x == y;
+            }
+            else
+            {
+                comparer = (x, y) => x.ToLower() == y.ToLower();
+            }
+
+            foreach (var ctorAssignments in this.assignments)
+            {
+                foreach (var assignment in ctorAssignments)
+                {
+                    if (comparer(assignment.ParameterName, parameter))
+                    {
+                        constructorAssignment = assignment;
+                        return true;
+                    }
+                }
+            }
+            constructorAssignment = null;
+            return false;
         }
 
         /// <summary>

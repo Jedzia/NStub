@@ -40,13 +40,21 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>An assignment statement for the specified member field.</returns>
         /// <remarks>Produces a statement like: 
         /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.</remarks>
-        public static CodeAssignStatement CreateInitializeMemberField(Type type, string memberField)
+        public static CodeAssignStatement CreateAndInitializeMemberField(Type type, string memberField)
         {
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
             CodeExpression assignExpr;
             if (type.IsAssignableFrom(typeof(string)))
             {
-                assignExpr = new CodePrimitiveExpression("Hehe " + memberField);
+                assignExpr = new CodePrimitiveExpression("Value of " + memberField);
+            }
+            else if (type.IsAssignableFrom(typeof(Type)))
+            {
+                assignExpr = new CodeTypeOfExpression(typeof(Object));
+            }
+            else if (type.IsAssignableFrom(typeof(int)) || type.IsAssignableFrom(typeof(uint)) || type.IsAssignableFrom(typeof(short)))
+            {
+                assignExpr = new CodePrimitiveExpression("1234");
             }
             else
             {
