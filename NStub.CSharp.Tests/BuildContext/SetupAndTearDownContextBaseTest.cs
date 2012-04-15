@@ -44,7 +44,6 @@ namespace NStub.CSharp.ObjectGeneration
         [TearDown()]
         public void TearDown()
         {
-            // ToDo: Implement TearDown logic here 
             this.testObject = null;
         }
 

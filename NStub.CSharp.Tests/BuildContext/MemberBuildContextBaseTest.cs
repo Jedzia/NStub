@@ -27,7 +27,6 @@ namespace NStub.CSharp.ObjectGeneration
         [SetUp()]
         public void SetUp()
         {
-            // ToDo: Implement SetUp logic here 
             this.codeNamespace = new System.CodeDom.CodeNamespace();
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             this.typeMember = new System.CodeDom.CodeTypeMember();
@@ -42,7 +41,6 @@ namespace NStub.CSharp.ObjectGeneration
         [TearDown()]
         public void TearDown()
         {
-            // ToDo: Implement TearDown logic here 
             this.testObject = null;
         }
         

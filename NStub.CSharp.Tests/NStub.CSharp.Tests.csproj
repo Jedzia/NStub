@@ -69,12 +69,15 @@
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
+    <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
+    <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />
     <Compile Include="CSharpProjectGeneratorTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ObjectGeneration\PropertyBuilderTest.cs" />
+    <Compile Include="Stubs\MyMemberBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NStub.Core\NStub.Core.csproj">

@@ -17,21 +17,21 @@ namespace NStub.CSharp.ObjectGeneration
         [SetUp()]
         public void SetUp()
         {
-            // ToDo: Implement SetUp logic here 
             this.testObject = new AssignmentInfoCollection();
         }
         
         [TearDown()]
         public void TearDown()
         {
-            // ToDo: Implement TearDown logic here 
             this.testObject = null;
         }
         
         [Test()]
-        public void ConstructWithParametersTest()
+        public void ConstructTest()
         {
             this.testObject = new AssignmentInfoCollection();
+            Assert.AreEqual(0, this.testObject.Count);
+            Assert.IsEmpty(this.testObject);
         }
         
         [Test()]
@@ -117,50 +117,16 @@ namespace NStub.CSharp.ObjectGeneration
         [Test()]
         public void EmptyTest()
         {
-            // TODO: Implement unit test for Empty
-
-            testObject.
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            // unit test for Empty list.
+            testObject = AssignmentInfoCollection.Empty();
+            Assert.AreEqual(0, testObject.Count);
+            Assert.IsEmpty(testObject);
         }
         
         [Test()]
         public void GetEnumeratorTest()
         {
-            // TODO: Implement unit test for GetEnumerator
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void EqualsTest()
-        {
-            // TODO: Implement unit test for Equals
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void GetHashCodeTest()
-        {
-            // TODO: Implement unit test for GetHashCode
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void GetTypeTest()
-        {
-            // TODO: Implement unit test for GetType
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void ToStringTest()
-        {
-            // TODO: Implement unit test for ToString
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.IsNotNull(testObject.GetEnumerator());
         }
     }
 }

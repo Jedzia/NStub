@@ -84,6 +84,5 @@ namespace NStub.CSharp.ObjectGeneration
             var memberBuilder = (IMemberBuilder)Activator.CreateInstance(this.Type, parameters);
             return memberBuilder;
         }
-
     }
 }
