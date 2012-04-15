@@ -479,6 +479,23 @@ namespace NStub.CSharp
         /// <returns>A list of code name spaces, to be added to the compilation unit.</returns>
         protected abstract IEnumerable<CodeNamespaceImport> RetrieveNamespaceImports();
 
+        private class DuplicatedMemberComparer : IEqualityComparer<CodeTypeMember>
+        {
+            #region IEqualityComparer<CodeTypeMember> Members
+
+            public bool Equals(CodeTypeMember x, CodeTypeMember y)
+            {
+                return x.Name.Equals(y.Name);
+            }
+
+            public int GetHashCode(CodeTypeMember obj)
+            {
+                return obj.Name.GetHashCode();
+            }
+
+            #endregion
+        }
+        private static readonly DuplicatedMemberComparer duplicatedMemberComparer = new DuplicatedMemberComparer();
         /// <summary>
         /// Since types can contain multiple overloads of the same method, once
         /// we remove the parameters from every method our type may have the 
@@ -489,6 +506,14 @@ namespace NStub.CSharp
         /// from which to remove the duplicates.</param>
         private static void RemoveDuplicatedMembers(CodeTypeDeclaration codeTypeDeclaration)
         {
+            //var ctm = codeTypeDeclaration.Members.OfType<CodeTypeMember>().ToArray();
+            var ctm2 = codeTypeDeclaration.Members.OfType<CodeTypeMember>().Distinct(duplicatedMemberComparer).ToArray();
+            codeTypeDeclaration.Members.Clear();
+            foreach (var item in ctm2)
+            {
+                codeTypeDeclaration.Members.Add(item);
+            }
+            /*return;
             for (int i = 0; i < codeTypeDeclaration.Members.Count; ++i)
             {
                 int occurrences = 0;
@@ -507,7 +532,7 @@ namespace NStub.CSharp
                         }
                     }
                 }
-            }
+            }*/
         }
 
         private class GroupMethodsComparer : IEqualityComparer<string>

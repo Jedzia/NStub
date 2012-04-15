@@ -84,6 +84,7 @@
     <add key="VBdocman_linkForExternalNotInFramework"><![CDATA[0]]></add>
     <add key="VBdocman_allowMacrosInComments"><![CDATA[0]]></add>
     <add key="VBdocman_emptyOutputFolder"><![CDATA[0]]></add>
+    <add key="VBdocman_comModules_AllIwantToTest.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BaseCSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...IMemberBuildContext.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...ISetupAndTearDownContext.cs"><![CDATA[On]]></add>
@@ -106,6 +107,7 @@
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignmentCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...EventBuilder.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...FluentCodeMemberField.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...FluentCodeMethod.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuilderData.cs"><![CDATA[On]]></add>

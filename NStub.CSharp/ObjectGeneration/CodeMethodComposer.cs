@@ -37,8 +37,7 @@ namespace NStub.CSharp.ObjectGeneration
         public static void AppendAssertInconclusive(CodeMemberMethod codeMemberMethod, string inconclusiveText)
         {
 
-            // add a blank line.
-            // builds Assert.Inconclusive("Verify the correctness of this test method.");
+            // add a blank line and Assert.Inconclusive(" specified text ..."); to the method body.
             codeMemberMethod
                 .AddBlankLine()
                 .StaticClass("Assert").Invoke("Inconclusive").With(inconclusiveText).Commit();
@@ -60,13 +59,17 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 assignExpr = new CodePrimitiveExpression("Value of " + memberField);
             }
+            else if (type.IsAssignableFrom(typeof(bool)))
+            {
+                assignExpr = new CodePrimitiveExpression(true);
+            }
             else if (type.IsAssignableFrom(typeof(Type)))
             {
                 assignExpr = new CodeTypeOfExpression(typeof(Object));
             }
             else if (type.IsAssignableFrom(typeof(int)) || type.IsAssignableFrom(typeof(uint)) || type.IsAssignableFrom(typeof(short)))
             {
-                assignExpr = new CodePrimitiveExpression("1234");
+                assignExpr = new CodePrimitiveExpression(1234);
             }
             else
             {

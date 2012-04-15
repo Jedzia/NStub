@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AllIwantToTest.cs" />
     <Compile Include="BaseCSharpCodeGenerator.cs" />
     <Compile Include="BuildContext\IMemberBuildContext.cs" />
     <Compile Include="BuildContext\MemberBuildContext.cs" />
@@ -88,6 +89,7 @@
     <Compile Include="ObjectGeneration\ConstructorAssignmentCollection.cs" />
     <Compile Include="ObjectGeneration\ConstructorBuilder.cs" />
     <Compile Include="ObjectGeneration\EventBuilder.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeMemberField.cs" />
     <Compile Include="ObjectGeneration\FluentCodeMethod.cs" />
     <Compile Include="ObjectGeneration\IBuilderData.cs" />
     <Compile Include="ObjectGeneration\IBuildHandler.cs" />

@@ -74,6 +74,7 @@
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeMemberFieldTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />
