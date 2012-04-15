@@ -93,7 +93,6 @@
     <add key="VBdocman_comModules_BuildContext...SetupAndTearDownContextBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpProjectGenerator.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_CodeMethodComposerTest.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Exceptions.Designer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Guard.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ImplicitVariableDeclarationStatement.cs"><![CDATA[On]]></add>
@@ -107,6 +106,7 @@
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignmentCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...EventBuilder.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...FluentCodeMethod.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuilderData.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IMemberBuilder.cs"><![CDATA[On]]></add>

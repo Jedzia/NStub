@@ -21,25 +21,13 @@ namespace NStub.CSharp.ObjectGeneration
         {
             // Clean the member name and append 'Test' to the end of it
             var origName = Utility.ScrubPathOfIllegalCharacters(codeMemberMethod.Name);
-            codeMemberMethod.Name = origName;
-            codeMemberMethod.Name = codeMemberMethod.Name + "Test";
-
             // Standard test methods accept no parameters and return void.
-            codeMemberMethod.ReturnType = new CodeTypeReference(typeof(void));
-            codeMemberMethod.Parameters.Clear();
-
-            // var testAttr = new CodeAttributeDeclaration(
-            // new CodeTypeReference(typeof(TestAttribute).Name));
-            var testAttr = new CodeAttributeDeclaration(new CodeTypeReference("Test"));
-
-            codeMemberMethod.CustomAttributes.Add(testAttr);
-
-            codeMemberMethod.Statements.Add(
-                new CodeCommentStatement(
-                    "TODO: Implement unit test for " +
-                    origName));
-
-            //Assert.Inconclusive("Verify the correctness of this test method.");
+            codeMemberMethod
+                .SetName(origName + "Test")
+                .WithReturnType(typeof(void))
+                .ClearParameters()
+                .AddMethodAttribute("Test")
+                .AddComment("TODO: Implement unit test for " + origName);
         }
 
         /// <summary>
@@ -50,15 +38,10 @@ namespace NStub.CSharp.ObjectGeneration
         {
 
             // add a blank line.
-            codeMemberMethod.Statements.Add(new CodeSnippetStatement(""));
-
             // builds Assert.Inconclusive("Verify the correctness of this test method.");
-            var assertExpr = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "Inconclusive",
-                new CodePrimitiveExpression(inconclusiveText));
-                //new CodePrimitiveExpression("Verify the correctness of this test method."));
-            codeMemberMethod.Statements.Add(assertExpr);
+            codeMemberMethod
+                .AddBlankLine()
+                .StaticClass("Assert").Invoke("Inconclusive").With(inconclusiveText).Commit();
         }
 
         /// <summary>

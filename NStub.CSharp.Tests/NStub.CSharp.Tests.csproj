@@ -68,9 +68,12 @@
     <Compile Include="BuildContext\MemberBuildContextTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
+    <Compile Include="FluentChecking\FluentCodeMethodChecking.cs" />
+    <Compile Include="FluentChecking\FluentCodeMethodCheckingTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
+    <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />
