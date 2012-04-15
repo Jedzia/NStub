@@ -70,6 +70,12 @@ namespace NStub.CSharp.ObjectGeneration
         #region IBuilderData Members
 
 
+        /// <summary>
+        /// Gets the data of this instance.
+        /// </summary>
+        /// <returns>
+        /// The stored data.
+        /// </returns>
         public object GetData()
         {
             return data;
@@ -174,7 +180,7 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets the <see cref="System.Collections.Generic.Dictionary&lt;System.String,NStub.CSharp.ObjectGeneration.IBuilderData&gt;"/> with the specified category.
+        /// Gets the <see cref="IBuilderData"/> lookup of the specified category.
         /// </summary>
         /// <param name="category">The category of the requested data items.</param>
         public Dictionary<string, IBuilderData> this[string category]
@@ -207,6 +213,19 @@ namespace NStub.CSharp.ObjectGeneration
             return this.generalData.TryGetValue(key, out value);
         }
 
+        /// <summary>
+        /// Gets the value associated with the specified category and key.
+        /// </summary>
+        /// <param name="category">The requested category.</param>
+        /// <param name="key">The key of the value to get.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified
+        /// key, if the key is found; otherwise, the default value for the type of the
+        /// value parameter. This parameter is passed uninitialized.</param>
+        /// <returns>
+        ///   <c>true</c> if the this instance contains an
+        /// element with the specified category and key; otherwise, <c>false</c>.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">key is null.</exception>
         public bool TryGetValue(string category, string key, out IBuilderData value)
         {
             Dictionary<string, IBuilderData> catLookup;

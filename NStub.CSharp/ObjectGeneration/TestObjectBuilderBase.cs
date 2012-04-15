@@ -125,6 +125,14 @@ namespace NStub.CSharp.ObjectGeneration
         public abstract void AssignParameters(
             CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor);
 
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitely specified constructor
+        /// create expression to a specified method.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testMethod">The test method, to add the assign-statements to.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        /// <param name="ctorAssignments">The list of constructor assignments that specify the parameter to add.</param>
         public abstract void AssignExtra(
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod testMethod,

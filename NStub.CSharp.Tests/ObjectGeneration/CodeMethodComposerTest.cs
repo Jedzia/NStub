@@ -60,8 +60,9 @@ using System.Linq.Expressions;
             var method = new CodeMemberMethod();
             method.Name = "TheMethodName";
             CodeMethodComposer.CreateTestStubForMethod(method);
-            AssertEx.That(method.HasComment("TODO: Implement unit test for TheMethodName"));
-            AssertEx.That(method.HasAttribute("Test"), "Attributes are: {0}", method.HasAttributeMsg());
+            var expectedComment = "TODO: Implement unit test for TheMethodName";
+            AssertEx.That(method.HasComment(expectedComment), "Comment '{0}' not found in: {1}", expectedComment, method.HasCommentMsg());
+            AssertEx.That(method.HasAttribute("Test"), "Attribute 'Test' not found in: {0}", method.HasAttributeMsg());
             AssertEx.That(method.HasReturnTypeOf(typeof(void)));
         }
     }

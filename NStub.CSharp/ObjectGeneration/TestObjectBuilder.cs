@@ -148,11 +148,13 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
-        /// expression.
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitely specified constructor
+        /// create expression to a specified method.
         /// </summary>
         /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testMethod">The test method, to add the assign-statements to.</param>
         /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        /// <param name="ctorAssignments">The list of constructor assignments that specify the parameter to add.</param>
         public override void AssignExtra(
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod testMethod,
@@ -502,9 +504,10 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Reorders the statement at the specified position to the last position of the code generation statements
-        /// in the <see cref="TestObjectBuilderBase.SetUpMethod"/>.
+        /// Reorders the statements of the specified method at the specified position to the last position 
+        /// of the code generation statements.
         /// </summary>
+        /// <param name="method">The method to re-order.</param>
         /// <param name="testObjectInitializerPosition">The position of the statement to push to the bottom.</param>
         private void ReorderSetupStatement(CodeMemberMethod method, int testObjectInitializerPosition)
         {

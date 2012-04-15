@@ -70,6 +70,19 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Set the method return type to the specified value.
         /// </summary>
+        /// <typeparam name="T">Type of the method return type.</typeparam>
+        /// <param name="method">The method which return type is set.</param>
+        /// <returns>
+        /// A fluent interface to build up methods.
+        /// </returns>
+        public static CodeMemberMethod WithReturnType<T>(this CodeMemberMethod method)
+        {
+            return WithReturnType(method, typeof(T));
+        }
+
+        /// <summary>
+        /// Set the method return type to the specified value.
+        /// </summary>
         /// <param name="method">The method which return type is set.</param>
         /// <param name="returnType">Type of the method return type.</param>
         /// <returns> A fluent interface to build up methods.</returns>
@@ -132,10 +145,14 @@ namespace NStub.CSharp.ObjectGeneration
         private readonly CodeMemberMethod method;
         private readonly CodeTypeReferenceExpression reference;
         private CodeMethodInvokeExpression invoker;
-        /*public CodeMemberMethod Method
+
+        /// <summary>
+        /// Gets the expression to the referenced type.
+        /// </summary>
+        public CodeTypeReferenceExpression TypeReference
         {
-            get { return method; }
-        }*/
+            get { return reference; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeTypeReferenceBinder"/> class.

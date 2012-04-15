@@ -262,7 +262,7 @@ namespace NStub.CSharp.ObjectGeneration
 
                 var propName = propertyData.PropertyName;
 
-                    CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
+                CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
                 {
                     // devel: how to create a string initializer from possible constructor setups of the 'SetUp' method.
                     var co = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
@@ -297,39 +297,7 @@ namespace NStub.CSharp.ObjectGeneration
                     new CodeVariableReferenceExpression("actual"));
                 typeMember.Statements.Add(assertExpr);
             }
-
-
-            return;
-
-
-            var variableDeclaration = new CodeVariableDeclarationStatement(
-                "var",
-                "expected",
-                new CodePrimitiveExpression("From the GET Builder"));
-
-            typeMember.Statements.Add(variableDeclaration);
-
-            variableDeclaration = new ImplicitVariableDeclarationStatement(
-                "actual", new CodePrimitiveExpression("Testing"));
-            typeMember.Statements.Add(variableDeclaration);
-
-            // Creates a code expression for a CodeExpressionStatement to contain.
-            var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
-                new CodeVariableReferenceExpression("expected"),
-                new CodeVariableReferenceExpression("actual"));
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(invokeExpression);
-
-            // A C# code generator produces the following source code for the preceeding example code:
-
-            // Console.Write( "Example string" );
-            typeMember.Statements.Add(invokeExpression);
-            BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "NormalBehavior");
         }
-
     }
 
 
@@ -442,26 +410,6 @@ namespace NStub.CSharp.ObjectGeneration
                     new CodeVariableReferenceExpression("actual"));
                 typeMember.Statements.Add(assertExpr);
             }
-
-
-            return;
-            var variableDeclaration = new CodeVariableDeclarationStatement(
-                "var",
-                "expected",
-                new CodePrimitiveExpression("From the SET Builder"));
-
-            typeMember.Statements.Add(variableDeclaration);
-
-            variableDeclaration = new ImplicitVariableDeclarationStatement(
-                "actual", new CodePrimitiveExpression("Testing"));
-            typeMember.Statements.Add(variableDeclaration);
-
-            // Creates a code expression for a CodeExpressionStatement to contain.
-            // Todo: better return the Statements and add it to the typeMember in the generator.
-            BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "NormalBehavior");
         }
-
     }
-
-
 }

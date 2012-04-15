@@ -32,7 +32,7 @@ namespace NStub.CSharp.BuildContext
         /// Gets the builder data specific to this builders key.
         /// </summary>
         /// <param name="category">Name of the category to request.</param>
-        /// <returns>The builder data with the <see cref="Context.TestKey"/> or <c>null</c> if nothing is found.</returns>
+        /// <returns>The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.</returns>
         IBuilderData GetBuilderData(string category);
 
         /// <summary>

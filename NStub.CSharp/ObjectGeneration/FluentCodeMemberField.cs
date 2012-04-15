@@ -6,8 +6,17 @@ using System.CodeDom;
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    /// <summary>
+    /// Provides Fluent <see cref="CodeMemberField"/> construction.
+    /// </summary>
     public static class FluentCodeMemberField
     {
+        /// <summary>
+        /// Creates the specified member field by name and type.
+        /// </summary>
+        /// <param name="memberFieldName">Name of the member field.</param>
+        /// <param name="memberFieldType">Type of the member field.</param>
+        /// <returns>A new CodeMemberField with the specified data.</returns>
         public static CodeMemberField Create(string memberFieldName, string memberFieldType)
         {
             var memberField = new CodeMemberField(memberFieldType, memberFieldName)
@@ -17,6 +26,12 @@ namespace NStub.CSharp.ObjectGeneration
             return memberField;
         }
 
+        /// <summary>
+        /// Creates the specified member field by name and type.
+        /// </summary>
+        /// <param name="memberFieldName">Name of the member field.</param>
+        /// <param name="memberFieldType">Type of the member field.</param>
+        /// <returns>A new CodeMemberField with the specified data.</returns>
         public static CodeMemberField Create(string memberFieldName, Type memberFieldType)
         {
             var memberField = new CodeMemberField(memberFieldType, memberFieldName)
@@ -26,6 +41,14 @@ namespace NStub.CSharp.ObjectGeneration
             return memberField;
         }
 
+        /// <summary>
+        /// Creates the specified member field by name and type.
+        /// </summary>
+        /// <typeparam name="T">Type of the member field</typeparam>
+        /// <param name="memberFieldName">Name of the member field.</param>
+        /// <returns>
+        /// A new CodeMemberField with the specified data.
+        /// </returns>
         public static CodeMemberField Create<T>(string memberFieldName)
         {
             return Create(memberFieldName, typeof(T));
@@ -50,6 +73,17 @@ namespace NStub.CSharp.ObjectGeneration
         private CodeAssignStatement fieldAssignment;
         private CodeMemberField memberField;
 
+        /// <summary>
+        /// Gets the reference to the member field.
+        /// </summary>
+        public CodeFieldReferenceExpression FieldReference
+        {
+            get { return fieldReference; }
+        }
+
+        /// <summary>
+        /// Gets the field assignment, e.g. 'this.myField = "Foo";' statement.
+        /// </summary>
         public CodeAssignStatement FieldAssignment
         {
             get { return fieldAssignment; }
@@ -86,8 +120,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Create the field in the specified class.
         /// </summary>
+        /// <typeparam name="T">CLR-Type of the field.</typeparam>
         /// <param name="owningClass">The owning class.</param>
-        /// <param name="fieldType">CLR-Type of the field.</param>
         /// <returns>
         /// A fluent interface to build up member field types.
         /// </returns>

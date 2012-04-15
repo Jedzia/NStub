@@ -34,6 +34,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Appends a 'Assert.Inconclusive("Text")' statement to the specified method.
         /// </summary>
         /// <param name="codeMemberMethod">The code member method.</param>
+        /// <param name="inconclusiveText">The warning parameter text of the Assert.Inconclusive call.</param>
         public static void AppendAssertInconclusive(CodeMemberMethod codeMemberMethod, string inconclusiveText)
         {
 

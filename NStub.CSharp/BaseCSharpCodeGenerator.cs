@@ -479,15 +479,36 @@ namespace NStub.CSharp
         /// <returns>A list of code name spaces, to be added to the compilation unit.</returns>
         protected abstract IEnumerable<CodeNamespaceImport> RetrieveNamespaceImports();
 
+        /// <summary>
+        /// Checks for duplicate class members.
+        /// </summary>
         private class DuplicatedMemberComparer : IEqualityComparer<CodeTypeMember>
         {
             #region IEqualityComparer<CodeTypeMember> Members
 
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <param name="x">The first object of type <paramref name="T"/> to compare.</param>
+            /// <param name="y">The second object of type <paramref name="T"/> to compare.</param>
+            /// <returns>
+            /// true if the specified objects are equal; otherwise, false.
+            /// </returns>
             public bool Equals(CodeTypeMember x, CodeTypeMember y)
             {
                 return x.Name.Equals(y.Name);
             }
 
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <param name="obj">The obj.</param>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            /// <exception cref="T:System.ArgumentNullException">
+            /// The type of <paramref name="obj"/> is a reference type and <paramref name="obj"/> is null.
+            ///   </exception>
             public int GetHashCode(CodeTypeMember obj)
             {
                 return obj.Name.GetHashCode();
@@ -637,6 +658,8 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
         /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">Initial name of the test method name.</param>
+        /// <returns>The calculated test method name.</returns>
         protected virtual string ComputeTestName(IMemberBuilder memberBuilder, IMemberBuildContext context, string originalName)
         {
             var testName = memberBuilder.GetTestName(context, originalName);
