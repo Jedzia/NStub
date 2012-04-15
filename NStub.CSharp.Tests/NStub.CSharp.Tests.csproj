@@ -75,6 +75,7 @@
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
     <Compile Include="ObjectGeneration\CodeFieldReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
+    <Compile Include="ObjectGeneration\CodeTypeReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeMemberFieldTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeMethodTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />

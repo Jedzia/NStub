@@ -17,20 +17,20 @@ namespace NStub.CSharp.Tests.FluentChecking
         public void HasCommentTest()
         {
             var cm = new CodeMemberMethod();
-            Assert.IsFalse(cm.HasComment("Bla").Compile().Invoke());
+            Assert.IsFalse(cm.ContainsComment("Bla").Compile().Invoke());
             cm.AddComment("You Foo");
-            Assert.IsTrue(cm.HasComment("You Foo").Compile().Invoke());
+            Assert.IsTrue(cm.ContainsComment("You Foo").Compile().Invoke());
 
             cm.AddComment(" ABC");
             cm.AddComment(" CDE ");
             cm.AddComment("E F G");
 
-            Assert.IsTrue(cm.HasComment("E F G").Compile().Invoke());
-            Assert.IsTrue(cm.HasComment(" CDE ").Compile().Invoke());
-            Assert.IsTrue(cm.HasComment(" ABC").Compile().Invoke());
-            Assert.IsTrue(cm.HasComment("You Foo").Compile().Invoke());
+            Assert.IsTrue(cm.ContainsComment("E F G").Compile().Invoke());
+            Assert.IsTrue(cm.ContainsComment(" CDE ").Compile().Invoke());
+            Assert.IsTrue(cm.ContainsComment(" ABC").Compile().Invoke());
+            Assert.IsTrue(cm.ContainsComment("You Foo").Compile().Invoke());
 
-            Assert.IsFalse(cm.HasComment(" aBC").Compile().Invoke());
+            Assert.IsFalse(cm.ContainsComment(" aBC").Compile().Invoke());
         }
     }
 }

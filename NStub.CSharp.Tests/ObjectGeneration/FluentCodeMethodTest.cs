@@ -36,14 +36,14 @@ namespace NStub.CSharp.ObjectGeneration
             var expectedComment = "My Comment is very cute.";
             var result = method.AddComment(expectedComment);
             Assert.AreSame(method, result);
-            AssertEx.That(method.HasComment(expectedComment), "Comment '{0}' not found in: {1}", expectedComment, method.HasCommentMsg());
+            AssertEx.That(method.ContainsComment(expectedComment), "Comment '{0}' not found in: {1}", expectedComment, method.ContainsCommentMsg());
         }
         
         [Test()]
         public void AddMethodAttributeTest()
         {
             method.AddMethodAttribute("Test");
-            AssertEx.That(method.HasAttribute("Test"), "Attribute 'Test' not found in: {0}", method.HasAttributeMsg());
+            AssertEx.That(method.ContainsAttribute("Test"), "Attribute 'Test' not found in: {0}", method.ContainsAttributeMsg());
         }
         
         [Test()]

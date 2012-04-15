@@ -61,8 +61,8 @@ using System.Linq.Expressions;
             method.Name = "TheMethodName";
             CodeMethodComposer.CreateTestStubForMethod(method);
             var expectedComment = "TODO: Implement unit test for TheMethodName";
-            AssertEx.That(method.HasComment(expectedComment), "Comment '{0}' not found in: {1}", expectedComment, method.HasCommentMsg());
-            AssertEx.That(method.HasAttribute("Test"), "Attribute 'Test' not found in: {0}", method.HasAttributeMsg());
+            AssertEx.That(method.ContainsComment(expectedComment), "Comment '{0}' not found in: {1}", expectedComment, method.ContainsCommentMsg());
+            AssertEx.That(method.ContainsAttribute("Test"), "Attribute 'Test' not found in: {0}", method.ContainsAttributeMsg());
             AssertEx.That(method.HasReturnTypeOf(typeof(void)));
         }
     }

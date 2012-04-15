@@ -19,7 +19,7 @@ namespace NStub.CSharp
     /// Expression style argument checking.
     /// </summary>
     [DebuggerStepThrough]
-    internal static class Guard
+    public static class Guard
     {
         #region Fields
 
