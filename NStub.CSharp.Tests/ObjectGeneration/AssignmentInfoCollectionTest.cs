@@ -1,14 +1,10 @@
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.Tests.ObjectGeneration
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using global::MbUnit.Framework;
-    using NStub.CSharp.ObjectGeneration;
     using System.CodeDom;
-    using System.Reflection;
-    
-    
+    using NStub.CSharp.ObjectGeneration;
+
     public partial class AssignmentInfoCollectionTest
     {
         

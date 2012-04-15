@@ -1,14 +1,11 @@
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.Tests.ObjectGeneration
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using global::MbUnit.Framework;
-    using NStub.CSharp.ObjectGeneration;
     using System.CodeDom;
+    using NStub.CSharp.ObjectGeneration;
+    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
     using NStub.CSharp.Tests.FluentChecking;
-    
-    
+
     public partial class CodeTypeReferenceBinderTest
     {
 

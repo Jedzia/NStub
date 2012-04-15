@@ -1,13 +1,9 @@
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.Tests.BuildContext
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using global::MbUnit.Framework;
     using NStub.CSharp.BuildContext;
     using Rhino.Mocks;
-    
-    
+
     public partial class SetupAndTearDownContextTest
     {
         

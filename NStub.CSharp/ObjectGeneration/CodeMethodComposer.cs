@@ -7,6 +7,8 @@ using NStub.Core;
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
+
     /// <summary>
     /// Provides helper methods for composition of <see cref="CodeMemberMethod"/> method members.
     /// </summary>

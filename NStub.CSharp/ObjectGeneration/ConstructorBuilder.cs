@@ -8,10 +8,6 @@ using System.Reflection;
 
 namespace NStub.CSharp.ObjectGeneration
 {
-
-    internal class CustomConstructorCodeMemberMethod : CodeMemberMethod
-    {
-    }
     /// <summary>
     /// Test method generator for constructor type members.
     /// </summary>

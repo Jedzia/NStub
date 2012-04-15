@@ -10,6 +10,8 @@ using NStub.CSharp.ObjectGeneration;
 
 namespace NStub.CSharp.Tests.FluentChecking
 {
+    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
+
     [TestFixture]
     public class FluentCodeMethodCheckingTest
     {
