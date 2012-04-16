@@ -11,14 +11,9 @@
     /// </summary>
     public class FluentCodeStatementBinder<T> where T : CodeStatement
     {
-        private static void TestThis()
-        {
-            var cm = new CodeMemberMethod();
-            //cm.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
-        }
         private readonly IEnumerable<T> initialExpression;
-        private readonly CodeTypeReferenceExpression reference;
-        private CodeMethodInvokeExpression invoker;
+        //private readonly CodeTypeReferenceExpression reference;
+        //private CodeMethodInvokeExpression invoker;
 
         /*/// <summary>
         /// Gets the expression to the referenced type.
@@ -28,7 +23,7 @@
             get { return reference; }
         }*/
 
-        public string Error { get; set; }
+        public string Error { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeTypeReferenceBinder"/> class.
@@ -43,7 +38,7 @@
             //this.reference = reference;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Add a primitive parameter to the method invocation.
         /// </summary>
         /// <param name="text">The content of the primitive expression.</param>
@@ -60,9 +55,15 @@
             var primitive = new CodePrimitiveExpression(text);
             invoker.Parameters.Add(primitive);
             return this;
-        }
+        }*/
 
         bool globalResult = true;
+        private int logCount;
+        private void Log(string text)
+        {
+            Error += "[" + logCount + "]" + text + Environment.NewLine;
+            logCount++;
+        }
         /// <summary>
         /// Specify the name of the method to invoke.
         /// </summary>
@@ -74,34 +75,44 @@
             {
                 var detailed = this.initialExpression.Cast<CodeExpressionStatement>();
                 //globalResult = detailed.All((e) => f((K)e.Expression));
+                if (detailed.Count() == 0)
+                {
+                    globalResult = false;
+                    Log("Expression: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
+                                " elements an empty expression list always returns false");
+                    return this;
+                }
+
                 var compResult = detailed.Select((e) => f((K)e.Expression));
-                globalResult = compResult.All(e => e.Result);
+
+                globalResult &= compResult.All(e => e.Result);
 
                 if (!globalResult)
                 {
-                    if (compResult.Count() == 0)
+                    // i think there cant be an empty compResult when the above checks for empty input list.
+                    /*if (compResult.Count() == 0)
                     {
                         Error = string.Empty;
                     }
-                    else
-                    {
-                        var count = 0;
-                        var result = compResult
-                            .Select(e => e.Name)
-                            .Aggregate("[", (a, b) =>
+                    else*/
+                    //{
+                    var count = 0;
+                    var result = compResult
+                        .Select(e => e.Name)
+                        .Aggregate("[", (a, b) =>
+                                            {
+                                                var separator = string.Empty;
+                                                if (count > 0)
                                                 {
-                                                    var separator = string.Empty;
-                                                    if (count > 0)
-                                                    { 
-                                                        separator = ", ";
-                                                    }
-                                                    count++;
-                                                    return a + separator + "{" + b + "}";
-                                                });
-                        var lastComparer = compResult.Last().Comparer;
-                        Error = "By comparing " +typeof(K) + "´s contained in " + typeof(T) +
-                                " elements, the value `" + lastComparer + "` was not found in the checked items: " + result + "]";
-                    }
+                                                    separator = ", ";
+                                                }
+                                                count++;
+                                                return a + separator + "{" + b + "}";
+                                            });
+                    var lastComparer = compResult.Last().Comparer;
+                    Log("By comparing " + typeof(K) + "´s contained in " + typeof(T) +
+                            " elements, the value `" + lastComparer + "` was not found in the checked items: " + result + "]");
+                    //}
                 }
 
                 //globalResult = detailed.All((e) => f(null, (K)e.Expression));
@@ -138,9 +149,9 @@
             // Todo: member checking.
             //method.Statements.Add(invoker);
             //Error = "Hello nerd";
-            Expression<Func<bool>> returnValue = 
-                () => 
-                globalResult; 
+            Expression<Func<bool>> returnValue =
+                () =>
+                globalResult;
             return returnValue;
             //return initialExpression;
         }

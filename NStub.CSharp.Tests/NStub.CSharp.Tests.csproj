@@ -69,10 +69,12 @@
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
     <Compile Include="FluentChecking\CompareResult.cs" />
+    <Compile Include="FluentChecking\CompareResultTest.cs" />
     <Compile Include="FluentChecking\FluentCodeMethodChecking.cs" />
     <Compile Include="FluentChecking\FluentCodeMethodCheckingTest.cs" />
     <Compile Include="FluentChecking\FluentCodeStatementBinder.cs" />
     <Compile Include="FluentChecking\FluentCodeStatementBinderExtender.cs" />
+    <Compile Include="FluentChecking\FluentCodeStatementBinderTest.cs" />
     <Compile Include="FluentChecking\FluentCodeWrapper.cs" />
     <Compile Include="FluentChecking\Is.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />

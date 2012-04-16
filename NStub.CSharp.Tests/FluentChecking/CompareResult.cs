@@ -42,8 +42,8 @@
         /// <param name="comparer">The comparer.</param>
         public CompareResult(bool result, string name, string comparer)
         {
-            //Guard.NotNullOrEmpty(() => name, name);
-            //Guard.NotNullOrEmpty(() => comparer, comparer);
+            Guard.NotNull(() => name, name);
+            Guard.NotNull(() => comparer, comparer);
             this.result = result;
             this.name = name;
             this.comparer = comparer;

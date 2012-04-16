@@ -13,7 +13,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = FluentCodeMemberField.Create("myField", typeof(string).Name);
             Assert.AreEqual("myField", actual.Name);
             Assert.AreEqual(MemberAttributes.Private, actual.Attributes);
-            Assert.AreEqual("string", actual.Type.BaseType);
+            Assert.AreEqual("String", actual.Type.BaseType);
         }
 
         [Test()]

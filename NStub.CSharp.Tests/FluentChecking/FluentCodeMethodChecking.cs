@@ -63,7 +63,7 @@ namespace NStub.CSharp.Tests.FluentChecking
                     return a + separator + "{" + b + "}";
                 });
 
-            return result;
+            return result + "]";
         }
 
         /// <summary>
@@ -187,7 +187,7 @@ namespace NStub.CSharp.Tests.FluentChecking
         }
 
 
-        /// <summary>
+        /*/// <summary>
         /// Builds an error message for use with <see cref="HasComment"/> assertions.
         /// </summary>
         /// <param name="method">The method to check.</param>
@@ -216,8 +216,6 @@ namespace NStub.CSharp.Tests.FluentChecking
                 });
 
             return result;
-        }
-
-
+        }*/
     }
 }
