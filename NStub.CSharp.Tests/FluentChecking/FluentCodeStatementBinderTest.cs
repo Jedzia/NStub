@@ -24,7 +24,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             this.method = new CodeMemberMethod();
             //this.testObject 
 
-            this.testObject = method.StatementsOf<CodeExpressionStatement>().Where();
+            this.testObject = method.StatementsOfType<CodeExpressionStatement>().Where();
             //.Expression<CodeMethodInvokeExpression>(Is.Named("MethodName"))
             //.Assert()
             //this.testObject = new FluentCodeStatementBinder<CodeStatement>();

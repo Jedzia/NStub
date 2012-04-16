@@ -5,21 +5,20 @@
     using System.Linq;
     using System.CodeDom;
 
-    /// <summary>
-    /// Provides Fluent <see cref="CodeMemberMethod"/> construction.
-    /// </summary>
-    public static class FluentCodeMethod
-    {
-
         /// <summary>
-        /// Determines whether the specified method contains specified type of statement.
+    /// Provides Fluent <see cref="CodeMemberMethod"/> investigation.
+    /// </summary>
+    public static class FluentCodeMethodExpression
+    {
+        /// <summary>
+        /// Get the statements of a method by the specified type.
         /// </summary>
         /// <param name="method">The method to check.</param>
         /// <param name="statementType">The matching statement type.</param>
         /// <returns>
         /// A Linq-Expression for use in <see cref="Assert.That"/>, checking the truth of the assertion.
         /// </returns>
-        public static IEnumerable<T> StatementsOf<T>(this CodeMemberMethod method)
+        public static IEnumerable<T> StatementsOfType<T>(this CodeMemberMethod method)
         {
             /*if (method.Statements.Count == 0)
             {
@@ -30,7 +29,13 @@
             IEnumerable<T> returnValue = method.Statements.OfType<T>();
             return returnValue;
         }
+    }
 
+    /// <summary>
+    /// Provides Fluent <see cref="CodeMemberMethod"/> construction.
+    /// </summary>
+    public static class FluentCodeMethod
+    {
         /// <summary>
         /// Add a comment to the method body.
         /// </summary>
@@ -135,6 +140,29 @@
             var staticexpr = new CodeTypeReferenceExpression(className);
             var result = new CodeTypeReferenceBinder(method, staticexpr);
             return result;
+        }
+
+        /// <summary>
+        /// Creates and initializes a local variable. var test = object.DoSomething("parameter").
+        /// </summary>
+        /// <param name="method">The method to add the statements to.</param>
+        /// <param name="variableName">Name of the local variable.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public static CodeLocalVariableBinder Var(this CodeMemberMethod method, string variableName, bool create)
+        {
+            // "Assert"
+            if (create)
+            {
+                var localDecl = new CodeVariableDeclarationStatement("var", variableName);
+                var result = new CodeLocalVariableBinder(method, localDecl);
+                return result;
+            }
+            else
+            {
+                var staticexpr = new CodeVariableReferenceExpression(variableName);
+                var result = new CodeLocalVariableBinder(method, staticexpr);
+                return result;
+            }
         }
 
         /// <summary>

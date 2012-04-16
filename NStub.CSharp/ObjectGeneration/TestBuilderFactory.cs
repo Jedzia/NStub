@@ -58,6 +58,7 @@ namespace NStub.CSharp.ObjectGeneration
             this.handlers.Add(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext));
             this.handlers.Add(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext));
             this.handlers.Add(new BuildHandler(typeof(ConstructorBuilder), ConstructorBuilder.CanHandleContext));
+            this.handlers.Add(new BuildHandler(typeof(StaticMethodBuilder), StaticMethodBuilder.CanHandleContext));
         }
 
         #endregion

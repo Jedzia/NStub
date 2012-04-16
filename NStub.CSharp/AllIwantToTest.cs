@@ -31,7 +31,15 @@ namespace NStub.CSharp
         /// My string.
         /// </value>
         public string MyString { get; set; }
-       
+
+        /// <summary>
+        /// Gets or sets my static string.
+        /// </summary>
+        /// <value>
+        /// My static string.
+        /// </value>
+        public static string MyStaticString { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether [my bool].
         /// </summary>

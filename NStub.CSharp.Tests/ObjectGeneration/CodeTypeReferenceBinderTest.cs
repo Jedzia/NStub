@@ -53,9 +53,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             //AssertEx.That(method.ContainsStatement<CodeMethodInvokeExpression>());
             //AssertEx.That(method.ContainsStatement<CodeExpressionStatement>().Where().Commit());
             //AssertEx.That(method.StatementsOf<CodeExpressionStatement>().Where().Expressions<CodeMethodInvokeExpression>("bla").Commit());
-            
-            AssertEx.That(method
-                .StatementsOf<CodeExpressionStatement>()
+
+            AssertEx.That(method.StatementsOfType<CodeExpressionStatement>()
                 .Where().Expression<CodeMethodInvokeExpression>(Is.Named("MethodName"))
                 .Assert());
              
