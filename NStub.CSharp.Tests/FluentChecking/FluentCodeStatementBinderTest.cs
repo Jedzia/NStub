@@ -9,6 +9,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
+    using Gallio.Framework.Assertions;
 
 
     public partial class FluentCodeStatementBinderTest
@@ -45,7 +46,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
 
             method.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
             
-            testObject.Expression<CodeMethodInvokeExpression>(Is.Named("MethodName"));
+            testObject.Expression<CodeMethodInvokeExpression>(Is.MethodNamed("MethodName"));
             var expected = "[0]By comparing System.CodeDom.CodeMethodInvokeExpression´s contained in System.CodeDom.CodeExpressionStatement elements, the value `MethodName` was not found in the checked items: [{Inconclusive}]\r\n";
             actual = testObject.Error;
             Assert.AreEqual(expected, actual);
@@ -138,8 +139,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var comparer = MockRepository.GenerateStrictMock<Func<CodeMethodInvokeExpression, CompareResult>>();
             comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
                 .Return(new CompareResult(true, "TheName", "TheComparer")).Repeat.Twice();
-            comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
-                .Return(new CompareResult(false, "TheName2", "TheComparer2")).Repeat.Times(2, int.MaxValue);
+            //comparer.AssertWasNotCalled((c) => c.Invoke(null));
             comparer.Replay();
 
             var result = testObject.Expression<CodeMethodInvokeExpression>(comparer);
@@ -149,6 +149,37 @@ namespace NStub.CSharp.Tests.ObjectGeneration
 
             result = testObject.Expression<CodeMethodInvokeExpression>(comparer);
             testResult = result.Assert().Compile().Invoke();
+            // Only if all comparer runs return false, the method is not found.
+            Assert.IsTrue(testResult);
+            Assert.AreSame(testObject, result);
+
+            comparer.VerifyAllExpectations();
+
+        }
+
+        [Test()]
+        public void ExpressionTwoMethodDeclarationsAndAllFalseCall()
+        {
+            var generator = method.StaticClass("Assert").Invoke("Inconclusive").With("Thisone"); //.Commit().TypeReference;
+            var generator2 = method.StaticClass("Ping").Invoke("Me").With("ToDeath"); //.Commit().TypeReference;
+            generator.Commit();
+            generator2.Commit();
+
+            var comparer = MockRepository.GenerateStrictMock<Func<CodeMethodInvokeExpression, CompareResult>>();
+            comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
+                .Return(new CompareResult(false, "TheName", "TheComparer")).Repeat.Twice();
+            comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
+                .Return(new CompareResult(false, "TheName2", "TheComparer2")).Repeat.Times(2, int.MaxValue);
+            comparer.Replay();
+
+            var result = testObject.Expression<CodeMethodInvokeExpression>(comparer);
+            var testResult = result.Assert().Compile().Invoke();
+            Assert.IsFalse(testResult);
+            Assert.AreSame(testObject, result);
+
+            result = testObject.Expression<CodeMethodInvokeExpression>(comparer);
+            testResult = result.Assert().Compile().Invoke();
+            // Only if all comparer runs return false, the method is not found.
             Assert.IsFalse(testResult);
             Assert.AreSame(testObject, result);
 
@@ -213,6 +244,22 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.IsFalse(testResult);
             Assert.AreSame(testObject, result);
             comparer.VerifyAllExpectations();
+        }
+
+        [Test()]
+        public void ExpressionThrowsOnWrongStatementType()
+        {
+            Assert.Throws<AssertionException>(() => method.StatementsOfType<CodeAssignStatement>()
+                .Where().Expression<CodeFieldReferenceExpression>(Is.FieldNamed("xMethodName"))
+                .Assert().Compile().Invoke());
+        }
+
+        [Test()]
+        public void ExpressionLeftThrowsOnWrongStatementType()
+        {
+            Assert.Throws<AssertionException>(()=>method.StatementsOfType<CodeExpressionStatement>()
+                .Where().ExpressionLeft<CodeFieldReferenceExpression>(Is.FieldNamed("xMethodName"))
+                .Assert().Compile().Invoke());
         }
 
 

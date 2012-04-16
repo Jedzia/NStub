@@ -80,11 +80,11 @@
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
-    <Compile Include="ObjectGeneration\CodeFieldReferenceBinderTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
-    <Compile Include="ObjectGeneration\CodeTypeReferenceBinderTest.cs" />
-    <Compile Include="ObjectGeneration\FluentCodeMemberFieldTest.cs" />
-    <Compile Include="ObjectGeneration\FluentCodeMethodTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\CodeTypeReferenceBinderTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMemberFieldTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethodTest.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />
     <Compile Include="CSharpCodeGeneratorTest.cs" />

@@ -22,7 +22,8 @@
         }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is a type reference.
+        /// Gets a value indicating whether this instance is a type reference. At the moment checks
+        /// for 'reference is CodeTypeReferenceExpression';
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance is type reference; otherwise, <c>false</c>.
