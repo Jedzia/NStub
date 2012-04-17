@@ -7,11 +7,12 @@
     /// </summary>
     public class CodeTypeReferenceBinder
     {
-        private static void TestThis()
+        /*private static void TestThis()
         {
             var cm = new CodeMemberMethod();
             cm.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
-        }
+        }*/
+
         private readonly CodeMemberMethod method;
         private readonly CodeExpression reference;
         private CodeMethodInvokeExpression invoker;

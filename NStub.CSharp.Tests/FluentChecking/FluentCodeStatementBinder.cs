@@ -60,6 +60,7 @@
         }*/
 
         bool globalResult = true;
+        //int globalResult = 0;
         private int logCount;
         private void Log(string text)
         {

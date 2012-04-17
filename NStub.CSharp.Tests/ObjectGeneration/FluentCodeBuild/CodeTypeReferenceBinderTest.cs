@@ -143,6 +143,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
 
             AssertEx.That(method.StatementsOfType<CodeExpressionStatement>()
                 .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed("WithoutCommit"))
+                //Todo: .None()
+                // .IsEmpty()
                 .Assert());
 
             //method.StatementsOf<CodeExpressionStatement>().Where();
