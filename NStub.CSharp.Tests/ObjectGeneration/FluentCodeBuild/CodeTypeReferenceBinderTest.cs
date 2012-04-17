@@ -142,13 +142,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             testObject.Invoke("WithoutCommit").With("None");
 
             AssertEx.That(method.StatementsOfType<CodeExpressionStatement>()
-                .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed("WithoutCommit"))
-                //Todo: .None()
-                // .IsEmpty()
+                .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed("WithoutCommit")).WasNotFound()
                 .Assert());
-
-            //method.StatementsOf<CodeExpressionStatement>().Where();
-            // Assert.AreSame(testObject.TypeReference, actualCodeExpression.Expression);
         }
         
         [Test()]
@@ -169,9 +164,43 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         [Test()]
         public void WithTest()
         {
-            var result = testObject.Invoke("MethodName").With("Thisone");
+            var expected = "Thisone";
+            var result = testObject.Invoke("MethodName").With(expected);
             Assert.AreSame(testObject, result);
             Assert.IsEmpty(method.Statements);
+            Assert.AreEqual(1, testObject.Invoker.Parameters.Count);
+            Assert.IsNotEmpty(testObject.Invoker
+                .Parameters.Cast<CodePrimitiveExpression>()
+                .Select(e=>e.Value)
+                .Where(e=>e.Equals(expected)));
+        }
+
+        [Test()]
+        public void WithReferenceTest()
+        {
+            var expected = "theLocalVar";
+            var result = testObject.Invoke("MethodName").WithReference(expected);
+            Assert.AreSame(testObject, result);
+            Assert.IsEmpty(method.Statements);
+            Assert.AreEqual(1, testObject.Invoker.Parameters.Count);
+            Assert.IsNotEmpty(testObject.Invoker
+                .Parameters.Cast<CodeVariableReferenceExpression>()
+                .Select(e => e.VariableName)
+                .Where(e => e.Equals(expected)));
+
+            var expected2 = "theOtherLocalVar";
+            result = testObject.Invoke("MethodName").WithReference(expected, expected2);
+            Assert.AreSame(testObject, result);
+            Assert.IsEmpty(method.Statements);
+            Assert.AreEqual(2, testObject.Invoker.Parameters.Count);
+            Assert.IsNotEmpty(testObject.Invoker
+                .Parameters.Cast<CodeVariableReferenceExpression>()
+                .Select(e => e.VariableName)
+                .Where(e => e.Equals(expected)));
+            Assert.IsNotEmpty(testObject.Invoker
+                .Parameters.Cast<CodeVariableReferenceExpression>()
+                .Select(e => e.VariableName)
+                .Where(e => e.Equals(expected2)));
         }
     }
 }

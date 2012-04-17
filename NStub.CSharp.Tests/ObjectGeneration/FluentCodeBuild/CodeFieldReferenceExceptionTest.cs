@@ -9,60 +9,60 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
     using System.Runtime.Serialization.Formatters.Binary;
     
     
-    public partial class CodeTypeReferenceExceptionTest
+    public partial class CodeFieldReferenceExceptionTest
     {
         
-        private NStub.CSharp.ObjectGeneration.FluentCodeBuild.CodeTypeReferenceBinder binder;
+        private NStub.CSharp.ObjectGeneration.FluentCodeBuild.CodeFieldReferenceBinder binder;
         private System.Exception inner;
         private string message;
-        private CodeTypeReferenceException testObject;
-        
+        private CodeFieldReferenceException testObject;
+
         [SetUp()]
         public void SetUp()
         {
             // ToDo: Implement SetUp logic here
             var method = new CodeMemberMethod();
-            this.binder = method.StaticClass("ReferencedClass");
+            this.binder = method.Assign("myField");
             this.message = "Value of message";
             this.inner = new System.Exception();
-            this.testObject = new CodeTypeReferenceException(this.binder, this.message, this.inner);
+            this.testObject = new CodeFieldReferenceException(this.binder, this.message, this.inner);
         }
         
         [Test()]
         public void ConstructWithParametersBinderMessageInnerTest()
         {
-            this.testObject = new CodeTypeReferenceException(this.binder, this.message, this.inner);
-            this.testObject = new CodeTypeReferenceException(this.binder, null, this.inner);
-            var expectedMsg = "Exception of type \'" + typeof(CodeTypeReferenceException) + "\' was thrown.";
+            this.testObject = new CodeFieldReferenceException(this.binder, this.message, this.inner);
+            this.testObject = new CodeFieldReferenceException(this.binder, null, this.inner);
+            var expectedMsg = "Exception of type \'" + typeof(CodeFieldReferenceException) + "\' was thrown.";
             Assert.AreEqual(expectedMsg, testObject.Message);
-            this.testObject = new CodeTypeReferenceException(this.binder, null, null);
+            this.testObject = new CodeFieldReferenceException(this.binder, null, null);
             Assert.AreEqual(expectedMsg, testObject.Message);
-            Assert.Throws<ArgumentNullException>(() => new CodeTypeReferenceException(null, this.message, this.inner));
+            Assert.Throws<ArgumentNullException>(() => new CodeFieldReferenceException(null, this.message, this.inner));
         }
         
         [Test()]
         public void ConstructWithParametersBinderMessageTest()
         {
             this.message = "Value of message";
-            this.testObject = new CodeTypeReferenceException(this.binder, this.message);
+            this.testObject = new CodeFieldReferenceException(this.binder, this.message);
             Assert.IsNull(testObject.InnerException);
             Assert.AreEqual(this.message, testObject.Message);
 
-            this.testObject = new CodeTypeReferenceException(this.binder, null);
-            var expectedMsg = "Exception of type \'" + typeof(CodeTypeReferenceException) + "\' was thrown.";
+            this.testObject = new CodeFieldReferenceException(this.binder, null);
+            var expectedMsg = "Exception of type \'" + typeof(CodeFieldReferenceException) + "\' was thrown.";
             Assert.AreEqual(expectedMsg, testObject.Message);
-            Assert.Throws<ArgumentNullException>(() => new CodeTypeReferenceException(null, this.message));
+            Assert.Throws<ArgumentNullException>(() => new CodeFieldReferenceException(null, this.message));
         }
         
         [Test()]
         public void ConstructWithParametersBinderTest()
         {
-            this.testObject = new CodeTypeReferenceException(this.binder);
+            this.testObject = new CodeFieldReferenceException(this.binder);
             Assert.IsNull(testObject.InnerException);
-            var expectedMsg = "Exception of type \'" + typeof(CodeTypeReferenceException) + "\' was thrown.";
+            var expectedMsg = "Exception of type \'" + typeof(CodeFieldReferenceException) + "\' was thrown.";
             Assert.AreEqual(expectedMsg,testObject.Message);
-            
-            Assert.Throws<ArgumentNullException>(() => new CodeTypeReferenceException(null));
+
+            Assert.Throws<ArgumentNullException>(() => new CodeFieldReferenceException(null));
         }
         
         [Test()]

@@ -4,40 +4,41 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using System.CodeDom;
     using NStub.CSharp.ObjectGeneration;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
+    using System;
 
     public partial class CodeFieldReferenceBinderTest
     {
-        
+
         private CodeFieldReferenceBinder testObject;
+        private CodeTypeDeclaration declaration;
+        private CodeMemberMethod method;
         
         [SetUp()]
         public void SetUp()
         {
-            var ctdecl = new CodeTypeDeclaration("MyClass");
-            var cm = new CodeMemberMethod();
-
-            this.testObject = cm.Assign("myField");
+            this.declaration = new CodeTypeDeclaration("MyClass");
+            this.method = new CodeMemberMethod();
+            this.testObject = this.method.Assign("myField");
         }
         
         [TearDown()]
         public void TearDown()
         {
-            // ToDo: Implement TearDown logic here 
+            this.declaration = null;
             this.testObject = null;
+            this.method = null;
         }
         
         [Test()]
         public void PropertyFieldAssignmentNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyFieldAssignment
-
             // Test read access of 'FieldAssignment' Property.
-            var expected = "Insert expected object here";
             var actual = testObject.FieldAssignment;
-            //Assert.AreEqual(expected, actual);
+            Assert.IsNull(actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
-            //cm.Assign("myField").AndCreateIn<IAsyncResult>(ctdecl).With(123);
+            testObject.With(123);
+            actual = testObject.FieldAssignment;
+            Assert.IsNotNull(actual);
         }
         
         [Test()]
@@ -59,9 +60,11 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         [Test()]
         public void WithTest()
         {
-            // TODO: Implement unit test for With
+            var actual = testObject.With("assignment text");
+            var fieldAssignment = testObject.FieldAssignment;
+            Assert.AreSame(testObject, actual);
+            Assert.IsNotNull(fieldAssignment);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
         }
     }
 }

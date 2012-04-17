@@ -8,12 +8,12 @@
     /// </summary>
     public class CodeFieldReferenceBinder
     {
-        private static void TestThis()
+        /*private static void TestThis()
         {
             var ctdecl = new CodeTypeDeclaration("MyClass");
             var cm = new CodeMemberMethod();
             cm.Assign("myField").AndCreateIn<IAsyncResult>(ctdecl).With(123);
-        }
+        }*/
 
         private readonly CodeMemberMethod method;
         private readonly CodeFieldReferenceExpression fieldReference;
