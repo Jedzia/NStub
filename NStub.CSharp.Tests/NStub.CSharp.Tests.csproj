@@ -82,6 +82,7 @@
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\CodeLocalVariableBinderTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeTypeReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMemberFieldTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethodTest.cs" />

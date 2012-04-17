@@ -107,5 +107,26 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             actual = method.ReturnType.BaseType;
             Assert.AreEqual(expected.ToString(), actual);
         }
+       
+        [Test()]
+        public void VarTest()
+        {
+            var variableName = "VariableName";
+            var create = false;
+
+            var expected = variableName;
+            var result = method.Var(variableName, create);
+            Assert.IsInstanceOfType<CodeLocalVariableBinder>(result);
+            Assert.IsNull(result.LocalVariableDeclaration);
+            Assert.AreEqual(expected, result.LocalVariableReference.VariableName);
+
+            create = true;
+
+            expected = variableName;
+            result = method.Var(variableName, create);
+            Assert.IsInstanceOfType<CodeLocalVariableBinder>(result);
+            Assert.IsNull(result.LocalVariableReference);
+            Assert.AreEqual(expected, result.LocalVariableDeclaration.Name);
+        }
     }
 }

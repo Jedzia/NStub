@@ -88,7 +88,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
                         .Select(e=>e.Value as string),
                         "Thisone");
                     return new CompareResult(true, "TheName", "TheComparer");
-                })
+                }).Repeat.Twice()
                 //.Return(new CompareResult(true, "TheName", "TheComparer")
             ;
             comparer.Replay();
@@ -98,6 +98,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.IsTrue(testResult);
             Assert.AreSame(testObject, result);
             comparer.VerifyAllExpectations();
+
         }
 
         [Test()]
@@ -125,6 +126,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.AreSame(testObject, result);
             
             comparer.VerifyAllExpectations();
+            //Assert.AreEqual(3, result.Result);
 
         }
 
@@ -184,6 +186,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.AreSame(testObject, result);
 
             comparer.VerifyAllExpectations();
+            //Assert.AreEqual(3, result.Result);
 
         }
 
@@ -261,6 +264,52 @@ namespace NStub.CSharp.Tests.ObjectGeneration
                 .Where().ExpressionLeft<CodeFieldReferenceExpression>(Is.FieldNamed("xMethodName"))
                 .Assert().Compile().Invoke());
         }
+
+        [Test()]
+        public void ExpressionResult()
+        {
+            var generator = method.StaticClass("Assert").Invoke("Inconclusive").With("Thisone"); //.Commit().TypeReference;
+            var codeExpr = generator.TypeReference;
+            generator.Commit();
+
+            var comparer = MockRepository.GenerateStrictMock<Func<CodeMethodInvokeExpression, CompareResult>>();
+            var comparer2 = MockRepository.GenerateStrictMock<Func<CodeFieldReferenceExpression, CompareResult>>();
+            //comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
+              //  .Return(new CompareResult(false, "TheName", "TheComparer"));
+            comparer.Expect((c) => c.Invoke(null)).IgnoreArguments()
+                .Return(new CompareResult(true, "TheName2", "TheComparer2")).Repeat.Any();// Times(2, int.MaxValue);
+            comparer2.Expect((c) => c.Invoke(null)).IgnoreArguments()
+                .Return(new CompareResult(false, "TheName2", "TheComparer2")).Repeat.Any();// Times(2, int.MaxValue);
+            comparer.Replay();
+            comparer2.Replay();
+
+            var result = testObject.Expression<CodeMethodInvokeExpression>(comparer);
+            var testResult = result.Assert().Compile().Invoke();
+            //Assert.IsFalse(testResult);
+
+            //this.testObject = method.StatementsOfType<CodeExpressionStatement>().Where();
+
+            //result = testObject.Expression<CodeMethodInvokeExpression>(comparer)
+            //    .Expression<CodeMethodInvokeExpression>(comparer).IsNotEmpty().AndX<CodeExpressionStatement>(
+            //    testObject.Expression<CodeMethodInvokeExpression>(comparer))
+            //    ;
+            //Assert.
+             AssertEx.That(method.StatementsOfType<CodeExpressionStatement>()
+                .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed("OtherMethodName")).WasNotFound()
+                .Assert());
+            result = testObject.Expression<CodeMethodInvokeExpression>(comparer)
+                .Expression<CodeMethodInvokeExpression>(comparer).WasFound()
+                .Expression<CodeFieldReferenceExpression>(comparer2).WasNotFound()
+                ;
+            testResult = result.Assert().Compile().Invoke();
+            Assert.IsTrue(testResult, "MSG: {0}", testObject.Error);
+
+            comparer.VerifyAllExpectations();
+            //Assert.AreEqual(13, result.Result);
+
+        }
+
+
 
 
         [Test()]

@@ -17,7 +17,13 @@
         private readonly CodeVariableDeclarationStatement variableDeclaration;
         private readonly CodeVariableReferenceExpression reference;
         private CodeMethodInvokeExpression invoker;
+        private CodeStatement assignStatement;
 
+        internal CodeStatement AssignStatement
+        {
+            get { return assignStatement; }
+        }
+        
         /// <summary>
         /// Gets the expression to the referenced type.
         /// </summary>
@@ -168,7 +174,6 @@
             return this;
         }
 
-        private CodeStatement assignStatement;
         /// <summary>
         /// Add a primitive parameter to the method invocation.
         /// </summary>
@@ -181,19 +186,16 @@
             var primitive = new CodePrimitiveExpression(value);
             if (this.variableDeclaration == null)
             {
-                // add 'localVar = DateTime.Now;'
+                // add 'localVar = "primitive expression";'
                 assignStatement = new CodeAssignStatement(this.reference, primitive);
-                //method.Statements.Add(assign);
             }
             else
             {
-                // add 'var localVar = DateTime.Now;'
+                // add 'var localVar = "primitive expression";'
                 this.variableDeclaration.InitExpression = primitive;
                 assignStatement = this.variableDeclaration;
-                //method.Statements.Add(this.variableDeclaration);
             }
 
-            //fieldAssignment = new CodeAssignStatement(fieldReference, primitive);
             return this;
         }
 

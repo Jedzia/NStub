@@ -17,13 +17,10 @@
         //private readonly CodeTypeReferenceExpression reference;
         //private CodeMethodInvokeExpression invoker;
 
-        /*/// <summary>
-        /// Gets the expression to the referenced type.
-        /// </summary>
-        public CodeTypeReferenceExpression TypeReference
+        public int Result
         {
-            get { return reference; }
-        }*/
+            get { return foundTimes; }
+        }
 
         public string Error { get; private set; }
 
@@ -60,7 +57,8 @@
         }*/
 
         bool globalResult = true;
-        //int globalResult = 0;
+        int foundTimes = 0;
+        int totalItems = 0;
         private int logCount;
         private void Log(string text)
         {
@@ -80,6 +78,7 @@
         /// <returns>A fluent interface to build up reference types.</returns>
         public FluentCodeStatementBinder<T> Expression<K>(Func<K, CompareResult> f) where K : CodeExpression
         {
+            detected = false;
             IEnumerable<CompareResult> compResult = null;
             if (typeof(T) == typeof(CodeExpressionStatement))
             {
@@ -87,12 +86,14 @@
                 if (detailed.Count() == 0)
                 {
                     globalResult = false;
+                    foundTimes = -1;
                     Log("Expression: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
                                 " elements an empty expression list always returns false");
                     return this;
                 }
 
-                compResult = detailed.Select((e) => f((K)e.Expression));
+                // check type !
+                compResult = detailed.Where(e=>e.Expression is K).Select((e) => f((K)e.Expression));
             }
             else if (typeof(T) == typeof(CodeFieldReferenceExpression))
             {
@@ -100,6 +101,7 @@
                 if (detailed.Count() == 0)
                 {
                     globalResult = false;
+                    foundTimes = -1;
                     Log("Expression: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
                                 " elements an empty expression list always returns false");
                     return this;
@@ -113,6 +115,7 @@
                 if (detailed.Count() == 0)
                 {
                     globalResult = false;
+                    foundTimes = -1;
                     Log("Expression: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
                                 " elements an empty expression list always returns false");
                     return this;
@@ -126,6 +129,7 @@
                 if (detailed.Count() == 0)
                 {
                     globalResult = false;
+                    foundTimes = -1;
                     Log("Expression: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
                                 " elements an empty expression list always returns false");
                     return this;
@@ -139,57 +143,11 @@
                     typeof(T) + "` elements.");
             }
 
-            globalResult &= compResult.Any(e => e.Result == true);
+            totalItems += compResult.Count();
+            foundTimes += compResult.Count(e => e.Result == true);
+            //globalResult &= compResult.Any(e => e.Result == true);
 
-            // replace with -> WriteErrorMsg<K>(compResult, "");
-            if (!globalResult)
-            {
-                // i think there cant be an empty compResult when the above checks for empty input list.
-                /*if (compResult.Count() == 0)
-                {
-                    Error = string.Empty;
-                }
-                else*/
-                //{
-                var count = 0;
-                var result = compResult
-                    .Select(e => e.Name)
-                    .Aggregate("[", (a, b) =>
-                                        {
-                                            var separator = string.Empty;
-                                            if (count > 0)
-                                            {
-                                                separator = ", ";
-                                            }
-                                            count++;
-                                            return a + separator + "{" + b + "}";
-                                        });
-                var lastComparer = compResult.Last().Comparer;
-                Log("By comparing " + typeof(K) + "´s contained in " + typeof(T) +
-                        " elements, the value `" + lastComparer + "` was not found in the checked items: " + result + "]");
-                //}
-
-
-                //globalResult = detailed.All((e) => f(null, (K)e.Expression));
-
-                /*foreach (var item in detailed)
-                {
-                    var result = f((K)item.Expression);
-                    globalResult &= result;
-                    //f((K)item.Expression);
-                }*/
-
-                /*if (typeof(K) == typeof(CodeMethodInvokeExpression))
-                {
-                    var subdetailed = detailed.OfType<CodeExpressionStatement>().Select(e => e.Expression);
-                    var x1 = subdetailed.OfType<CodeMethodInvokeExpression>().ToArray();
-                }*/
-            }
-            //this.initialExpression
-            //    .Any(e=>e.
-
-            //invoker = new CodeMethodInvokeExpression();
-            //invoker.Method = new CodeMethodReferenceExpression(reference, methodname);
+            WriteErrorMsg<K>(compResult, "");
             return this;
         }
 
@@ -201,6 +159,7 @@
         public FluentCodeStatementBinder<T> ExpressionLeft<K>(Func<K, CompareResult> f)
             where K : CodeExpression
         {
+            detected = false;
             IEnumerable<CompareResult> compResult = null;
             if (typeof(T) == typeof(CodeAssignStatement))
             {
@@ -208,6 +167,7 @@
                 if (detailed.Count() == 0)
                 {
                     globalResult = false;
+                    foundTimes = -1;
                     Log("ExpressionLeft: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
                                 " elements an empty expression list always returns false");
                     return this;
@@ -234,7 +194,9 @@
                     typeof(T) + "` elements.");
             }
 
-            globalResult &= compResult.Any(e => e.Result == true);
+            totalItems += compResult.Count();
+            foundTimes += compResult.Count(e => e.Result == true);
+            //globalResult &= compResult.Any(e => e.Result == true);
 
             WriteErrorMsg<K>(compResult, "left side");
             return this;
@@ -242,8 +204,15 @@
 
         private void WriteErrorMsg<K>(IEnumerable<CompareResult> compResult, string msgforT) where K : CodeExpression
         {
-            if (!globalResult)
+            if (!compResult.Any(e => e.Result == true))
             {
+                if (compResult.Count() == 0)
+                {
+                    Log("By comparing " + typeof(K) + "´s contained in " + typeof(T) + " " + msgforT +
+                            " no " + typeof(K) + " elements where found.");
+                    return;
+                }
+
                 var count = 0;
                 var result = compResult
                     .Select(e => e.Name)
@@ -264,6 +233,70 @@
         }
 
 
+        /*public Expression<Func<bool>> IsEmpty()
+        {
+            return () => result == 0;;
+        }*/
+
+        /*public Expression<Func<bool>> IsNotEmpty()
+        {
+            return () => result > 0; ;
+        }*/
+
+        private FluentCodeStatementBinder<T> EndDetect()
+        {
+            foundTimes = 0;
+            totalItems = 0;
+            detected = true;
+            return this;
+        }
+        bool detected;
+
+        public FluentCodeStatementBinder<T> WasFound()
+        {
+            var detect = foundTimes > 0;
+            if (!detect)
+            {
+                Log(string.Format("WasFound(> 0) on {0} total items with {1} found items.", totalItems, foundTimes));
+            }
+            globalResult &= detect;
+            return EndDetect();
+        }
+
+        public FluentCodeStatementBinder<T> WasNotFound()
+        {
+            var detect = foundTimes == 0;
+            if (!detect)
+            {
+                Log(string.Format("WasFound(== 0) on {0} total items with {1} found items.", totalItems, foundTimes));
+            }
+            globalResult &= detect;
+            return EndDetect();
+        }
+        public FluentCodeStatementBinder<T> WasFound(int times)
+        {
+            // genau times mal gefunden
+            var detect = foundTimes == times;
+            if (!detect)
+            {
+                Log(string.Format("WasFound({2}) on {0} total items with {1} found items.", totalItems, foundTimes, times));
+            }
+            globalResult &= detect;
+            return EndDetect();
+        }
+
+        public FluentCodeStatementBinder<T> WasNotFound(int times)
+        {
+            // genau times mal nicht gefunden
+            var detect = (totalItems - foundTimes) == times;
+            if (!detect)
+            {
+                Log(string.Format("WasNotFound({2}) on {0} total items with {1} not found items.", totalItems, totalItems - foundTimes, times));
+            }
+            globalResult &= detect;
+            return EndDetect();
+        }
+
         /// <summary>
         /// Completes the creation of the reference type.
         /// </summary>
@@ -275,6 +308,13 @@
             // Todo: member checking.
             //method.Statements.Add(invoker);
             //Error = "Hello nerd";
+            if (!detected)
+            {
+                // when no WasNotFound, WasFound, etc. was called, then use WasFound as standard and assert.
+                WasFound();
+                Log("Auto WasFound() called.");
+                detected = false;
+            }
             Expression<Func<bool>> returnValue =
                 () =>
                 globalResult;
@@ -283,5 +323,11 @@
         }
 
 
+
+        internal FluentCodeStatementBinder<T> And(Expression<Func<bool>> expression)
+        {
+            globalResult &= expression.Compile().Invoke();
+            return this;
+        }
     }
 }

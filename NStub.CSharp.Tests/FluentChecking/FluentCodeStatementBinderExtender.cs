@@ -39,5 +39,22 @@
 
             return returnValue;*/
         }
+
+        public static FluentCodeStatementBinder<T> AndX<T>(this Expression<Func<bool>> expression, FluentCodeStatementBinder<T> binder) where T : CodeStatement
+        {
+            //var binder = new FluentCodeStatementBinder(expression, null);
+            return binder.And(expression);
+            /*var firstResult = expression.Compile().Invoke();
+
+            Expression<Func<bool>> returnValue;
+            returnValue = () => firstResult && method.Statements
+                .OfType<CodeStatement>()
+                //.Select(e => e.Expression)
+                .Any(e => e.GetType() == typeof(string)
+                );
+
+            return returnValue;*/
+        }
+
     }
 }
