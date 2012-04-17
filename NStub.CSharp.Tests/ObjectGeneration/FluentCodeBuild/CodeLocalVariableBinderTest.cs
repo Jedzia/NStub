@@ -71,19 +71,34 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
         [Test()]
         public void CommitTest()
         {
-            // TODO: Implement unit test for Commit
+            Assert.Throws<InvalidOperationException>(() => testVarCreate.Commit());
 
-            // nach commit StaticClassTest.
-            //Assert.IsNotEmpty(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.Name == "variableNameCreate"));
-            //AssertEx.That(methodVarCreate.StatementsOfType<CodeAssignStatement>()
-            // .Where().ExpressionLeft<CodeVariableReferenceExpression>(Is.VarRefNamed("localVar"))
-            //.Assert());
+            // no create
+            Assert.Throws<InvalidOperationException>(() => testVarNoCreate.Commit());
+        }
+
+        [Test()]
+        public void CommitWith()
+        {
+            var expectedPrimitive = 123.456d;
+            var binder = testVarCreate.With(expectedPrimitive);
+            var result = binder.Commit();
+            Assert.AreSame(this.methodVarCreate, result);
+
+            Assert.IsNotEmpty(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.Name == "variableNameCreate"));
+            AssertEx.That(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>()
+              .Where().Expression<CodePrimitiveExpression>(Is.Primitve(expectedPrimitive)).WasFound(1)
+              .Assert());
+
+            // no create
+            binder = testVarNoCreate.With(expectedPrimitive);
+            result = binder.Commit();
+            Assert.AreSame(this.methodVarNoCreate, result);
             
-            // initialization happened
-            //AssertEx.That(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>()
-           //  .Where().Expression<CodePrimitiveExpression>(Is.Primitve("localVar")).WasNotFound()
-           //  .Assert());
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            AssertEx.That(methodVarNoCreate.StatementsOfType<CodeAssignStatement>().Where()
+                .ExpressionLeft<CodeVariableReferenceExpression>(Is.VarRefNamed("variableNameNoCreate")).WasFound(1)
+                .ExpressionRight<CodePrimitiveExpression>(Is.Primitve(expectedPrimitive)).WasFound(1)
+                .Assert());
         }
 
         [Test()]
@@ -113,7 +128,63 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 
             //Assert.IsNotEmpty(methodVarNoCreate.StatementsOfType<CodeAssignStatement>().Where(e => e. == "variableNameNoCreate"));
             //Assert.IsEmpty(methodVarNoCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.InitExpression != null));
+        }
 
+        [Test()]
+        public void CommitStaticClassInvoke()
+        {
+            var expected = "DateTime";
+            var expectedMethodName = "MethodName";
+            var binder = testVarCreate.StaticClass(expected).Invoke(expectedMethodName);
+            var result = binder.Commit();
+            Assert.AreSame(this.methodVarCreate, result);
+
+            Assert.IsNotEmpty(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.Name == "variableNameCreate"));
+            // no .With(...) -> no initialization happened  ... Todo: should i block this?
+            //Assert.IsEmpty(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.InitExpression != null));
+            AssertEx.That(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>()
+              .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed(expectedMethodName)).WasFound(1)
+              .Assert());
+
+            // no create
+            binder = testVarNoCreate.StaticClass(expected).Invoke(expectedMethodName);
+            result = binder.Commit();
+            Assert.AreSame(this.methodVarNoCreate, result);
+
+            AssertEx.That(methodVarNoCreate.StatementsOfType<CodeAssignStatement>().Where()
+                .ExpressionLeft<CodeVariableReferenceExpression>(Is.VarRefNamed("variableNameNoCreate")).WasFound()
+                .ExpressionRight<CodeMethodInvokeExpression>(Is.MethodNamed(expectedMethodName)).WasFound()
+                .Assert());
+        }
+
+        [Test()]
+        public void CommitStaticClassInvokeWith()
+        {
+            var expected = "DateTime";
+            var expectedMethodName = "MethodName";
+            var expectedPrimitive = 123.456d;
+            var binder = testVarCreate.StaticClass(expected).Invoke(expectedMethodName).With(expectedPrimitive);
+            var result = binder.Commit();
+            Assert.AreSame(this.methodVarCreate, result);
+
+            Assert.IsNotEmpty(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>().Where(e => e.Name == "variableNameCreate"));
+            AssertEx.That(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>()
+              .Where().Expression<CodeMethodInvokeExpression>(Is.MethodNamed(expectedMethodName)).WasFound(1)
+              .Assert());
+            AssertEx.That(methodVarCreate.StatementsOfType<CodeVariableDeclarationStatement>()
+              .Where().Expression<CodeMethodInvokeExpression>(Contains.MethodPrimitiveParameter(expectedPrimitive)).WasFound(1)
+              .Assert());
+
+            
+            // no create
+            binder = testVarNoCreate.StaticClass(expected).Invoke(expectedMethodName).With(expectedPrimitive); 
+            result = binder.Commit();
+            Assert.AreSame(this.methodVarNoCreate, result);
+
+            AssertEx.That(methodVarNoCreate.StatementsOfType<CodeAssignStatement>().Where()
+                .ExpressionLeft<CodeVariableReferenceExpression>(Is.VarRefNamed("variableNameNoCreate")).WasFound()
+                .ExpressionRight<CodeMethodInvokeExpression>(Is.MethodNamed(expectedMethodName)).WasFound()
+                .Assert());
         }
 
         [Test()]

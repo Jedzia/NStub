@@ -66,18 +66,18 @@
         /// <summary>
         /// Add a primitive parameter to the method invocation.
         /// </summary>
-        /// <param name="text">The content of the primitive expression.</param>
+        /// <param name="value">The content of the primitive expression.</param>
         /// <returns>
         /// A fluent interface to build up reference types.
         /// </returns>
-        public CodeTypeReferenceBinder With(string text)
+        public CodeTypeReferenceBinder With(object value)
         {
             if (invoker == null)
             {
                 throw new CodeTypeReferenceException(this, "Cannot add parameter to a method that is not defined." +
                                                            "Use Invoke(...) to specify the method." );
             }
-            var primitive = new CodePrimitiveExpression(text);
+            var primitive = new CodePrimitiveExpression(value);
             invoker.Parameters.Add(primitive);
             return this;
         }

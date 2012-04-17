@@ -1,6 +1,7 @@
 ﻿namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 {
     using System.CodeDom;
+    using System;
 
 
     /// <summary>
@@ -8,11 +9,12 @@
     /// </summary>
     public class CodeLocalVariableBinder
     {
-        private static void TestThis()
+        /*private static void TestThis()
         {
             var cm = new CodeMemberMethod();
             cm.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
-        }
+        }*/
+
         private readonly CodeMemberMethod method;
         private readonly CodeVariableDeclarationStatement variableDeclaration;
         private readonly CodeVariableReferenceExpression reference;
@@ -208,6 +210,12 @@
         public CodeMemberMethod Commit()
         {
             // Todo: member checking.
+            if (assignStatement == null)
+            {
+                // CodeLocalVariableException
+                throw new InvalidOperationException("Cannot add not assigned local variable to a method." +
+                                                          "Use StaticClass(...) or With(...) to specify a initialization expression.");
+            }
             method.Statements.Add(assignStatement);
             return method;
         }

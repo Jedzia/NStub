@@ -93,7 +93,7 @@
                 }
 
                 // check type !
-                compResult = detailed.Where(e=>e.Expression is K).Select((e) => f((K)e.Expression));
+                compResult = detailed.Where(e => e.Expression is K).Select((e) => f((K)e.Expression));
             }
             else if (typeof(T) == typeof(CodeFieldReferenceExpression))
             {
@@ -151,7 +151,7 @@
             return this;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Specify the name of the method to invoke.
         /// </summary>
         /// <param name="methodname">The name of the method.</param>
@@ -174,6 +174,78 @@
                 }
 
                 compResult = detailed.Select((e) => f((K)e.Left));
+            }
+            //else if (typeof(T) == typeof(CodeVariableDeclarationStatement))
+            //{
+              //  var detailed = this.initialExpression.Cast<CodeVariableDeclarationStatement>();
+             //   if (detailed.Count() == 0)
+             //   {
+              //      globalResult = false;
+              //      Log("ExpressionLeft: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
+             //                   " elements an empty expression list always returns false");
+             //       return this;
+            //    }
+            //
+            //     compResult = detailed.Select((e) => f((K)e.InitExpression));
+            //}
+            else
+            {
+                throw new AssertionException("ExpressionLeft<K>(...) ist not capable of comparing `" +
+                    typeof(T) + "` elements.");
+            }
+
+            totalItems += compResult.Count();
+            foundTimes += compResult.Count(e => e.Result == true);
+            //globalResult &= compResult.Any(e => e.Result == true);
+
+            WriteErrorMsg<K>(compResult, "left side");
+            return this;
+        }*/
+
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodname">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public FluentCodeStatementBinder<T> ExpressionLeft<K>(Func<K, CompareResult> f)
+            where K : CodeExpression
+        {
+            return ExpressionSided<K>(f, (e) => e.Left);
+        }
+
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodname">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public FluentCodeStatementBinder<T> ExpressionRight<K>(Func<K, CompareResult> f)
+            where K : CodeExpression
+        {
+            return ExpressionSided<K>(f, (e) => e.Right);
+        }
+
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodname">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        private FluentCodeStatementBinder<T> ExpressionSided<K>(Func<K, CompareResult> f, Func<CodeAssignStatement, CodeExpression> selector)
+            where K : CodeExpression
+        {
+            detected = false;
+            IEnumerable<CompareResult> compResult = null;
+            if (typeof(T) == typeof(CodeAssignStatement))
+            {
+                var detailed = this.initialExpression.Cast<CodeAssignStatement>();
+                if (detailed.Count() == 0)
+                {
+                    globalResult = false;
+                    foundTimes = -1;
+                    Log("ExpressionLeft: By comparing " + typeof(K) + "´s contained in " + typeof(T) +
+                                " elements an empty expression list always returns false");
+                    return this;
+                }
+                compResult = detailed.Select((e) => f((K)selector(e)));
             }
             /*else if (typeof(T) == typeof(CodeVariableDeclarationStatement))
             {
@@ -201,6 +273,7 @@
             WriteErrorMsg<K>(compResult, "left side");
             return this;
         }
+
 
         private void WriteErrorMsg<K>(IEnumerable<CompareResult> compResult, string msgforT) where K : CodeExpression
         {
