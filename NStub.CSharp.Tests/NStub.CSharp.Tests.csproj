@@ -77,6 +77,7 @@
     <Compile Include="FluentChecking\FluentCodeStatementBinderTest.cs" />
     <Compile Include="FluentChecking\FluentCodeWrapper.cs" />
     <Compile Include="FluentChecking\Is.cs" />
+    <Compile Include="NamespaceDetectorTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />

@@ -99,13 +99,13 @@
     <add key="VBdocman_comModules_ImplicitVariableDeclarationStatement.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnitRhinoMocks...CSharpMbUnitRhinoMocksCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnit...CSharpMbUnitCodeGenerator.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_NamespaceDetector.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...AssignmentInfoCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuildDataCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...CodeMethodComposer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignment.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignmentCollection.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...FluentCodeBuild...Copy of CodeTypeReferenceBinder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuilderData.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IMemberBuilder.cs"><![CDATA[On]]></add>

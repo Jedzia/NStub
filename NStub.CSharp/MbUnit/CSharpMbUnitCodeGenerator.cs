@@ -131,14 +131,14 @@ namespace NStub.CSharp.MbUnit
         /// <returns>
         /// A list of code name spaces, to be added to the compilation unit.
         /// </returns>
-        protected override IEnumerable<CodeNamespaceImport> RetrieveNamespaceImports()
+        protected override IEnumerable<string> RetrieveNamespaceImports()
         {
             return new[]
                        {
-                           new CodeNamespaceImport("System"), 
-                           new CodeNamespaceImport("System.Collections.Generic"), 
-                           new CodeNamespaceImport("System.Linq"), 
-                           new CodeNamespaceImport(typeof(TestAttribute).Namespace), 
+                           "System", 
+                           "System.Collections.Generic", 
+                           "System.Linq",
+                           typeof(TestAttribute).Namespace, 
                        };
         }
     }

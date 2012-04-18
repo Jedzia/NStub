@@ -200,16 +200,24 @@ namespace NStub.CSharp
         /// </summary>
         public void GenerateCode()
         {
+            //var asd = this.CodeNamespace.Types.OfType<CodeTypeDeclaration>().Any(e=>e.Name =="ddepp");
             // We want to write a separate file for each type
+            var nd = new NamespaceDetector(this.CodeNamespace.Types);
+
             foreach(CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
             {
+                if (testClassDeclaration.Name.Contains("MbUnit"))
+                {
+                }
                 this.CurrentTestClassDeclaration = testClassDeclaration;
 
                 // Create a namespace for the Type in order to put it in scope
-                var codeNamespace = new CodeNamespace(this.CodeNamespace.Name);
+                var ndiff = nd.GetDifferingNamespace(testClassDeclaration, ".Tests");
+                var codeNamespace = new CodeNamespace(this.CodeNamespace.Name + ndiff);
 
                 // add using imports.
-                codeNamespace.Imports.AddRange(this.RetrieveNamespaceImports().ToArray());
+                codeNamespace.Imports.AddRange(nd.PrepareNamespaceImports(this.RetrieveNamespaceImports()).ToArray());
+
                 var indexcodeNs = testClassDeclaration.Name.LastIndexOf('.');
                 if (indexcodeNs > 0)
                 {
@@ -218,9 +226,11 @@ namespace NStub.CSharp
                     codeNamespace.Imports.Add(new CodeNamespaceImport(codeNs));
                 }
 
+
                 // Clean the type name
                 testClassDeclaration.Name =
                     Utility.ScrubPathOfIllegalCharacters(testClassDeclaration.Name);
+                testClassDeclaration.Name = nd.CombineWithShortestNamespace(testClassDeclaration, ".Tests");
 
                 var testObjectName = Utility.GetUnqualifiedTypeName(testClassDeclaration.Name);
 
@@ -477,7 +487,7 @@ namespace NStub.CSharp
         /// Add namespace imports to the main compilation unit.
         /// </summary>
         /// <returns>A list of code name spaces, to be added to the compilation unit.</returns>
-        protected abstract IEnumerable<CodeNamespaceImport> RetrieveNamespaceImports();
+        protected abstract IEnumerable<string> RetrieveNamespaceImports();
 
         /// <summary>
         /// Checks for duplicate class members.

@@ -72,6 +72,7 @@
     <Compile Include="BuildContext\MemberBuildContextBase.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownContext.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBase.cs" />
+    <Compile Include="NamespaceDetector.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollection.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollection.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
