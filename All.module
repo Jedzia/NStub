@@ -1,0 +1,25 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VarShow">
+  <Import Project="$(BuildPath)\Module.targets" />
+
+	  <Target Name="VarShow">
+	<!--	<Message Text="AllModule !!! Der RootDir: $(RootDir)" />
+		<Message Text="Der MSBuildExtensionsPath: $(MSBuildExtensionsPath)" />
+		<Message Text="das TargetBinDir: $(TargetBinDir)" />
+		<Message />
+		<Message />
+	-->
+	</Target>
+
+
+
+  <ItemGroup>
+    <NestedModule Include="*\*.module" />
+  </ItemGroup>
+  
+  
+  <ItemGroup>
+      <NestedModule Include="Objects\**\*.module" />
+      <NestedModule Include="DB\**\*.module" />
+      <NestedModule Include="Dist\**\*.module" />
+    </ItemGroup>
+</Project>

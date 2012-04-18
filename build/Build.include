@@ -1,0 +1,13 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(BuildPath)\Module.targets" />
+		
+  <ItemGroup>
+    <NestedModule Include="$(RootDir)\All.module" />
+  </ItemGroup>
+
+  <!--<ItemGroup>
+    <File Include="MbUnit License.txt" />
+    <File Include="Release Notes.txt" />
+    <File Include="ASL - Apache Software Foundation License.txt" />
+  </ItemGroup>-->
+</Project>

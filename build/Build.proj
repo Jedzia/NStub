@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build;Test" ToolsVersion="3.5">
+	<!--***** Main Properties ***** -->
+	<PropertyGroup>
+		<TargetConfig>Debug</TargetConfig>
+		<TargetType>Build</TargetType>
+		<BuildPath>$(MSBuildProjectDirectory)</BuildPath>
+		<TasksPath Condition="'$(TasksPath)'==''">$(BuildPath)\bin\Debug</TasksPath>
+		<RootDir>$(MSBuildProjectDirectory)\..</RootDir>
+		<ProjectRootPath>$(MSBuildProjectDirectory)\..</ProjectRootPath>
+		<RarRoot>$(RootDir)\..\</RarRoot>
+		<BuildProjZipFileName>BuildRoot</BuildProjZipFileName>
+	</PropertyGroup>
+	<UsingTask AssemblyFile="C:\Program Files\MSBuild\ExtensionPack\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.FileSystem.File" />
+	<ItemGroup></ItemGroup>
+	
+	<!-- ***** Version and Settings ***** -->
+	<PropertyGroup>
+		<Version Condition="'$(Version)'==''">1.0.0.0</Version>
+		<ShowReports Condition="'$(ShowReports)'==''">false</ShowReports>
+		<ReportTypes Condition="'$(ReportTypes)'==''">Html</ReportTypes>
+		<TargetFX1_1 Condition="'$(TargetFX1_1)'==''">true</TargetFX1_1>
+		<HTMLHelpCompilerPath>$(ProgramFiles)\HTML Help Workshop\hhc.exe</HTMLHelpCompilerPath>
+		<NSISPath>$(ProgramFiles)\NSIS\makensis.exe</NSISPath>
+		<Perl>c:\perl\perl\bin\perl.exe</Perl>
+		<SourceServerIndexerPath>$(ProgramFiles)\Debugging Tools for Windows (x86)\srcsrv</SourceServerIndexerPath>
+	</PropertyGroup>
+	
+	
+	
+	<ItemGroup>
+		<NestedModule Include="Build.include" />
+	</ItemGroup>
+	
+	
+	<Import Project="$(MSBuildProjectDirectory)\Module.targets" />
+	
+	<PropertyGroup>
+		<BuildDependsOnTargets>     
+      SetBuildCSharpProjects;
+      RecursiveBeforeBuild;
+      BuildCSharpProjects;
+      RecursiveAfterBuild;
+      CopyFiles
+    </BuildDependsOnTargets>
+		<RebuildDependsOnTargets>
+      SetRebuildCSharpProjects;
+      RecursiveBeforeBuild;
+      RebuildCSharpProjects;
+      RecursiveAfterBuild;
+      CopyFiles
+    </RebuildDependsOnTargets>
+		<CleanDependsOnTargets>
+      CleanCSharpProjects;
+      RemoveBuildDir;
+    </CleanDependsOnTargets>
+	</PropertyGroup>
+	<!--Create a zipfile of the build system-->
+	<Target Name="ZipTools">
+		<MSBuild.Community.Tasks.Time Format="yyyy-MM-dd_HHmm">
+			<Output TaskParameter="FormattedTime" PropertyName="buildDate" />
+		</MSBuild.Community.Tasks.Time>
+		<CreateProperty Value="BuildProject-$(buildDate)">
+			<Output TaskParameter="Value" PropertyName="BuildProjZipFileName" />
+		</CreateProperty>
+		<ConvertToAbsolutePath Paths="..\..\" AbsolutePaths="$(MSBuildProjectDirectory)">
+			<Output TaskParameter="AbsolutePaths" PropertyName="AbsPath" />
+		</ConvertToAbsolutePath>
+		<CreateItem Include="$(AbsPath)\$(BuildToolsFolder)\Build\**\*.*">
+			<Output TaskParameter="Include" ItemName="XXBuildStructureFiles" />
+		</CreateItem>
+		<CreateItem Include="$(AbsPath)\$(BuildToolsFolder)\BuildTools\**\*.*">
+			<Output TaskParameter="Include" ItemName="XXBuildStructureFiles" />
+		</CreateItem>
+		<CreateItem Include="$(AbsPath)\$(BuildToolsFolder)\**\*.module">
+			<Output TaskParameter="Include" ItemName="XXBuildStructureFiles" />
+		</CreateItem>
+		<Error Condition="Exists('$(AbsPath)$(BuildProjZipFileName).zip')" Text="File $(AbsPath)$(BuildProjZipFileName).zip Exists" />
+		<Delete Files="$(AbsPath)$(BuildProjZipFileName).zip" Condition="false" />
+		<Zip Files="@(XXBuildStructureFiles)" WorkingDirectory="$(AbsPath)" ZipFileName="$(AbsPath)$(BuildProjZipFileName).zip" ZipLevel="9" Flatten="False" />
+		<Warning Text="$(AbsPath)" ContinueOnError="False" Condition="false" />
+		<Warning Text="@(XXBuildStructureFiles)" Condition="false" />
+	</Target>
+	<Target Name="ResProjDir">
+		<CombinePath BasePath="$(MSBuildProjectDirectory)" Paths="..\">
+			<Output TaskParameter="CombinedPaths" PropertyName="ProjectRootPath" />
+		</CombinePath>
+	</Target>
+	<!-- ***** Main Targets ***** -->
+	<Target Name="All" DependsOnTargets="Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;CreateTestReports;BuildFxCop;BuildInstaller;BuildZip"></Target>
+	<Target Name="Complete" DependsOnTargets="Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;CreateTestReports;BuildFxCop;BuildInstaller;BuildStyleCop;BuildZip"></Target>
+	
+	<Target Name="Release" DependsOnTargets="Clean;Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;BuildZip" />
+	<Target Name="Build" DependsOnTargets="$(BuildDependsOnTargets)"></Target>
+	<Target Name="Rebuild" DependsOnTargets="$(RebuildDependsOnTargets)"></Target>
+	<Target Name="Clean" DependsOnTargets="$(CleanDependsOnTargets)"></Target>
+	<Target Name="A-----Test-----A"></Target>
+	<!--***** Unit Testing ***** -->
+	<PropertyGroup>
+		<MbUnitConsArgs>/report-type:$(ReportTypes)  /report-folder:"$(BuildReportsDir)" </MbUnitConsArgs>
+		<MbUnitConsArgs Condition="$(ShowReports)">$(MbUnitConsArgs) /show-reports</MbUnitConsArgs>
+		<NUnitConsArgs>/labels </NUnitConsArgs>
+		<TestX></TestX>
+		<NCoverExe>$(LibsDir)\NCover\NCover.Console.exe</NCoverExe>
+		<TestAllWithMbUnit>true</TestAllWithMbUnit>
+	</PropertyGroup>
+	
+	<Target Name="Test" DependsOnTargets="Build; TestOnly"></Target>
+	<!--Test and Create Reports-->
+	<Target Name="TestWithReports" DependsOnTargets="TestOnly;CreateTestReportsNUnitOnly"></Target>
+	
+	<Target Name="TestNameEmpty"></Target>
+	<Target Name="TestNameNotEmpty"></Target>
+	<!--$(BuildTempDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml-->
+	<Target Name="TestOnly" DependsOnTargets="TestOnlynUnit; TestOnlyMbUnit"></Target>
+	
+	<Target Name="TestOnlynUnit" Inputs="@(TestGroups)" Outputs="$(BuildTempDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml">
+		<!--@(TestAssembly-&gt;'"%(Identity)"', ' ') 
+Only Nunit-->
+		<Exec Command="&quot;$(LibsDir)\NUnit\bin\nunit-console.exe&quot; $(NUnitConsArgs) @(TestGroups,' ')  /xml=&quot;$(BuildTempDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot;" WorkingDirectory="$(BuildTempDir)" IgnoreExitCode="true" Condition="('%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='') AND false">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<!--With NCover-->
+		<Exec Command="&quot;$(NCoverExe)&quot; &quot;$(LibsDir)\NUnit\bin\nunit-console.exe&quot; $(NUnitConsArgs) &quot;@(TestGroups,'&quot; &quot;')&quot;  /xml=&quot;$(BuildTempDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot;  //x &quot;$(BuildTempDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot;  //reg" WorkingDirectory="$(BuildTempDir)" IgnoreExitCode="true" Condition="('%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='')">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<Warning Text="Some tests failed!" Condition="'$(MbUnitExitCode)'!='0' AND ('%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='' )" />
+	</Target>
+	<Target Name="TestOnlyMbUnit" Inputs="@(TestGroups)" Outputs="$(BuildTempDir)\TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).xml">
+		<!--without ncover-->
+		<Exec Command="&quot;$(LibsDir)\MbUnit\bin\MbUnit.cons.exe&quot;  /report-type:xml  /report-folder:&quot;$(BuildTempDir)&quot;  /report-name-format:&quot;TestReport-%(TestGroups.GroupName)$(TestX)-$(Version)&quot; @(TestGroups,' ')" WorkingDirectory="$(LibsDir)\MbUnit\bin" IgnoreExitCode="True" Condition="('%(TestGroups.Type)'=='mbunit') AND false">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<Exec Command="&quot;$(GallioEchoPath)&quot;  /report-type:xml  /report-directory:&quot;$(BuildTempDir)&quot;  /report-name-format:&quot;TestReport-%(TestGroups.GroupName)$(TestX)-$(Version)&quot; @(TestGroups,' ')" WorkingDirectory="$(LibsDir)\MbUnit\bin" IgnoreExitCode="True" Condition="('%(TestGroups.Type)'=='gallio') AND false">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<!--with ncover-->
+		<Exec Command="&quot;$(NCoverExe)&quot; &quot;$(LibsDir)\MbUnit\bin\MbUnit.cons.exe&quot;  /report-type:xml  /report-folder:&quot;$(BuildTempDir)&quot;  /report-name-format:&quot;TestReport-%(TestGroups.GroupName)$(TestX)-$(Version)&quot; &quot;@(TestGroups,'&quot; &quot;')&quot;  //x &quot;$(BuildTempDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot; //reg" WorkingDirectory="$(LibsDir)\MbUnit\bin" IgnoreExitCode="True" Condition="'%(TestGroups.Type)'=='mbunit'">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<Exec Command="&quot;$(NCoverExe)&quot; &quot;$(GallioEchoPath)&quot;  /report-type:xml  /report-directory:&quot;$(BuildTempDir)&quot;  /report-name-format:&quot;TestReport-%(TestGroups.GroupName)$(TestX)-$(Version)&quot; &quot;@(TestGroups,'&quot; &quot;')&quot;  //x &quot;$(BuildTempDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot; //reg" WorkingDirectory="$(LibsDir)\MbUnit\bin" IgnoreExitCode="True" Condition="'%(TestGroups.Type)'=='gallio'">
+			<Output TaskParameter="ExitCode" PropertyName="MbUnitExitCode" />
+		</Exec>
+		<Warning Text="Some tests failed!" Condition="'$(MbUnitExitCode)'!='0' AND '%(TestGroups.Type)'=='mbunit'" />
+		<Warning Text="Some tests failed!" Condition="'$(MbUnitExitCode)'!='0' AND '%(TestGroups.Type)'=='gallio'" />
+	</Target>
+	<Target Name="TestX">
+		<Warning Text="Some tests failed!" Condition="'$(MbUnitExitCode)'!='0'" />
+	</Target>
+	<Target Name="E-----Test-----E"></Target>
+	<!--Copy necessary files to the output folders.-->
+	<Target Name="CopyFiles" DependsOnTargets="CreateBuildDir">
+		<Message Text="Copying files to target folder... @(Binary) Fuck" Importance="High" />
+		<Copy SourceFiles="@(Binary)" DestinationFolder="$(TargetBinDir)\%(Binary.Folder)\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Document)" DestinationFolder="$(TargetDocsDir)\%(Document.Folder)\%(RecursiveDir)" />
+		<Copy SourceFiles="@(Extra)" DestinationFolder="$(TargetExtrasDir)\%(Extra.Folder)\%(RecursiveDir)" />
+		<Copy SourceFiles="@(File)" DestinationFolder="$(TargetDir)\%(File.Folder)\%(RecursiveDir)" />
+	</Target>
+	
+	<!-- ***** Create the Release Package Zip ***** -->
+	<Target Name="BuildZip" DependsOnTargets="CreateBuildDir; Build">
+		<CreateItem Include="$(TargetDir)\**\*.*">
+			<Output TaskParameter="Include" ItemName="ZipFiles" />
+		</CreateItem>
+		<!--Release Files-->
+		<Zip Files="@(ZipFiles)" WorkingDirectory="$(TargetDir)" ZipFileName="$(BuildReleaseDir)\OmberZombie-$(Version)-$(TargetConfig).zip" ZipLevel="9" />
+		<!--Doc only-->
+		<Zip Files="$(TargetDocsDir)\%(DocumentedAssembly.DocName)\%(DocumentedAssembly.DocName)-$(Version).chm" WorkingDirectory="$(TargetDocsDir)\%(DocumentedAssembly.DocName)" ZipFileName="$(BuildReleaseDir)\%(DocumentedAssembly.DocName)-$(Version).doc.zip" ZipLevel="9" />
+		
+		<CreateItem Include="$(BuildReportsDir)\**\*.*">
+			<Output TaskParameter="Include" ItemName="ReportFiles" />
+		</CreateItem>
+	<!--Report Files-->
+		<Zip Files="@(ReportFiles)" WorkingDirectory="$(BuildReportsDir)\" ZipFileName="$(BuildReleaseDir)\OmberZombie-Reports-$(Version).zip" ZipLevel="9" />
+	</Target>
+	
+	<ItemGroup>
+		<BuildAssemblies Include="*.dll" />
+	</ItemGroup>
+	<!-- ***** Build the Documentation ***** -->
+	<PropertyGroup>
+		<CopyrightText>Copyright 2005-2008 OmberZombie Project - http://omberzombie.sourceforge.net/</CopyrightText>
+		<CopyrightHref>http://omberzombie.sourceforge.net/</CopyrightHref>
+		<NDocCommonOptions></NDocCommonOptions>
+		<NDocXMLOptions>@(DocumentedAssembly-&gt;'"%(FullPath)"', ' ') -documenter=Intellisense "-OutputDirectory=$(TargetBinDir)" -UseAssemblyShadowCache=False</NDocXMLOptions>
+		<TargetChmName>OmberZombie</TargetChmName>
+		<NDocCHMOptions> -documenter=MSDN-CHM -UseAbbreviatedFileNames=True -UseAssemblyShadowCache=False -AssemblyVersionInfo=AssemblyVersion "-CopyrightText=$(CopyrightText)" "-CopyrightHref=$(CopyrightHref)" -IncludeDefaultThreadSafety=False -CleanIntermediates=True -SkipCompile=False -UseNamespaceDocSummaries=True</NDocCHMOptions>
+	</PropertyGroup>
+	
+	<Target Name="BuildDocs" DependsOnTargets="BuildXMLDocs; BuildCHMDocs" />
+	<Target Name="BuildXMLDocs" Condition="false">
+		<Exec Command="&quot;$(LibsDir)\NDoc2\NDocConsole.exe&quot; $(NDocXMLOptions)" />
+		<Delete Files="$(TargetBinDir)\ndoc_qa.log;$(TargetBinDir)\ndoc_build.log" />
+	</Target>
+	<Target Name="BuildCHMDocs">
+		<Message Text="Building %(DocumentedAssembly.DocName) for Project %(DocumentedAssembly.Filename)" Condition="Exists('$(HTMLHelpCompilerPath)') " />
+		<Warning Text="Microsoft HTML Help Workshop must be installed so that Compiled HTML help (CHM) documentation can be generated.  Look in libs\Setup Files for the Microsoft HTML Help Workshop installer." Condition="! Exists('$(HTMLHelpCompilerPath)')" />
+		<Exec Command="&quot;$(LibsDir)\NDoc2\NDocConsole.exe&quot; $(NDocCHMOptions) &quot;-OutputDirectory=$(TargetDocsDir)\%(DocumentedAssembly.DocName)&quot; &quot;@(DocumentedAssembly, '&quot; &quot;')&quot;  &quot;-HtmlHelpName=%(DocumentedAssembly.DocName)-$(Version)&quot; &quot;-Title=%(DocumentedAssembly.DocName)&quot; " Condition="Exists('$(HTMLHelpCompilerPath)') "></Exec>
+		<RemoveDir Directories="$(TargetDocsDir)\%(DocumentedAssembly.DocName)\ndoc_msdn_temp" />
+		<CreateProperty Value="$(TargetDocsDir)\OmberZombie.chm">
+			<Output TaskParameter="Value" PropertyName="ChmOut" />
+		</CreateProperty>
+		<Message Text="CHM Output:  @(DocumentedAssembly, ' ')" Importance="high" />
+	</Target>
+	<Target Name="BuildSandcastleDocs" Outputs="$(BuildReleaseDir)\%(Sandcastle.DocName)-$(Version).doc.zip" Inputs="@(BuildAssemblies)" DependsOnTargets="Build">
+		    <PropertyGroup>
+      <SHFBROOT>$(MSBuildProjectDirectory)\tools\SHFB</SHFBROOT>
+      <HHCPath>$(MSBuildProjectDirectory)\tools\HTMLHelpWorkshop</HHCPath>
+    </PropertyGroup>
+		<Message Text="Sandcastle: $(TargetDocsDir)\%(Sandcastle.DocName)\Help\%(Sandcastle.DocName)-$(Version).chm" />
+    
+	<Message Text="Input: @(BuildAssemblies)" Condition="false" />
+		<MSBuild.Community.Tasks.Sandcastle.Sandcastle Condition="false" />
+		<MSBuild Projects="%(Sandcastle.FullPath)" Properties="HelpFileFormat=HtmlHelp1;HtmlHelpName=%(Sandcastle.DocName)-$(Version);HelpTitle=%(Sandcastle.DocName);WorkingPath=$(TargetDocsDir)\%(Sandcastle.DocName)\work\;OutputPath=$(TargetDocsDir)\%(Sandcastle.DocName)\" StopOnFirstFailure="True">
+			<Output TaskParameter="TargetOutputs" ItemName="SandcastleOut" />
+		</MSBuild>
+		
+		<Message Text="SandcastleOut: @(SandcastleOut)" />
+		<!--Sandcastle doc-->
+		<Zip Files="$(TargetDocsDir)\%(Sandcastle.DocName)\%(Sandcastle.DocName)-$(Version).chm" WorkingDirectory="$(TargetDocsDir)\%(Sandcastle.DocName)" ZipFileName="$(BuildReleaseDir)\%(Sandcastle.DocName)-$(Version).doc.zip" ZipLevel="9" />
+	</Target>
+	
+	<Target Name="A-----Compile-----A"></Target>
+	
+	<!-- ***** Build the Assemblies ***** -->
+	<Target Name="CreateBuildDir">
+		<MakeDir Directories="$(BuildDir);$(TargetDir);$(TargetBinDir);$(TargetDocsDir);$(TargetExtrasDir);$(BuildReportsDir);$(BuildReportsDir)\Images;$(BuildReleaseDir);$(BuildTempDir)" />
+	</Target>
+	<Target Name="RemoveBuildDir">
+		<RemoveDir Directories="$(BuildDir)" Condition="Exists('$(BuildDir)')" />
+	</Target>
+	<PropertyGroup>
+		<CSharpProperties>
+      Configuration=$(TargetConfig);
+      Version=$(Version);
+      TargetFX1_1=$(TargetFX1_1);
+      BaseFX1_1OutputPath=bin\$(TargetConfig)\;
+      OutputPath=bin\$(TargetConfig)\;
+      BaseIntermediateOutputPath=obj\</CSharpProperties>
+		<CSharpPropertiesVersion>
+      Configuration=$(TargetConfig);
+      Version=$(Version);
+      TargetFX1_1=$(TargetFX1_1);
+      BaseFX1_1OutputPath=bin\$(TargetConfig)\;
+      OutputPath=bin\$(TargetConfig)\;
+      BaseIntermediateOutputPath=obj\;
+      CustomAfterMicrosoftCommonTargets=$(BuildPath)\Build.Custom.Targets</CSharpPropertiesVersion>
+	</PropertyGroup>
+	<Target Name="SetBuildCSharpProjects">
+		<CreateProperty Value="Build">
+			<Output TaskParameter="Value" PropertyName="TargetType" />
+		</CreateProperty>
+	</Target>
+	<Target Name="BuildCSharpProjects" DependsOnTargets="BuildCSharpVersioned">
+		<CreateProperty Value="Build">
+			<Output TaskParameter="Value" PropertyName="TargetType" />
+		</CreateProperty>
+		<Error Text="Fuck %(ModuleItem.Version)" Condition="false" />
+		<Warning Text="Version: @(CSharpProject) = %(CSharpProject.Version)" Condition="false" />
+	</Target>
+	<Target Name="SetRebuildCSharpProjects">
+		<CreateProperty Value="Rebuild">
+			<Output TaskParameter="Value" PropertyName="TargetType" />
+		</CreateProperty>
+	</Target>
+	<Target Name="RebuildCSharpProjects" DependsOnTargets="BuildCSharpVersioned">
+		<MSBuild Projects="@(CSharpProject)" Targets="Rebuild" Properties="$(CSharpProperties)" Condition="false" />
+	</Target>
+	<Target Name="BuildCSharpVersioned">
+		<Warning Text="XXXXXXXXXXXXX   TargetType   $(TargetType)    XXXXXXXXXXXXXXXXXXXXXX" Condition="false" />
+		<MSBuild Projects="@(CSharpProject)" Targets="$(TargetType)" Properties="$(CSharpProperties) " Condition="'%(CSharpProject.Version)'=='' Or '%(CSharpProject.Version)'==false" RunEachTargetSeparately="True" ContinueOnError="False">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildAssemblies" />
+		</MSBuild>
+		<MSBuild Projects="@(CSharpProject)" Targets="$(TargetType)" Properties="$(CSharpPropertiesVersion)" Condition="'%(CSharpProject.Version)'=='true'" RunEachTargetSeparately="True" ContinueOnError="False">
+			<Output TaskParameter="TargetOutputs" ItemName="BuildAssemblies" />
+		</MSBuild>
+	</Target>
+	<Target Name="CleanCSharpProjects">
+		<MSBuild Projects="@(CSharpProject)" Targets="Clean" Properties="$(CSharpProperties)" />
+	</Target>
+	
+	<Target Name="E-----Compile-----E"></Target>
+	
+	
+	<!--Build the Installer-->
+	<Target Name="BuildInstaller"></Target>
+	
+		
+		<!--Build the Source Server Index-->
+	<Target Name="BuildSourceServerIndex" DependsOnTargets="CreateBuildDir" Condition="true">
+		<Warning Text="The Debugging Tools for Windows must be installed along with the Source Source SDK in order to embed Source Server indexing information in the PDBs." Condition="! Exists('$(SourceServerIndexerPath)')" />
+		<Exec Command="$(Perl)  &quot;$(SourceServerIndexerPath)\ssindex.cmd&quot; /debug -System=svn -Ini=&quot;$(RootDir)\Objects\structz\srcsrv.ini&quot; -Source=&quot;$(RootDir)&quot; -Symbols=&quot;$(TargetBinDir)&quot;" Condition="Exists('$(SourceServerIndexerPath)')" WorkingDirectory="$(SourceServerIndexerPath)" />
+	</Target>
+
+	
+	<!--Build the Source Server Index-->
+	<Target Name="BuildSourceServerIndex2Test" DependsOnTargets="CreateBuildDir" Condition="false">
+			<Warning Text="The Debugging Tools for Windows must be installed along with the Source Source SDK in order to embed Source Server indexing information in the PDBs." Condition="! Exists('$(SourceServerIndexerPath)')" />
+			<Exec Command="$(Perl)  &quot;$(SourceServerIndexerPath)\ssindex.cmd&quot; /debug -System=svn -Ini=&quot;%(CSharpProject.RelativeDir)srcsrv.ini&quot; -Source=&quot;$(SourceDir)&quot; -Symbols=&quot;$(TargetBinDir)&quot;" Condition="Exists('$(SourceServerIndexerPath)')" WorkingDirectory="$(SourceServerIndexerPath)" />
+		</Target>
+	<!--Build FxCop Reports-->
+	<PropertyGroup>
+		<FxCopOutFileName>M00hoo</FxCopOutFileName>
+		<MainCoverageExclusion />
+	</PropertyGroup>
+	<Target Name="BuildFxCop" DependsOnTargets="Build">
+		<!--@(FxCopAssembly)-->
+		<MSBuild.Community.Tasks.FxCop RuleLibraries="@(FxCopRuleAssemblies)" Rules="Microsoft.Design#CA1012;-Microsoft.Performance#CA1805" AnalysisReportFileName="Fxcop-%(FxCopAssembly.Filename)-$(Version).html" DependencyDirectories="$(MSBuildCommunityTasksPath)" FailOnError="False" ApplyOutXsl="True" OutputXslFileName="C:\Program Files\Microsoft FxCop 1.36\Xml\FxCopReport.xsl" TargetAssemblies="%(FxCopAssembly.FullPath)" ToolPath="C:\Program Files\Microsoft FxCop 1.36" WorkingDirectory="$(BuildReportsDir)" />
+	</Target>
+	
+	<Import Project="C:\Program Files\MSBuild\Microsoft\StyleCop\v4.4\Microsoft.StyleCop.Targets" />
+
+	<!--Build the Stylecop reports-->
+	<Target Name="BuildStyleCop" DependsOnTargets="CopyImageFiles">
+		<ItemGroup>
+			<SSources Include="@(StyleCop)" Condition="'%(StyleCop.Type)'=='Source'" />
+			<SSourcesX Condition="'%(StyleCop.Type)'=='Source'" />
+		</ItemGroup>
+		<PropertyGroup>
+			<StyleCopProject Condition="'%(StyleCop.Type)'=='Project'">%(StyleCop.FullPath)</StyleCopProject>
+			<StyleCopSFiles Condition="'%(StyleCop.Name)'!='' AND '%(StyleCop.Type)'=='Source'">@(StyleCop-&gt;'%(FullPath)')</StyleCopSFiles>
+		</PropertyGroup>
+		<Message Text="XXXXXX: &quot;$(StyleCopSFiles)&quot;" Importance="high" />
+		<Message Text="YYYYYYY: $(StyleCopProject)" Condition="false" />
+		<StyleCopTask OutputFile="$(BuildTempDir)\StyleCop-%(StyleCop.Name)-$(Version).xml" ForceFullAnalysis="False" TreatErrorsAsWarnings="True" ProjectFullPath="$(StyleCopProject)" SourceFiles="@(StyleCop-&gt;'%(FullPath)')" Condition="'%(StyleCop.Name)'!='' AND '%(StyleCop.Type)'=='Source' AND true" />
+		<Message Text="IIIIIIIIII: &quot;%(StyleCop.Name)    (arguments: @(StyleCop-&gt;'%(Filename)'))&quot;" />
+		<Exec Command="&quot;$(LibsDir)\Reports\nxslt2.exe&quot; &quot;$(BuildTempDir)\StyleCop-%(StyleCop.Name)-$(Version).xml&quot; &quot;$(LibsDir)\Reports\StyleCopReport.xsl&quot;  &gt; &quot;$(BuildReportsDir)\StyleCop-%(StyleCop.Name)-$(Version).html&quot;" Condition="'%(StyleCop.Name)'!='' AND '%(StyleCop.Type)'=='Source'" />
+	</Target>
+	
+	
+	<Import Project="$(MSBuildProjectDirectory)\Coverage.settings" />
+	
+	<!--	<UsingTask AssemblyFile="$(NCoverExplorerPath)\NCoverExplorer.MSBuildTasks.dll" TaskName="NCoverExplorer.MSBuildTasks.NCoverExplorer" />-->
+	        <UsingTask AssemblyFile="$(NCoverExplorerPath)\NCoverExplorer.MSBuildTasks.dll" TaskName="NCoverExplorer.MSBuildTasks.NCoverExplorer" />
+	<!--<UsingTask AssemblyFile="D:\Temp\RefDreck\RefDreck\BuildTools\NCoverExplorer\NCoverExplorer.MSBuildTasks.dll" TaskName="NCoverExplorer.MSBuildTasks.NCoverExplorer" />-->
+	<!-- ***** build, run tests and create reports. ***** -->
+	<Target Name="CreateTestReports" DependsOnTargets="CreateBuildDir; Test; CreateTestReportsNUnitOnly; CreateTestReportsMbUnitOnly">
+		<!--'%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='' -->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; -noheader Test*.xml -xsl=&quot;$(LibsDir)\Reports\NUnitSummaryT.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestSummary$(TestX)$(Version)N.html&quot;" WorkingDirectory="$(BuildTempDir)"></Exec>
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; -noheader Test*.xml -xsl=&quot;$(LibsDir)\Reports\MBUnitSummary.xsl&quot;   &gt;&gt; &quot;$(BuildReportsDir)\TestSummary$(TestX)$(Version)N.html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="true"></Exec>
+		<NCoverExplorer.MSBuildTasks.NCoverExplorer ToolPath="$(LibsDir)\NCoverExplorer" OutputDir="$(BuildReportsDir)" CoverageFiles="$(BuildTempDir)\Coverage*.xml" HtmlReportName="Coverage-Summary.html" ReportType="ModuleNamespaceSummary" ShowExcluded="True" Exclusions="$(MainCoverageExclusions)" ProjectName="Summary" />
+		<NCoverExplorer.MSBuildTasks.NCoverExplorer CoverageFiles="$(BuildTempDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml" OutputDir="$(BuildReportsDir)" ReportType="ModuleClassFunctionSummary" ToolPath="$(LibsDir)\NCoverExplorer" HtmlReportName="Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).html" Filter="%(TestGroups.CoverageFilter)" Exclusions="%(TestGroups.CoverageExclusion)" SatisfactoryCoverage="80" ProjectName="%(TestGroups.GroupName)" ShowExcluded="True" />
+		<Warning Text="Main is: $(MainCoverageExclusions)" Condition="false" />
+	</Target>
+	
+	<ItemGroup>
+		<ReportImageSourceFiles Include="$(LibsDir)\Reports\Images\**\*.*" />
+		<ReportGallioSourceFiles Include="$(LibsDir)\Reports\gallio\**\*.*" Exclude="$(LibsDir)\Reports\gallio\xsl\**"/>
+	</ItemGroup>
+	
+	<Target Name="CreateTestReportsNUnitOnly" DependsOnTargets="CopyImageFiles">
+		<!--Summary-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\NUnitSummary.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestReport-%(TestGroups.GroupName)$(TestX)-$(Version)N.html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='' "></Exec>
+		<!--Details-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\NUnitDetails.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestDetails-%(TestGroups.GroupName)$(TestX)-$(Version)N.html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="('%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='' ) "></Exec>
+		<!--Coverage-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\NCover\Coverage.xsl&quot;   &gt; &quot;$(BuildReportsDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="('%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='') AND false"></Exec>
+		<!--nxslt-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nxslt2.exe&quot; &quot;$(BuildTempDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).xml&quot; &quot;$(LibsDir)\Reports\NUnitDetails.xsl&quot;  &gt; &quot;$(BuildReportsDir)\TestResult-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" Condition="false" />
+	</Target>
+	<!--Only apply the xsl-transform for the test reports.
+$(BuildTempDir)\TestResult.xml
+$(BuildReportsDir)\TestResult.html-->
+	<Target Name="CreateTestReportsMbUnitOnly" DependsOnTargets="CopyImageFiles">
+		<!--MbUnit-summary-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\MBUnitSummary.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='mbunit'"></Exec>
+		<!--mbunit-Details-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\MBUnitDetails.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestDetails-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='mbunit' "></Exec>
+		<!--Coverage-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\NCover\Coverage.xsl&quot;   &gt; &quot;$(BuildReportsDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='mbunit' AND false"></Exec>
+		<!--Gallio-summary-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\gallio\xsl\Gallio-Report.ccnet-details-condensed.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='gallio'"></Exec>
+		<!--Gallio-Details-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; TestReport-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\Reports\gallio\xsl\Gallio-Report.ccnet-details.xsl&quot;   &gt; &quot;$(BuildReportsDir)\TestDetails-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='gallio' "></Exec>
+		<!--Gallio-->
+		<Exec Command="&quot;$(LibsDir)\Reports\nunit-summary.exe&quot; Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).xml -xsl=&quot;$(LibsDir)\NCover\Coverage.xsl&quot;   &gt; &quot;$(BuildReportsDir)\Coverage-%(TestGroups.GroupName)$(TestX)-$(Version).html&quot;" WorkingDirectory="$(BuildTempDir)" Condition="'%(TestGroups.Type)'=='gallio' AND false"></Exec>
+	</Target>
+	<Target Name="CopyImageFiles">
+		<Copy DestinationFolder="$(BuildReportsDir)\Images" SkipUnchangedFiles="True" SourceFiles="@(ReportImageSourceFiles)" Condition="'%(TestGroups.Type)'=='nunit' OR '%(TestGroups.Type)'=='' " />
+		<Copy DestinationFolder="$(BuildReportsDir)\Images" SkipUnchangedFiles="True" SourceFiles="@(ReportImageSourceFiles)" Condition="'%(TestGroups.Type)'=='mbunit' OR $(TestAllWithMbUnit)" />
+		<Copy DestinationFolder="$(BuildReportsDir)\Images" SkipUnchangedFiles="True" SourceFiles="@(ReportImageSourceFiles)" Condition="'%(TestGroups.Type)'=='gallio' OR $(TestAllWithMbUnit)" />
+		<Copy DestinationFolder="$(BuildReportsDir)\gallio\%(RecursiveDir)" SkipUnchangedFiles="True" SourceFiles="@(ReportGallioSourceFiles)" Condition="'%(TestGroups.Type)'=='gallio' OR $(TestAllWithMbUnit)" />
+		<Copy SourceFiles="@(ReportImageSourceFiles)" DestinationFolder="$(BuildReportsDir)\Images" SkipUnchangedFiles="True" Condition="'%(StyleCop.Name)'!='' AND '%(StyleCop.Type)'=='Source'" />
+	</Target>
+</Project>

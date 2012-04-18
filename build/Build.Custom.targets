@@ -1,0 +1,59 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="GenerateAdditionalAssemblyInfo; CheckFiles">
+	<PropertyGroup>
+		<AdditionalAssemblyInfoTemp>$(IntermediateOutputPath)..\AdditionalAssemblyInfoTemp.cs</AdditionalAssemblyInfoTemp>
+		<AdditionalAssemblyInfo>$(IntermediateOutputPath)..\AdditionalAssemblyInfo.cs</AdditionalAssemblyInfo>
+		<AdditionalAssemblyInfoOrig>$(IntermediateOutputPath)..\AdditionalAssemblyInfoOrig.cs</AdditionalAssemblyInfoOrig>
+		<CompileDependsOn>
+      CheckFiles;
+      GenerateAdditionalAssemblyInfo;
+      $(CompileDependsOn);
+    </CompileDependsOn>
+		<DefineConstantsOrig>$(DefineConstants)</DefineConstantsOrig>
+		<DefineConstants>$(DefineConstants);HAVE_ASSEMBLY_VERSION</DefineConstants>
+		<makeNewFile>true</makeNewFile>
+	</PropertyGroup>
+	<UsingTask AssemblyFile="C:\Program Files\MSBuild\ExtensionPack\MSBuild.ExtensionPack.dll" TaskName="MSBuild.ExtensionPack.FileSystem.File" />
+	<Target Name="GenerateAdditionalAssemblyInfo" Condition="$(makeNewFile)">
+		<WriteLinesToFile File="$(AdditionalAssemblyInfo)" Lines="%(AdditionalAssemblyInfo.Contents)" Overwrite="true"></WriteLinesToFile>
+		<CreateItem Include="$(AdditionalAssemblyInfo)">
+			<Output TaskParameter="Include" ItemName="FileWrites" />
+		</CreateItem>
+	</Target>
+	<Target Name="CheckFiles">
+		<WriteLinesToFile File="$(AdditionalAssemblyInfoTemp)" Lines="%(AdditionalAssemblyInfo.Contents)" Overwrite="true"></WriteLinesToFile>
+		<CreateItem Include="$(AdditionalAssemblyInfoTemp)">
+			<Output TaskParameter="Include" ItemName="FileWrites" />
+		</CreateItem>
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="GetChecksum" Path="$(AdditionalAssemblyInfoTemp)" Condition="Exists($(AdditionalAssemblyInfoTemp))">
+	<Output TaskParameter="Checksum" PropertyName="chksm" />
+</MSBuild.ExtensionPack.FileSystem.File>
+		<MSBuild.ExtensionPack.FileSystem.File TaskAction="GetChecksum" Path="$(AdditionalAssemblyInfo)" Condition="Exists($(AdditionalAssemblyInfo))">
+	<Output TaskParameter="Checksum" PropertyName="chksmOrig" />
+</MSBuild.ExtensionPack.FileSystem.File>
+		<CreateProperty Condition="'$(chksm)'=='$(chksmOrig)'" Value="false">
+			<Output TaskParameter="Value" PropertyName="makeNewFile" />
+		</CreateProperty>
+		<WriteLinesToFile File="$(AdditionalAssemblyInfoOrig)" Lines="%(AdditionalAssemblyInfo.Contents)" Overwrite="True" Condition="false"></WriteLinesToFile>
+		<CreateItem Include="$(AdditionalAssemblyInfoOrig)" Condition="false">
+			<Output TaskParameter="Include" ItemName="FileWrites" />
+		</CreateItem>
+		<!--'$(chksm)'=='$(chksmOrig)'-->
+		<CreateProperty Value="$(DefineConstantsOrig)" Condition="false">
+			<Output TaskParameter="Value" PropertyName="DefineConstants" />
+		</CreateProperty>
+		<Warning Text="makeNew: $(makeNewFile)" Condition="false" />
+		<Warning Text="Dongens: %(CSharpProject.Version) $(MSBuildProjectName)" Condition="false" />
+		<Warning Text="DefConstants : $(DefineConstants)" Condition="false" />
+		<Message Condition="$(makeNewFile)" Importance="high" Text="Creating new Version File: $(AdditionalAssemblyInfo) with Version: $(Version)" />
+	</Target>
+	<ItemGroup>
+		<Compile Include="$(AdditionalAssemblyInfo)" />
+		<AdditionalAssemblyInfo Include="$(AdditionalAssemblyInfo)">
+			<Contents>
+        using System.Reflection%3B;
+        [assembly: AssemblyFileVersion("$(Version)")];
+        [assembly: AssemblyVersion("$(Version)")];
+      </Contents>
+		</AdditionalAssemblyInfo>
+	</ItemGroup>
+</Project>

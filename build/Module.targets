@@ -1,0 +1,125 @@
+<Project InitialTargets="GetModuleItems" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	
+	<PropertyGroup>
+		<LibsDir>$(RootDir)\BuildTools</LibsDir>
+		<SourceDir>$(RootDir)\structz</SourceDir>
+		<BuildDir>$(RootDir)\output</BuildDir>
+		<BuildReportsDir>$(BuildDir)\reports</BuildReportsDir>
+		<BuildReleaseDir>$(BuildDir)\$(TargetConfig)</BuildReleaseDir>
+		<BuildTempDir>$(BuildDir)\temp</BuildTempDir>
+		<TargetDir>$(BuildDir)\target</TargetDir>
+		<TargetBinDir>$(TargetDir)\bin</TargetBinDir>
+		<TargetDocsDir>$(TargetDir)\docs</TargetDocsDir>
+		<TargetExtrasDir>$(TargetDir)\extras</TargetExtrasDir>
+		<MSBuildCommunityTasksPath>$(MSBuildExtensionsPath)\MSBuildCommunityTasks</MSBuildCommunityTasksPath>
+		<NCoverExplorerPath>$(LibsDir)\NCoverExplorer</NCoverExplorerPath>
+		<GallioEchoPath>C:\Program Files\Gallio\bin\Gallio.Echo.exe</GallioEchoPath>
+		<BuildToolsFolder>trunk</BuildToolsFolder>
+	</PropertyGroup>
+	
+	<Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
+	<Target Name="GetModuleItems" DependsOnTargets="GetMainModuleItems; GetTestUnits; GetStylecopItems; SSS" Outputs="@(ModuleItem)">
+	</Target>
+	
+	<Target Name="GetMainModuleItems" Outputs="@(ModuleItem)">
+		<Error Text="RootDir property must be defined." Condition="'$(RootDir)'==''" />
+		<MSBuild Projects="@(NestedModule)" Targets="GetModuleItems" Properties="RootDir=$(RootDir);TargetConfig=$(TargetConfig);BuildPath=$(BuildPath)" Condition="'@(NestedModule)'!=''">
+			<Output TaskParameter="TargetOutputs" ItemName="NestedModuleItem" />
+		</MSBuild>
+		<CreateItem Include="@(NestedModuleItem)" Condition="'@(NestedModuleItem)'!=''">
+			<Output TaskParameter="Include" ItemName="%(NestedModuleItem.ItemName)" />
+		</CreateItem>
+		<CreateItem Include="@(CSharpProject-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=CSharpProject">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(CSharpProject-&gt;'%(Version)')" ContinueOnError="False" AdditionalMetadata="ItemName=VersionX" Condition="false">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<Warning Text="FuckSUCKEEEEEEEEEER: %(CSharpProject.Version)" Condition="false" />
+		<CreateItem Include="@(TestAssembly-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=TestAssembly">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+<CreateItem Include="@(Testgroup-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Testgroup">
+	<Output TaskParameter="Include" ItemName="ModuleItem" />
+</CreateItem>
+		<CreateItem Include="@(FxCopAssembly-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=FxCopAssembly">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(DocumentedAssembly-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=DocumentedAssembly;DocName=%(DocumentedAssembly.DocName)" Condition="'%(DocumentedAssembly.DocName)'!=''">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(Sandcastle-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Sandcastle;DocName=%(Sandcastle.DocName);Input=$(InputTargetDir)" Condition="'%(Sandcastle.DocName)'!=''">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(DocumentedAssembly-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=DocumentedAssembly;DocName=Main" Condition="'%(DocumentedAssembly.DocName)'==''">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(Binary-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Binary">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(Document-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Document">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(Extra-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Extra">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(File-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=File">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<CreateItem Include="@(Ndoc-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=Ndoc">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<Message Text="AAAAAAAASandcastleAssembly:  " Condition="false" />
+	</Target>
+	
+
+	<Target Name="GetTestUnits" Outputs="@(TestGroups)">
+		<CreateItem Include="%(TestAssembly.TestGroup)" Condition="false">
+			<Output TaskParameter="Include" ItemName="TestGroups" />
+		</CreateItem>
+		<CreateItem AdditionalMetadata="GroupName=%(TestAssembly.TestGroup);Type=%(TestAssembly.Type)" Include="@(TestAssembly-&gt;'%(FullPath)')" Condition="'%(TestAssembly.TestGroup)'!=''">
+			<Output TaskParameter="Include" ItemName="TestGroups" />
+		</CreateItem>
+		<!--'%(TestAssembly.TestGroup)'==''-->
+		<CreateItem AdditionalMetadata="GroupName=Main;Type=%(TestAssembly.Type)" Include="@(TestAssembly-&gt;'%(FullPath)')" Condition="'%(TestAssembly.TestGroup)'==''">
+			<Output TaskParameter="Include" ItemName="TestGroups" />
+		</CreateItem>
+		<CreateItem AdditionalMetadata="Type=%(TestAssembly.Type)" Include="@(TestAssembly-&gt;'%(FullPath)')" Condition="false">
+			<Output TaskParameter="Include" ItemName="TestGroups" />
+		</CreateItem>
+	</Target>
+	
+	<Target Name="GetStylecopItems" Outputs="@(ModuleItem)">
+		<CreateItem Include="@(StyleCop-&gt;'%(FullPath)')" AdditionalMetadata="ItemName=StyleCop;Type=%(StyleCop.Type);Name=%(StyleCop.Name)">
+			<Output TaskParameter="Include" ItemName="ModuleItem" />
+		</CreateItem>
+		<Message Text="StyleCopSources:  %(StyleCopSources.FullPath)" Condition="false" />
+		<Message Text="EEEEEEEEEEE: &quot;$(StyleHeiner)&quot;" Condition="false" />
+	</Target>
+	
+	<Target Name="RecursiveBeforeBuild" DependsOnTargets="BeforeBuild;_NestedRecursiveBeforeBuild" />
+	
+	<Target Name="RecursiveAfterBuild" DependsOnTargets="_NestedRecursiveAfterBuild;AfterBuild" />
+	
+	
+	<Target Name="_NestedRecursiveBeforeBuild">
+		<MSBuild Projects="@(NestedModule)" Targets="RecursiveBeforeBuild" Properties="RootDir=$(RootDir);TargetConfig=$(TargetConfig);BuildPath=$(BuildPath)" Condition="'@(NestedModule)'!=''" />
+	</Target>
+	
+	
+	
+	
+	<Target Name="_NestedRecursiveAfterBuild">
+		<MSBuild Projects="@(NestedModule)" Targets="RecursiveAfterBuild" Properties="RootDir=$(RootDir);TargetConfig=$(TargetConfig);BuildPath=$(BuildPath)" Condition="'@(NestedModule)'!=''" />
+	</Target>
+	
+	<!-- Override this target to add custom before build actions -->
+	<Target Name="BeforeBuild"></Target>
+	<!-- Override this target to add custom after build actions -->
+	<Target Name="AfterBuild"></Target>
+	<Target Name="SSS" Outputs="@(ModuleItem)">
+		<CreateItem AdditionalMetadata="ItemName=StyleCop" Include=".\**\*.cs">
+			<Output TaskParameter="Include" ItemName="SSS" />
+		</CreateItem>
+	</Target>
+</Project>

@@ -1,0 +1,31 @@
+
+
+
+Source Server Integration
+=========================
+
+To make the debug Information accessible from a source server you 
+need:
+* The Debugging Tools for Windows. 
+  ( from http://www.microsoft.com/whdc/DevTools/Debugging/default.mspx)
+* Installed Perl ( i use Active Perl https://www.activestate.com/activeperl/downloads/)
+* A svn client ( http://www.open.collab.net/downloads/subversion/ )
+* The sources as part of a checked out working copy with open access to the 
+  svn repository like SourceForge, your own server or another provider.
+
+Set the Perl Variable to your executable: <Perl>c:\perl\perl\bin\perl.exe</Perl>.
+Set the SourceServerIndexerPath to the srcsrv directory, e.g.
+$(ProgramFiles)\Debugging Tools for Windows (x86)\srcsrv. Then adjust the settings
+in your srcsrv.ini file. Possibly you have to set the correct path to your svn
+executable.
+Once set up correctly you can index your pdb's with msbuild /t:BuildSourceServerIndex.
+
+
+Set
+	<!--Build the Source Server Index-->
+	<Target Name="BuildSourceServerIndex" DependsOnTargets="CreateBuildDir" Condition="false">
+
+to true.
+
+run
+Build>msbuild /t:BuildSourceServerIndex

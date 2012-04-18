@@ -1,0 +1,26 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+	<MainCoverageExclusions> 
+		<CoverageExclusion>
+			<ExclusionType>Namespace</ExclusionType>
+			<Pattern>Jedzia.Objects.structz.SerializersXXX.DonotUSE</Pattern>
+		</CoverageExclusion>
+		<CoverageExclusion>
+			<ExclusionType>Assembly</ExclusionType>
+			<Pattern>UnitTests.*</Pattern>
+		</CoverageExclusion>
+		<CoverageExclusion>
+				<ExclusionType>Assembly</ExclusionType>
+				<Pattern>orebeltDBTesting</Pattern>
+		</CoverageExclusion>
+		<CoverageExclusion>
+				<ExclusionType>Assembly</ExclusionType>
+				<Pattern>Gallio</Pattern>
+		</CoverageExclusion>
+		<CoverageExclusion>
+				<ExclusionType>Assembly</ExclusionType>
+				<Pattern>MbUnit</Pattern>
+		</CoverageExclusion>
+	</MainCoverageExclusions> 
+	</PropertyGroup>
+</Project>
