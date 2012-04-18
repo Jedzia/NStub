@@ -1,0 +1,48 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" InitialTargets="VarShow">
+	<Import Project="$(BuildPath)\Module.targets"/>
+	<Target Name="VarShow">
+		<!--		<Message Text="Der RootDir: $(RootDir)" />
+  		<Message Text="Der MSBuildExtensionsPath: $(MSBuildExtensionsPath)" />
+  		<Message Text="das TargetBinDir: $(TargetBinDir)" />
+  		<Message Text="!!!!!!!!!!!!!!!!das TargetConfig: $(TargetConfig)!!!!!!!!!!!!!!!!!!" />
+  		<Message Text="!!!!!!!!!!!!!!!!das BuildPath: $(BuildPath)!!!!!!!!!!!!!!!!!!" />
+
+  		<Message />
+  		<Message />
+   -->
+	</Target>
+	<ItemGroup>
+		<CSharpProject Include="NStub.CSharp.csproj">
+			<Version>false</Version>
+		</CSharpProject>
+	</ItemGroup>
+	<ItemGroup>
+		<Binary Include="bin\$(TargetConfig)\*.*"/>
+		<!--    <Binary Include="bin\$(TargetConfig)\RefDreck.exe" />
+    <Binary Include="bin\$(TargetConfig)\RefDreck.pdb" /> -->
+		<Extra Include="Documentation\DocProject\structzDocSite\Images\*">
+			<Folder>CCNet\images</Folder>
+		</Extra>
+	</ItemGroup>
+	<ItemGroup>
+		<DocumentedAssembly Include="bin\$(TargetConfig)\NStub.CSharp.dll">
+		<DocName>NStub-Library CSharp Code Generator API-Documentation</DocName>
+		</DocumentedAssembly>
+	</ItemGroup>
+	<ItemGroup>
+		<FxCopAssembly Include="bin\$(TargetConfig)\NStub.CSharp.dll"/>
+	</ItemGroup>
+	<ItemGroup>
+		<StyleCop Exclude=".\**\AssemblyInfo.cs; .\UnitTests\**\*.cs; .\Documentation\\**\*.cs" 
+		Include=".\*.cs; .\Wizard\**\*.cs">
+			<Type>Source</Type>
+			<Name>NStub-Library CSharp Code Generator StyleCop Overview</Name>
+		</StyleCop>
+		<StyleCop Include="..\Settings.StyleCop">
+			<Type>Project</Type>
+		</StyleCop>
+	</ItemGroup>
+	<ItemGroup>
+		<Ndoc Include="Documentation\structz.ndoc"/>
+	</ItemGroup>
+</Project>

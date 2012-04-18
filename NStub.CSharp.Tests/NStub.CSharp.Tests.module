@@ -1,0 +1,74 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(BuildPath)\Module.targets" />
+  
+
+  <ItemGroup>
+    <CSharpProject Include="NStub.CSharp.Tests.csproj">
+    <Version>false</Version>
+    </CSharpProject>
+  </ItemGroup>
+
+	           <PropertyGroup> 
+	               <CoverageExclusions> 
+	                  <CoverageExclusion>
+	                      <ExclusionType>Assembly</ExclusionType>
+	                      <Pattern>UnitTests.*</Pattern> 
+	                  </CoverageExclusion> 
+<!--	                  <CoverageExclusion>
+	                      <ExclusionType>Namespace</ExclusionType>
+	                      <Pattern>^[^J].*</Pattern> 
+	                      <IsRegex>true</IsRegex> 
+	                  </CoverageExclusion>  -->
+	                  <CoverageExclusion>
+	                      <ExclusionType>Namespace</ExclusionType>
+	                      <Pattern>Jedzia.Objects.structz.SerializersXXX.DonotUSE</Pattern> 
+	                  </CoverageExclusion>
+	                  <CoverageExclusion>
+	                      <ExclusionType>Namespace</ExclusionType>
+	                      <Pattern>^(?!Jedzia.Objects.structz.Serializers).*</Pattern> 
+	                      <IsRegex>true</IsRegex> 
+	                  </CoverageExclusion>
+	               </CoverageExclusions> 
+	           </PropertyGroup>
+
+  <ItemGroup>
+    <TestAssembly Include="bin\$(TargetConfig)\NStub.CSharp.Tests.dll">
+		<TestGroup>ViewModel</TestGroup>
+		<Type>gallio</Type>
+		<!--<CoverageExclusion>Assembly=UnitTests.*</CoverageExclusion>-->
+		<CoverageExclusion>$(CoverageExclusions)</CoverageExclusion>
+    </TestAssembly>
+  </ItemGroup>
+
+<!--
+	<ItemGroup>
+		<Testgroup Include="MainTests">
+			<GroupName>SerializerTest</GroupName>
+			<MFullPath>@(TestAssembly-&gt;'"%(FullPath)"', ' ')</MFullPath>
+		</Testgroup>
+		<Testgroup Include="MainTests">
+			<GroupName>SerializerTest</GroupName>
+			<MFullPath>SchlabbelDi.babbel.assembly.dll</MFullPath>
+		</Testgroup>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Testgroup Include="MainTests">
+			<GroupName>ObjectTest</GroupName>
+			<MFullPath>@(TestAssembly-&gt;'"%(FullPath)"', ' ')</MFullPath>
+		</Testgroup>
+	</ItemGroup>
+-->
+
+
+	<ItemGroup>
+<!--		<DocumentedAssembly Include="bin\$(TargetConfig)\NStub.CSharp.Tests.dll">
+		<DocName>Tests</DocName>
+		</DocumentedAssembly> -->
+	</ItemGroup>
+
+    <ItemGroup>
+      <Ndoc Include="Documentation\structz.ndoc" />
+    </ItemGroup>
+
+</Project>

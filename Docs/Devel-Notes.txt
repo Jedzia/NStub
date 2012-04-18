@@ -1,0 +1,54 @@
+Themes and Skins
+==================
+
+There is currently no documented way of defining a new theme. All
+you can do is add features to the built-in themes. 
+So, if the terminology "Theme" is used in the program or documentation,
+in fact, a skin is meaned.
+
+
+WPG DataTemplate's
+===================
+
+Jedzia.SamCat.Tasks
+=======================
+
+Wildcard resolution
+--------------------
+
+Sample task generator output:
+------------------------------
+ 
+ IoC stuff
+============================
+
+Schema Files:
+==============
+Main location at Jedzia.SamCat.Model
+Try to use links to this, when possible ... for DTO, or Business Model auto-generated sources.
+
+Build
+==============
+To create test reports:
+build> msbuild /v:m /t:CreateTestReports
+
+To run the unit tests:
+msbuild /t:Test
+
+Create a StyleCop report:
+msbuild /verbosity:quiet /t:BuildStyleCop
+msbuild /v:m /t:BuildStyleCop > buildlog.txt
+
+To build a CHM documentation:
+msbuild /v:m /t:BuildCHMDocs
+
+
+	<Target Name="All" DependsOnTargets="Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;CreateTestReports;BuildFxCop;BuildInstaller;BuildZip"></Target>
+	<Target Name="Complete" DependsOnTargets="Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;CreateTestReports;BuildFxCop;BuildInstaller;BuildZip"></Target>
+	
+	<Target Name="Release" DependsOnTargets="Clean;Build;BuildSourceServerIndex;BuildDocs;BuildInstaller;BuildZip" />
+	<Target Name="Build" DependsOnTargets="$(BuildDependsOnTargets)"></Target>
+	<Target Name="Rebuild" DependsOnTargets="$(RebuildDependsOnTargets)"></Target>
+	<Target Name="Clean" DependsOnTargets="$(CleanDependsOnTargets)"></Target>
+
+
