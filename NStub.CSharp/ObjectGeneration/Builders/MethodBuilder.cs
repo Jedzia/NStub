@@ -8,9 +8,8 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
-    using System;
     using NStub.CSharp.BuildContext;
 
     /// <summary>

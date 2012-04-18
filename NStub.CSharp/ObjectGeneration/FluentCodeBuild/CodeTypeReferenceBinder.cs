@@ -1,4 +1,14 @@
-﻿namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CodeTypeReferenceBinder.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 {
     using System.CodeDom;
 
@@ -12,48 +22,21 @@
             var cm = new CodeMemberMethod();
             cm.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
         }*/
+        #region Fields
 
         private readonly CodeMemberMethod method;
         private readonly CodeExpression reference;
         private CodeMethodInvokeExpression invoker;
+        private CodeLocalVariableBinder localVar;
 
-        internal CodeMethodInvokeExpression Invoker
-        {
-            get { return invoker; }
-        }
+        #endregion
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is a type reference. At the moment checks
-        /// for 'reference is CodeTypeReferenceExpression';
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is type reference; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsTypeReference
-        {
-            get { return reference is CodeTypeReferenceExpression; }
-        }
-
-        /// <summary>
-        /// Gets the expression to the referenced type.
-        /// </summary>
-        public CodeTypeReferenceExpression TypeReference
-        {
-            get { return reference as CodeTypeReferenceExpression; }
-        }
-
-        /// <summary>
-        /// Gets the expression to the referenced type.
-        /// </summary>
-        public CodeExpression Expression
-        {
-            get { return reference; }
-        }
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CodeTypeReferenceBinder"/> class.
         /// </summary>
-        /// <param name="method">The method to add a CodeTypeReference to.</param>
+        /// <param name="method">The method to add a <see cref="CodeTypeReference"/> to.</param>
         /// <param name="reference">The reference to a variable or type.</param>
         internal CodeTypeReferenceBinder(CodeMemberMethod method, CodeExpression reference)
         {
@@ -63,80 +46,93 @@
             this.reference = reference;
         }
 
+        #endregion
+
+        #region Properties
+
         /// <summary>
-        /// Add a primitive parameter to the method invocation.
+        /// Gets the expression to the referenced type.
         /// </summary>
-        /// <param name="value">The content of the primitive expression.</param>
-        /// <returns>
-        /// A fluent interface to build up reference types.
-        /// </returns>
-        public CodeTypeReferenceBinder With(object value)
+        public CodeExpression Expression
         {
-            if (invoker == null)
+            get
             {
-                throw new CodeTypeReferenceException(this, "Cannot add parameter to a method that is not defined." +
-                                                           "Use Invoke(...) to specify the method." );
+                return this.reference;
             }
-            var primitive = new CodePrimitiveExpression(value);
-            invoker.Parameters.Add(primitive);
-            return this;
         }
 
         /// <summary>
-        /// Add a parameter with a reference to a local variable of the specified name to the method invocation.
+        /// Gets a value indicating whether this instance is a type reference. At the moment checks
+        /// for 'reference is <see cref="CodeTypeReferenceExpression"/>';
         /// </summary>
-        /// <param name="variableName">The name of the referenced local variable.</param>
-        /// <returns>
-        /// A fluent interface to build up reference types.
-        /// </returns>
-        public CodeTypeReferenceBinder WithReference(string variableName)
+        /// <value>
+        /// <c>true</c> if this instance is type reference; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsTypeReference
         {
-            // Todo: add WithThisReference
-            if (invoker == null)
+            get
             {
-                throw new CodeTypeReferenceException(this, "Cannot add parameter to a method that is not defined." +
-                                                           "Use Invoke(...) to specify the method.");
+                return this.reference is CodeTypeReferenceExpression;
             }
-            var varRef = new CodeVariableReferenceExpression(variableName);
-            invoker.Parameters.Add(varRef);
-            return this;
         }
 
         /// <summary>
-        /// Add multiple parameters with a reference to a local variables of the specified name to the method invocation.
+        /// Gets the expression to the referenced type.
         /// </summary>
-        /// <param name="variableNames">The list of local variable names.</param>
-        /// <returns>
-        /// A fluent interface to build up reference types.
-        /// </returns>
-        public CodeTypeReferenceBinder WithReference(params string[] variableNames)
+        public CodeTypeReferenceExpression TypeReference
         {
-            // Todo: add WithThisReference
-            if (invoker == null)
+            get
             {
-                throw new CodeTypeReferenceException(this, "Cannot add parameter to a method that is not defined." +
-                                                           "Use Invoke(...) to specify the method.");
+                return this.reference as CodeTypeReferenceExpression;
             }
-
-            foreach (var variableName in variableNames)
-            {
-                var varRef = new CodeVariableReferenceExpression(variableName);
-                invoker.Parameters.Add(varRef);
-            }
-
-            return this;
         }
 
         /// <summary>
-        /// Specify the name of the method to invoke.
+        /// Gets the invoker expression of the type.
         /// </summary>
-        /// <param name="methodname">The name of the method.</param>
-        /// <returns>A fluent interface to build up reference types.</returns>
-        public CodeTypeReferenceBinder Invoke(string methodname)
+        internal CodeMethodInvokeExpression Invoker
         {
-            invoker = new CodeMethodInvokeExpression();
-            invoker.Method = new CodeMethodReferenceExpression(reference, methodname);
-            return this;
+            get
+            {
+                return this.invoker;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the reference to the memorized local variable.
+        /// </summary>
+        /// <value>
+        /// The local variable declaration.
+        /// </value>
+        internal CodeLocalVariableBinder LocalVar
+        {
+            get
+            {
+                return this.localVar;
+            }
+
+            set
+            {
+                this.localVar = value;
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Completes the creation of the reference type with an assignment of a member field.
+        /// </summary>
+        /// <param name="fieldName">Name of the member field to assign.</param>
+        /// <returns>
+        /// A fluent interface to build up methods.
+        /// </returns>
+        public CodeMemberMethod AssignField(string fieldName)
+        {
+            // Todo: member checking.
+            var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName);
+            var as1 = new CodeAssignStatement(fieldRef1, this.invoker);
+            this.method.Statements.Add(as1);
+            return this.method;
         }
 
         /// <summary>
@@ -152,31 +148,17 @@
             // Todo: member checking.
             if (createVariable)
             {
-                var localDecl = new CodeVariableDeclarationStatement("var", variableName, invoker);
-                method.Statements.Add(localDecl);
+                var localDecl = new CodeVariableDeclarationStatement("var", variableName, this.invoker);
+                this.method.Statements.Add(localDecl);
             }
             else
             {
                 var localRef = new CodeVariableReferenceExpression(variableName);
-                var as1 = new CodeAssignStatement(localRef, invoker);
-                method.Statements.Add(as1);
+                var as1 = new CodeAssignStatement(localRef, this.invoker);
+                this.method.Statements.Add(as1);
             }
-            return method;
-        }
 
-        /// <summary>
-        /// Completes the creation of the reference type with an assignment of a member field.
-        /// </summary>
-        /// <returns>
-        /// A fluent interface to build up methods.
-        /// </returns>
-        public CodeMemberMethod AssignField(string fieldName)
-        {
-            // Todo: member checking.
-            var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName);
-            var as1 = new CodeAssignStatement(fieldRef1, invoker);
-            method.Statements.Add(as1);
-            return method;
+            return this.method;
         }
 
         /// <summary>
@@ -188,29 +170,101 @@
         public CodeMemberMethod Commit()
         {
             // Todo: member checking.
-            if (localVar != null)
+            if (this.localVar != null)
             {
-                var temp = localVar;
-                localVar = null;
+                var temp = this.localVar;
+                this.localVar = null;
                 return temp.Commit(this);
             }
 
-            method.Statements.Add(invoker);
-            return method;
+            this.method.Statements.Add(this.invoker);
+            return this.method;
         }
 
-        private CodeLocalVariableBinder localVar;
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodName">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public CodeTypeReferenceBinder Invoke(string methodName)
+        {
+            this.invoker = new CodeMethodInvokeExpression
+                               {
+                                   Method = new CodeMethodReferenceExpression(this.reference, methodName)
+                               };
+            return this;
+        }
 
         /// <summary>
-        /// Gets or sets the reference to the memorized local variable.
+        /// Add a primitive parameter to the method invocation.
         /// </summary>
-        /// <value>
-        /// The local variable declaration.
-        /// </value>
-        internal CodeLocalVariableBinder LocalVar
+        /// <param name="value">The content of the primitive expression.</param>
+        /// <returns>
+        /// A fluent interface to build up reference types.
+        /// </returns>
+        /// <exception cref="CodeTypeReferenceException">Cannot add parameter to a method that is not defined.Use Invoke(...) to specify the method.</exception>
+        public CodeTypeReferenceBinder With(object value)
         {
-            get { return localVar; }
-            set { localVar = value; }
+            if (this.invoker == null)
+            {
+                const string Msg = "Cannot add parameter to a method that is not defined." +
+                                   "Use Invoke(...) to specify the method.";
+                throw new CodeTypeReferenceException(this, Msg);
+            }
+
+            var primitive = new CodePrimitiveExpression(value);
+            this.invoker.Parameters.Add(primitive);
+            return this;
+        }
+
+        /// <summary>
+        /// Add a parameter with a reference to a local variable of the specified name to the method invocation.
+        /// </summary>
+        /// <param name="variableName">The name of the referenced local variable.</param>
+        /// <returns>
+        /// A fluent interface to build up reference types.
+        /// </returns>
+        /// <exception cref="CodeTypeReferenceException">Cannot add parameter to a method that is not defined.Use Invoke(...) to specify the method.</exception>
+        public CodeTypeReferenceBinder WithReference(string variableName)
+        {
+            // Todo: add WithThisReference
+            if (this.invoker == null)
+            {
+                const string Msg = "Cannot add parameter to a method that is not defined." +
+                                   "Use Invoke(...) to specify the method.";
+                throw new CodeTypeReferenceException(this, Msg);
+            }
+
+            var varRef = new CodeVariableReferenceExpression(variableName);
+            this.invoker.Parameters.Add(varRef);
+            return this;
+        }
+
+        /// <summary>
+        /// Add multiple parameters with a reference to a local variables of the specified name to the method invocation.
+        /// </summary>
+        /// <param name="variableNames">The list of local variable names.</param>
+        /// <returns>
+        /// A fluent interface to build up reference types.
+        /// </returns>
+        /// <exception cref="CodeTypeReferenceException">Cannot add parameter to a method that is not defined.Use Invoke(...) to specify the method.</exception>
+        public CodeTypeReferenceBinder WithReference(params string[] variableNames)
+        {
+            // Todo: add WithThisReference
+            if (this.invoker == null)
+            {
+                const string Msg = "Cannot add parameter to a method that is not defined." +
+                                   "Use Invoke(...) to specify the method.";
+                throw new CodeTypeReferenceException(this, Msg);
+            }
+
+            foreach (var variableName in variableNames)
+            {
+                var varRef = new CodeVariableReferenceExpression(variableName);
+                this.invoker.Parameters.Add(varRef);
+            }
+
+            return this;
         }
 
         /*public CodeMemberMethod Assign()
@@ -223,6 +277,5 @@
             //method.Statements.Add(invoker);
             return method;
         }*/
-
     }
 }

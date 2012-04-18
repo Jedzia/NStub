@@ -103,13 +103,16 @@
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeLocalVariableBinder.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMemberField.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethod.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethodExpression.cs" />
     <Compile Include="ObjectGeneration\IBuilderData.cs" />
     <Compile Include="ObjectGeneration\IBuildHandler.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilder.cs" />
+    <Compile Include="ObjectGeneration\IMemberBuildResult.cs" />
     <Compile Include="ObjectGeneration\ITestBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\MemberBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\MethodBuilder.cs" />
+    <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttribute.cs" />
     <Compile Include="ObjectGeneration\ParameterInfoCollection.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderData.cs" />

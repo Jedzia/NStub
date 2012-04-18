@@ -1,11 +1,20 @@
-﻿namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
-{
-    using System.CodeDom;
-    using System;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CodeLocalVariableBinder.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
 
+namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
+{
+    using System;
+    using System.CodeDom;
 
     /// <summary>
-    /// Build a reference type from fluent parameters.
+    /// Build a local variable from fluent parameters.
     /// </summary>
     public class CodeLocalVariableBinder
     {
@@ -14,39 +23,24 @@
             var cm = new CodeMemberMethod();
             cm.StaticClass("Assert").Invoke("Inconclusive").With("Thisone").Commit();
         }*/
+        #region Fields
 
         private readonly CodeMemberMethod method;
-        private readonly CodeVariableDeclarationStatement variableDeclaration;
         private readonly CodeVariableReferenceExpression reference;
-        //private CodeMethodInvokeExpression invoker;
+        private readonly CodeVariableDeclarationStatement variableDeclaration;
+
+        // private CodeMethodInvokeExpression invoker;
         private CodeStatement assignStatement;
 
-        internal CodeStatement AssignStatement
-        {
-            get { return assignStatement; }
-        }
-        
-        /// <summary>
-        /// Gets the expression to the referenced type.
-        /// </summary>
-        internal CodeVariableReferenceExpression LocalVariableReference
-        {
-            get { return reference; }
-        }
+        #endregion
+
+        #region Constructors
 
         /// <summary>
-        /// Gets the expression to the referenced type.
-        /// </summary>
-        public CodeVariableDeclarationStatement LocalVariableDeclaration
-        {
-            get { return variableDeclaration; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CodeTypeReferenceBinder"/> class
+        /// Initializes a new instance of the <see cref="CodeLocalVariableBinder"/> class
         /// with a local variable declaration.
         /// </summary>
-        /// <param name="method">The method to add a CodeTypeReference to.</param>
+        /// <param name="method">The method to add a <see cref="CodeTypeReference"/> to.</param>
         /// <param name="variableDeclaration">The variable declaration to add.</param>
         internal CodeLocalVariableBinder(CodeMemberMethod method, CodeVariableDeclarationStatement variableDeclaration)
         {
@@ -57,10 +51,10 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CodeTypeReferenceBinder"/> class
+        /// Initializes a new instance of the <see cref="CodeLocalVariableBinder"/> class
         /// with a reference to a variable.
         /// </summary>
-        /// <param name="method">The method to add a CodeTypeReference to.</param>
+        /// <param name="method">The method to add a <see cref="CodeTypeReference"/> to.</param>
         /// <param name="reference">The reference to a local variable.</param>
         internal CodeLocalVariableBinder(CodeMemberMethod method, CodeVariableReferenceExpression reference)
         {
@@ -69,6 +63,45 @@
             this.method = method;
             this.reference = reference;
         }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the expression to the referenced type.
+        /// </summary>
+        public CodeVariableDeclarationStatement LocalVariableDeclaration
+        {
+            get
+            {
+                return this.variableDeclaration;
+            }
+        }
+
+        /// <summary>
+        /// Gets the assign statement of the variable.
+        /// </summary>
+        internal CodeStatement AssignStatement
+        {
+            get
+            {
+                return this.assignStatement;
+            }
+        }
+
+        /// <summary>
+        /// Gets the expression to the referenced type.
+        /// </summary>
+        internal CodeVariableReferenceExpression LocalVariableReference
+        {
+            get
+            {
+                return this.reference;
+            }
+        }
+
+        #endregion
 
         /*/// <summary>
         /// Add a primitive parameter to the method invocation.
@@ -121,21 +154,6 @@
             return this;
         }*/
 
-        /// <summary>
-        /// Add a reference to a static class to the method body. Like 'Assert' or 'DateTime'.
-        /// </summary>
-        /// <param name="className">Name of the class.</param>
-        /// <returns>A fluent interface to build up reference types.</returns>
-        public CodeTypeReferenceBinder StaticClass(string className)
-        {
-            //var localRef = new CodeVariableReferenceExpression(this.reference.Name);
-            //var as1 = new CodeAssignStatement(localRef, invoker);
-            var staticexpr = new CodeTypeReferenceExpression(className);
-            var result = new CodeTypeReferenceBinder(method, staticexpr);
-            result.LocalVar = this;
-            return result;
-        }
-
         /*/// <summary>
         /// Completes the creation of the reference type with an assignment of a local variable.
         /// </summary>
@@ -170,10 +188,47 @@
         public CodeLocalVariableBinder Assign()
         {
             // Todo: member checking.
-            //var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName);
-            //var as1 = new CodeAssignStatement(fieldRef1, invoker);
-            //method.Statements.Add(as1);
+            // var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldName);
+            // var as1 = new CodeAssignStatement(fieldRef1, invoker);
+            // method.Statements.Add(as1);
             return this;
+        }
+
+        /// <summary>
+        /// Completes the creation of the reference type.
+        /// </summary>
+        /// <returns>
+        /// A fluent interface to build up methods.
+        /// </returns>
+        /// <exception cref="InvalidOperationException">Cannot add not assigned local variable to a method.Use <see cref="StaticClass"/>
+        /// (...) or <see cref="With"/>(...) to specify a initialization expression.</exception>
+        public CodeMemberMethod Commit()
+        {
+            // Todo: member checking.
+            if (this.assignStatement == null)
+            {
+                // CodeLocalVariableException
+                throw new InvalidOperationException(
+                    "Cannot add not assigned local variable to a method." +
+                    "Use StaticClass(...) or With(...) to specify a initialization expression.");
+            }
+
+            this.method.Statements.Add(this.assignStatement);
+            return this.method;
+        }
+
+        /// <summary>
+        /// Add a reference to a static class to the method body. Like '<c>Assert</c>' or '<c>DateTime</c>'.
+        /// </summary>
+        /// <param name="className">Name of the class.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public CodeTypeReferenceBinder StaticClass(string className)
+        {
+            // var localRef = new CodeVariableReferenceExpression(this.reference.Name);
+            // var as1 = new CodeAssignStatement(localRef, invoker);
+            var staticexpr = new CodeTypeReferenceExpression(className);
+            var result = new CodeTypeReferenceBinder(this.method, staticexpr) { LocalVar = this };
+            return result;
         }
 
         /// <summary>
@@ -189,39 +244,20 @@
             if (this.variableDeclaration == null)
             {
                 // add 'localVar = "primitive expression";'
-                assignStatement = new CodeAssignStatement(this.reference, primitive);
+                this.assignStatement = new CodeAssignStatement(this.reference, primitive);
             }
             else
             {
                 // add 'var localVar = "primitive expression";'
                 this.variableDeclaration.InitExpression = primitive;
-                assignStatement = this.variableDeclaration;
+                this.assignStatement = this.variableDeclaration;
             }
 
             return this;
         }
 
         /// <summary>
-        /// Completes the creation of the reference type.
-        /// </summary>
-        /// <returns>
-        /// A fluent interface to build up methods.
-        /// </returns>
-        public CodeMemberMethod Commit()
-        {
-            // Todo: member checking.
-            if (assignStatement == null)
-            {
-                // CodeLocalVariableException
-                throw new InvalidOperationException("Cannot add not assigned local variable to a method." +
-                                                          "Use StaticClass(...) or With(...) to specify a initialization expression.");
-            }
-            method.Statements.Add(assignStatement);
-            return method;
-        }
-
-        /// <summary>
-        /// Completes the creation of the reference type from a CodeTypeReferenceBinder build reference.
+        /// Completes the creation of the reference type from a <see cref="CodeTypeReferenceBinder"/> build reference.
         /// </summary>
         /// <param name="binder">The calling binder.</param>
         /// <returns>
@@ -233,16 +269,16 @@
             {
                 // add 'localVar = DateTime.Now;'
                 var assign = new CodeAssignStatement(this.reference, binder.Invoker);
-                method.Statements.Add(assign);
+                this.method.Statements.Add(assign);
             }
             else
             {
                 // add 'var localVar = DateTime.Now;'
                 this.variableDeclaration.InitExpression = binder.Invoker;
-                method.Statements.Add(this.variableDeclaration);
+                this.method.Statements.Add(this.variableDeclaration);
             }
-            return method;
+
+            return this.method;
         }
     }
-
 }

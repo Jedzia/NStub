@@ -8,9 +8,8 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
-    using System;
     using NStub.CSharp.BuildContext;
 
     /// <summary>
@@ -24,7 +23,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="MemberBuilder"/> class.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
-        public MemberBuilder(IMemberSetupContext context)
+        protected MemberBuilder(IMemberSetupContext context)
         {
             this.SetupContext = context;
         }
@@ -86,9 +85,8 @@ namespace NStub.CSharp.ObjectGeneration
             return DetermineTestName(context, originalName);
         }
 
-
         /// <summary>
-        /// Builds the specified context.
+        /// Builds the test method member with the specified context.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
         /// <returns>

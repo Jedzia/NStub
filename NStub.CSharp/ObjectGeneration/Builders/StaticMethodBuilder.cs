@@ -1,5 +1,5 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PropertyBuilder.cs" company="EvePanix">
+// <copyright file="StaticMethodBuilder.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,22 +8,20 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
-    using System.Linq;
     using System.CodeDom;
-    using NStub.CSharp.BuildContext;
-    using System.Reflection;
-    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
     using System.Collections.Generic;
+    using System.Linq;
+    using NStub.CSharp.BuildContext;
+    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
 
     /// <summary>
-    /// Test method generator for property type members.
+    /// Test method generator for static method members.
     /// </summary>
     public class StaticMethodBuilder : MemberBuilder
     {
-
         #region Constructors
 
         /// <summary>
@@ -48,21 +46,24 @@ namespace NStub.CSharp.ObjectGeneration
         {
             if (context.MemberInfo != null)
             {
-
             }
+
             if (context.TestKey != null)
             {
                 if (context.TestObjectType.Name.Contains("AllIwantToTest"))
                 {
                     if (context.TestKey.Contains("Static"))
                     {
-                        var abc = context.TestKey;
-                        var older = context.TestObjectType.Name;
-                        var mstatic = context.MemberInfo;
+                        // var abc = context.TestKey;
+                        // var older = context.TestObjectType.Name;
+                        // var mstatic = context.MemberInfo;
                     }
                 }
             }
-            return !context.IsConstructor && !context.IsProperty && !context.IsEvent && context.MemberInfo != null && context.MemberInfo.IsStatic;
+
+            return !context.IsConstructor && !context.IsProperty && !context.IsEvent && context.MemberInfo != null &&
+                   context.MemberInfo.IsStatic;
+
             // return context.TypeMember.Name.StartsWith("get_") || context.TypeMember.Name.StartsWith("set_");
         }
 
@@ -98,25 +99,26 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 
             }*/
-
             Guard.NotNull(() => context, context);
             var typeMember = context.TypeMember as CodeMemberMethod;
 
-            var abc = context.TestKey;
-            var older = context.TestObjectType.Name;
-            var mstatic = context.MemberInfo;
+            // var abc = context.TestKey;
+            // var older = context.TestObjectType.Name;
+            // var mstatic = context.MemberInfo;
 
             /*if (!(typeMember is CodeMemberMethod))
             {
                 throw new ArgumentOutOfRangeException("context", "The supplied build context is not for a CodeMemberMethod type.");
             }*/
+           
+            // var typeMemberName = typeMember.Name;
+            // var propertyName = typeMemberName;
 
-            var typeMemberName = typeMember.Name;
-            var propertyName = typeMemberName;
-            //var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
-            //BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
-            var propertyData = context.GetBuilderData("Property");
-            //var testName = DetermineTestName(context);
+            // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
+            // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
+            // var propertyData = context.GetBuilderData("Property");
+
+            // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             /*var propertyData = builderData as PropertyBuilderData;
 
@@ -145,65 +147,74 @@ namespace NStub.CSharp.ObjectGeneration
 
             // Console.Write( "Example string" );
             typeMember.Statements.Add(invokeExpression);*/
-            //BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "NormalBehavior");
-            //typeMember.AddBlankLine();
-            //CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("This is from Static Method Builder");
-            //var expectedAsign = new CodeVariableDeclarationStatement("var", "expected",
-            //                                                         ctorAssignmentRight);
+            
+            // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "NormalBehavior");
+            // typeMember.AddBlankLine();
+            // CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("This is from Static Method Builder");
+            // var expectedAsign = new CodeVariableDeclarationStatement("var", "expected",
+            // ctorAssignmentRight);
 
-            //typeMember.StaticClass(context.TestObjectType.Name).Invoke(context.TestKey).WithReference("expected").AssignLocal("actual", true);
-            //.Invoke(context.TestKey).WithReference("expected").AssignLocal("actual", true);
+            // typeMember.StaticClass(context.TestObjectType.Name).Invoke(context.TestKey).WithReference("expected").AssignLocal("actual", true);
+            // .Invoke(context.TestKey).WithReference("expected").AssignLocal("actual", true);
             typeMember.AddBlankLine();
-            var returnType = string.Empty;
-            if (context.MemberInfo.ReturnType != null)
-            {
-                returnType = context.MemberInfo.ReturnType.FullName;
-            }
+            var returnType = context.MemberInfo.ReturnType.FullName;
+
             typeMember.AddComment("Type is " + returnType);
             typeMember.AddBlankLine();
 
             var parameterNames = new List<string>();
-            foreach (var item in context.MemberInfo.GetParameters())
+            foreach(var item in context.MemberInfo.GetParameters())
             {
                 bool activatorAdded = false;
                 var parameterType = item.ParameterType;
                 typeMember.AddComment("Parameter '" + item.Name + "' is of type " + parameterType.Name);
-                //var def = default(parameterType);
-                object cct = 55;
+
+                // var def = default(parameterType);
                 try
                 {
-                    cct = Activator.CreateInstance(parameterType);
-                    if (parameterType.FullName.StartsWith("System.") && 
-                        parameterType.FullName.ToCharArray().Count(e=>e == '.') < 2)
+                    var cct = Activator.CreateInstance(parameterType);
+                    if (parameterType.FullName != null)
                     {
-                        typeMember.Var(item.Name, true).Assign().With(cct).Commit();
-                        activatorAdded = true;
+                        if (parameterType.FullName.StartsWith("System.") &&
+                            parameterType.FullName.ToCharArray().Count(e => e == '.') < 2)
+                        {
+                            typeMember.Var(item.Name, true).Assign().With(cct).Commit();
+                            activatorAdded = true;
+                        }
                     }
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // Todo: bad bad, show or handle exceptions ;) Or better: get default instances for the requested types .... later, later...
+                    Log(ex.Message);
                 }
-                
+
                 if (!activatorAdded)
                 {
-                    typeMember.Var(item.Name, true).Assign().With("Insert initialization of parameter ´" + item.Name + "´ here").Commit();
+                    typeMember.Var(item.Name, true).Assign().With(
+                        "Insert initialization of parameter ´" + item.Name + "´ here").Commit();
                 }
+
                 // Todo: impl var assignValue = context.SetUpTearDownContext.TryGetAcceptableParameterValue(item.Name);
                 parameterNames.Add(item.Name);
             }
 
-            //typeMember.Var("expected", true).StaticClass(context.TestObjectType.Name).Invoke(context.TestKey).With("12:03:05").Commit();
+            // typeMember.Var("expected", true).StaticClass(context.TestObjectType.Name).Invoke(context.TestKey).With("12:03:05").Commit();
             typeMember.AddBlankLine();
             typeMember.Var("expected", true).Assign().With("Dreck").Commit();
-            //typeMember.Var("expected", false).StaticClass("DateTime").Invoke("Now").Commit(); 
-            
-            //typeMember.Statements.Add(expectedAsign);
+
+            // typeMember.Var("expected", false).StaticClass("DateTime").Invoke("Now").Commit(); 
+
+            // typeMember.Statements.Add(expectedAsign);
             typeMember.StaticClass(context.TestObjectType.Name).Invoke(context.TestKey)
                 .WithReference(parameterNames.ToArray()).AssignLocal("actual", true);
             typeMember.StaticClass("Assert").Invoke("AreEqual").WithReference("expected").WithReference("actual").Commit();
             return true;
         }
 
+        private void Log(string message)
+        {
+            Console.WriteLine(message);
+        }
     }
 }

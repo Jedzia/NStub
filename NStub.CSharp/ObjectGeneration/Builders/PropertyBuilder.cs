@@ -8,19 +8,17 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
     using System.CodeDom;
     using NStub.CSharp.BuildContext;
-    using System.Reflection;
 
     /// <summary>
     /// Test method generator for property type members.
     /// </summary>
     public class PropertyBuilder : MemberBuilder
     {
-
         #region Constructors
 
         /// <summary>
@@ -43,7 +41,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public static bool CanHandleContext(IMemberBuildContext context)
         {
-            //context.
+            // context.
             return context.IsProperty;
 
             // return context.TypeMember.Name.StartsWith("get_") || context.TypeMember.Name.StartsWith("set_");
@@ -56,6 +54,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>
         /// <c>true</c> on success.
         /// </returns>
+        /// <exception cref="ArgumentOutOfRangeException"><c>context</c> is out of range.</exception>
         protected override bool BuildMember(IMemberBuildContext context)
         {
             /*
@@ -81,57 +80,26 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 
             }*/
-
             Guard.NotNull(() => context, context);
             var typeMember = context.TypeMember;
 
             if (!(typeMember is CodeMemberMethod))
             {
-                throw new ArgumentOutOfRangeException("context", "The supplied build context is not for a CodeMemberMethod type.");
+                throw new ArgumentOutOfRangeException(
+                    "context", "The supplied build context is not for a CodeMemberMethod type.");
             }
 
             var typeMemberName = typeMember.Name;
             var propertyName = typeMemberName;
-            //var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
-            //BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
+
+            // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
+            // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
             var propertyData = context.GetBuilderData("Property");
-            //var testName = DetermineTestName(context);
+
+            // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, propertyName);
             return true;
-        }
-
-        /// <summary>
-        /// Determines the name of the test method.
-        /// </summary>
-        /// <param name="context">The build context of the test method member.</param>
-        /// <param name="originalName">The initial name of the test method member.</param>
-        /// <returns>
-        /// The name of the test method.
-        /// </returns>
-        protected override string DetermineTestName(IMemberSetupContext context, string originalName)
-        {
-            //var typeMember = context.TypeMember;
-            var typeMemberName = originalName;// typeMember.Name;
-            var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
-            // var methodMemberInfo = typeMember.UserData["MethodMemberInfo"];
-            //typeMember.Name = "Property" + propertyName + "NormalBehavior";
-            var result = "Property" + propertyName;
-
-            /*if (typeMember.Name.Contains("get_"))
-                        {
-                            typeMember.Name = typeMember.Name.Replace("get_", "Property");
-                        }
-                        else if (typeMember.Name.Contains("set_"))
-                        {
-                            typeMember.Name = typeMember.Name.Replace("set_", "Property");
-                        }*/
-
-            // typeMember.Name += "NormalBehavior";
-            //result = result.Replace("Test", "NormalBehavior");
-            return result;
-
-            // Todo: return a Test name and a test description ... for the todo.
         }
 
         /// <summary>
@@ -140,7 +108,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="typeMember">The type member.</param>
         /// <param name="builderData">The builder data.</param>
         /// <param name="propertyName">Name of the property.</param>
-        protected virtual void ComputeCodeMemberProperty(CodeMemberMethod typeMember, IBuilderData builderData, string propertyName)
+        protected virtual void ComputeCodeMemberProperty(
+            CodeMemberMethod typeMember, IBuilderData builderData, string propertyName)
         {
             /*var propertyData = builderData as PropertyBuilderData;
 
@@ -172,5 +141,38 @@ namespace NStub.CSharp.ObjectGeneration
             BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "NormalBehavior");
         }
 
+        /// <summary>
+        /// Determines the name of the test method.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">The initial name of the test method member.</param>
+        /// <returns>
+        /// The name of the test method.
+        /// </returns>
+        protected override string DetermineTestName(IMemberSetupContext context, string originalName)
+        {
+            // var typeMember = context.TypeMember;
+            var typeMemberName = originalName; // typeMember.Name;
+            var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
+
+            // var methodMemberInfo = typeMember.UserData["MethodMemberInfo"];
+            // typeMember.Name = "Property" + propertyName + "NormalBehavior";
+            var result = "Property" + propertyName;
+
+            /*if (typeMember.Name.Contains("get_"))
+                        {
+                            typeMember.Name = typeMember.Name.Replace("get_", "Property");
+                        }
+                        else if (typeMember.Name.Contains("set_"))
+                        {
+                            typeMember.Name = typeMember.Name.Replace("set_", "Property");
+                        }*/
+
+            // typeMember.Name += "NormalBehavior";
+            // result = result.Replace("Test", "NormalBehavior");
+            return result;
+
+            // Todo: return a Test name and a test description ... for the todo.
+        }
     }
 }

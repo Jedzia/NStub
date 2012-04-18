@@ -15,7 +15,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
 
     /// <summary>
-    /// Base class for a test-class member field generator.
+    /// Base class for a <see cref="ITestObjectBuilder"/> test-class member field generator.
     /// </summary>
     public abstract class TestObjectBuilderBase : ITestObjectBuilder
     {

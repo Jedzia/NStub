@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildSystem.cs" />
+    <Compile Include="CodeGeneratorParameters.cs" />
+    <Compile Include="CodeGeneratorParametersBase.cs" />
     <Compile Include="Exceptions.Designer.cs">
       <DependentUpon>Exceptions.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -52,6 +55,7 @@
     <Compile Include="IProjectGenerator.cs" />
     <Compile Include="NStubCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StandardBuildSystem.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

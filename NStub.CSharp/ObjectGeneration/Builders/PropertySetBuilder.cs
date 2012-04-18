@@ -1,14 +1,23 @@
-﻿namespace NStub.CSharp.ObjectGeneration
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="PropertySetBuilder.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System.CodeDom;
     using NStub.CSharp.BuildContext;
 
     /// <summary>
-    /// Test method generator for property type members.
+    /// Test method generator for the 'set' part of property type members.
     /// </summary>
     public class PropertySetBuilder : MemberBuilder
     {
-
         #region Constructors
 
         /// <summary>
@@ -31,7 +40,7 @@
         /// </returns>
         public static bool CanHandleContext(IMemberBuildContext context)
         {
-            //return context.TypeMember.Name.StartsWith("set_");
+            // return context.TypeMember.Name.StartsWith("set_");
             return context.IsProperty;
         }
 
@@ -47,14 +56,16 @@
             var typeMember = context.TypeMember;
             var typeMemberName = typeMember.Name;
             var propertyName = typeMemberName;
-            //var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
-            //BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
+
+            // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
+            // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
             var propertyData = context.GetBuilderData("Property");
-            //var testName = DetermineTestName(context);
+
+            // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
-            //var testObjectName = context.TestObjectName;
-            var testObjectName = "testObject";
-            this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, testObjectName, propertyName);
+            // var testObjectName = context.TestObjectName;
+            const string TestObjectName = "testObject";
+            this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, TestObjectName, propertyName);
             return true;
         }
 
@@ -66,52 +77,59 @@
         /// <param name="testObjectName">Name of the test object member field.</param>
         /// <param name="propertyName">Name of the property.</param>
         protected virtual void ComputeCodeMemberProperty(
-            CodeMemberMethod typeMember, 
-            IBuilderData builderData, 
+            CodeMemberMethod typeMember,
+            IBuilderData builderData,
             string testObjectName,
             string propertyName)
         {
-
             var propertyData = builderData as PropertyBuilderData;
+
+            if (propertyData == null)
+            {
+                return;
+            }
 
             var setAccessor = propertyData.SetAccessor;
             var getAccessor = propertyData.GetAccessor;
 
-            if (setAccessor != null)
+            if (setAccessor == null)
             {
-                if (getAccessor == null)
-                {
-                    // create the actual and expected var's here.
-                    // actualRef
-                    // expectedRef
-                }
-
-                var propName = setAccessor.Name.Replace("set_","");
-
-                typeMember.Statements.Add(new CodeSnippetStatement(""));
-                typeMember.Statements.Add(new CodeCommentStatement("Test write access of '" + propName + "' Property."));
-
-                var expectedRef = new CodeVariableReferenceExpression("expected");
-                var expectedAsign = new CodeAssignStatement(expectedRef,
-                                                            new CodePrimitiveExpression("Insert setter object here"));
-                typeMember.Statements.Add(expectedAsign);
-
-                var actualRef = new CodeVariableReferenceExpression("actual");
-                var testObjRef = new CodeTypeReferenceExpression(testObjectName);
-                var testPropRef = new CodePropertyReferenceExpression(testObjRef, propName);
-                var invokeSetProp = new CodeAssignStatement(testPropRef, expectedRef);
-                typeMember.Statements.Add(invokeSetProp);
-
-                var invoke = new CodeAssignStatement(actualRef, testPropRef);
-                typeMember.Statements.Add(invoke);
-
-                var assertExpr = new CodeMethodInvokeExpression(
-                    new CodeTypeReferenceExpression("Assert"),
-                    "AreEqual",     
-                    new CodeVariableReferenceExpression("expected"),
-                    new CodeVariableReferenceExpression("actual"));
-                typeMember.Statements.Add(assertExpr);
+                return;
             }
+
+            if (getAccessor == null)
+            {
+                // create the actual and expected var's here.
+                // actualRef
+                // expectedRef
+            }
+
+            var propName = setAccessor.Name.Replace("set_", string.Empty);
+
+            typeMember.Statements.Add(new CodeSnippetStatement(string.Empty));
+            typeMember.Statements.Add(new CodeCommentStatement("Test write access of '" + propName + "' Property."));
+
+            var expectedRef = new CodeVariableReferenceExpression("expected");
+            var expectedAsign = new CodeAssignStatement(
+                expectedRef,
+                new CodePrimitiveExpression("Insert setter object here"));
+            typeMember.Statements.Add(expectedAsign);
+
+            var actualRef = new CodeVariableReferenceExpression("actual");
+            var testObjRef = new CodeTypeReferenceExpression(testObjectName);
+            var testPropRef = new CodePropertyReferenceExpression(testObjRef, propName);
+            var invokeSetProp = new CodeAssignStatement(testPropRef, expectedRef);
+            typeMember.Statements.Add(invokeSetProp);
+
+            var invoke = new CodeAssignStatement(actualRef, testPropRef);
+            typeMember.Statements.Add(invoke);
+
+            var assertExpr = new CodeMethodInvokeExpression(
+                new CodeTypeReferenceExpression("Assert"),
+                "AreEqual",
+                new CodeVariableReferenceExpression("expected"),
+                new CodeVariableReferenceExpression("actual"));
+            typeMember.Statements.Add(assertExpr);
         }
     }
 }

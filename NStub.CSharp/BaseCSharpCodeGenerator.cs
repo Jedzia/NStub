@@ -20,6 +20,7 @@ namespace NStub.CSharp
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration;
     using System.Reflection;
+    using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
     /// The <see cref="BaseCSharpCodeGenerator"/> is responsible for the generation of the individual

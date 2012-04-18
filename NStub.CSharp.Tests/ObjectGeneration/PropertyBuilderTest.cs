@@ -3,6 +3,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using System;
     using global::MbUnit.Framework;
     using NStub.CSharp.ObjectGeneration;
+    using NStub.CSharp.ObjectGeneration.Builders;
     using Rhino.Mocks;
     using System.CodeDom;
 
