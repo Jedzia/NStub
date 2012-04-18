@@ -8,6 +8,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using System.CodeDom;
     using NStub.CSharp.Tests.FluentChecking;
 using System.Linq.Expressions;
+    using NStub.CSharp.Tests.Stubs;
     
     
     public partial class CodeMethodComposerTest
@@ -45,6 +46,33 @@ using System.Linq.Expressions;
             var memberfield = "theMember";
             var actual = CodeMethodComposer.CreateAndInitializeMemberField(type, memberfield);
             Assert.IsInstanceOfType<CodeAssignStatement>(actual);
+
+            object expectedValue = (bool)true;
+            Type expectedType = expectedValue.GetType();
+            actual = CodeMethodComposer.CreateAndInitializeMemberField(expectedType, memberfield);
+            var assignment = (CodePrimitiveExpression)actual.Right;
+            Assert.AreEqual(true, assignment.Value);
+            Assert.AreEqual(expectedType, assignment.Value.GetType());
+
+            expectedValue = (Type)typeof(CodeMethodComposerTest);
+            expectedType = expectedValue.GetType();
+            actual = CodeMethodComposer.CreateAndInitializeMemberField(expectedType, memberfield);
+            var assignment2 = (CodeObjectCreateExpression)actual.Right;
+            Assert.AreEqual(expectedType.FullName, assignment2.CreateType.BaseType);
+
+            expectedValue = (int)35;
+            expectedType = expectedValue.GetType();
+            actual = CodeMethodComposer.CreateAndInitializeMemberField(expectedType, memberfield);
+            assignment = (CodePrimitiveExpression)actual.Right;
+            Assert.AreEqual(1234, assignment.Value);
+            Assert.AreEqual(expectedType, assignment.Value.GetType());
+
+            expectedValue = new InfoApe();
+            expectedType = expectedValue.GetType();
+            actual = CodeMethodComposer.CreateAndInitializeMemberField(expectedType, memberfield);
+            assignment2 = (CodeObjectCreateExpression)actual.Right;
+            Assert.AreEqual(expectedType.FullName, assignment2.CreateType.BaseType);
+            // Todo: implement all CLR-Types.
         }
 
         [Test()]

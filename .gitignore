@@ -28,3 +28,4 @@ _ReSharper*/
 /.svn
 *.tss
 StyleCop.Cache
+/BuildTools

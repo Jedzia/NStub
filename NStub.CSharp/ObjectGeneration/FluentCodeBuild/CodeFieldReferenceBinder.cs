@@ -59,6 +59,10 @@
         /// </returns>
         public CodeFieldReferenceBinder AndCreateIn(CodeTypeDeclaration owningClass, Type fieldType)
         {
+            if (this.memberField != null)
+            {
+                throw new CodeFieldReferenceException(this, "Cannot create a memberfield twice.");
+            }
             this.memberField = new CodeMemberField(fieldType, fieldReference.FieldName);
             owningClass.Members.Add(memberField);
             return this;
@@ -74,14 +78,7 @@
         /// </returns>
         public CodeFieldReferenceBinder AndCreateIn<T>(CodeTypeDeclaration owningClass)
         {
-            if (this.memberField != null)
-            {
-                throw new CodeFieldReferenceException(this, "Cannot create a memberfield twice.");
-            }
-            this.memberField = new CodeMemberField(typeof(T), fieldReference.FieldName);
-            //this.fieldReference = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), fieldReference.FieldName);
-            owningClass.Members.Add(memberField);
-            return this;
+            return AndCreateIn(owningClass, typeof(T));
         }
 
         /// <summary>

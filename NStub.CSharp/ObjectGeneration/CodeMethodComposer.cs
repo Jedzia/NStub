@@ -48,12 +48,18 @@ namespace NStub.CSharp.ObjectGeneration
 
         /// <summary>
         /// Creates a reference to a member field and initializes it with a new instance of the specified parameter type.
+        /// Sample values are used as the initializing expression.
         /// </summary>
         /// <param name="type">Defines the type of the new object.</param>
         /// <param name="memberField">Name of the referenced member field.</param>
         /// <returns>An assignment statement for the specified member field.</returns>
-        /// <remarks>Produces a statement like: 
-        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.</remarks>
+        /// <remarks>With a custom Type, this method produces a statement with a initializer like: 
+        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.
+        /// or let myInt be of type int:
+        /// <code>this.myInt = 1234;</code>.
+        /// myType of type System.Type:
+        /// <code>this.myType = typeof(System.Object);</code>.
+        /// </remarks>
         public static CodeAssignStatement CreateAndInitializeMemberField(Type type, string memberField)
         {
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);

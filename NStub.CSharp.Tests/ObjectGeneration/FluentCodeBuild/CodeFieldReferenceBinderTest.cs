@@ -5,6 +5,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using NStub.CSharp.ObjectGeneration;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
     using System;
+    using System.Linq;
+    using NStub.CSharp.Tests.FluentChecking;
 
     public partial class CodeFieldReferenceBinderTest
     {
@@ -40,21 +42,61 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             actual = testObject.FieldAssignment;
             Assert.IsNotNull(actual);
         }
-        
+
+        [Test()]
+        public void AndCreateInGenericTest()
+        {
+            var ctd = new CodeTypeDeclaration("MyTestClassTest");
+            var fieldType = typeof(IComparable);
+            var actual = testObject.AndCreateIn<IComparable>(ctd);
+            Assert.AreSame(testObject, actual);
+            Assert.IsNotEmpty(ctd.Members.OfType<CodeMemberField>().Where(e => e.Name == "myField"));
+            Assert.IsNotEmpty(ctd.Members.OfType<CodeMemberField>().Where(e => e.Type.BaseType == fieldType.FullName));
+            var field = ctd.Members.OfType<CodeMemberField>().Where(e => e.Name == "myField").First();
+            Assert.IsNull(field.InitExpression);
+        }
+
         [Test()]
         public void AndCreateInTest()
         {
-            // TODO: Implement unit test for AndCreateIn
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var ctd = new CodeTypeDeclaration("MyTestClassTest");
+            var fieldType = typeof(Guid);
+            var actual = testObject.AndCreateIn(ctd, fieldType);
+            Assert.AreSame(testObject, actual);
+            Assert.IsNotEmpty(ctd.Members.OfType<CodeMemberField>().Where(e => e.Name == "myField"));
+            Assert.IsNotEmpty(ctd.Members.OfType<CodeMemberField>().Where(e => e.Type.BaseType == fieldType.FullName));
+            var field = ctd.Members.OfType<CodeMemberField>().Where(e => e.Name == "myField").First();
+            Assert.IsNull(field.InitExpression);
         }
-        
+
+        [Test()]
+        public void AndCreateInTwoTimesShouldThrow()
+        {
+            var ctd = new CodeTypeDeclaration("MyTestClassTest");
+            var fieldType = typeof(Guid);
+            var actual = testObject.AndCreateIn(ctd, fieldType);
+            Assert.Throws<CodeFieldReferenceException>(() => testObject.AndCreateIn(ctd, fieldType));
+            Assert.AreEqual(1, ctd.Members.Count);
+        }
+
+
+        [Test()]
+        public void CommitWithNoAssignmentShouldThrow()
+        {
+            Assert.Throws<CodeFieldReferenceException>(() => testObject.Commit());
+            Assert.IsEmpty(method.Statements);
+        }
+
         [Test()]
         public void CommitTest()
         {
-            // TODO: Implement unit test for Commit
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var expectedPrimitive = 55.55d;
+            var result = testObject.With(expectedPrimitive).Commit();
+            Assert.AreSame(method, result);
+            AssertEx.That(method.StatementsOfType<CodeAssignStatement>().Where()
+                .ExpressionLeft<CodeFieldReferenceExpression>(Is.FieldNamed("myField")).WasFound(1)
+                .ExpressionRight<CodePrimitiveExpression>(Is.Primitve(expectedPrimitive)).WasFound(1)
+                .Assert());
         }
         
         [Test()]

@@ -176,6 +176,16 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test()]
+        public void WithReferenceWithoutInvokeShouldThrow()
+        {
+            Assert.Throws<CodeTypeReferenceException>(() => testObject.WithReference("Thisone"));
+            Assert.IsEmpty(method.Statements);
+
+            Assert.Throws<CodeTypeReferenceException>(() => testObject.WithReference("a", "b", "c"));
+            Assert.IsEmpty(method.Statements);
+        }
+
+        [Test()]
         public void WithReferenceTest()
         {
             var expected = "theLocalVar";
