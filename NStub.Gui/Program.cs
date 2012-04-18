@@ -16,10 +16,10 @@ namespace NStub.Gui
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 
-            //AppDomain ad = AppDomain.CreateDomain("Test");
-            ///AppDomain ad = AppDomain.CurrentDomain;
-            //ad.AssemblyResolve += new ResolveEventHandler(ad_AssemblyResolve);
-            //ad.TypeResolve += new ResolveEventHandler(ad_TypeResolve);
+            //  AppDomain ad = AppDomain.CreateDomain("Test");
+            //  AppDomain ad = AppDomain.CurrentDomain;
+            //  ad.AssemblyResolve += new ResolveEventHandler(ad_AssemblyResolve);
+            //  ad.TypeResolve += new ResolveEventHandler(ad_TypeResolve);
 
 
             Application.ApplicationExit += new EventHandler(Application_ApplicationExit);

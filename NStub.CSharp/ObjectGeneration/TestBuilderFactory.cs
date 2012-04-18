@@ -114,6 +114,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
+            // Todo: maybe cache em.
             foreach(var buildHandler in this.handlers)
             {
                 var canHandleContext = buildHandler.Handler(context);

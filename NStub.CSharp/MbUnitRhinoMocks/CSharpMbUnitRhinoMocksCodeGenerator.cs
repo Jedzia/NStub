@@ -15,11 +15,11 @@ namespace NStub.CSharp.MbUnitRhinoMocks
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.MbUnit;
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
-    using NStub.Core;
 
     /// <summary>
     /// The <see cref="CSharpMbUnitRhinoMocksCodeGenerator"/> is responsible for the generation of the individual
@@ -40,12 +40,10 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
-        ///   
-        /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
+        /// <cref name="ICodeGeneratorParameters.OutputDirectory"/> is <c>null</c>.</exception>
+        /// <exception cref="System.ArgumentException"><cref name="ICodeGeneratorParameters.OutputDirectory"/> is an
         /// empty string.</exception>
-        ///   
-        /// <exception cref="ApplicationException"><paramref name="outputDirectory"/>
+        /// <exception cref="ApplicationException"><cref name="ICodeGeneratorParameters.OutputDirectory"/>
         /// cannot be found.</exception>
         public CSharpMbUnitRhinoMocksCodeGenerator(
             IBuildSystem buildSystem,

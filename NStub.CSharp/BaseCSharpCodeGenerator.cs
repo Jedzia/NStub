@@ -19,7 +19,6 @@ namespace NStub.CSharp
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration;
-    using System.Reflection;
     using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
@@ -32,6 +31,8 @@ namespace NStub.CSharp
     {
         #region Fields
 
+        private static readonly DuplicatedMemberComparer DuplicatedMemberComparerInstance = new DuplicatedMemberComparer();
+        private readonly IBuildSystem buildSystem;
         private readonly ITestBuilderFactory testBuilders;
 
         #endregion
@@ -47,31 +48,29 @@ namespace NStub.CSharp
         /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
-        ///   
-        /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
+        /// <cref name="ICodeGeneratorParameters.OutputDirectory"/> is <c>null</c>.</exception>
+        /// <exception cref="System.ArgumentException"><cref name="ICodeGeneratorParameters.OutputDirectory"/> is an
         /// empty string.</exception>
-        ///   
-        /// <exception cref="ApplicationException"><paramref name="outputDirectory"/>
+        /// <exception cref="ApplicationException"><cref name="ICodeGeneratorParameters.OutputDirectory"/>
         /// cannot be found.</exception>
         protected BaseCSharpCodeGenerator(
             IBuildSystem buildSystem,
-            CodeNamespace codeNamespace, 
+            CodeNamespace codeNamespace,
             ITestBuilderFactory testBuilders,
-            ICodeGeneratorParameters configuration
-            )
+            ICodeGeneratorParameters configuration)
         {
             Guard.NotNull(() => buildSystem, buildSystem);
             this.buildSystem = buildSystem;
             Guard.NotNull(() => configuration, configuration);
-            //this.configuration = configuration;
 
+            // this.configuration = configuration;
             string outputDirectory = configuration.OutputDirectory;
+
             // Null arguments will not be accepted
             if (codeNamespace == null)
             {
                 throw new ArgumentNullException(
-                    "codeNamespace", 
+                    "codeNamespace",
                     Exceptions.ParameterCannotBeNull);
             }
 
@@ -86,7 +85,7 @@ namespace NStub.CSharp
             if (outputDirectory == null)
             {
                 throw new ArgumentNullException(
-                    "outputDirectory", 
+                    "outputDirectory",
                     Exceptions.ParameterCannotBeNull);
             }
 
@@ -94,7 +93,7 @@ namespace NStub.CSharp
             if (outputDirectory.Length == 0)
             {
                 throw new ArgumentException(
-                    Exceptions.StringCannotBeEmpty, 
+                    Exceptions.StringCannotBeEmpty,
                     "outputDirectory");
             }
 
@@ -128,7 +127,7 @@ namespace NStub.CSharp
         public string OutputDirectory { get; set; }
 
         /// <summary>
-        /// Gets or sets the test builder repository.
+        /// Gets the test builder repository.
         /// </summary>
         /// <value>
         /// The test builders.
@@ -143,21 +142,20 @@ namespace NStub.CSharp
                     this.testBuilders = new TestBuilderFactory(
                         new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
                 }*/
-
                 return this.testBuilders;
             }
 
             /*set
-            {
-                if (this.testBuilders != null)
-                {
-                    throw new InvalidOperationException("The TestBuilders can only set once.");
-                }
+                        {
+                            if (this.testBuilders != null)
+                            {
+                                throw new InvalidOperationException("The TestBuilders can only set once.");
+                            }
 
-                this.testBuilders = value;
-            }*/
+                            this.testBuilders = value;
+                        }*/
         }
-        private readonly IBuildSystem buildSystem;
+
         /*public IBuildSystem buildSystem
         {
             get
@@ -197,8 +195,8 @@ namespace NStub.CSharp
         /// <param name="testObjectName">The name of the object under test.</param>
         /// <returns>A reference to the created member field of the test.</returns>
         public static CodeMemberField AddTestMemberField(
-            CodeTypeDeclaration codeTypeDeclaration, 
-            string testObjectType, 
+            CodeTypeDeclaration codeTypeDeclaration,
+            string testObjectType,
             string testObjectName)
         {
             var memberField = CreateMemberField(testObjectType, testObjectName);
@@ -226,28 +224,39 @@ namespace NStub.CSharp
         }
 
         /// <summary>
+        /// Replaces the ending name of the test ("Test") with a specified string.
+        /// </summary>
+        /// <param name="typeMember">The type member that name gets modified.</param>
+        /// <param name="replacement">The replacement string.</param>
+        public static void ReplaceTestInTestName(CodeTypeMember typeMember, string replacement)
+        {
+            typeMember.Name = typeMember.Name.Replace("Test", replacement);
+        }
+
+        /// <summary>
         /// This methods actually performs the code generation for the
         /// file current <see cref="System.CodeDom.CodeNamespace"><see cref="CodeNamespace"/></see>. 
         /// All classes within the namespace will have exactly one file generated for them.  
         /// </summary>
         public void GenerateCode()
         {
-            //var asd = this.CodeNamespace.Types.OfType<CodeTypeDeclaration>().Any(e=>e.Name =="ddepp");
+            // var asd = this.CodeNamespace.Types.OfType<CodeTypeDeclaration>().Any(e=>e.Name =="ddepp");
             // We want to write a separate file for each type
             var nd = new NamespaceDetector(this.CodeNamespace.Types);
 
-            foreach(CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
+            foreach (CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
             {
                 if (testClassDeclaration.Name.Contains("MbUnit"))
                 {
                 }
+
                 this.CurrentTestClassDeclaration = testClassDeclaration;
 
                 var cts = new CodeTypeSetup(nd, testClassDeclaration);
 
                 var codeNamespace = cts.SetUpCodeNamespace(this.CodeNamespace.Name, this.RetrieveNamespaceImports());
                 var testObjectName = cts.SetUpTestname();
-                
+
                 testClassDeclaration.IsPartial = true;
 
                 // Add testObject field
@@ -264,12 +273,11 @@ namespace NStub.CSharp
 
                 // Setup and TearDown
                 var setTearContext = this.GenerateSetupAndTearDown(
-                    codeNamespace, 
-                    testClassDeclaration, 
-                    testObjectName, 
+                    codeNamespace,
+                    testClassDeclaration,
+                    testObjectName,
                     testObjectMemberField,
                     propertyData);
-
 
                 this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
@@ -277,16 +285,16 @@ namespace NStub.CSharp
                 codeNamespace.Types.Add(testClassDeclaration);
 
                 // pre calculate property data.
-                var contextLookup = PreCalculateMemberBuildContext(
-                    testClassDeclaration, 
+                var contextLookup = this.PreCalculateMemberBuildContext(
+                    testClassDeclaration,
                     codeNamespace,
                     initialMembers,
-                    propertyData, 
+                    propertyData,
                     setTearContext);
 
                 // Set out member names correctly 
                 // foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
-                foreach(CodeTypeMember typeMember in initialMembers)
+                foreach (CodeTypeMember typeMember in initialMembers)
                 {
                     /*var memberBuildContext = new MemberBuildContext(
                         codeNamespace, testClassDeclaration, typeMember, null, null);*/
@@ -311,67 +319,10 @@ namespace NStub.CSharp
                     
                     this.GenerateCodeTypeMember(memberBuildContext);
                 }*/
-
                 RemoveDuplicatedMembers(testClassDeclaration);
                 SortMembers(testClassDeclaration);
                 this.WriteClassFile(testClassDeclaration.Name, codeNamespace);
             }
-        }
-
-        private Dictionary<CodeTypeMember, MemberBuildContext> PreCalculateMemberBuildContext(
-            CodeTypeDeclaration testClassDeclaration, 
-            CodeNamespace codeNamespace, 
-            CodeTypeMember[] initialMembers, 
-            BuildDataCollection propertyData,
-            ISetupAndTearDownCreationContext setTearContext)
-        {
-            var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
-            //var propertyData = new Dictionary<string, IBuilderData>();
-            //buildData.AddDataItem(propertyData);
-            foreach (CodeTypeMember typeMember in initialMembers)
-            {
-                var memberBuildContext = new MemberBuildContext(
-                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
-
-                // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
-                // if i put the stuff here into this.GenerateCodeTypeMember(...)
-                var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
-                var composedTestName = memberBuildContext.TypeMember.Name;
-                foreach (var memberBuilder in builders)
-                {
-                    composedTestName = ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
-                }
-                memberBuildContext.TestKey = composedTestName;
-
-                contextLookup.Add(typeMember, memberBuildContext);
-
-                if (memberBuildContext.IsProperty)
-                {
-                    IBuilderData propertyDataItem;
-                    var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
-                    if (found)
-                    {
-                        propertyDataItem.SetData(memberBuildContext.MemberInfo);
-                    }
-                    else
-                    {
-                        var propdata = new PropertyBuilderData();
-                        propdata.SetData(memberBuildContext.MemberInfo);
-                        propertyData.AddDataItem("Property", composedTestName, propdata);
-                    }
-                }
-            }
-            return contextLookup;
-        }
-
-        /// <summary>
-        /// Replaces the ending name of the test ("Test") with a specified string.
-        /// </summary>
-        /// <param name="typeMember">The type member that name gets modified.</param>
-        /// <param name="replacement">The replacement string.</param>
-        public static void ReplaceTestInTestName(CodeTypeMember typeMember, string replacement)
-        {
-            typeMember.Name = typeMember.Name.Replace("Test", replacement);
         }
 
         /// <summary>
@@ -388,9 +339,9 @@ namespace NStub.CSharp
         /// </returns>
         protected virtual ITestObjectBuilder ComposeTestSetupMethod(
             BuildDataCollection buildData,
-            CodeMemberMethod setUpMethod, 
-            CodeMemberField testObjectMemberField, 
-            string testObjectName, 
+            CodeMemberMethod setUpMethod,
+            CodeMemberField testObjectMemberField,
+            string testObjectName,
             Type testObjectType)
         {
             ITestObjectBuilder objectBuilder = new TestObjectBuilder(
@@ -430,10 +381,34 @@ namespace NStub.CSharp
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
         protected virtual void ComposeTestTearDownMethod(
-            CodeMemberMethod teardownMethod, 
-            CodeMemberField testObjectMemberField, 
+            CodeMemberMethod teardownMethod,
+            CodeMemberField testObjectMemberField,
             string testObjectName)
         {
+        }
+
+        /// <summary>
+        /// Computes the test method code member via an <see cref="IMemberBuilder"/>.
+        /// </summary>
+        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
+        /// <param name="context">The build context of the test method member.</param>
+        protected virtual void ComputeCodeMember(IMemberBuilder memberBuilder, IMemberBuildContext context)
+        {
+            memberBuilder.Build(context);
+        }
+
+        /// <summary>
+        /// Computes the test method name via an <see cref="IMemberBuilder"/>.
+        /// </summary>
+        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">Initial name of the test method name.</param>
+        /// <returns>The calculated test method name.</returns>
+        protected virtual string ComputeTestName(
+            IMemberBuilder memberBuilder, IMemberBuildContext context, string originalName)
+        {
+            var testName = memberBuilder.GetTestName(context, originalName);
+            return testName;
         }
 
         /*private Dictionary<string, CodeMemberField> testMemberFieldLookup =
@@ -470,8 +445,8 @@ namespace NStub.CSharp
         {
             var codeMemberMethod = new CustomCodeMemberMethod
                                        {
-                                           Attributes = MemberAttributes.Public | MemberAttributes.Final, 
-                                           Name = methodName, 
+                                           Attributes = MemberAttributes.Public | MemberAttributes.Final,
+                                           Name = methodName,
                                            ReturnType = new CodeTypeReference(typeof(void))
                                        };
 
@@ -519,44 +494,6 @@ namespace NStub.CSharp
         protected abstract IEnumerable<string> RetrieveNamespaceImports();
 
         /// <summary>
-        /// Checks for duplicate class members.
-        /// </summary>
-        private class DuplicatedMemberComparer : IEqualityComparer<CodeTypeMember>
-        {
-            #region IEqualityComparer<CodeTypeMember> Members
-
-            /// <summary>
-            /// Determines whether the specified objects are equal.
-            /// </summary>
-            /// <param name="x">The first object of type <paramref name="T"/> to compare.</param>
-            /// <param name="y">The second object of type <paramref name="T"/> to compare.</param>
-            /// <returns>
-            /// true if the specified objects are equal; otherwise, false.
-            /// </returns>
-            public bool Equals(CodeTypeMember x, CodeTypeMember y)
-            {
-                return x.Name.Equals(y.Name);
-            }
-
-            /// <summary>
-            /// Returns a hash code for this instance.
-            /// </summary>
-            /// <param name="obj">The obj.</param>
-            /// <returns>
-            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-            /// </returns>
-            /// <exception cref="T:System.ArgumentNullException">
-            /// The type of <paramref name="obj"/> is a reference type and <paramref name="obj"/> is null.
-            ///   </exception>
-            public int GetHashCode(CodeTypeMember obj)
-            {
-                return obj.Name.GetHashCode();
-            }
-
-            #endregion
-        }
-        private static readonly DuplicatedMemberComparer duplicatedMemberComparer = new DuplicatedMemberComparer();
-        /// <summary>
         /// Since types can contain multiple overloads of the same method, once
         /// we remove the parameters from every method our type may have the 
         /// many duplicates of the same method.  This method removes those
@@ -566,50 +503,34 @@ namespace NStub.CSharp
         /// from which to remove the duplicates.</param>
         private static void RemoveDuplicatedMembers(CodeTypeDeclaration codeTypeDeclaration)
         {
-            //var ctm = codeTypeDeclaration.Members.OfType<CodeTypeMember>().ToArray();
-            var ctm2 = codeTypeDeclaration.Members.OfType<CodeTypeMember>().Distinct(duplicatedMemberComparer).ToArray();
+            // var ctm = codeTypeDeclaration.Members.OfType<CodeTypeMember>().ToArray();
+            var ctm2 = codeTypeDeclaration.Members.OfType<CodeTypeMember>().Distinct(DuplicatedMemberComparerInstance).ToArray();
             codeTypeDeclaration.Members.Clear();
             foreach (var item in ctm2)
             {
                 codeTypeDeclaration.Members.Add(item);
             }
+
             /*return;
-            for (int i = 0; i < codeTypeDeclaration.Members.Count; ++i)
-            {
-                int occurrences = 0;
-                for (int j = 0; j < codeTypeDeclaration.Members.Count; ++j)
-                {
-                    // Compare each CodeTypeMember to all other CodeTypeMembers
-                    // in its type.  If more than one match is found (the 
-                    // codeTypeMember matching itself) then we remove that match.
-                    if (codeTypeDeclaration.Members[i].Name.Equals(
-                        codeTypeDeclaration.Members[j].Name))
-                    {
-                        occurrences++;
-                        if (occurrences > 1)
+                        for (int i = 0; i < codeTypeDeclaration.Members.Count; ++i)
                         {
-                            codeTypeDeclaration.Members.Remove(codeTypeDeclaration.Members[j]);
-                        }
-                    }
-                }
-            }*/
-        }
-
-        private class GroupMethodsComparer : IEqualityComparer<string>
-        {
-            #region IEqualityComparer<string> Members
-
-            public bool Equals(string x, string y)
-            {
-                return x.Equals(y);
-            }
-
-            public int GetHashCode(string obj)
-            {
-                return obj.GetHashCode();
-            }
-
-            #endregion
+                            int occurrences = 0;
+                            for (int j = 0; j < codeTypeDeclaration.Members.Count; ++j)
+                            {
+                                // Compare each CodeTypeMember to all other CodeTypeMembers
+                                // in its type.  If more than one match is found (the 
+                                // codeTypeMember matching itself) then we remove that match.
+                                if (codeTypeDeclaration.Members[i].Name.Equals(
+                                    codeTypeDeclaration.Members[j].Name))
+                                {
+                                    occurrences++;
+                                    if (occurrences > 1)
+                                    {
+                                        codeTypeDeclaration.Members.Remove(codeTypeDeclaration.Members[j]);
+                                    }
+                                }
+                            }
+                        }*/
         }
 
         private static void SortMembers(CodeTypeDeclaration codeTypeDeclaration)
@@ -618,7 +539,7 @@ namespace NStub.CSharp
 
             // var ordered = members.OrderBy(e => e, new CodeTypeDeclarationComparer());
             // var grp = members.OrderBy(e => e, new CodeTypeDeclarationComparer()).GroupBy(e => e.GetType().FullName);
-            var grp = members.GroupBy(e => e.GetType().FullName).OrderBy(e=>e.Key);
+            var grp = members.GroupBy(e => e.GetType().FullName).OrderBy(e => e.Key);
             {
                 // var result = ordered.ToArray();
                 // foreach (var item in grp)
@@ -638,7 +559,8 @@ namespace NStub.CSharp
         private void GenerateCodeTypeMember(IMemberBuildContext context)
         {
             var typeMember = context.TypeMember;
-            var initialTypeMemberName = typeMember.Name;
+            
+            // var initialTypeMemberName = typeMember.Name;
             if (typeMember is CodeMemberMethod)
             {
                 // We don't generate default constructors
@@ -647,16 +569,18 @@ namespace NStub.CSharp
                     // before stub has created.
                     // PreComputeCodeMemberProperty(typeMember);
                 }*/
-
+                
                 var builders = this.TestBuilders.GetBuilder(context).ToArray();
-                foreach (var memberBuilder in builders)
+                /*foreach (var memberBuilder in builders)
                 {
                     // Set the test name from the pre computed one.
-                    //var testName = context.TypeMember.Name;
-                    //testName = ComputeTestName(memberBuilder, context, testName);
-                    //context.TypeMember.Name = testName;
-                    context.TypeMember.Name = context.TestKey;
-                }
+                    // var testName = context.TypeMember.Name;
+                    // testName = ComputeTestName(memberBuilder, context, testName);
+                    // context.TypeMember.Name = testName;
+                }*/
+
+                // set the test method name to the context key that is the normalized test name.
+                context.TypeMember.Name = context.TestKey;
 
                 if (!(typeMember is CodeConstructor))
                 {
@@ -665,7 +589,7 @@ namespace NStub.CSharp
 
                 foreach (var memberBuilder in builders)
                 {
-                    ComputeCodeMember(memberBuilder, context);
+                    this.ComputeCodeMember(memberBuilder, context);
                 }
 
                 if (!(typeMember is CodeConstructor))
@@ -693,29 +617,6 @@ namespace NStub.CSharp
         }
 
         /// <summary>
-        /// Computes the test method name via an <see cref="IMemberBuilder"/>.
-        /// </summary>
-        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
-        /// <param name="context">The build context of the test method member.</param>
-        /// <param name="originalName">Initial name of the test method name.</param>
-        /// <returns>The calculated test method name.</returns>
-        protected virtual string ComputeTestName(IMemberBuilder memberBuilder, IMemberBuildContext context, string originalName)
-        {
-            var testName = memberBuilder.GetTestName(context, originalName);
-            return testName;
-        }
-
-        /// <summary>
-        /// Computes the test method code member via an <see cref="IMemberBuilder"/>.
-        /// </summary>
-        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
-        /// <param name="context">The build context of the test method member.</param>
-        protected virtual void ComputeCodeMember(IMemberBuilder memberBuilder, IMemberBuildContext context)
-        {
-            memberBuilder.Build(context);
-        }
-
-        /// <summary>
         /// Generates the setup and tear down methods.
         /// </summary>
         /// <param name="codeNamespace">The code namespace of the test class.</param>
@@ -727,9 +628,9 @@ namespace NStub.CSharp
         /// Data specific to SetUp and TearDown test-method generation.
         /// </returns>
         private ISetupAndTearDownCreationContext GenerateSetupAndTearDown(
-            CodeNamespace codeNamespace, 
-            CodeTypeDeclaration testClassDeclaration, 
-            string testObjectName, 
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration testClassDeclaration,
+            string testObjectName,
             CodeMemberField testObjectMemberField,
             BuildDataCollection buildData)
         {
@@ -762,6 +663,55 @@ namespace NStub.CSharp
             }*/
         }
 
+        private Dictionary<CodeTypeMember, MemberBuildContext> PreCalculateMemberBuildContext(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeNamespace codeNamespace,
+            IEnumerable<CodeTypeMember> initialMembers,
+            BuildDataCollection propertyData,
+            ISetupAndTearDownCreationContext setTearContext)
+        {
+            var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
+
+            // var propertyData = new Dictionary<string, IBuilderData>();
+            // buildData.AddDataItem(propertyData);
+            foreach (CodeTypeMember typeMember in initialMembers)
+            {
+                var memberBuildContext = new MemberBuildContext(
+                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+
+                // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
+                // if i put the stuff here into this.GenerateCodeTypeMember(...)
+                var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
+                var composedTestName = memberBuildContext.TypeMember.Name;
+                foreach (var memberBuilder in builders)
+                {
+                    composedTestName = this.ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
+                }
+
+                memberBuildContext.TestKey = composedTestName;
+
+                contextLookup.Add(typeMember, memberBuildContext);
+
+                if (memberBuildContext.IsProperty)
+                {
+                    IBuilderData propertyDataItem;
+                    var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
+                    if (found)
+                    {
+                        propertyDataItem.SetData(memberBuildContext.MemberInfo);
+                    }
+                    else
+                    {
+                        var propdata = new PropertyBuilderData();
+                        propdata.SetData(memberBuildContext.MemberInfo);
+                        propertyData.AddDataItem("Property", composedTestName, propdata);
+                    }
+                }
+            }
+
+            return contextLookup;
+        }
+
         /// <summary>
         /// Writes the class file.  This method actually creates the physical
         /// class file and populates it accordingly.
@@ -779,8 +729,8 @@ namespace NStub.CSharp
                 new IndentedTextWriter(this.buildSystem.GetTextWriter(sourceFile, false), "  ");
             var codeGenerationOptions = new CodeGeneratorOptions { BracingStyle = "C" };
             csharpCodeProvider.GenerateCodeFromNamespace(
-                codeNamespace, 
-                indentedTextWriter, 
+                codeNamespace,
+                indentedTextWriter,
                 codeGenerationOptions);
             indentedTextWriter.Flush();
             indentedTextWriter.Close();
@@ -814,8 +764,7 @@ namespace NStub.CSharp
                 CompareNameStart(-2, "Event", x, y, ref diff);
                 CompareNameStart(-1, "Property", x, y, ref diff);
 
-                //CompareNameStart(1, "TestConstructor", x, y, ref diff);
-
+                // CompareNameStart(1, "TestConstructor", x, y, ref diff);
                 CompareForName(12, "EqualsTest", x, y, ref diff);
                 CompareForName(13, "GetHashCodeTest", x, y, ref diff);
                 CompareForName(14, "GetTypeTest", x, y, ref diff);
@@ -887,6 +836,82 @@ namespace NStub.CSharp
         /// </summary>
         private class CustomCodeMemberMethod : CodeMemberMethod
         {
+        }
+
+        #endregion
+
+        #region Nested type: DuplicatedMemberComparer
+
+        /// <summary>
+        /// Checks for duplicate class members.
+        /// </summary>
+        private class DuplicatedMemberComparer : IEqualityComparer<CodeTypeMember>
+        {
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <param name="x">The first object of type <paramref name="x"/> to compare.</param>
+            /// <param name="y">The second object of type <paramref name="y"/> to compare.</param>
+            /// <returns>
+            /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
+            /// </returns>
+            public bool Equals(CodeTypeMember x, CodeTypeMember y)
+            {
+                return x.Name.Equals(y.Name);
+            }
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <param name="obj">The object to get the hash for.</param>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            /// <exception cref="T:System.ArgumentNullException">
+            /// The type of <paramref name="obj"/> is a reference type and <paramref name="obj"/> is <c>null</c>.
+            /// </exception>
+            public int GetHashCode(CodeTypeMember obj)
+            {
+                return obj.Name.GetHashCode();
+            }
+        }
+
+        #endregion
+
+        #region Nested type: GroupMethodsComparer
+
+        /// <summary>
+        /// Used for the group ordering of test methods into SetUp and TearDown, Constructors, Properties, etc. 
+        /// </summary>
+        private class GroupMethodsComparer : IEqualityComparer<string>
+        {
+            /// <summary>
+            /// Determines whether the specified objects are equal.
+            /// </summary>
+            /// <param name="x">The first object of type <paramref name="x"/> to compare.</param>
+            /// <param name="y">The second object of type <paramref name="y"/> to compare.</param>
+            /// <returns>
+            /// <c>true</c> if the specified objects are equal; otherwise, <c>false</c>.
+            /// </returns>
+            public bool Equals(string x, string y)
+            {
+                return x.Equals(y);
+            }
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <param name="obj">The object to get the hash code of.</param>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            /// <exception cref="T:System.ArgumentNullException">
+            /// The type of <paramref name="obj"/> is a reference type and <paramref name="obj"/> is <c>null</c>.
+            /// </exception>
+            public int GetHashCode(string obj)
+            {
+                return obj.GetHashCode();
+            }
         }
 
         #endregion

@@ -26,11 +26,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="TestObjectCreator"/> class.
         /// </summary>
         internal TestObjectCreator() { }*/
-        #region Fields
-
-
-        #endregion
-
         #region Constructors
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace NStub.CSharp.ObjectGeneration
         {
             get
             {
-                return this.assignments != null && this.assignments.Count > 0;
+                return CtorAssignments != null && CtorAssignments.Count > 0;
             }
         }
 
@@ -84,10 +79,10 @@ namespace NStub.CSharp.ObjectGeneration
                     return true;
                 }
 
-                var ctorparameters = this.assignments.PreferredConstructor.UsedConstructor.GetParameters();
+                var ctorparameters = CtorAssignments.PreferredConstructor.UsedConstructor.GetParameters();
                 foreach (var para in ctorparameters)
                 {
-                    var assignment = this.assignments.PreferredConstructor[para.Name];
+                    var assignment = CtorAssignments.PreferredConstructor[para.Name];
                     if (assignment == null)
                     {
                         return false;
@@ -101,54 +96,7 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         /// <summary>
-        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
-        /// expression.
-        /// </summary>
-        /// <param name="testClassDeclaration">The test class declaration.</param>
-        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
-        public override void AssignParameters(
-            CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor)
-        {
-            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
-            Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
-
-            // Guard.NotNull(() => this.assignments, this.assignments);
-            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
-            {
-            }
-
-            if (this.HasParameterAssignments)
-            {
-                var testObjectInitializerPosition = SetUpMethod.Statements.Count - 1;
-
-                var ctorparameters = this.assignments.PreferredConstructor.UsedConstructor.GetParameters();
-                foreach (var para in ctorparameters)
-                {
-                    var assignment = this.assignments.PreferredConstructor[para.Name];
-                    if (assignment == null)
-                    {
-                        continue;
-                    }
-
-                    // Add the member field to the test class.
-                    testClassDeclaration.Members.Add(assignment.MemberField);
-                    this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
-
-                    // Add a local variable for the constructor parameter.
-                    AddAssignStatement(assignment.AssignStatement);
-
-                    // Add the local variable to the constructor initializer in the object create expression 
-                    // (e.g. SetUp method, test object constructor) of the specified method.
-                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
-                }
-
-                // reorder the testObject initializer to the bottom of the SetUp method.
-                this.ReorderSetupStatement(SetUpMethod, testObjectInitializerPosition);
-            }
-        }
-
-        /// <summary>
-        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitely specified constructor
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitly specified constructor
         /// create expression to a specified method.
         /// </summary>
         /// <param name="testClassDeclaration">The test class declaration.</param>
@@ -176,8 +124,8 @@ namespace NStub.CSharp.ObjectGeneration
                 var ctorparameters = ctorAssignments.UsedConstructor.GetParameters();
                 if (ctorparameters.Length > 1)
                 {
-
                 }
+
                 foreach (var para in ctorparameters)
                 {
                     var assignment = ctorAssignments[para.Name];
@@ -188,7 +136,8 @@ namespace NStub.CSharp.ObjectGeneration
 
                     // Add the member field to the test class.
                     testClassDeclaration.Members.Add(assignment.MemberField);
-                    //this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+
+                    // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
                     // Add a local variable for the constructor parameter.
                     testMethod.Statements.Add(assignment.AssignStatement);
@@ -203,6 +152,53 @@ namespace NStub.CSharp.ObjectGeneration
             }
         }
 
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the specified constructor create
+        /// expression.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        public override void AssignParameters(
+            CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor)
+        {
+            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
+            Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
+
+            // Guard.NotNull(() => this.assignments, this.assignments);
+            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
+            {
+            }
+
+            if (this.HasParameterAssignments)
+            {
+                var testObjectInitializerPosition = SetUpMethod.Statements.Count - 1;
+
+                var ctorparameters = CtorAssignments.PreferredConstructor.UsedConstructor.GetParameters();
+                foreach (var para in ctorparameters)
+                {
+                    var assignment = CtorAssignments.PreferredConstructor[para.Name];
+                    if (assignment == null)
+                    {
+                        continue;
+                    }
+
+                    // Add the member field to the test class.
+                    testClassDeclaration.Members.Add(assignment.MemberField);
+                    BuildData.AddDataItem(
+                        "Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+
+                    // Add a local variable for the constructor parameter.
+                    AddAssignStatement(assignment.AssignStatement);
+
+                    // Add the local variable to the constructor initializer in the object create expression 
+                    // (e.g. SetUp method, test object constructor) of the specified method.
+                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
+                }
+
+                // reorder the testObject initializer to the bottom of the SetUp method.
+                this.ReorderSetupStatement(SetUpMethod, testObjectInitializerPosition);
+            }
+        }
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization
@@ -225,7 +221,7 @@ namespace NStub.CSharp.ObjectGeneration
             var testObjectMemberFieldCreate = new CodeObjectCreateExpression(TestObjectName, new CodeExpression[] { });
             TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
             var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-            this.assignments = this.AddParametersToConstructor();
+            CtorAssignments = this.AddParametersToConstructor();
 
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
@@ -281,7 +277,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public override int GetHashCode()
         {
-            return this.assignments != null ? this.assignments.GetHashCode() : 0;
+            return CtorAssignments != null ? CtorAssignments.GetHashCode() : 0;
         }
 
         /// <summary>
@@ -297,6 +293,53 @@ namespace NStub.CSharp.ObjectGeneration
             sb.Append("TestObjectMemberField = " + TestObjectMemberField + ";");
             sb.Append("TestObjectName = " + TestObjectName);
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// Tries to find a matching constructor assignment for a parameter.
+        /// </summary>
+        /// <param name="parameter">The name of the parameter to find the constructor assignment for.</param>
+        /// <param name="constructorAssignment">The found constructor assignment. Is <c>null</c> when none is found.</param>
+        /// <param name="caseSensitive">if set to <c>true</c> if case sensitive parameter name matching should be used.</param>
+        /// <returns>
+        /// <c>true</c> if a matching constructor assignment was found; otherwise <c>false</c>.
+        /// </returns>
+        public bool TryFindConstructorAssignment(
+            string parameter, out ConstructorAssignment constructorAssignment, bool caseSensitive)
+        {
+            Guard.NotNullOrEmpty(() => parameter, parameter);
+
+            // Guard.NotNull(() => this.assignments, this.assignments);
+            if (CtorAssignments == null)
+            {
+                constructorAssignment = null;
+                return false;
+            }
+
+            Func<string, string, bool> comparer;
+            if (caseSensitive)
+            {
+                comparer = (x, y) => x == y;
+            }
+            else
+            {
+                comparer = (x, y) => x.ToLower() == y.ToLower();
+            }
+
+            foreach (var ctorAssignments in CtorAssignments)
+            {
+                foreach (var assignment in ctorAssignments)
+                {
+                    if (comparer(assignment.ParameterName, parameter))
+                    {
+                        constructorAssignment = assignment;
+                        return true;
+                    }
+                }
+            }
+
+            constructorAssignment = null;
+            return false;
         }
 
         /*
@@ -460,47 +503,13 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 var memberField = BaseCSharpCodeGenerator.CreateMemberField(
                     paraInfo.ParameterType.FullName, paraInfo.Name);
-                var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(paraInfo.ParameterType, paraInfo.Name);
+                var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
+                    paraInfo.ParameterType, paraInfo.Name);
                 var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
                 assignmentInfoCollection.AddAssignment(assignment);
             }
 
             return assignmentInfoCollection;
-        }
-
-        public bool TryFindConstructorAssignment(string parameter, out ConstructorAssignment constructorAssignment, bool caseSensitive)
-        {
-            Guard.NotNullOrEmpty(() => parameter, parameter);
-            //Guard.NotNull(() => this.assignments, this.assignments);
-            if (assignments == null)
-            {
-                constructorAssignment = null;
-                return false;
-            }
-
-            Func<string, string, bool> comparer;
-            if (caseSensitive)
-            {
-                comparer = (x, y) => x == y;
-            }
-            else
-            {
-                comparer = (x, y) => x.ToLower() == y.ToLower();
-            }
-
-            foreach (var ctorAssignments in this.assignments)
-            {
-                foreach (var assignment in ctorAssignments)
-                {
-                    if (comparer(assignment.ParameterName, parameter))
-                    {
-                        constructorAssignment = assignment;
-                        return true;
-                    }
-                }
-            }
-            constructorAssignment = null;
-            return false;
         }
 
         /// <summary>

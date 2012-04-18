@@ -1,29 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="BuildDataCollection.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     /// <summary>
-    /// List of <see cref="IBuilderData"/>.
+    /// List of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
     /// </summary>
     public class BuildDataCollection : IEnumerable<IBuilderData>
     {
+        #region Fields
+
+        private readonly Dictionary<string, Dictionary<string, IBuilderData>> data =
+            new Dictionary<string, Dictionary<string, IBuilderData>>();
+
+        private readonly Dictionary<string, IBuilderData> generalData;
+
+        #endregion
+
+        #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:BuildDataCollection"/> class.
+        /// Initializes a new instance of the <see cref="BuildDataCollection"/> class.
         /// </summary>
         public BuildDataCollection()
         {
             this.generalData = new Dictionary<string, IBuilderData>();
-            data.Add("General", this.generalData);
+            this.data.Add("General", this.generalData);
         }
-
-        #region Fields
-
-        private readonly Dictionary<string, IBuilderData> generalData;
-        private readonly Dictionary<string, Dictionary<string, IBuilderData>> data = new Dictionary<string, Dictionary<string, IBuilderData>>();
 
         #endregion
 
@@ -39,6 +53,31 @@ namespace NStub.CSharp.ObjectGeneration
                 return this.data.Count;
             }
         }
+
+        #endregion
+
+        #region Indexers
+
+        /// <summary>
+        /// Gets the <see cref="IBuilderData"/> lookup of the specified category.
+        /// </summary>
+        /// <param name="category">The category of the requested data items.</param>
+        public Dictionary<string, IBuilderData> this[string category]
+        {
+            get
+            {
+                Dictionary<string, IBuilderData> catLookup;
+                this.TryGetCategory(category, out catLookup);
+                return catLookup;
+            }
+
+            /*set
+                        {
+                            this.data[category] = value;
+                        }*/
+        }
+
+        #endregion
 
         /*/// <summary>
         /// Gets the number of parameters with standard arguments. ( Currently all but interfaces ).
@@ -70,8 +109,6 @@ namespace NStub.CSharp.ObjectGeneration
             }
         }*/
 
-        #endregion
-
         /// <summary>
         /// Adds the specified data item to the "General" topic of this list.
         /// </summary>
@@ -97,26 +134,34 @@ namespace NStub.CSharp.ObjectGeneration
                 catLookup = new Dictionary<string, IBuilderData>();
                 this.data.Add(category, catLookup);
             }
+
             catLookup.Add(key, item);
         }
 
         /// <summary>
-        /// Gets the <see cref="IBuilderData"/> lookup of the specified category.
+        /// Returns an enumerator that iterates through the collection.
         /// </summary>
-        /// <param name="category">The category of the requested data items.</param>
-        public Dictionary<string, IBuilderData> this[string category]
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerator<IBuilderData> GetEnumerator()
         {
-            get
-            {
-                Dictionary<string, IBuilderData> catLookup;
-                var found = this.TryGetCategory(category, out catLookup);
-                return catLookup;
-            }
+            return this.generalData.Values.GetEnumerator();
+        }
 
-            /*set
-            {
-                this.data[category] = value;
-            }*/
+        /// <summary>
+        /// Gets the category associated with the specified key.
+        /// </summary>
+        /// <param name="category">The key of the value to get.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified
+        /// key, if the key is found; otherwise, the default value for the type of the
+        /// value parameter. This parameter is passed uninitialized.</param>
+        /// <returns><c>true</c> if the this instance contains an
+        /// element with the specified key; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
+        public bool TryGetCategory(string category, out Dictionary<string, IBuilderData> value)
+        {
+            return this.data.TryGetValue(category, out value);
         }
 
         /// <summary>
@@ -128,7 +173,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// value parameter. This parameter is passed uninitialized.</param>
         /// <returns><c>true</c> if the this instance contains an
         /// element with the specified key; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">key is null.</exception>
+        /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
         public bool TryGetValue(string key, out IBuilderData value)
         {
             return this.generalData.TryGetValue(key, out value);
@@ -146,7 +191,7 @@ namespace NStub.CSharp.ObjectGeneration
         ///   <c>true</c> if the this instance contains an
         /// element with the specified category and key; otherwise, <c>false</c>.
         /// </returns>
-        /// <exception cref="ArgumentNullException">key is null.</exception>
+        /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
         public bool TryGetValue(string category, string key, out IBuilderData value)
         {
             Dictionary<string, IBuilderData> catLookup;
@@ -155,34 +200,9 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 return catLookup.TryGetValue(key, out value);
             }
+
             value = null;
             return false;
-        }
-
-        /// <summary>
-        /// Gets the category associated with the specified key.
-        /// </summary>
-        /// <param name="category">The key of the value to get.</param>
-        /// <param name="value">When this method returns, contains the value associated with the specified
-        /// key, if the key is found; otherwise, the default value for the type of the
-        /// value parameter. This parameter is passed uninitialized.</param>
-        /// <returns><c>true</c> if the this instance contains an
-        /// element with the specified key; otherwise, <c>false</c>.</returns>
-        /// <exception cref="ArgumentNullException">key is null.</exception>
-        public bool TryGetCategory(string category, out Dictionary<string, IBuilderData> value)
-        {
-            return this.data.TryGetValue(category, out value);
-        }
-
-        /// <summary>
-        /// Returns an enumerator that iterates through the collection.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-        /// </returns>
-        public IEnumerator<IBuilderData> GetEnumerator()
-        {
-            return this.generalData.Values.GetEnumerator();
         }
 
         /// <summary>
@@ -196,5 +216,4 @@ namespace NStub.CSharp.ObjectGeneration
             return this.data.Values.GetEnumerator();
         }
     }
-
 }

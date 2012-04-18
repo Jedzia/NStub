@@ -1,4 +1,14 @@
-﻿namespace NStub.CSharp.ObjectGeneration
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IMemberBuildResult.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
+
+namespace NStub.CSharp.ObjectGeneration
 {
     using NStub.CSharp.BuildContext;
 
@@ -7,6 +17,6 @@
     /// </summary>
     public interface IMemberBuildResult
     {
-        // Todo: Use this type provided in a IMemberBuildContext to return results and add test methods, etc.
+        // Todo: provide this type in a IMemberBuildContext to return results and add test methods, etc.
     }
 }

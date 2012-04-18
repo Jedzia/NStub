@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.CodeDom;
-using NStub.Core;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="CodeMethodComposer.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using System;
+    using System.CodeDom;
+    using NStub.Core;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
 
     /// <summary>
@@ -15,31 +21,12 @@ namespace NStub.CSharp.ObjectGeneration
     public static class CodeMethodComposer
     {
         /// <summary>
-        /// Creates the stub for the specified code member method.  This method actually
-        /// implements the method body for the test method.
-        /// </summary>
-        /// <param name="codeMemberMethod">The code member method.</param>
-        public static void CreateTestStubForMethod(CodeMemberMethod codeMemberMethod)
-        {
-            // Clean the member name and append 'Test' to the end of it
-            var origName = Utility.ScrubPathOfIllegalCharacters(codeMemberMethod.Name);
-            // Standard test methods accept no parameters and return void.
-            codeMemberMethod
-                .SetName(origName + "Test")
-                .WithReturnType(typeof(void))
-                .ClearParameters()
-                .AddMethodAttribute("Test")
-                .AddComment("TODO: Implement unit test for " + origName);
-        }
-
-        /// <summary>
         /// Appends a 'Assert.Inconclusive("Text")' statement to the specified method.
         /// </summary>
         /// <param name="codeMemberMethod">The code member method.</param>
         /// <param name="inconclusiveText">The warning parameter text of the Assert.Inconclusive call.</param>
         public static void AppendAssertInconclusive(CodeMemberMethod codeMemberMethod, string inconclusiveText)
         {
-
             // add a blank line and Assert.Inconclusive(" specified text ..."); to the method body.
             codeMemberMethod
                 .AddBlankLine()
@@ -74,9 +61,10 @@ namespace NStub.CSharp.ObjectGeneration
             }
             else if (type.IsAssignableFrom(typeof(Type)))
             {
-                assignExpr = new CodeTypeOfExpression(typeof(Object));
+                assignExpr = new CodeTypeOfExpression(typeof(object));
             }
-            else if (type.IsAssignableFrom(typeof(int)) || type.IsAssignableFrom(typeof(uint)) || type.IsAssignableFrom(typeof(short)))
+            else if (type.IsAssignableFrom(typeof(int)) || type.IsAssignableFrom(typeof(uint)) ||
+                     type.IsAssignableFrom(typeof(short)))
             {
                 assignExpr = new CodePrimitiveExpression(1234);
             }
@@ -84,8 +72,27 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 assignExpr = new CodeObjectCreateExpression(type.FullName, new CodeExpression[] { });
             }
+
             return new CodeAssignStatement(fieldRef1, assignExpr);
         }
 
+        /// <summary>
+        /// Creates the stub for the specified code member method.  This method actually
+        /// implements the method body for the test method.
+        /// </summary>
+        /// <param name="codeMemberMethod">The code member method.</param>
+        public static void CreateTestStubForMethod(CodeMemberMethod codeMemberMethod)
+        {
+            // Clean the member name and append 'Test' to the end of it
+            var origName = Utility.ScrubPathOfIllegalCharacters(codeMemberMethod.Name);
+
+            // Standard test methods accept no parameters and return void.
+            codeMemberMethod
+                .SetName(origName + "Test")
+                .WithReturnType(typeof(void))
+                .ClearParameters()
+                .AddMethodAttribute("Test")
+                .AddComment("TODO: Implement unit test for " + origName);
+        }
     }
 }

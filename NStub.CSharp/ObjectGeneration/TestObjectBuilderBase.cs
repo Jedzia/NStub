@@ -19,6 +19,14 @@ namespace NStub.CSharp.ObjectGeneration
     /// </summary>
     public abstract class TestObjectBuilderBase : ITestObjectBuilder
     {
+        // Todo: this assignments field should be refactered into a protected property and null checks for each usage should be added.
+        // hint: this.assignments = this.AddParametersToConstructor(); in BuildTestObject() creates it.
+        #region Fields
+
+        private ConstructorAssignmentCollection assignments;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -31,9 +39,9 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectType">Type of the test object.</param>
         protected TestObjectBuilderBase(
             BuildDataCollection buildData,
-            CodeMemberMethod setUpMethod, 
-            CodeMemberField testObjectMemberField, 
-            string testObjectName, 
+            CodeMemberMethod setUpMethod,
+            CodeMemberField testObjectMemberField,
+            string testObjectName,
             Type testObjectType)
         {
             Guard.NotNull(() => buildData, buildData);
@@ -52,10 +60,6 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         #region Properties
-
-        // Todo: this assignments field should be refactered into a protected property and null checks for each usage should be added.
-        // hint: this.assignments = this.AddParametersToConstructor(); in BuildTestObject() creates it.
-        internal ConstructorAssignmentCollection assignments;
 
         /// <summary>
         /// Gets the assignments related to this instance.
@@ -104,7 +108,40 @@ namespace NStub.CSharp.ObjectGeneration
         /// </value>
         public Type TestObjectType { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the constructor assignments of the builder.
+        /// </summary>
+        /// <value>
+        /// The constructor assignments.
+        /// </value>
+        internal ConstructorAssignmentCollection CtorAssignments
+        {
+            get
+            {
+                return this.assignments;
+            }
+
+            set
+            {
+                this.assignments = value;
+            }
+        }
+
         #endregion
+
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitly specified constructor
+        /// create expression to a specified method.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testMethod">The test method, to add the assign-statements to.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        /// <param name="ctorAssignments">The list of constructor assignments that specify the parameter to add.</param>
+        public abstract void AssignExtra(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod testMethod,
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments);
 
         /// <summary>
         /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the constructor create
@@ -124,20 +161,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
         public abstract void AssignParameters(
             CodeTypeDeclaration testClassDeclaration, CodeObjectCreateExpression testObjectConstructor);
-
-        /// <summary>
-        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitely specified constructor
-        /// create expression to a specified method.
-        /// </summary>
-        /// <param name="testClassDeclaration">The test class declaration.</param>
-        /// <param name="testMethod">The test method, to add the assign-statements to.</param>
-        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
-        /// <param name="ctorAssignments">The list of constructor assignments that specify the parameter to add.</param>
-        public abstract void AssignExtra(
-            CodeTypeDeclaration testClassDeclaration,
-            CodeMemberMethod testMethod,
-            CodeObjectCreateExpression testObjectConstructor,
-            AssignmentInfoCollection ctorAssignments);
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization

@@ -469,7 +469,8 @@ namespace NStub.Gui
 
             var assName = args.Name.Split(new[] { ',' })[0] + ".dll";
             var path = Path.Combine(finfo.Directory.FullName, assName);
-            int depp = 6;
+            
+            // int depp = 6;
             var ass = Assembly.LoadFile(path);
             return ass;
         }

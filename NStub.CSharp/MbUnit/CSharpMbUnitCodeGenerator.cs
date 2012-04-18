@@ -36,12 +36,10 @@ namespace NStub.CSharp.MbUnit
         /// <param name="testBuilders">The test builder repository.</param>
         /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
-        ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
-        ///   
-        /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
+        ///   <cref name="ICodeGeneratorParameters.OutputDirectory"/> is <c>null</c>.</exception>
+        /// <exception cref="System.ArgumentException"><cref name="ICodeGeneratorParameters.OutputDirectory"/> is an
         /// empty string.</exception>
-        ///   
-        /// <exception cref="System.ApplicationException"><paramref name="outputDirectory"/>
+        /// <exception cref="System.ApplicationException"><cref name="ICodeGeneratorParameters.OutputDirectory"/>
         /// cannot be found.</exception>
         public CSharpMbUnitCodeGenerator(
             IBuildSystem buildSystem, 
