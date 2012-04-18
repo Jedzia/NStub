@@ -27,7 +27,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StaticConstructorBuilder"/> class.
+        /// Initializes a new instance of the <see cref="StaticMethodBuilder"/> class.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
         public StaticMethodBuilder(IMemberSetupContext context)
@@ -180,8 +180,9 @@ namespace NStub.CSharp.ObjectGeneration
                         activatorAdded = true;
                     }
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
+                    // Todo: bad bad, show or handle exceptions ;) Or better: get default instances for the requested types .... later, later...
                 }
                 
                 if (!activatorAdded)

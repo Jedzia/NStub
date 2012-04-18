@@ -13,13 +13,13 @@ namespace NStub.CSharp.MbUnitRhinoMocks
     using System;
     using System.CodeDom;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.MbUnit;
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
+    using NStub.Core;
 
     /// <summary>
     /// The <see cref="CSharpMbUnitRhinoMocksCodeGenerator"/> is responsible for the generation of the individual
@@ -35,19 +35,24 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// Initializes a new instance of the <see cref="CSharpMbUnitRhinoMocksCodeGenerator"/> class
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
+        /// <param name="buildSystem">The build system.</param>
         /// <param name="codeNamespace">The code namespace.</param>
         /// <param name="testBuilders">The test builder repository.</param>
-        /// <param name="outputDirectory">The output directory.</param>
+        /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
         ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
         ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
         ///   
-        /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
+        /// <exception cref="ApplicationException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
-        public CSharpMbUnitRhinoMocksCodeGenerator(CodeNamespace codeNamespace, ITestBuilderFactory testBuilders, string outputDirectory)
-            : base(codeNamespace,testBuilders, outputDirectory)
+        public CSharpMbUnitRhinoMocksCodeGenerator(
+            IBuildSystem buildSystem,
+            CodeNamespace codeNamespace,
+            ITestBuilderFactory testBuilders,
+            ICodeGeneratorParameters configuration)
+            : base(buildSystem, codeNamespace, testBuilders, configuration)
         {
         }
 
@@ -97,9 +102,9 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// The list of assigned mock objects.
         /// </returns>
         protected virtual IEnumerable<CodeAssignStatement> ComposeTestSetupMockery(
-            CodeTypeDeclaration testClassDeclaration, 
-            CodeMemberMethod setUpMethod, 
-            CodeMemberField testObjectMemberField, 
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod setUpMethod,
+            CodeMemberField testObjectMemberField,
             string testObjectName)
         {
             // Todo: only the Type is necs, the CodeTypeDeclaration is to much knowledge.
@@ -109,9 +114,9 @@ namespace NStub.CSharp.MbUnitRhinoMocks
 
             // Get the constructor that takes an integer as a parameter.
             var ctor = testObjectClassType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public, 
-                Type.DefaultBinder, 
-                parameters, 
+                BindingFlags.Instance | BindingFlags.Public,
+                Type.DefaultBinder,
+                parameters,
                 null);
 
             if (ctor == null)
@@ -131,10 +136,10 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             bool hasInterfaceInCtorParameters = false;
             var ctorParameterTypes = new List<ParameterInfo>();
 
-            foreach(var constructor in testObjectConstructors)
+            foreach (var constructor in testObjectConstructors)
             {
                 var ctorParameters = constructor.GetParameters();
-                foreach(var para in ctorParameters)
+                foreach (var para in ctorParameters)
                 {
                     if (para.ParameterType.IsInterface && !para.ParameterType.IsGenericType)
                     {
@@ -155,7 +160,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                 testClassDeclaration, setUpMethod, testObjectName, null, "mocks");
 
             var mockAssignments = new List<CodeAssignStatement>();
-            foreach(var paraInfo in ctorParameterTypes)
+            foreach (var paraInfo in ctorParameterTypes)
             {
                 var mockMemberField = AddTestMemberField(
                     testClassDeclaration, paraInfo.ParameterType.FullName, paraInfo.Name);
@@ -185,7 +190,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                 context.TestClassDeclaration, context.SetUpMethod, testObjectMemberField, testObjectName);
             if (assignedMockObjects.Count() > 0)
             {
-                foreach(var mockObject in assignedMockObjects)
+                foreach (var mockObject in assignedMockObjects)
                 {
                     // Todo: maybe use the creator here to add all the stuff
                     context.TestObjectCreator.TestObjectMemberFieldCreateExpression.Parameters.Add(mockObject.Left);
@@ -197,10 +202,10 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         }
 
         private CodeAssignStatement AddMockObject(
-            CodeMemberMethod setUpMethod, 
-            CodeMemberField mockRepositoryMemberField, 
-            string testObjectName, 
-            ParameterInfo paraInfo, 
+            CodeMemberMethod setUpMethod,
+            CodeMemberField mockRepositoryMemberField,
+            string testObjectName,
+            ParameterInfo paraInfo,
             string paraName)
         {
             var paraType = paraInfo.ParameterType;
@@ -239,10 +244,10 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// <param name="paraName">Name of the mock parameter.</param>
         /// <returns>The declaration of the created mock member field of the test class.</returns>
         private CodeMemberField AddMockRepository(
-            CodeTypeDeclaration testClassDeclaration, 
-            CodeMemberMethod setUpMethod, 
-            string testObjectName, 
-            ParameterInfo paraInfo, 
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod setUpMethod,
+            string testObjectName,
+            ParameterInfo paraInfo,
             string paraName)
         {
             var mockMemberField = AddTestMemberField(testClassDeclaration, typeof(MockRepository).Name, "mocks");

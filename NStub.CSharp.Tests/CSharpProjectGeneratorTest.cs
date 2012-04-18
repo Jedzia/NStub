@@ -1,11 +1,35 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+//using System.IO;
 using System.Reflection;
 using NUnit.Framework;
+using NStub.Core;
 
 namespace NStub.CSharp.Tests
 {
+    internal class FakeBuildSystem : IBuildSystem
+    {
+        #region IBuildSystem Members
+
+        public char DirectorySeparatorChar
+        {
+            get { return System.IO.Path.DirectorySeparatorChar; }
+        }
+
+        public bool DirectoryExists(string directory)
+        {
+            return true;
+        }
+
+        public System.IO.TextWriter GetTextWriter(string path, bool append)
+        {
+            var ms = new System.IO.MemoryStream();
+            return new System.IO.StreamWriter(ms);
+        }
+
+        #endregion
+    }
+
 	/// <summary>
 	/// This class exercises all major functionality of the CSharpProjectGenerator
 	/// module.
@@ -32,7 +56,7 @@ namespace NStub.CSharp.Tests
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
-			_outputDirectory = Path.GetTempPath();
+			_outputDirectory = System.IO.Path.GetTempPath();
 		} 
 
 		#endregion TestFixtureSetUp (Public)
@@ -46,10 +70,10 @@ namespace NStub.CSharp.Tests
 		[TestFixtureTearDown]
 		public void TestFixtureTearDown()
 		{
-			if (Directory.Exists(_outputDirectory))
+			/*if (Directory.Exists(_outputDirectory))
 			{
 				Directory.Delete(_outputDirectory);
-			}
+			}*/
 		} 
 
 		#endregion TestFixtureTearDown (Public)
@@ -62,8 +86,10 @@ namespace NStub.CSharp.Tests
 		[SetUp]
 		public void SetUp()
 		{
+            //var buildSystem = new StandardBuildSystem();
+            var buildSystem = new FakeBuildSystem();
 			_cSharpProjectGenerator =
-				new CSharpProjectGenerator(_projectName, _outputDirectory);
+                new CSharpProjectGenerator(buildSystem, _projectName, _outputDirectory);
 
 			_classFiles = new List<string>();
 			_classFiles.Add("FooClass.cs");

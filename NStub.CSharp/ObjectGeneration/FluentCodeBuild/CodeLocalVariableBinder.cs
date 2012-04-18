@@ -18,7 +18,7 @@
         private readonly CodeMemberMethod method;
         private readonly CodeVariableDeclarationStatement variableDeclaration;
         private readonly CodeVariableReferenceExpression reference;
-        private CodeMethodInvokeExpression invoker;
+        //private CodeMethodInvokeExpression invoker;
         private CodeStatement assignStatement;
 
         internal CodeStatement AssignStatement

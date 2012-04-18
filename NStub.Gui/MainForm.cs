@@ -97,6 +97,8 @@ namespace NStub.Gui
             }
         }
 
+        private static readonly IBuildSystem sbs = new StandardBuildSystem();
+
         /// <summary>
         /// Handles the Click event of the btnGo control.  Creates a list of the methods
         /// for which the user wishes to generate test cases for and instantiates an
@@ -111,7 +113,7 @@ namespace NStub.Gui
             Cursor.Current = Cursors.WaitCursor;
             this._browseInputAssemblyButton.Enabled = false;
             this._browseOutputDirectoryButton.Enabled = false;
-
+            
             // Create a new directory for each assembly
             for (int h = 0; h < this._assemblyGraphTreeView.Nodes.Count; h++)
             {
@@ -124,6 +126,7 @@ namespace NStub.Gui
                 // Create our project generator
                 CSharpProjectGenerator cSharpProjectGenerator =
                     new CSharpProjectGenerator(
+                        sbs,
                         Path.GetFileNameWithoutExtension(this._inputAssemblyTextBox.Text) + ".Tests",
                         outputDirectory);
 
@@ -216,15 +219,18 @@ namespace NStub.Gui
                         //       new CSharpMbUnitRhinoMocksCodeGenerator(codeNamespace, outputDirectory));
 
                         //var testBuilders = new TestBuilderFactory(new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
+                        var configuration = new CodeGeneratorParameters(outputDirectory);
                         var testBuilders = new TestBuilderFactory();
                         var codeGenerator = (ICodeGenerator)Activator.CreateInstance((Type)cbGenerators
                             .SelectedItem, new object[]
                          {
-                             codeNamespace, testBuilders, outputDirectory
+                             sbs, codeNamespace, testBuilders, configuration
                          });
 
                         var nStub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
                         nStub.GenerateCode();
+
+                        // Todo: some of this shit should be done by the core itself.
 
                         // Add all of our classes to the project
                         foreach (CodeTypeDeclaration codeType in nStub.CodeNamespace.Types)

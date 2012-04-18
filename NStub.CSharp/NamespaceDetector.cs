@@ -10,6 +10,7 @@ namespace NStub.CSharp
     /// <summary>
     /// Determines the namespace to use, based on a supplied list of type declarations.
     /// </summary>
+    /// <remarks>Todo: Interface and better naming for the GetDifferingNamespace and CombineWithShortestNamespace methods.</remarks>
     public class NamespaceDetector
     {
         /// <summary>
@@ -64,7 +65,8 @@ namespace NStub.CSharp
         }
 
         /// <summary>
-        /// Normalizes the namespace of a specified type for use as the test class namespace.
+        /// Get the differing namespace part between object to test and unit test module,
+        /// seen relative from the <see cref="ShortestNamespace"/>, prefixed with the specified string.
         /// </summary>
         /// <param name="inputType">The type with the input namespace.</param>
         /// <param name="testNamespacePart">The additional namespace part of the test project, e.g. ".Test".</param>
@@ -79,7 +81,7 @@ namespace NStub.CSharp
         /// var testNamespace = detector.ShortestNamespace + GetDifferingNamespace(inputType);
         /// ]]></code>
         /// </example></remarks>
-        public string GetDifferingNamespace(CodeTypeDeclaration inputType, string testNamespacePart)
+        public string GetDifferingTypeFullname(CodeTypeDeclaration inputType, string testNamespacePart)
         {
             string codeNs = inputType.Name;
             var indexcodeNs = inputType.Name.LastIndexOf('.');
@@ -100,7 +102,8 @@ namespace NStub.CSharp
 
 
         /// <summary>
-        /// Combines the with shortest namespace.
+        /// Insert the specified extra string into the namespace of a specified type, relative to the 
+        /// <see cref="ShortestNamespace"/>.
         /// </summary>
         /// <param name="inputType">The type with the input namespace.</param>
         /// <param name="testNamespacePart">The additional namespace part of the test project, e.g. ".Test".</param>
@@ -114,8 +117,8 @@ namespace NStub.CSharp
         /// between the <see cref="ShortestNamespace"/> and the rest of the fullname of <paramref name="inputType"/>. Simply add "Test" at the end
         /// to it an you have the fullname to your test class.
         /// </remarks>
-        public string CombineWithShortestNamespace(CodeTypeDeclaration inputType, string testNamespacePart)
-        {
+        public string InsertAfterShortestNamespace(CodeTypeDeclaration inputType, string testNamespacePart)
+        { 
             var combined = inputType.Name;
             var splitter = inputType.Name.Split(new[] {this.ShortestNamespace}, StringSplitOptions.RemoveEmptyEntries);
             if (splitter.Length == 1)
@@ -127,7 +130,7 @@ namespace NStub.CSharp
         }
 
         /// <summary>
-        /// Prepares the specified namespace imports.
+        /// Prepares the specified namespace imports to prevent collisions with the types under test.
         /// </summary>
         /// <param name="imports">The namespace imports.</param>
         /// <returns>

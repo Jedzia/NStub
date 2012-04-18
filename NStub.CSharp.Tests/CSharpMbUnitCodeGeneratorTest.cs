@@ -1,11 +1,13 @@
 using System;
 using System.CodeDom;
-using System.IO;
+//using System.IO;
 using NUnit.Framework;
 
 namespace NStub.CSharp.Tests
 {
     using NStub.CSharp.MbUnit;
+    using NStub.Core;
+    using NStub.CSharp.ObjectGeneration;
 
     /// <summary>
 	/// This class exercises all major functionality found in the 
@@ -31,7 +33,7 @@ namespace NStub.CSharp.Tests
 		[TestFixtureSetUp]
 		public void TestFixtureSetUp()
 		{
-			_outputDirectory = Path.GetTempPath();
+			_outputDirectory = System.IO.Path.GetTempPath();
 		} 
 
 		#endregion TestFixtureSetUp (Public)
@@ -45,10 +47,10 @@ namespace NStub.CSharp.Tests
 		[TestFixtureTearDown]
 		public void TestFixtureTearDown()
 		{
-			if (Directory.Exists(_outputDirectory))
+			/*if (Directory.Exists(_outputDirectory))
 			{
 				//Directory.Delete(_outputDirectory, true);
-			}
+			}*/
 		} 
 
 		#endregion TestFixtureTearDown (Public)
@@ -61,9 +63,13 @@ namespace NStub.CSharp.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
+            //var buildSystem = new StandardBuildSystem();
+            var buildSystem = new FakeBuildSystem(); 
+            CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
+            var testBuilders = new TestBuilderFactory();
+            var configuration = new CodeGeneratorParameters(_outputDirectory);
 			_CSharpMbUnitCodeGenerator =
-				new CSharpMbUnitCodeGenerator(codeNamespace, null, _outputDirectory);
+                new CSharpMbUnitCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration);
 		} 
 
 		#endregion SetUp (Public)

@@ -13,10 +13,10 @@
         /// <summary>
         /// Get the statements of a method by the specified type.
         /// </summary>
+        /// <typeparam name="T">The matching statement type.</typeparam>
         /// <param name="method">The method to check.</param>
-        /// <param name="statementType">The matching statement type.</param>
         /// <returns>
-        /// A Linq-Expression for use in <see cref="Assert.That"/>, checking the truth of the assertion.
+        /// A Linq-Expression for use in <i>Assert.That</i>, checking the truth of the assertion.
         /// </returns>
         public static IEnumerable<T> StatementsOfType<T>(this CodeMemberMethod method)
         {
@@ -147,11 +147,12 @@
         /// </summary>
         /// <param name="method">The method to add the statements to.</param>
         /// <param name="variableName">Name of the local variable.</param>
+        /// <param name="createVariable">if set to <c>true</c> a local variable is created; otherwise it is only referenced.</param>
         /// <returns>A fluent interface to build up reference types.</returns>
-        public static CodeLocalVariableBinder Var(this CodeMemberMethod method, string variableName, bool create)
+        public static CodeLocalVariableBinder Var(this CodeMemberMethod method, string variableName, bool createVariable)
         {
             // "Assert"
-            if (create)
+            if (createVariable)
             {
                 var localDecl = new CodeVariableDeclarationStatement("var", variableName);
                 var result = new CodeLocalVariableBinder(method, localDecl);

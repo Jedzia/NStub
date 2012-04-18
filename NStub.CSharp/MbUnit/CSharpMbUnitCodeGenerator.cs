@@ -12,7 +12,6 @@ namespace NStub.CSharp.MbUnit
 {
     using System.CodeDom;
     using System.Collections.Generic;
-    using System.IO;
     using global::MbUnit.Framework;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
@@ -32,19 +31,24 @@ namespace NStub.CSharp.MbUnit
         /// Initializes a new instance of the <see cref="CSharpMbUnitCodeGenerator"/> class
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
+        /// <param name="buildSystem">The build system.</param>
         /// <param name="codeNamespace">The code namespace.</param>
         /// <param name="testBuilders">The test builder repository.</param>
-        /// <param name="outputDirectory">The output directory.</param>
+        /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
         ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
         ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
         ///   
-        /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
+        /// <exception cref="System.ApplicationException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
-        public CSharpMbUnitCodeGenerator(CodeNamespace codeNamespace, ITestBuilderFactory testBuilders, string outputDirectory)
-            : base(codeNamespace, testBuilders, outputDirectory)
+        public CSharpMbUnitCodeGenerator(
+            IBuildSystem buildSystem, 
+            CodeNamespace codeNamespace, 
+            ITestBuilderFactory testBuilders,
+            ICodeGeneratorParameters configuration)
+            : base(buildSystem, codeNamespace, testBuilders, configuration)
         {
         }
 

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+//using System.IO;
 using System.Reflection;
 using System.Xml;
 using NStub.Core;
@@ -23,26 +23,33 @@ namespace NStub.CSharp
 		private XmlWriter _xmlWriter;
 
 		#endregion Fields (Private)
+        private readonly IBuildSystem buildSystem;
 
 		#region Constructor (Public)
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CSharpProjectGenerator"/>
-		/// within the given projectName which will output to the given 
-		/// outputDirectory.
-		/// </summary>
-		/// <param name="projectName">The name of the project.</param>
-		/// <param name="outputDirectory">The directory where the project
-		/// will be output.</param>	
-		/// <exception cref="System.ArgumentNullException">Either projectName or
-		/// outputDirectory is null.</exception>
-		/// <exception cref="System.ArgumentException">Either projectName or
-		/// outputDirectory is empty.</exception>
-		/// <exception cref="DirectoryNotFoundException">outputDirectory
-		/// cannot be found.</exception>
-		public CSharpProjectGenerator(string projectName, string outputDirectory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CSharpProjectGenerator"/>
+        /// within the given projectName which will output to the given
+        /// outputDirectory.
+        /// </summary>
+        /// <param name="buildSystem">The build system.</param>
+        /// <param name="projectName">The name of the project.</param>
+        /// <param name="outputDirectory">The directory where the project
+        /// will be output.</param>
+        /// <exception cref="System.ArgumentNullException">Either projectName or
+        /// outputDirectory is null.</exception>
+        ///   
+        /// <exception cref="System.ArgumentException">Either projectName or
+        /// outputDirectory is empty.</exception>
+        ///   
+        /// <exception cref="System.IO.DirectoryNotFoundException">outputDirectory
+        /// cannot be found.</exception>
+        public CSharpProjectGenerator(IBuildSystem buildSystem, string projectName, string outputDirectory)
 		{
 			#region Validation
+
+            Guard.NotNull(() => buildSystem, buildSystem);
+            this.buildSystem = buildSystem;
 
 			// Null arguments will not be accepted
 			if (projectName == null)
@@ -67,10 +74,10 @@ namespace NStub.CSharp
 					"outputDirectory");
 			}
 			// Ensure that the output directory is valid
-			if (!(Directory.Exists(outputDirectory)))
-			{
-				throw new DirectoryNotFoundException(Exceptions.DirectoryCannotBeFound);
-			}
+            if (!this.buildSystem.DirectoryExists(outputDirectory))
+            {
+                throw new ApplicationException(Exceptions.DirectoryCannotBeFound);
+            }
 
 			#endregion Validation
 
@@ -172,7 +179,7 @@ namespace NStub.CSharp
 			xmlWriterSettings.OmitXmlDeclaration = true;
 
 			_xmlWriter = XmlWriter.Create(_outputDirectory +
-				Path.DirectorySeparatorChar + _projectName + ".csproj", xmlWriterSettings);
+                this.buildSystem.DirectorySeparatorChar + _projectName + ".csproj", xmlWriterSettings);
 
 			// Specify the scheams we will be using 
 			_xmlWriter.WriteStartElement("Project", @"http://schemas.microsoft.com/developer/msbuild/2003");

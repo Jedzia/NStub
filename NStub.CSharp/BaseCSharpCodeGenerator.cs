@@ -14,7 +14,6 @@ namespace NStub.CSharp
     using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using Microsoft.CSharp;
     using NStub.Core;
@@ -42,22 +41,31 @@ namespace NStub.CSharp
         /// Initializes a new instance of the <see cref="BaseCSharpCodeGenerator"/> class
         /// based the given <see cref="CodeNamespace"/> which will output to the given directory.
         /// </summary>
+        /// <param name="buildSystem">The build system.</param>
         /// <param name="codeNamespace">The code namespace.</param>
         /// <param name="testBuilders">The test builder repository.</param>
-        /// <param name="outputDirectory">The output directory.</param>
+        /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
         ///   <paramref name="outputDirectory"/> is <c>null</c>.</exception>
         ///   
         /// <exception cref="System.ArgumentException"><paramref name="outputDirectory"/> is an
         /// empty string.</exception>
         ///   
-        /// <exception cref="DirectoryNotFoundException"><paramref name="outputDirectory"/>
+        /// <exception cref="ApplicationException"><paramref name="outputDirectory"/>
         /// cannot be found.</exception>
         protected BaseCSharpCodeGenerator(
+            IBuildSystem buildSystem,
             CodeNamespace codeNamespace, 
             ITestBuilderFactory testBuilders,
-            string outputDirectory)
+            ICodeGeneratorParameters configuration
+            )
         {
+            Guard.NotNull(() => buildSystem, buildSystem);
+            this.buildSystem = buildSystem;
+            Guard.NotNull(() => configuration, configuration);
+            //this.configuration = configuration;
+
+            string outputDirectory = configuration.OutputDirectory;
             // Null arguments will not be accepted
             if (codeNamespace == null)
             {
@@ -90,9 +98,9 @@ namespace NStub.CSharp
             }
 
             // Ensure that the output directory is valid
-            if (!Directory.Exists(outputDirectory))
+            if (!this.buildSystem.DirectoryExists(outputDirectory))
             {
-                throw new DirectoryNotFoundException(Exceptions.DirectoryCannotBeFound);
+                throw new ApplicationException(Exceptions.DirectoryCannotBeFound);
             }
 
             this.CodeNamespace = codeNamespace;
@@ -148,6 +156,29 @@ namespace NStub.CSharp
                 this.testBuilders = value;
             }*/
         }
+        private readonly IBuildSystem buildSystem;
+        /*public IBuildSystem buildSystem
+        {
+            get
+            {
+                if (this.buildSystem == null)
+                {
+                    this.buildSystem = new StandardBuildSystem();
+                }
+
+                return this.buildSystem;
+            }
+
+            set
+            {
+                if (this.buildSystem != null)
+                {
+                    throw new InvalidOperationException("The BuildSystem can only be setup once. This should happen early after instantiation.");
+                }
+
+                this.buildSystem = value;
+            }
+        }*/
 
         /// <summary>
         /// Gets the current test class declaration. The value is only valid during execution of 
@@ -211,28 +242,12 @@ namespace NStub.CSharp
                 }
                 this.CurrentTestClassDeclaration = testClassDeclaration;
 
-                // Create a namespace for the Type in order to put it in scope
-                var ndiff = nd.GetDifferingNamespace(testClassDeclaration, ".Tests");
-                var codeNamespace = new CodeNamespace(this.CodeNamespace.Name + ndiff);
+                var cts = new CodeTypeSetup(nd, testClassDeclaration);
 
-                // add using imports.
-                codeNamespace.Imports.AddRange(nd.PrepareNamespaceImports(this.RetrieveNamespaceImports()).ToArray());
-
-                var indexcodeNs = testClassDeclaration.Name.LastIndexOf('.');
-                if (indexcodeNs > 0)
-                {
-                    // try to import the namespace for the object under test.
-                    var codeNs = testClassDeclaration.Name.Substring(0, indexcodeNs);
-                    codeNamespace.Imports.Add(new CodeNamespaceImport(codeNs));
-                }
-
-
-                // Clean the type name
-                testClassDeclaration.Name =
-                    Utility.ScrubPathOfIllegalCharacters(testClassDeclaration.Name);
-                testClassDeclaration.Name = nd.CombineWithShortestNamespace(testClassDeclaration, ".Tests");
-
-                var testObjectName = Utility.GetUnqualifiedTypeName(testClassDeclaration.Name);
+                var codeNamespace = cts.SetUpCodeNamespace(this.CodeNamespace.Name, this.RetrieveNamespaceImports());
+                var testObjectName = cts.SetUpTestname();
+                
+                testClassDeclaration.IsPartial = true;
 
                 // Add testObject field
                 var testObjectMemberField = AddTestMemberField(
@@ -254,52 +269,19 @@ namespace NStub.CSharp
                     testObjectMemberField,
                     propertyData);
 
-                this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
-                // Create our test type
-                testClassDeclaration.Name = testObjectName + "Test";
-                testClassDeclaration.IsPartial = true;
+                this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
                 // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(testClassDeclaration);
 
                 // pre calculate property data.
-                var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
-                //var propertyData = new Dictionary<string, IBuilderData>();
-                //buildData.AddDataItem(propertyData);
-                foreach (CodeTypeMember typeMember in initialMembers)
-                {
-                    var memberBuildContext = new MemberBuildContext(
-                        codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
-
-                    // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
-                    // if i put the stuff here into this.GenerateCodeTypeMember(...)
-                    var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
-                    var composedTestName = memberBuildContext.TypeMember.Name;
-                    foreach (var memberBuilder in builders)
-                    {
-                        composedTestName = ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
-                    }
-                    memberBuildContext.TestKey = composedTestName;
-
-                    contextLookup.Add(typeMember, memberBuildContext);
-
-                    if (memberBuildContext.IsProperty)
-                    {
-                        IBuilderData propertyDataItem;
-                        var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
-                        if (found)
-                        {
-                            propertyDataItem.SetData(memberBuildContext.MemberInfo);
-                        }
-                        else
-                        {
-                            var propdata = new PropertyBuilderData();
-                            propdata.SetData(memberBuildContext.MemberInfo);
-                            propertyData.AddDataItem("Property", composedTestName, propdata);
-                        }
-                    }                    
-                }
+                var contextLookup = PreCalculateMemberBuildContext(
+                    testClassDeclaration, 
+                    codeNamespace,
+                    initialMembers,
+                    propertyData, 
+                    setTearContext);
 
                 // Set out member names correctly 
                 // foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
@@ -333,6 +315,52 @@ namespace NStub.CSharp
                 SortMembers(testClassDeclaration);
                 this.WriteClassFile(testClassDeclaration.Name, codeNamespace);
             }
+        }
+
+        private Dictionary<CodeTypeMember, MemberBuildContext> PreCalculateMemberBuildContext(
+            CodeTypeDeclaration testClassDeclaration, 
+            CodeNamespace codeNamespace, 
+            CodeTypeMember[] initialMembers, 
+            BuildDataCollection propertyData,
+            ISetupAndTearDownCreationContext setTearContext)
+        {
+            var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
+            //var propertyData = new Dictionary<string, IBuilderData>();
+            //buildData.AddDataItem(propertyData);
+            foreach (CodeTypeMember typeMember in initialMembers)
+            {
+                var memberBuildContext = new MemberBuildContext(
+                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+
+                // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
+                // if i put the stuff here into this.GenerateCodeTypeMember(...)
+                var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
+                var composedTestName = memberBuildContext.TypeMember.Name;
+                foreach (var memberBuilder in builders)
+                {
+                    composedTestName = ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
+                }
+                memberBuildContext.TestKey = composedTestName;
+
+                contextLookup.Add(typeMember, memberBuildContext);
+
+                if (memberBuildContext.IsProperty)
+                {
+                    IBuilderData propertyDataItem;
+                    var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
+                    if (found)
+                    {
+                        propertyDataItem.SetData(memberBuildContext.MemberInfo);
+                    }
+                    else
+                    {
+                        var propdata = new PropertyBuilderData();
+                        propdata.SetData(memberBuildContext.MemberInfo);
+                        propertyData.AddDataItem("Property", composedTestName, propdata);
+                    }
+                }
+            }
+            return contextLookup;
         }
 
         /// <summary>
@@ -743,11 +771,11 @@ namespace NStub.CSharp
         private void WriteClassFile(string className, CodeNamespace codeNamespace)
         {
             var csharpCodeProvider = new CSharpCodeProvider();
-            string sourceFile = this.OutputDirectory + Path.DirectorySeparatorChar +
+            string sourceFile = this.OutputDirectory + this.buildSystem.DirectorySeparatorChar +
                                 className + "." + csharpCodeProvider.FileExtension;
             sourceFile = Utility.ScrubPathOfIllegalCharacters(sourceFile);
             var indentedTextWriter =
-                new IndentedTextWriter(new StreamWriter(sourceFile, false), "  ");
+                new IndentedTextWriter(this.buildSystem.GetTextWriter(sourceFile, false), "  ");
             var codeGenerationOptions = new CodeGeneratorOptions { BracingStyle = "C" };
             csharpCodeProvider.GenerateCodeFromNamespace(
                 codeNamespace, 

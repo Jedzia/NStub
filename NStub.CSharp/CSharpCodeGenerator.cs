@@ -1,11 +1,11 @@
 using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
-using System.IO;
 using Microsoft.CSharp;
 using NStub.Core;
 using NStub.CSharp;
 using NUnit.Framework;
+using NStub.CSharp.ObjectGeneration;
 
 namespace NStub.CSharp
 {
@@ -25,23 +25,37 @@ namespace NStub.CSharp
 		#endregion Fields (Private)
 
 		#region Constructor (Public)
+        private readonly IBuildSystem buildSystem;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="CSharpCodeGenerator"/> class
-		/// based the given CodeNamespace which will output to the given directory.
-		/// </summary>
-		/// <param name="codeNamespace">The code namespace.</param>
-		/// <param name="outputDirectory">The output directory.</param>
-		/// <exception cref="System.ArgumentNullException">codeNamepsace or
-		/// outputDirectory is null.</exception>
-		/// <exception cref="System.ArgumentException">outputDirectory is an
-		/// empty string.</exception>
-		/// <exception cref="DirectoryNotFoundException">outputDirectory
-		/// cannot be found.</exception>
-		public CSharpCodeGenerator(CodeNamespace codeNamespace,
-			string outputDirectory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CSharpCodeGenerator"/> class
+        /// based the given CodeNamespace which will output to the given directory.
+        /// </summary>
+        /// <param name="buildSystem">The build system.</param>
+        /// <param name="codeNamespace">The code namespace.</param>
+        /// <param name="testBuilders">The test builders.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <exception cref="System.ArgumentNullException">codeNamepsace or
+        /// outputDirectory is null.</exception>
+        ///   
+        /// <exception cref="System.ArgumentException">outputDirectory is an
+        /// empty string.</exception>
+        ///   
+        /// <exception cref="System.IO.DirectoryNotFoundException">outputDirectory
+        /// cannot be found.</exception>
+        public CSharpCodeGenerator(
+            IBuildSystem buildSystem,
+            CodeNamespace codeNamespace, 
+            ITestBuilderFactory testBuilders,
+            ICodeGeneratorParameters configuration)
 		{
 			#region Validation
+
+            Guard.NotNull(() => buildSystem, buildSystem);
+            this.buildSystem = buildSystem;
+            Guard.NotNull(() => configuration, configuration);
+            //this.configuration = configuration;
+            string outputDirectory = configuration.OutputDirectory;
 
 			// Null arguments will not be accepted
 			if (codeNamespace == null)
@@ -61,10 +75,10 @@ namespace NStub.CSharp
 					"outputDirectory");
 			}
 			// Ensure that the output directory is valid
-			if (!(Directory.Exists(outputDirectory)))
-			{
-				throw new DirectoryNotFoundException(Exceptions.DirectoryCannotBeFound);
-			}
+            if (!this.buildSystem.DirectoryExists(outputDirectory))
+            {
+                throw new ApplicationException(Exceptions.DirectoryCannotBeFound);
+            }
 
 			#endregion Validation
 
@@ -232,19 +246,20 @@ namespace NStub.CSharp
 		/// file to be written.</param>
 		private void WriteClassFile(string className, CodeNamespace codeNamespace)
 		{
-			CSharpCodeProvider cSharpCodeProvider = new CSharpCodeProvider();
-			string sourceFile = _outputDirectory + Path.DirectorySeparatorChar +
-				className + "." + cSharpCodeProvider.FileExtension;
-			sourceFile = Utility.ScrubPathOfIllegalCharacters(sourceFile);
-			IndentedTextWriter indentedTextWriter =
-				new IndentedTextWriter(new StreamWriter(sourceFile, false), "  ");
-			CodeGeneratorOptions codeGenerationOptions = new CodeGeneratorOptions();
-			codeGenerationOptions.BracingStyle = "C";
-			cSharpCodeProvider.GenerateCodeFromNamespace(codeNamespace, indentedTextWriter,
-				codeGenerationOptions);
-			indentedTextWriter.Flush();
-			indentedTextWriter.Close();
-		}
+            var csharpCodeProvider = new CSharpCodeProvider();
+            string sourceFile = this.OutputDirectory + this.buildSystem.DirectorySeparatorChar +
+                                className + "." + csharpCodeProvider.FileExtension;
+            sourceFile = Utility.ScrubPathOfIllegalCharacters(sourceFile);
+            var indentedTextWriter =
+                new IndentedTextWriter(this.buildSystem.GetTextWriter(sourceFile, false), "  ");
+            var codeGenerationOptions = new CodeGeneratorOptions { BracingStyle = "C" };
+            csharpCodeProvider.GenerateCodeFromNamespace(
+                codeNamespace,
+                indentedTextWriter,
+                codeGenerationOptions);
+            indentedTextWriter.Flush();
+            indentedTextWriter.Close();
+        }
 
 		#endregion Helper Methods (Private)
 	}

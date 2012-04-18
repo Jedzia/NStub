@@ -2,6 +2,8 @@ using System;
 using System.CodeDom;
 using System.IO;
 using NUnit.Framework;
+using NStub.Core;
+using NStub.CSharp.ObjectGeneration;
 
 namespace NStub.CSharp.Tests
 {
@@ -60,8 +62,11 @@ namespace NStub.CSharp.Tests
 		public void SetUp()
 		{
 			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
+            var configuration = new CodeGeneratorParameters(_outputDirectory);
+            var testBuilders = new TestBuilderFactory();
+            var buildSystem = new StandardBuildSystem();
 			_cSharpCodeGenerator =
-				new CSharpCodeGenerator(codeNamespace, _outputDirectory);
+                new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration);
 		} 
 
 		#endregion SetUp (Public)

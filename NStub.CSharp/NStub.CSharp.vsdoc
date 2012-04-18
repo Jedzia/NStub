@@ -95,6 +95,7 @@
     <add key="VBdocman_comModules_CSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpProjectGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Exceptions.Designer.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_GeneratorSetup.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Guard.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ImplicitVariableDeclarationStatement.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnitRhinoMocks...CSharpMbUnitRhinoMocksCodeGenerator.cs"><![CDATA[On]]></add>

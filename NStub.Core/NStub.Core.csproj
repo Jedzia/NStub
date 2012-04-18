@@ -46,7 +46,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="IBuildSystem.cs" />
     <Compile Include="ICodeGenerator.cs" />
+    <Compile Include="ICodeGeneratorParameters.cs" />
     <Compile Include="IProjectGenerator.cs" />
     <Compile Include="NStubCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

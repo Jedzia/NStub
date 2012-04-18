@@ -55,7 +55,7 @@ namespace NStub.CSharp.Test
             var type = new CodeTypeDeclaration("Jedzia.Loves.Testing.TheClassToTest");
 
             var expected = "Jedzia.Loves.Testing.Tests.TheClassToTest";
-            var actual = testObject.CombineWithShortestNamespace(type, ".Tests");
+            var actual = testObject.InsertAfterShortestNamespace(type, ".Tests");
             Assert.AreEqual(expected, actual);
 
         }
