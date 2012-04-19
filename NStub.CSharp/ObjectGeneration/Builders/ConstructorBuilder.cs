@@ -15,6 +15,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     using System.Reflection;
     using System.Text;
     using NStub.CSharp.BuildContext;
+    using System;
 
     /// <summary>
     /// Test method generator for constructor type members.
@@ -56,27 +57,32 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// </returns>
         protected override bool BuildMember(IMemberBuildContext context)
         {
+            Guard.NotNull(() => context, context);
+
             // var bla = context.TypeMember.Name;
             // var to = context.TestObjectType.Name;
 
             // var methodName = "ConstructWithParameters";
             var ct = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
-            if (ct != null)
+            Guard.NotNull(() => ct, ct);
+            var objcreator = ct.TestObjectCreator; // as TestObjectBuilder;
+            var assignMents = objcreator.Assignments;
+            if (assignMents != null && assignMents.Count() > 1)
             {
-                var objcreator = ct.TestObjectCreator; // as TestObjectBuilder;
-                var assignMents = objcreator.Assignments;
-                if (assignMents != null && assignMents.Count() > 1)
+                foreach (var item in assignMents)
                 {
-                    foreach (var item in assignMents)
+                    var usedCtor = item.UsedConstructor;
+                    if (usedCtor == null)
                     {
-                        var usedCtor = item.UsedConstructor;
-                        var methodName = BuildNameFromCtorParameters(usedCtor);
-                        CodeObjectCreateExpression createExpr;
-                        var cm = this.CreateConstructorTest(context, methodName, "testObject", out createExpr);
-
-                        // item.AddAssignment(new ConstructorAssignment(
-                        objcreator.AssignExtra(context.TestClassDeclaration, cm, createExpr, item);
+                        throw new InvalidOperationException("ConstructorBuilder was called with an AssignmentInfoCollection.UsedConstructor that was null.");
                     }
+
+                    var methodName = BuildNameFromCtorParameters(usedCtor);
+                    CodeObjectCreateExpression createExpr;
+                    var cm = this.CreateConstructorTest(context, methodName, "testObject", out createExpr);
+
+                    // item.AddAssignment(new ConstructorAssignment(
+                    objcreator.AssignExtra(context.TestClassDeclaration, cm, createExpr, item);
                 }
             }
 
@@ -105,7 +111,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testFieldName);
 
             var testObjectMemberFieldCreate = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
-            
+
             // var TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
             var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
 

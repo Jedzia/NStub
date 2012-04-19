@@ -11,6 +11,7 @@
 namespace NStub.Gui
 {
     using System;
+    using System.Linq;
     using System.CodeDom;
     using System.Collections.Generic;
     using System.IO;
@@ -22,6 +23,9 @@ namespace NStub.Gui
     using NStub.CSharp.MbUnitRhinoMocks;
     using NStub.CSharp.ObjectGeneration;
     using NStub.Gui.Properties;
+    using System.Text;
+    using System.ComponentModel;
+    using NStub.Gui.Util;
 
     /// <summary>e
     /// This is the main UI form for the NStub application.
@@ -49,11 +53,6 @@ namespace NStub.Gui
         #endregion Constructor (Public)
 
         #region Event Handlers (Private)
-
-        private void Log(string p)
-        {
-            this.logText.AppendText(DateTime.Now + ": " + p + Environment.NewLine);
-        }
 
         /// <summary>
         /// Handles the Click event of the btnBrowseInputAssembly control.
@@ -99,27 +98,74 @@ namespace NStub.Gui
 
         private static readonly IBuildSystem sbs = new StandardBuildSystem();
 
+        private void btnGo_Click(object sender, EventArgs e)
+        {
+            Dumper();
+            //GenerateTests();
+
+            BeforeGenerateTests();
+
+            var bg = new BackgroundWorker();
+            bg.DoWork += new DoWorkEventHandler(bg_DoWork);
+            bg.RunWorkerCompleted += bg_RunWorkerCompleted;
+
+            string outputFolder = this._outputDirectoryTextBox.Text;
+            Type generatorType = (Type)cbGenerators.SelectedItem;
+            string inputAssemblyPath = this._inputAssemblyTextBox.Text;
+            TreeNodeCollection mainNodes = this._assemblyGraphTreeView.Nodes;
+
+            var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes };
+            bg.RunWorkerAsync();
+        }
+
+        private void BeforeGenerateTests()
+        {
+            Cursor.Current = Cursors.WaitCursor;
+            this._browseInputAssemblyButton.Enabled = false;
+            this._browseOutputDirectoryButton.Enabled = false;
+        }
+
+        private void AfterGenerateTests()
+        {
+            //this.InvokeIfRequired(() =>
+            //{
+                this._browseInputAssemblyButton.Enabled = true;
+                this._browseOutputDirectoryButton.Enabled = true;
+                Cursor.Current = Cursors.Arrow;
+            //});
+        }
+
+        void bg_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.InvokeIfRequired(() => AfterGenerateTests());
+        }
+
+        void bg_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            GenerateTests();
+        }
         /// <summary>
         /// Handles the Click event of the btnGo control.  Creates a list of the methods
         /// for which the user wishes to generate test cases for and instantiates an
         /// instance of NStub around these methods.  The sources are files are then
         /// generated.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The <see cref="T:System.EventArgs"/> instance containing the 
-        /// event data.</param>
-        private void btnGo_Click(object sender, EventArgs e)
+        private void GenerateTests()
         {
-            Cursor.Current = Cursors.WaitCursor;
-            this._browseInputAssemblyButton.Enabled = false;
-            this._browseOutputDirectoryButton.Enabled = false;
-            
+            var outputFolder = this._outputDirectoryTextBox.Text;
+            var generatorType = (Type)cbGenerators.SelectedItem;
+            var inputAssemblyPath = this._inputAssemblyTextBox.Text;
+            //TreeNodeCollection mainNodes = this._assemblyGraphTreeView.Nodes;
+            IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
+
             // Create a new directory for each assembly
-            for (int h = 0; h < this._assemblyGraphTreeView.Nodes.Count; h++)
+            for (int h = 0; h < mainNodes.Count; h++)
             {
-                string outputDirectory = this._outputDirectoryTextBox.Text +
+                var mainnode = mainNodes[h];
+                string outputDirectory = outputFolder +
                                          Path.DirectorySeparatorChar +
-                                         Path.GetFileNameWithoutExtension(this._assemblyGraphTreeView.Nodes[h].Text) +
+                                         Path.GetFileNameWithoutExtension(mainnode.Text) +
                                          ".Tests";
                 Directory.CreateDirectory(outputDirectory);
 
@@ -127,7 +173,7 @@ namespace NStub.Gui
                 CSharpProjectGenerator cSharpProjectGenerator =
                     new CSharpProjectGenerator(
                         sbs,
-                        Path.GetFileNameWithoutExtension(this._inputAssemblyTextBox.Text) + ".Tests",
+                        Path.GetFileNameWithoutExtension(inputAssemblyPath) + ".Tests",
                         outputDirectory);
 
                 // Add our referenced assemblies to the project generator so we
@@ -139,54 +185,54 @@ namespace NStub.Gui
 
                 // Generate the new test namespace
                 // At the assembly level
-                for (int i = 0; i < this._assemblyGraphTreeView.Nodes[h].Nodes.Count; i++)
+                for (int i = 0; i < mainnode.Nodes.Count; i++)
                 {
-                    if (this._assemblyGraphTreeView.Nodes[h].Nodes[i].Checked)
+                    var rootsubnode = mainnode.Nodes[i];
+
+                    if (rootsubnode.Checked)
                     {
                         // Create the namespace and initial inputs
                         CodeNamespace codeNamespace = new CodeNamespace();
 
                         // At the type level
-                        for (int j = 0; j < this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes.Count; j++)
+                        for (int j = 0; j < rootsubnode.Nodes.Count; j++)
                         {
+                            var rootsubsubnode = rootsubnode.Nodes[j];
                             // TODO: This namespace isn't being set correctly.  
                             // Also one namespace per run probably won't work, we may 
                             // need to break this up more.
                             codeNamespace.Name =
-                                Utility.GetNamespaceFromFullyQualifiedTypeName(
-                                    this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Text);
+                                Utility.GetNamespaceFromFullyQualifiedTypeName(rootsubsubnode.Text);
 
-                            if (this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Checked)
+                            if (rootsubsubnode.Checked)
                             {
                                 // Create the class
                                 CodeTypeDeclaration testClass =
-                                    new CodeTypeDeclaration(this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Text);
+                                    new CodeTypeDeclaration(rootsubsubnode.Text);
                                 codeNamespace.Types.Add(testClass);
                                 var testObjectClassType =
-                                    (Type)this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Tag;
+                                    (Type)rootsubsubnode.Tag;
                                 testClass.UserData.Add("TestObjectClassType", testObjectClassType);
 
                                 // At the method level
                                 // Create a test method for each method in this type
                                 for (int k = 0;
-                                     k < this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes.Count;
+                                     k < rootsubsubnode.Nodes.Count;
                                      k++)
                                 {
+                                    var rootsubsubsubnode = rootsubsubnode.Nodes[k];
                                     try
                                     {
-                                        if (this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Checked)
+                                        if (rootsubsubsubnode.Checked)
                                         {
                                             try
                                             {
                                                 // Retrieve the MethodInfo object from this TreeNode's tag
                                                 var memberInfo =
                                                     (MethodInfo)
-                                                    this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].Tag;
+                                                    rootsubsubsubnode.Tag;
                                                 CodeMemberMethod codeMemberMethod =
-                                                    this.CreateMethod(
-                                                        this._assemblyGraphTreeView.Nodes[h].Nodes[i].Nodes[j].Nodes[k].
-                                                            Text,
-                                                        memberInfo);
+                                                    this.CreateMethod(rootsubsubsubnode.Text, memberInfo);
                                                 codeMemberMethod.UserData.Add("MethodMemberInfo", memberInfo);
                                                 testClass.Members.Add(codeMemberMethod);
                                             }
@@ -221,12 +267,11 @@ namespace NStub.Gui
                         //var testBuilders = new TestBuilderFactory(new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
                         var configuration = new CodeGeneratorParameters(outputDirectory);
                         var testBuilders = new TestBuilderFactory();
-                        var codeGenerator = (ICodeGenerator)Activator.CreateInstance((Type)cbGenerators
-                            .SelectedItem, new object[]
+                        var codeGenerator = (ICodeGenerator)Activator.CreateInstance(generatorType, new object[]
                          {
                              sbs, codeNamespace, testBuilders, configuration
                          });
-
+                        codeNamespace.Dump(3);
                         var nStub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
                         nStub.GenerateCode();
 
@@ -248,9 +293,38 @@ namespace NStub.Gui
                 cSharpProjectGenerator.GenerateProjectFile();
             }
 
-            this._browseInputAssemblyButton.Enabled = true;
-            this._browseOutputDirectoryButton.Enabled = true;
-            Cursor.Current = Cursors.Arrow;
+        }
+
+        private void Dumper()
+        {
+            Log("------------------------------------------------");
+            Log("Running Dumper");
+            new MyObjectDumper().Test();
+            Log("End Of Running Dumper");
+            Log("------------------------------------------------");
+        }
+
+        void Default_TextChanged(object sender, TextWrittenEventArgs e)
+        {
+            Log(e.Text);
+        }
+
+        StringBuilder logsb = new StringBuilder();
+        private void Log(string p)
+        {
+            p = p.TrimEnd('\r', '\n');
+            //this.logText.AppendText(DateTime.Now + ": " + p + Environment.NewLine);
+            var ct = DateTime.Now;
+            logsb.Append(ct + "." + ct.Millisecond + ": " + p + Environment.NewLine);
+        }
+
+        private void logtimer_Tick(object sender, EventArgs e)
+        {
+            this.Invoke((Action)delegate()
+            {
+                this.logText.AppendText(logsb.ToString());
+                logsb.Length = 0;
+            });
         }
 
         /// <summary>
@@ -447,6 +521,9 @@ namespace NStub.Gui
                     {
                         this._goButton.Enabled = true;
                     }
+
+                    Server.Default.TextChanged += new EventHandler<TextWrittenEventArgs>(Default_TextChanged);
+                    this.logtimer.Enabled = true;
                 }
             }
 
@@ -463,13 +540,14 @@ namespace NStub.Gui
             ad.AssemblyResolve += this.ad_AssemblyResolve;
         }
 
+
         private Assembly ad_AssemblyResolve(object sender, ResolveEventArgs args)
         {
             var finfo = new FileInfo(this._inputAssemblyOpenFileDialog.FileName);
 
             var assName = args.Name.Split(new[] { ',' })[0] + ".dll";
             var path = Path.Combine(finfo.Directory.FullName, assName);
-            
+
             // int depp = 6;
             var ass = Assembly.LoadFile(path);
             return ass;
@@ -479,5 +557,6 @@ namespace NStub.Gui
         {
             return null;
         }
+
     }
 }

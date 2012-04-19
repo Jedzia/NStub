@@ -25,6 +25,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <param name="context">The build context of the test method member.</param>
         protected MemberBuilder(IMemberSetupContext context)
         {
+            Guard.NotNull(() => context, context);
             this.SetupContext = context;
         }
 

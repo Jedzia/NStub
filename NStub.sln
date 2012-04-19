@@ -32,6 +32,15 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NStub.Deployment", "NStub.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MbUnitTestProject1", "MbUnitTestProject1\MbUnitTestProject1.csproj", "{1AFC9841-4B05-47C6-BD87-8D12D9AE0C79}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Reports", "Reports", "{EC7B2609-D51F-4410-93C5-915F81F74538}"
+	ProjectSection(SolutionItems) = preProject
+		output\reports\Coverage-Summary.html = output\reports\Coverage-Summary.html
+		output\reports\Coverage-ViewModel-1.0.0.0.html = output\reports\Coverage-ViewModel-1.0.0.0.html
+		output\reports\StyleCop-NStub-Library CSharp Code Generator StyleCop Overview-1.0.0.0.html = output\reports\StyleCop-NStub-Library CSharp Code Generator StyleCop Overview-1.0.0.0.html
+		output\reports\TestDetails-ViewModel-1.0.0.0.html = output\reports\TestDetails-ViewModel-1.0.0.0.html
+		output\reports\TestSummary1.0.0.0N.html = output\reports\TestSummary1.0.0.0N.html
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,5 +77,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EC7B2609-D51F-4410-93C5-915F81F74538} = {AE38214D-21A9-477C-9E75-BFCFC6081BB7}
 	EndGlobalSection
 EndGlobal

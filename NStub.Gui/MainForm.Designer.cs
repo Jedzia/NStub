@@ -46,6 +46,7 @@ namespace NStub.Gui
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label1 = new System.Windows.Forms.Label();
             this.cbGenerators = new System.Windows.Forms.ComboBox();
+            this.logtimer = new System.Windows.Forms.Timer(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -59,7 +60,7 @@ namespace NStub.Gui
             this._assemblyGraphTreeView.Location = new System.Drawing.Point(0, 0);
             this._assemblyGraphTreeView.Name = "_assemblyGraphTreeView";
             this._assemblyGraphTreeView.SelectedImageIndex = 0;
-            this._assemblyGraphTreeView.Size = new System.Drawing.Size(589, 331);
+            this._assemblyGraphTreeView.Size = new System.Drawing.Size(928, 164);
             this._assemblyGraphTreeView.TabIndex = 15;
             this._assemblyGraphTreeView.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tvAssemblyGraph_AfterCheck);
             this._assemblyGraphTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvAssemblyGraph_BeforeSelect);
@@ -78,7 +79,7 @@ namespace NStub.Gui
             // 
             this._browseOutputDirectoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this._browseOutputDirectoryButton.Enabled = false;
-            this._browseOutputDirectoryButton.Location = new System.Drawing.Point(518, 30);
+            this._browseOutputDirectoryButton.Location = new System.Drawing.Point(857, 30);
             this._browseOutputDirectoryButton.Name = "_browseOutputDirectoryButton";
             this._browseOutputDirectoryButton.Size = new System.Drawing.Size(75, 23);
             this._browseOutputDirectoryButton.TabIndex = 14;
@@ -99,7 +100,7 @@ namespace NStub.Gui
             // 
             this._goButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this._goButton.Enabled = false;
-            this._goButton.Location = new System.Drawing.Point(518, 575);
+            this._goButton.Location = new System.Drawing.Point(857, 575);
             this._goButton.Name = "_goButton";
             this._goButton.Size = new System.Drawing.Size(75, 23);
             this._goButton.TabIndex = 11;
@@ -110,7 +111,7 @@ namespace NStub.Gui
             // _browseInputAssemblyButton
             // 
             this._browseInputAssemblyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this._browseInputAssemblyButton.Location = new System.Drawing.Point(518, 4);
+            this._browseInputAssemblyButton.Location = new System.Drawing.Point(857, 4);
             this._browseInputAssemblyButton.Name = "_browseInputAssemblyButton";
             this._browseInputAssemblyButton.Size = new System.Drawing.Size(75, 23);
             this._browseInputAssemblyButton.TabIndex = 8;
@@ -140,7 +141,7 @@ namespace NStub.Gui
             this._outputDirectoryTextBox.Location = new System.Drawing.Point(102, 32);
             this._outputDirectoryTextBox.Name = "_outputDirectoryTextBox";
             this._outputDirectoryTextBox.ReadOnly = true;
-            this._outputDirectoryTextBox.Size = new System.Drawing.Size(410, 20);
+            this._outputDirectoryTextBox.Size = new System.Drawing.Size(749, 20);
             this._outputDirectoryTextBox.TabIndex = 13;
             this._outputDirectoryTextBox.Text = global::NStub.Gui.Properties.Settings.Default.CurrentOutputDirectory;
             // 
@@ -152,7 +153,7 @@ namespace NStub.Gui
             this._inputAssemblyTextBox.Location = new System.Drawing.Point(102, 6);
             this._inputAssemblyTextBox.Name = "_inputAssemblyTextBox";
             this._inputAssemblyTextBox.ReadOnly = true;
-            this._inputAssemblyTextBox.Size = new System.Drawing.Size(410, 20);
+            this._inputAssemblyTextBox.Size = new System.Drawing.Size(749, 20);
             this._inputAssemblyTextBox.TabIndex = 9;
             this._inputAssemblyTextBox.Text = global::NStub.Gui.Properties.Settings.Default.CurrentInputAssembly;
             // 
@@ -164,8 +165,9 @@ namespace NStub.Gui
             this.logText.Name = "logText";
             this.logText.ReadOnly = true;
             this.logText.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.logText.Size = new System.Drawing.Size(583, 135);
+            this.logText.Size = new System.Drawing.Size(922, 302);
             this.logText.TabIndex = 16;
+            this.logText.WordWrap = false;
             // 
             // panel1
             // 
@@ -176,16 +178,16 @@ namespace NStub.Gui
             this.panel1.Controls.Add(this.groupBox1);
             this.panel1.Location = new System.Drawing.Point(4, 84);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(589, 485);
+            this.panel1.Size = new System.Drawing.Size(928, 485);
             this.panel1.TabIndex = 17;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.logText);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox1.Location = new System.Drawing.Point(0, 331);
+            this.groupBox1.Location = new System.Drawing.Point(0, 164);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(589, 154);
+            this.groupBox1.Size = new System.Drawing.Size(928, 321);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Log";
@@ -207,11 +209,15 @@ namespace NStub.Gui
             this.cbGenerators.Size = new System.Drawing.Size(410, 21);
             this.cbGenerators.TabIndex = 18;
             // 
+            // logtimer
+            // 
+            this.logtimer.Tick += new System.EventHandler(this.logtimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 612);
+            this.ClientSize = new System.Drawing.Size(939, 612);
             this.Controls.Add(this.cbGenerators);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this._browseOutputDirectoryButton);
@@ -252,6 +258,7 @@ namespace NStub.Gui
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbGenerators;
+        private System.Windows.Forms.Timer logtimer;
 
 	}
 }

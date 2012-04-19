@@ -12,13 +12,25 @@
 	               <CoverageExclusions> 
 	                  <CoverageExclusion>
 	                      <ExclusionType>Assembly</ExclusionType>
-	                      <Pattern>UnitTests.*</Pattern> 
+	                      <Pattern>Gallio*</Pattern> 
+	                  </CoverageExclusion> 
+	                  <CoverageExclusion>
+	                      <ExclusionType>Assembly</ExclusionType>
+	                      <Pattern>MbUnit*</Pattern> 
+	                  </CoverageExclusion> 
+	                  <CoverageExclusion>
+	                      <ExclusionType>Assembly</ExclusionType>
+	                      <Pattern>NStub.Core</Pattern> 
+	                  </CoverageExclusion> 
+	                  <CoverageExclusion>
+	                      <ExclusionType>Assembly</ExclusionType>
+	                      <Pattern>*.Tests</Pattern> 
 	                  </CoverageExclusion> 
 <!--	                  <CoverageExclusion>
 	                      <ExclusionType>Namespace</ExclusionType>
 	                      <Pattern>^[^J].*</Pattern> 
 	                      <IsRegex>true</IsRegex> 
-	                  </CoverageExclusion>  -->
+	                  </CoverageExclusion>  
 	                  <CoverageExclusion>
 	                      <ExclusionType>Namespace</ExclusionType>
 	                      <Pattern>Jedzia.Objects.structz.SerializersXXX.DonotUSE</Pattern> 
@@ -27,13 +39,13 @@
 	                      <ExclusionType>Namespace</ExclusionType>
 	                      <Pattern>^(?!Jedzia.Objects.structz.Serializers).*</Pattern> 
 	                      <IsRegex>true</IsRegex> 
-	                  </CoverageExclusion>
+	                  </CoverageExclusion>-->
 	               </CoverageExclusions> 
 	           </PropertyGroup>
 
   <ItemGroup>
     <TestAssembly Include="bin\$(TargetConfig)\NStub.CSharp.Tests.dll">
-		<TestGroup>ViewModel</TestGroup>
+		<TestGroup>NStub.CSharp</TestGroup>
 		<Type>gallio</Type>
 		<!--<CoverageExclusion>Assembly=UnitTests.*</CoverageExclusion>-->
 		<CoverageExclusion>$(CoverageExclusions)</CoverageExclusion>
