@@ -126,6 +126,7 @@ namespace NStub.Gui
             Cursor.Current = Cursors.WaitCursor;
             this._browseInputAssemblyButton.Enabled = false;
             this._browseOutputDirectoryButton.Enabled = false;
+            this._goButton.Enabled = false;
         }
 
         private void AfterGenerateTests()
@@ -134,6 +135,7 @@ namespace NStub.Gui
             //{
             this._browseInputAssemblyButton.Enabled = true;
             this._browseOutputDirectoryButton.Enabled = true;
+            this._goButton.Enabled = true;
             Cursor.Current = Cursors.Arrow;
             //});
         }
@@ -145,8 +147,29 @@ namespace NStub.Gui
 
         void bg_DoWork(object sender, DoWorkEventArgs e)
         {
-            var agb = new TestBuilder(sbs, this.Log);
-            agb.GenerateTests((GeneratorRunnerData)e.Argument);
+            try
+            {
+                var parameters = (GeneratorRunnerData)e.Argument;
+                var prjName = Path.GetFileNameWithoutExtension(parameters.InputAssemblyPath) + ".Tests";
+                var prj = new CSharpProjectGenerator(sbs, prjName, parameters.OutputFolder);
+                var testProjectBuilder = new TestProjectBuilder(sbs, prj, (buildSystem, configuration, codeNamespace) =>
+                {
+                    //var testBuilders = new TestBuilderFactory();
+                    var codeGenerator = (ICodeGenerator)Activator.CreateInstance(parameters.GeneratorType, new object[]
+                           {
+                             buildSystem, codeNamespace, null, configuration
+                       });
+                    //codeNamespace.Dump(3);
+                    return codeGenerator;
+
+                }, this.Log);
+                testProjectBuilder.GenerateTests(parameters);
+
+            }
+            catch (Exception ex)
+            {
+                this.Log(ex.Message);
+            }
         }
 
         private void Dumper()

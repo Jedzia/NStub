@@ -90,7 +90,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Guard.cs" />
     <Compile Include="ImplicitVariableDeclarationStatement.cs" />
     <Compile Include="ObjectGeneration\ConstructorAssignmentCollection.cs" />
     <Compile Include="ObjectGeneration\Builders\ConstructorBuilder.cs" />

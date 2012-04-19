@@ -28,6 +28,21 @@ namespace NStub.CSharp.Tests
         }
 
         #endregion
+
+        #region IBuildSystem Members
+
+
+        public string GetFileNameWithoutExtension(string path)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(path);
+        }
+
+        public System.IO.DirectoryInfo CreateDirectory(string path)
+        {
+            return new System.IO.DirectoryInfo(@"C:\Tmp");
+        }
+
+        #endregion
     }
 
 	/// <summary>

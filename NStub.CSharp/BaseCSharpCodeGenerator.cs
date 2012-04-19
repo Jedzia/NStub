@@ -45,7 +45,7 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="buildSystem">The build system.</param>
         /// <param name="codeNamespace">The code namespace.</param>
-        /// <param name="testBuilders">The test builder repository.</param>
+        /// <param name="testBuilders">The test builder repository. If null, is substituted with <see cref="TestBuilderFactory.Default"/></param>
         /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
         /// <cref name="ICodeGeneratorParameters.OutputDirectory"/> is <c>null</c>.</exception>
@@ -77,9 +77,10 @@ namespace NStub.CSharp
             // Null arguments will not be accepted
             if (testBuilders == null)
             {
-                throw new ArgumentNullException(
-                    "testBuilders",
-                    Exceptions.ParameterCannotBeNull);
+                testBuilders = TestBuilderFactory.Default;
+                //throw new ArgumentNullException(
+                //    "testBuilders",
+                //    Exceptions.ParameterCannotBeNull);
             }
 
             if (outputDirectory == null)
