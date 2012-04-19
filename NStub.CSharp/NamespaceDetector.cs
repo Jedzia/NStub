@@ -16,6 +16,7 @@ namespace NStub.CSharp
     using System.Collections.Specialized;
     using System.Linq;
     using global::MbUnit.Framework;
+    using NStub.Core;
 
     /// <summary>
     /// Determines the namespace to use, based on a supplied list of type declarations.

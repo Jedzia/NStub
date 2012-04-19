@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System.Reflection;
+    using NStub.Core;
 
     /// <summary>
     /// Stores information for an <see cref="IMemberBuilder"/>. 

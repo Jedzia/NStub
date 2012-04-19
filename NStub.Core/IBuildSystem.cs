@@ -1,39 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.IO;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="IBuildSystem.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace NStub.Core
 {
+    using System.IO;
+
     /// <summary>
-    /// Represents a hosting system with infrastructure for filesystem access and other low level functionality.
+    /// Represents a hosting system with infrastructure for file system access and other low level functionality.
     /// </summary>
     public interface IBuildSystem
     {
-        /*/// <summary>
-        /// Gets the OutputDirectory.
-        /// </summary>
-        string OutputDirectory { get; }*/
+        #region Properties
 
         /// <summary>
-        /// Gets the directory separator char.
+        /// Gets the directory separator character, like the backslash "\" for Windows operation systems.
         /// </summary>
         char DirectorySeparatorChar { get; }
+
+        #endregion
+
+        /// <summary>
+        /// Creates all directories and subdirectories as specified by path.
+        /// </summary>
+        /// <param name="path">The directory path to create.</param>
+        /// <returns>A <see cref="System.IO.DirectoryInfo"/> as specified by path.</returns>
+        DirectoryInfo CreateDirectory(string path);
 
         /// <summary>
         /// Determines whether the given path refers to an existing directory on disk.
         /// </summary>
         /// <param name="directory">The path to test.</param>
-        /// <returns>true if path refers to an existing directory; otherwise, false.</returns>
+        /// <returns><c>true</c> if path refers to an existing directory; otherwise, <c>false</c>.</returns>
         bool DirectoryExists(string directory);
-
-        /// <summary>
-        /// Returns a writer that stores text in the specified path.
-        /// </summary>
-        /// <param name="path">The filename to write data to.</param>
-        /// <param name="append">if set to <c>true</c> appends the file.</param>
-        /// <returns>A writer that stores text in the specified path.</returns>
-        TextWriter GetTextWriter(string path, bool append);
 
         /// <summary>
         /// Returns the file name of the specified path string without the extension.
@@ -45,10 +50,11 @@ namespace NStub.Core
         string GetFileNameWithoutExtension(string path);
 
         /// <summary>
-        /// Creates all directories and subdirectories as specified by path.
+        /// Returns a writer that stores text in the specified path.
         /// </summary>
-        /// <param name="path">The directory path to create.</param>
-        /// <returns>A System.IO.DirectoryInfo as specified by path.</returns>
-        DirectoryInfo CreateDirectory(string path);
+        /// <param name="path">The filename to write data to.</param>
+        /// <param name="append">if set to <c>true</c> appends the file.</param>
+        /// <returns>A writer that stores text in the specified path.</returns>
+        TextWriter GetTextWriter(string path, bool append);
     }
 }

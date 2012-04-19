@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using Gallio.Framework.Assertions;
+    using NStub.Core;
 
     /// <summary>
     /// Build a reference type from fluent parameters.

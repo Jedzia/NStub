@@ -111,11 +111,11 @@ namespace NStub.Gui
             bg.RunWorkerCompleted += bg_RunWorkerCompleted;
 
             string outputFolder = this._outputDirectoryTextBox.Text;
-            Type generatorType = (Type)cbGenerators.SelectedItem;
+            // Type generatorType = (Type)cbGenerators.SelectedItem;
             string inputAssemblyPath = this._inputAssemblyTextBox.Text;
             IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+            var data = new GeneratorRunnerData(outputFolder, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
             //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
             bg.RunWorkerAsync(data);

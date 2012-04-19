@@ -95,6 +95,7 @@
     <Compile Include="ObjectGeneration\Builders\ConstructorBuilder.cs" />
     <Compile Include="ObjectGeneration\CustomConstructorCodeMemberMethod.cs" />
     <Compile Include="ObjectGeneration\Builders\EventBuilder.cs" />
+    <Compile Include="ObjectGeneration\DefaultTestBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinder.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceException.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeTypeReferenceBinder.cs" />

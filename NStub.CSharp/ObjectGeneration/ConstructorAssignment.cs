@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System.CodeDom;
+    using NStub.Core;
 
     /// <summary>
     /// Holds a mapping from parameter name to code creation expressions.

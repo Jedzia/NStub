@@ -11,6 +11,7 @@
 namespace NStub.CSharp.BuildContext
 {
     using System.CodeDom;
+    using NStub.Core;
     using NStub.CSharp.ObjectGeneration;
     using System;
     using System.Reflection;

@@ -14,6 +14,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     using System.CodeDom;
     using System.Collections.Generic;
     using System.Linq;
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
 

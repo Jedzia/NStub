@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp
+namespace NStub.Core
 {
     using System;
     using System.Diagnostics;

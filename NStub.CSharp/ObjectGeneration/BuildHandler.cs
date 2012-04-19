@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System;
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
 
     /// <summary>
@@ -49,7 +50,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Gets the handler, that checks, if the associated <see cref="Type"/> can process an <see cref="IMemberBuildContext"/> assignment.
         /// </summary>
-        public Func<IMemberBuildContext, bool> Handler
+        public Func<IMemberBuildContext, bool> CanHandle
         {
             get
             {
@@ -58,7 +59,7 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets the associated <see cref="IMemberBuilder"/> type that can handle the request specified in the <see cref="Handler"/> method.
+        /// Gets the associated <see cref="IMemberBuilder"/> type that can handle the request specified in the <see cref="CanHandle"/> method.
         /// </summary>
         public Type Type
         {
@@ -76,7 +77,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         /// <param name="context">The context of the current test object.</param>
         /// <returns>
-        /// A test member builder that can handle the request specified in the <see cref="Handler"/> method.
+        /// A test member builder that can handle the request specified in the <see cref="CanHandle"/> method.
         /// </returns>
         public IMemberBuilder CreateInstance(IMemberBuildContext context)
         {

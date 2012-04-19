@@ -53,6 +53,7 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
+    <Compile Include="GeneratorRunnerData.cs" />
     <Compile Include="Guard.cs" />
     <Compile Include="IBuildSystem.cs" />
     <Compile Include="ICodeGenerator.cs" />
@@ -61,7 +62,8 @@
     <Compile Include="NStubCore.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StandardBuildSystem.cs" />
-    <Compile Include="TestBuilder.cs" />
+    <Compile Include="TestNode.cs" />
+    <Compile Include="TestProjectBuilder.cs" />
     <Compile Include="Utility.cs" />
   </ItemGroup>
   <ItemGroup>

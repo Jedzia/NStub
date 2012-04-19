@@ -1,5 +1,7 @@
 ﻿namespace NStub.CSharp.Tests.FluentChecking
 {
+    using NStub.Core;
+
     public class FluentCodeWrapper<T, K>
     {
         private readonly T initialExpression;

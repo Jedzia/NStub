@@ -10,68 +10,24 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
-    using System.Collections.Generic;
-    using NStub.CSharp.BuildContext;
-    using NStub.CSharp.ObjectGeneration.Builders;
     using System;
-
-    /// <summary>
-    /// Default implementation of a <see cref="ITestBuilderFactory"/>.
-    /// </summary>
-    internal class DefaultTestBuilderFactory : TestBuilderFactory
-    {
-        #region Fields
-
-        /*/// <summary>
-        /// Holds the default task service.
-        /// </summary>
-        private ITaskService taskService;*/
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets the service of this instance.
-        /// </summary>
-        public override ITestBuilderFactory Factory
-        {
-            get
-            {
-                // return this.taskService ?? (this.taskService = TaskRegistry.GetInstance());
-                return new DefaultTestBuilderFactory();
-            }
-        }
-
-        #endregion
-    }
+    using System.Collections.Generic;
+    using NStub.Core;
+    using NStub.CSharp.BuildContext;
 
     /// <summary>
     /// Provides builders for test method generation. 
     /// </summary>
     public abstract class TestBuilderFactory : ITestBuilderFactory
     {
-        private static ITestBuilderFactory defaultfactory;
-        
-        /*/// <summary>
-        /// Gets the default instance of the system wide <see cref="ITestBuilderFactory"/>.
-        /// </summary>
-        public static ITestBuilderFactory Default
-        {
-            get
-            {
-                if (defaultfactory == null)
-                {
-                    defaultfactory = new DefaultTestBuilderFactory();
-                }
-                return defaultfactory;
-            }
-        }*/
+        #region Fields
 
-        /// <summary>
-        /// Gets the factory service of this instance.
-        /// </summary>
-        public abstract ITestBuilderFactory Factory { get; }
+        private readonly List<IBuildHandler> handlers = new List<IBuildHandler>();
+        private static ITestBuilderFactory defaultfactory;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets the default <see cref="TestBuilderFactory"/>.
@@ -96,11 +52,7 @@ namespace NStub.CSharp.ObjectGeneration
 
             set
             {
-                if (value == null)
-                {
-                    throw new ArgumentNullException("value");
-                }
-
+                Guard.NotNull(() => value, value);
                 if (defaultfactory != null)
                 {
                     throw new InvalidOperationException(
@@ -111,46 +63,20 @@ namespace NStub.CSharp.ObjectGeneration
             }
         }
 
-        // private readonly EventBuilder eventBuilder;
-        // private readonly MethodBuilder methodBuilder;
-        // private readonly PropertyBuilder propertyBuilder;
-        // private readonly Dictionary<Type, IMemberBuilder> builders = new Dictionary<Type, IMemberBuilder>();
-        #region Fields
-
-        private readonly List<IBuildHandler> handlers = new List<IBuildHandler>();
-
-        #endregion
-
-        /*/// <summary>
-        /// Initializes a new instance of the <see cref="TestBuilderFactory"/> class.
+        /// <summary>
+        /// Gets the factory service of this instance.
         /// </summary>
-        /// <param name="propertyBuilder">The property builder.</param>
-        /// <param name="eventBuilder">The event builder.</param>
-        /// <param name="methodBuilder">The method builder.</param>
-        public TestBuilderFactory(
-            PropertyBuilder propertyBuilder, EventBuilder eventBuilder, MethodBuilder methodBuilder)
-        {
-            Guard.NotNull(() => propertyBuilder, propertyBuilder);
-            Guard.NotNull(() => eventBuilder, eventBuilder);
-            Guard.NotNull(() => methodBuilder, methodBuilder);
-
-            this.propertyBuilder = propertyBuilder;
-            this.eventBuilder = eventBuilder;
-            this.methodBuilder = methodBuilder;
-        }*/
-        #region Constructors
+        public abstract ITestBuilderFactory Factory { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestBuilderFactory"/> class.
+        /// Gets the list of build handlers.
         /// </summary>
-        public TestBuilderFactory()
+        protected List<IBuildHandler> Handlers
         {
-            this.handlers.Add(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext));
-            this.handlers.Add(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext));
-            this.handlers.Add(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext));
-            this.handlers.Add(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext));
-            this.handlers.Add(new BuildHandler(typeof(ConstructorBuilder), ConstructorBuilder.CanHandleContext));
-            this.handlers.Add(new BuildHandler(typeof(StaticMethodBuilder), StaticMethodBuilder.CanHandleContext));
+            get
+            {
+                return this.handlers;
+            }
         }
 
         #endregion
@@ -161,41 +87,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="handler">The handler to be added.</param>
         public void AddHandler(IBuildHandler handler)
         {
-            this.handlers.Add(handler);
+            this.Handlers.Add(handler);
         }
-
-        /*/// <summary>
-        /// Gets the event builder.
-        /// </summary>
-        public EventBuilder EventBuilder
-        {
-            get
-            {
-                return this.eventBuilder;
-            }
-        }
-
-        /// <summary>
-        /// Gets the method builder.
-        /// </summary>
-        public MethodBuilder MethodBuilder
-        {
-            get
-            {
-                return this.methodBuilder;
-            }
-        }
-
-        /// <summary>
-        /// Gets the property builder.
-        /// </summary>
-        public PropertyBuilder PropertyBuilder
-        {
-            get
-            {
-                return this.propertyBuilder;
-            }
-        }*/
 
         /// <summary>
         /// Tries to get the builder for the specified context.
@@ -207,14 +100,16 @@ namespace NStub.CSharp.ObjectGeneration
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
             // Todo: maybe cache em.
-            foreach(var buildHandler in this.handlers)
+            foreach(var buildHandler in this.Handlers)
             {
-                var canHandleContext = buildHandler.Handler(context);
-                if (canHandleContext)
+                var canHandleContext = buildHandler.CanHandle(context);
+                if (!canHandleContext)
                 {
-                    var memberBuilder = buildHandler.CreateInstance(context);
-                    yield return memberBuilder;
+                    continue;
                 }
+
+                var memberBuilder = buildHandler.CreateInstance(context);
+                yield return memberBuilder;
             }
         }
     }

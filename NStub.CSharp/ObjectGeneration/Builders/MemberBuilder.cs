@@ -10,6 +10,7 @@
 
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
 
     /// <summary>

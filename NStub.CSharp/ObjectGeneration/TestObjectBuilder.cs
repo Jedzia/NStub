@@ -15,6 +15,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
     using System.Reflection;
     using System.Text;
+    using NStub.Core;
 
     /// <summary>
     /// Used to create new test member fields with the matching initialization for them.

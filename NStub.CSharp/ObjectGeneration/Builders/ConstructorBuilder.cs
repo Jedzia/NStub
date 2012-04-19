@@ -14,6 +14,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
     using System;
 

@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
     using System.CodeDom;
+    using NStub.Core;
     using NStub.CSharp.BuildContext;
 
     /// <summary>

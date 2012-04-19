@@ -13,6 +13,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using System.CodeDom;
     using System.Collections.Generic;
+    using NStub.Core;
 
     /// <summary>
     /// Base class for a <see cref="ITestObjectBuilder"/> test-class member field generator.

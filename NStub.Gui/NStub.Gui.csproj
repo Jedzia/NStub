@@ -62,7 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyGraphBuilder.cs" />
+    <Compile Include="GeneratorDataMapper.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>

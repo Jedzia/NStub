@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 {
     using System;
     using System.Runtime.Serialization;
+    using NStub.Core;
 
     /// <summary>
     /// Represents errors that occur during code generation with a <see cref="CodeTypeReferenceBinder"/>.

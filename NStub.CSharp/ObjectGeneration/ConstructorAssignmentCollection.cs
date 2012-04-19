@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System.Collections;
     using System.Collections.Generic;
+    using NStub.Core;
 
     /// <summary>
     /// A list of <see cref="AssignmentInfoCollection"/>'s which holds a reference to a <see cref="AssignmentInfoCollection"/>

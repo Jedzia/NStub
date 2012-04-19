@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 {
     using System;
     using System.CodeDom;
+    using NStub.Core;
 
     /// <summary>
     /// Build a local variable from fluent parameters.

@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
 {
     using System.CodeDom;
+    using NStub.Core;
 
     /// <summary>
     /// Build a reference type from fluent parameters.

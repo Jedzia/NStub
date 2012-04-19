@@ -54,7 +54,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             // Test read access of 'Handler' Property.
             mocks.ReplayAll();
             var expected = this.handler;
-            var actual = testObject.Handler;
+            var actual = testObject.CanHandle;
             Assert.AreEqual(expected, actual);
             mocks.VerifyAll();
         }
