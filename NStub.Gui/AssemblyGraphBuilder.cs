@@ -13,8 +13,55 @@ using System.Windows.Forms;
 namespace NStub.Gui
 {
 
+    public struct TestNode
+    {
+        public object Tag;
+        public string Text;
+        public IList<TestNode> Nodes;
+        public bool Checked;
+    }
+
+    public static class GeneratorDataMapper
+    {
+        public static IList<TestNode> MapToNodes(this TreeView treeView)
+        {
+            return treeView.Nodes.Cast<TreeNode>().MapToNodes();
+        }
+
+        public static IList<TestNode> MapToNodes(this IEnumerable<TreeNode> mainNodes)
+        {
+            var returnValue = new List<TestNode>();
+            foreach (var item in mainNodes)
+            {
+                returnValue.Add(item.MapToNode());
+            }
+            return returnValue;
+        }
+
+        public static TestNode MapToNode(this TreeNode treeNode)
+        {
+            var returnValue = new TestNode()
+            {
+                Checked = treeNode.Checked,
+                Tag = treeNode.Tag,
+                Text = treeNode.Text
+            };
+
+            //if (treeNode.Nodes.Count > 0)
+            {
+                returnValue.Nodes = new List<TestNode>(treeNode.Nodes.Count);
+                foreach (TreeNode item in treeNode.Nodes)
+                {
+                    returnValue.Nodes.Add(item.MapToNode());
+                }
+            }
+
+            return returnValue;
+        }
+    }
+
     /// <summary>
-    /// Helds data for running the <see cref="AssemblyGraphBuilder"/>.
+    /// Helds data for running the <see cref="TestBuilder"/>.
     /// </summary>
     public class GeneratorRunnerData
     {
@@ -39,10 +86,10 @@ namespace NStub.Gui
         /// <summary>
         /// Gets the root nodes.
         /// </summary>
-        public IList<TreeNode> RootNodes { get; private set; }
+        public IList<TestNode> RootNodes { get; private set; }
 
         /// <summary>
-        /// Gets the referenced assemblies.
+        /// Gets the list of referenced assemblies.
         /// </summary>
         public IList<AssemblyName> ReferencedAssemblies { get; private set; }
 
@@ -53,12 +100,12 @@ namespace NStub.Gui
         /// <param name="generatorType">Type of the generator.</param>
         /// <param name="inputAssemblyPath">The input assembly path.</param>
         /// <param name="mainNodes">The main nodes.</param>
-        /// <param name="referencedAssemblies">The referenced assemblies.</param>
+        /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
         public GeneratorRunnerData(
             string outputFolder,
             Type generatorType,
             string inputAssemblyPath,
-            IList<TreeNode> mainNodes,
+            IList<TestNode> mainNodes,
             IList<AssemblyName> referencedAssemblies)
         {
             Guard.NotNullOrEmpty(() => outputFolder, outputFolder);
@@ -102,16 +149,22 @@ namespace NStub.Gui
         /// <param name="data">The data that is neccessary for test building.</param>
         public void GenerateTests(GeneratorRunnerData data)
         {
+            Guard.NotNull(() => data, data);
             this.GenerateTests(data.OutputFolder, data.GeneratorType, data.InputAssemblyPath, data.RootNodes, data.ReferencedAssemblies);
         }
 
         /// <summary>
-        /// Handles the Click event of the btnGo control.  Creates a list of the methods
+        /// Creates a list of the methods
         /// for which the user wishes to generate test cases for and instantiates an
         /// instance of NStub around these methods.  The sources are files are then
         /// generated.
         /// </summary>
-        public void GenerateTests(
+        /// <param name="outputFolder">The output folder.</param>
+        /// <param name="generatorType">Type of the generator.</param>
+        /// <param name="inputAssemblyPath">The input assembly path.</param>
+        /// <param name="mainNodes">The main nodes.</param>
+        /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
+        public void GenerateTestsOld(
             string outputFolder,
             Type generatorType,
             string inputAssemblyPath,
@@ -226,6 +279,123 @@ namespace NStub.Gui
                 cSharpProjectGenerator.GenerateProjectFile();
             }
         }
+
+        public void GenerateTests(
+     string outputFolder,
+     Type generatorType,
+     string inputAssemblyPath,
+     IList<TestNode> mainNodes,
+     IList<AssemblyName> referencedAssemblies)
+        {
+            // string outputFolder = this._outputDirectoryTextBox.Text;
+            // Type generatorType = (Type)cbGenerators.SelectedItem;
+            // string inputAssemblyPath = this._inputAssemblyTextBox.Text;
+            // //TreeNodeCollection mainNodes = this._assemblyGraphTreeView.Nodes;
+            // IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
+            // IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
+
+            // Create a new directory for each assembly
+            for (int h = 0; h < mainNodes.Count; h++)
+            {
+                var mainnode = mainNodes[h];
+                string outputDirectory = outputFolder +
+                                         Path.DirectorySeparatorChar +
+                                         Path.GetFileNameWithoutExtension(mainnode.Text) +
+                                         ".Tests";
+                Directory.CreateDirectory(outputDirectory);
+
+                // Create our project generator
+                CSharpProjectGenerator cSharpProjectGenerator =
+                    new CSharpProjectGenerator(
+                        sbs,
+                        Path.GetFileNameWithoutExtension(inputAssemblyPath) + ".Tests",
+                        outputDirectory);
+
+                // Add our referenced assemblies to the project generator so we
+                // can build the resulting project
+                foreach (AssemblyName assemblyName in referencedAssemblies)
+                {
+                    cSharpProjectGenerator.ReferencedAssemblies.Add(assemblyName);
+                }
+
+                // Generate the new test namespace
+                // At the assembly level
+                for (int i = 0; i < mainnode.Nodes.Count; i++)
+                {
+                    var rootsubnode = mainnode.Nodes[i];
+
+                    if (rootsubnode.Checked)
+                    {
+                        // Create the namespace and initial inputs
+                        CodeNamespace codeNamespace = new CodeNamespace();
+
+                        // At the type level
+                        for (int j = 0; j < rootsubnode.Nodes.Count; j++)
+                        {
+                            var rootsubsubnode = rootsubnode.Nodes[j];
+                            // TODO: This namespace isn't being set correctly.  
+                            // Also one namespace per run probably won't work, we may 
+                            // need to break this up more.
+                            codeNamespace.Name =
+                                Utility.GetNamespaceFromFullyQualifiedTypeName(rootsubsubnode.Text);
+
+                            if (rootsubsubnode.Checked)
+                            {
+                                // Create the class
+                                CodeTypeDeclaration testClass = new CodeTypeDeclaration(rootsubsubnode.Text);
+                                codeNamespace.Types.Add(testClass);
+                                var testObjectClassType = (Type)rootsubsubnode.Tag;
+                                testClass.UserData.Add("TestObjectClassType", testObjectClassType);
+
+                                // At the method level
+                                // Create a test method for each method in this type
+                                for (int k = 0;
+                                     k < rootsubsubnode.Nodes.Count;
+                                     k++)
+                                {
+                                    var rootsubsubsubnode = rootsubsubnode.Nodes[k];
+                                    try
+                                    {
+                                        if (rootsubsubsubnode.Checked)
+                                        {
+                                            try
+                                            {
+                                                // Retrieve the MethodInfo object from this TreeNode's tag
+                                                var memberInfo =
+                                                    (MethodInfo)
+                                                    rootsubsubsubnode.Tag;
+                                                CodeMemberMethod codeMemberMethod =
+                                                    this.CreateMethod(rootsubsubsubnode.Text, memberInfo);
+                                                codeMemberMethod.UserData.Add("MethodMemberInfo", memberInfo);
+                                                testClass.Members.Add(codeMemberMethod);
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                // MessageBox.Show(ex.Message + Environment.NewLine + ex.ToString());
+                                                if (this.logger != null)
+                                                {
+                                                    this.logger(ex.Message + Environment.NewLine + ex + Environment.NewLine);
+                                                }
+                                            }
+                                        }
+                                    }
+                                    catch (Exception)
+                                    {
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+
+                        WriteTestFile(generatorType, outputDirectory, cSharpProjectGenerator, codeNamespace);
+                    }
+                }
+
+                // Now write the project file and add all of the test files to it
+                cSharpProjectGenerator.GenerateProjectFile();
+            }
+        }
+
 
         private void WriteTestFile(Type generatorType, string outputDirectory, CSharpProjectGenerator cSharpProjectGenerator, CodeNamespace codeNamespace)
         {

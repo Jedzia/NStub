@@ -115,7 +115,7 @@ namespace NStub.Gui
             string inputAssemblyPath = this._inputAssemblyTextBox.Text;
             IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies);
+            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
             //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
             bg.RunWorkerAsync(data);
