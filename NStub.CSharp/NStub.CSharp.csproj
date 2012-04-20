@@ -60,6 +60,9 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +80,12 @@
     <Compile Include="ObjectGeneration\AssignmentInfoCollection.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollection.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
+    <Compile Include="ObjectGeneration\Builders\PropertyBuilderParameters.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>PropertyBuilderParameters.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="ObjectGeneration\Builders\PropertyBuilderParametersSetup.cs" />
     <Compile Include="ObjectGeneration\Builders\StaticMethodBuilder.cs" />
     <Compile Include="ObjectGeneration\BuildHandler.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposer.cs" />
@@ -140,6 +149,17 @@
   <ItemGroup>
     <None Include="..\Settings.StyleCop">
       <Link>Settings.StyleCop</Link>
+    </None>
+    <None Include="ObjectGeneration\Builders\PropertyBuilderParameters.xsc">
+      <DependentUpon>PropertyBuilderParameters.xsd</DependentUpon>
+    </None>
+    <None Include="ObjectGeneration\Builders\PropertyBuilderParameters.xsd">
+      <SubType>Designer</SubType>
+      <Generator>Xsd2CodeCustomTool</Generator>
+      <LastGenOutput>PropertyBuilderParameters.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ObjectGeneration\Builders\PropertyBuilderParameters.xss">
+      <DependentUpon>PropertyBuilderParameters.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

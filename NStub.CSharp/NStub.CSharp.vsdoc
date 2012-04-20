@@ -95,8 +95,6 @@
     <add key="VBdocman_comModules_CSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpProjectGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Exceptions.Designer.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_GeneratorSetup.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_Guard.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ImplicitVariableDeclarationStatement.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnitRhinoMocks...CSharpMbUnitRhinoMocksCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnit...CSharpMbUnitCodeGenerator.cs"><![CDATA[On]]></add>
@@ -104,6 +102,8 @@
     <add key="VBdocman_comModules_ObjectGeneration...AssignmentInfoCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuildDataCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuildHandler.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...Builders...PropertyBuilderParameters.Designer.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...Builders...PropertyBuilderParametersSetup.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...CodeMethodComposer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignment.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignmentCollection.cs"><![CDATA[On]]></add>

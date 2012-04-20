@@ -700,6 +700,10 @@ namespace NStub.CSharp
                     if (found)
                     {
                         propertyDataItem.SetData(memberBuildContext.MemberInfo);
+                        if (propertyDataItem is PropertyBuilderData)
+                        {
+                            var propData = (PropertyBuilderData)propertyDataItem;
+                        }
                     }
                     else
                     {

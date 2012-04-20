@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.CodeDom;
 using System.IO;
+using NStub.CSharp.ObjectGeneration.Builders;
 
 namespace NStub.Gui
 {
@@ -11,6 +12,22 @@ namespace NStub.Gui
     {
         public string Test()
         {
+
+            var pb = new PropertyBuilderParameters();
+            
+            var pbps = new PropertyBuilderParametersSetup();
+            pbps.MethodSuffix = "OlderDepp";
+            pbps.Moep = 42;
+            pbps.UseDings = false;
+            pb.Items.Add(pbps);
+
+            pbps = new PropertyBuilderParametersSetup();
+            pbps.MethodSuffix = "OtherParameter";
+            pbps.UseDings = true;
+            pb.Items.Add(pbps);
+            
+            pb.SaveToFile("PropertyBuilderParametersSetup.xml");
+
             var testObject = new CodeTypeDeclaration("DeclClass");
             var method = new CodeMemberMethod() { Name = "MyMethod" };
             testObject.Members.Add(method);
