@@ -102,16 +102,6 @@ namespace NStub.Gui
         private void btnGo_Click(object sender, EventArgs e)
         {
             Dumper();
-            //GenerateTests();
-
-            //BeforeGenerateTests();
-
-            string outputFolder = this._outputDirectoryTextBox.Text;
-            Type generatorType = (Type)cbGenerators.SelectedItem;
-            string inputAssemblyPath = this._inputAssemblyTextBox.Text;
-            IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
-            IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
             var bg = new LoadAssemblyWorker(sbs, this)
             {
@@ -120,66 +110,17 @@ namespace NStub.Gui
                _goButton = this._goButton,
                 Logger = Log,
             };
-            //bg.DoWork += new DoWorkEventHandler(bg_DoWork);
-            //bg.RunWorkerCompleted += bg_RunWorkerCompleted;
+
+            string outputFolder = this._outputDirectoryTextBox.Text;
+            Type generatorType = (Type)cbGenerators.SelectedItem;
+            string inputAssemblyPath = this._inputAssemblyTextBox.Text;
+            IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
+            IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
+            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+
             bg.RunWorkerAsync(data);
-
-            //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
-            //bg.RunWorkerAsync(data);
         }
 
-        /*
-        private void BeforeGenerateTests()
-        {
-            Cursor.Current = Cursors.WaitCursor;
-            this._browseInputAssemblyButton.Enabled = false;
-            this._browseOutputDirectoryButton.Enabled = false;
-            this._goButton.Enabled = false;
-        }
-
-        private void AfterGenerateTests()
-        {
-            //this.InvokeIfRequired(() =>
-            //{
-            this._browseInputAssemblyButton.Enabled = true;
-            this._browseOutputDirectoryButton.Enabled = true;
-            this._goButton.Enabled = true;
-            Cursor.Current = Cursors.Arrow;
-            //});
-        }
-
-        void bg_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            this.InvokeIfRequired(() => AfterGenerateTests());
-        }
-
-        void bg_DoWork(object sender, DoWorkEventArgs e)
-        {
-            try
-            {
-                var parameters = (GeneratorRunnerData)e.Argument;
-                var prjName = Path.GetFileNameWithoutExtension(parameters.InputAssemblyPath) + ".Tests";
-                var prj = new CSharpProjectGenerator(sbs, prjName, parameters.OutputFolder);
-                var testProjectBuilder = new TestProjectBuilder(sbs, prj, (buildSystem, configuration, codeNamespace) =>
-                {
-                    //var testBuilders = new TestBuilderFactory();
-                    var codeGenerator = (ICodeGenerator)Activator.CreateInstance(parameters.GeneratorType, new object[]
-                           {
-                             buildSystem, codeNamespace, null, configuration
-                       });
-                    //codeNamespace.Dump(3);
-                    return codeGenerator;
-
-                }, this.Log);
-                testProjectBuilder.GenerateTests(parameters);
-
-            }
-            catch (Exception ex)
-            {
-                this.Log(ex.Message);
-            }
-        }
-        */
         private void Dumper()
         {
             Log("------------------------------------------------");
@@ -292,68 +233,6 @@ namespace NStub.Gui
             var resss = asf.LoadAssembly();
             this._assemblyGraphTreeView.Nodes.Clear();
             this._assemblyGraphTreeView.Nodes.Add(resss.Nodes[0].MapToTree());
-            return;
-            for (int theAssembly = 0; theAssembly < this._inputAssemblyOpenFileDialog.FileNames.Length; theAssembly++)
-            {
-                // Load our input assembly and create its node in the tree
-                Assembly inputAssembly =
-                    Assembly.LoadFile(this._inputAssemblyOpenFileDialog.FileNames[theAssembly]);
-                TreeNode assemblyTreeNode =
-                    this.CreateTreeNode(
-                        this._inputAssemblyOpenFileDialog.FileNames[theAssembly],
-                        "imgAssembly");
-                this._assemblyGraphTreeView.Nodes.Add(assemblyTreeNode);
-
-                // Add our referenced assemblies to the project generator so we
-                // can reference them later
-                foreach (AssemblyName assemblyName in inputAssembly.GetReferencedAssemblies())
-                {
-                    this._referencedAssemblies.Add(assemblyName);
-                }
-
-                // Retrieve the modules from the assembly.  Most assemblies only have one
-                // module, but it is possible for assemblies to possess multiple modules
-                Module[] modules = inputAssembly.GetModules(false);
-
-                // Add the namespaces in the DLL
-                for (int theModule = 0; theModule < modules.Length; theModule++)
-                {
-                    // Add a node to the tree to represent the module
-                    TreeNode moduleTreeNode =
-                        this.CreateTreeNode(modules[theModule].Name, "imgModule");
-                    this._assemblyGraphTreeView.Nodes[theAssembly].Nodes.Add(moduleTreeNode);
-                    Type[] containedTypes = modules[theModule].GetTypes();
-
-                    // Add the classes in each type
-                    for (int theClass = 0; theClass < containedTypes.Length; theClass++)
-                    {
-                        // Add a node to the tree to represent the class
-                        var classType = containedTypes[theClass];
-                        var classNode = this.CreateTreeNode(classType.FullName, "imgClass");
-                        classNode.Tag = classType;
-                        this._assemblyGraphTreeView.Nodes[theAssembly].Nodes[theModule].Nodes.Add(
-                            classNode);
-
-                        // Create a test method for each method in this type
-                        MethodInfo[] methods = containedTypes[theClass].GetMethods();
-                        for (int theMethod = 0; theMethod < methods.Length; theMethod++)
-                        {
-                            this._assemblyGraphTreeView.Nodes[theAssembly].Nodes[theModule].Nodes[theClass].Nodes.Add(
-                                this.CreateTreeNode(methods[theMethod].Name, "imgMethod"));
-
-                            // Store the method's MethodInfo object in this node's tag
-                            // so that we may retrieve it later
-                            this._assemblyGraphTreeView.Nodes[theAssembly].Nodes[theModule].Nodes[theClass].Nodes[
-                                theMethod].Tag =
-                                methods[theMethod];
-                        }
-                    }
-
-                    moduleTreeNode.Expand();
-                }
-
-                assemblyTreeNode.Expand();
-            }
         }
 
         #endregion Helper Methods (Private)
