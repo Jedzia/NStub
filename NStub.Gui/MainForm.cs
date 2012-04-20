@@ -304,5 +304,11 @@ namespace NStub.Gui
             return null;
         }
 
+        private void bnConfigGenerator_Click(object sender, EventArgs e)
+        {
+            var wnd = new GeneratorConfig();
+            var result = wnd.ShowDialog();
+        }
+
     }
 }

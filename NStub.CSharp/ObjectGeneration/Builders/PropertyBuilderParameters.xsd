@@ -18,6 +18,7 @@
               <xs:element name="MethodSuffix" msprop:Generator_UserColumnName="MethodSuffix" msprop:Generator_ColumnPropNameInRow="MethodSuffix" msprop:Generator_ColumnVarNameInTable="columnMethodSuffix" msprop:Generator_ColumnPropNameInTable="MethodSuffixColumn" type="xs:string" minOccurs="0" />
               <xs:element name="UseDings" msprop:Generator_UserColumnName="UseDings" msprop:Generator_ColumnPropNameInRow="UseDings" msprop:Generator_ColumnVarNameInTable="columnUseDings" msprop:Generator_ColumnPropNameInTable="UseDingsColumn" type="xs:boolean" />
               <xs:element name="Moep" msprop:Generator_UserColumnName="Moep" msprop:Generator_ColumnPropNameInRow="Moep" msprop:Generator_ColumnVarNameInTable="columnMoep" msprop:Generator_ColumnPropNameInTable="MoepColumn" type="xs:int" />
+              <xs:element name="Enabled" msprop:Generator_UserColumnName="Enabled" msprop:Generator_ColumnPropNameInRow="Enabled" msprop:Generator_ColumnVarNameInTable="columnEnabled" msprop:Generator_ColumnPropNameInTable="EnabledColumn" type="xs:boolean" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

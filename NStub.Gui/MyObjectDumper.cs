@@ -13,20 +13,7 @@ namespace NStub.Gui
         public string Test()
         {
 
-            var pb = new PropertyBuilderParameters();
-            
-            var pbps = new PropertyBuilderParametersSetup();
-            pbps.MethodSuffix = "OlderDepp";
-            pbps.Moep = 42;
-            pbps.UseDings = false;
-            pb.Items.Add(pbps);
-
-            pbps = new PropertyBuilderParametersSetup();
-            pbps.MethodSuffix = "OtherParameter";
-            pbps.UseDings = true;
-            pb.Items.Add(pbps);
-            
-            pb.SaveToFile("PropertyBuilderParametersSetup.xml");
+            //TestXmlSeria();
 
             var testObject = new CodeTypeDeclaration("DeclClass");
             var method = new CodeMemberMethod() { Name = "MyMethod" };
@@ -48,6 +35,24 @@ namespace NStub.Gui
             //var xx = ms.ToString();
             var result = swriter.ToString();
         }
+
+        /*private static void TestXmlSeria()
+        {
+            var pb = new PropertyBuilderParameters();
+
+            var pbps = new PropertyBuilderParametersSetup();
+            pbps.MethodSuffix = "OlderDepp";
+            pbps.Moep = 42;
+            pbps.UseDings = false;
+            pb.Items.Add(pbps);
+
+            pbps = new PropertyBuilderParametersSetup();
+            pbps.MethodSuffix = "OtherParameter";
+            pbps.UseDings = true;
+            pb.Items.Add(pbps);
+
+            pb.SaveToFile("PropertyBuilderParametersSetup.xml");
+        }*/
     }
 
 }

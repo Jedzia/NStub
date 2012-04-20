@@ -33,7 +33,7 @@ namespace NStub.CSharp
 
         private static readonly DuplicatedMemberComparer DuplicatedMemberComparerInstance = new DuplicatedMemberComparer();
         private readonly IBuildSystem buildSystem;
-        private readonly ITestBuilderFactory testBuilders;
+        private readonly IMemberBuilderFactory testBuilders;
 
         #endregion
 
@@ -56,7 +56,7 @@ namespace NStub.CSharp
         protected BaseCSharpCodeGenerator(
             IBuildSystem buildSystem,
             CodeNamespace codeNamespace,
-            ITestBuilderFactory testBuilders,
+            IMemberBuilderFactory testBuilders,
             ICodeGeneratorParameters configuration)
         {
             Guard.NotNull(() => buildSystem, buildSystem);
@@ -77,7 +77,7 @@ namespace NStub.CSharp
             // Null arguments will not be accepted
             if (testBuilders == null)
             {
-                testBuilders = TestBuilderFactory.Default;
+                testBuilders = MemberBuilderFactory.Default;
                 //throw new ArgumentNullException(
                 //    "testBuilders",
                 //    Exceptions.ParameterCannotBeNull);
@@ -134,7 +134,7 @@ namespace NStub.CSharp
         /// The test builders.
         /// </value>
         /// <exception cref="InvalidOperationException">The TestBuilders can only set once.</exception>
-        public ITestBuilderFactory TestBuilders
+        public IMemberBuilderFactory TestBuilders
         {
             get
             {
@@ -270,7 +270,7 @@ namespace NStub.CSharp
 
                 var initialMembers = testClassDeclaration.Members.Cast<CodeTypeMember>().ToArray();
 
-                var propertyData = new BuildDataCollection();
+                var buildProperties = new BuildDataCollection();
 
                 // Setup and TearDown
                 var setTearContext = this.GenerateSetupAndTearDown(
@@ -278,7 +278,7 @@ namespace NStub.CSharp
                     testClassDeclaration,
                     testObjectName,
                     testObjectMemberField,
-                    propertyData);
+                    buildProperties);
 
                 this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
@@ -290,7 +290,7 @@ namespace NStub.CSharp
                     testClassDeclaration,
                     codeNamespace,
                     initialMembers,
-                    propertyData,
+                    buildProperties,
                     setTearContext);
 
                 // Set out member names correctly 

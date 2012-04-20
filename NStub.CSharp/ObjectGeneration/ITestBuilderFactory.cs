@@ -12,11 +12,13 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System.Collections.Generic;
     using NStub.CSharp.BuildContext;
+    using System;
+    using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
     /// Provides access to builders used in test method generation.
     /// </summary>
-    public interface ITestBuilderFactory
+    public interface IMemberBuilderFactory
     {
         /*/// <summary>
         /// Gets the event builder.
@@ -27,11 +29,17 @@ namespace NStub.CSharp.ObjectGeneration
         /// Gets the method builder.
         /// </summary>
         MethodBuilder MethodBuilder { get; }
+        */
 
         /// <summary>
-        /// Gets the property builder.
+        /// Gets the name of the builders.
         /// </summary>
-        PropertyBuilder PropertyBuilder { get; }*/
+        IEnumerable<string> BuilderNames { get; }
+
+        /// <summary>
+        /// Gets the type of each builder.
+        /// </summary>
+        IEnumerable<Type> BuilderTypes { get; }
 
         /// <summary>
         /// Tries to get the builder for the specified context.
@@ -39,5 +47,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="context">The context of the current test object.</param>
         /// <returns>A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.</returns>
         IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context);
+
+        IBuilderSetupParameters GetParameters(Type sampleDataType, BuildDataCollection globalProperties);
     }
 }

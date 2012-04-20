@@ -18,6 +18,15 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// </summary>
     public abstract class MemberBuilder : IMemberBuilder
     {
+
+        private static readonly EmptyBuilderParameters defaults = new EmptyBuilderParameters();
+
+        public static EmptyBuilderParameters EmptyParameters
+        {
+            get { return MemberBuilder.defaults; }
+        } 
+
+
         #region Constructors
 
         /// <summary>

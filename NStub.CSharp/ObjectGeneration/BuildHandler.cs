@@ -13,6 +13,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
+    using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
     /// Checks if a registered <see cref="IMemberBuilder"/> can handle a <see cref="IMemberBuildContext"/> request.
@@ -23,6 +24,7 @@ namespace NStub.CSharp.ObjectGeneration
 
         private readonly Func<IMemberBuildContext, bool> handler;
         private readonly Type type;
+        private readonly Type parameterDataType;
 
         #endregion
 
@@ -34,13 +36,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="type">The type of the <see cref="IMemberBuilder"/> worker.</param>
         /// <param name="handler">The handler that can determine if the <paramref name="type"/> can 
         /// accept an <see cref="IMemberBuildContext"/> order.</param>
-        public BuildHandler(Type type, Func<IMemberBuildContext, bool> handler)
+        public BuildHandler(Type type, Func<IMemberBuildContext, bool> handler, Type parameterDataType)
         {
             Guard.CanBeAssigned(() => type, type, typeof(IMemberBuilder));
             Guard.NotNull(() => handler, handler);
+            //Guard.NotNull(() => parameterDataType, parameterDataType);
+            Guard.CanBeAssigned(() => parameterDataType, parameterDataType, typeof(IBuilderSetupParameters));
 
             this.type = type;
             this.handler = handler;
+            this.parameterDataType = parameterDataType;
         }
 
         #endregion
@@ -66,6 +71,14 @@ namespace NStub.CSharp.ObjectGeneration
             get
             {
                 return this.type;
+            }
+        }
+
+        public Type ParameterDataType
+        {
+            get
+            {
+                return this.parameterDataType;
             }
         }
 

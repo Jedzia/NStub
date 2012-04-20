@@ -104,7 +104,7 @@
     <Compile Include="ObjectGeneration\Builders\ConstructorBuilder.cs" />
     <Compile Include="ObjectGeneration\CustomConstructorCodeMemberMethod.cs" />
     <Compile Include="ObjectGeneration\Builders\EventBuilder.cs" />
-    <Compile Include="ObjectGeneration\DefaultTestBuilderFactory.cs" />
+    <Compile Include="ObjectGeneration\DefaultMemberBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinder.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceException.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeTypeReferenceBinder.cs" />
@@ -127,7 +127,7 @@
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderData.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyGetBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertySetBuilder.cs" />
-    <Compile Include="ObjectGeneration\TestBuilderFactory.cs" />
+    <Compile Include="ObjectGeneration\MemberBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\TestObjectBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContext.cs" />

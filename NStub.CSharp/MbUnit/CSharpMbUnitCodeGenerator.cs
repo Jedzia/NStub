@@ -44,7 +44,7 @@ namespace NStub.CSharp.MbUnit
         public CSharpMbUnitCodeGenerator(
             IBuildSystem buildSystem, 
             CodeNamespace codeNamespace, 
-            ITestBuilderFactory testBuilders,
+            IMemberBuilderFactory testBuilders,
             ICodeGeneratorParameters configuration)
             : base(buildSystem, codeNamespace, testBuilders, configuration)
         {

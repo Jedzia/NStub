@@ -29,6 +29,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// Gets the associated <see cref="IMemberBuilder"/> type that can handle the request specified in the <see cref="CanHandle"/> method.
         /// </summary>
         Type Type { get; }
+        
+        Type ParameterDataType { get; }
 
         #endregion
 

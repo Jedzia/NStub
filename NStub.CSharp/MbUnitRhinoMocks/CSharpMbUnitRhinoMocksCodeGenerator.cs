@@ -48,7 +48,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         public CSharpMbUnitRhinoMocksCodeGenerator(
             IBuildSystem buildSystem,
             CodeNamespace codeNamespace,
-            ITestBuilderFactory testBuilders,
+            IMemberBuilderFactory testBuilders,
             ICodeGeneratorParameters configuration)
             : base(buildSystem, codeNamespace, testBuilders, configuration)
         {

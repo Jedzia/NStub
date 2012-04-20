@@ -54,7 +54,7 @@ namespace NStub.CSharp
         public CSharpCodeGenerator(
             IBuildSystem buildSystem,
             CodeNamespace codeNamespace,
-            ITestBuilderFactory testBuilders,
+            IMemberBuilderFactory testBuilders,
             ICodeGeneratorParameters configuration)
         {
             Guard.NotNull(() => buildSystem, buildSystem);

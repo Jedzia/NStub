@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
     using System.Reflection;
+    using NStub.Core;
 
     /// <summary>
     /// Stores information about a test method for a property.
@@ -135,9 +136,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// Sets the data via the specified method info.
         /// </summary>
         /// <param name="methodInfo">The method info.</param>
-        public void SetData(MethodInfo methodInfo)
+        public void SetData(object data)
         {
-            this.SetViaAccessorName(methodInfo);
+            Guard.CanBeAssigned<MethodInfo>(() => data, data);
+            this.SetViaAccessorName((MethodInfo)data);
         }
 
         /// <summary>

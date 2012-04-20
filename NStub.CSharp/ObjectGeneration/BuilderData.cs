@@ -95,7 +95,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Sets the data via the specified method info.
         /// </summary>
         /// <param name="methodInfo">The method info.</param>
-        public void SetData(MethodInfo methodInfo)
+        public void SetData(object data)
         {
         }
     }

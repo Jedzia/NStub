@@ -67,7 +67,7 @@ namespace NStub.CSharp.Tests
             var buildSystem = new FakeBuildSystem(); 
             CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
             // Todo: Mock this
-            var testBuilders = TestBuilderFactory.Default;
+            var testBuilders = MemberBuilderFactory.Default;
             var configuration = new CodeGeneratorParameters(_outputDirectory);
 			_CSharpMbUnitCodeGenerator =
                 new CSharpMbUnitCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration);

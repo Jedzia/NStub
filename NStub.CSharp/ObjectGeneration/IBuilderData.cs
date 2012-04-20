@@ -19,13 +19,13 @@ namespace NStub.CSharp.ObjectGeneration
     {
         #region Properties
 
-        /// <summary>
+        /*/// <summary>
         /// Gets a value indicating whether the information of this instance is complete.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance is complete; otherwise, <c>false</c>.
         /// </value>
-        bool IsComplete { get; }
+        bool IsComplete { get; }*/
 
         #endregion
 
@@ -48,6 +48,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// Sets the data via the specified method info.
         /// </summary>
         /// <param name="methodInfo">The method info.</param>
-        void SetData(MethodInfo methodInfo);
+        void SetData(object data);
     }
 }

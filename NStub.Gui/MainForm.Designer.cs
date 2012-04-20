@@ -47,6 +47,7 @@ namespace NStub.Gui
             this.label1 = new System.Windows.Forms.Label();
             this.cbGenerators = new System.Windows.Forms.ComboBox();
             this.logtimer = new System.Windows.Forms.Timer(this.components);
+            this.bnConfigGenerator = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -206,13 +207,24 @@ namespace NStub.Gui
             this.cbGenerators.FormattingEnabled = true;
             this.cbGenerators.Location = new System.Drawing.Point(102, 57);
             this.cbGenerators.Name = "cbGenerators";
-            this.cbGenerators.Size = new System.Drawing.Size(410, 21);
+            this.cbGenerators.Size = new System.Drawing.Size(749, 21);
             this.cbGenerators.TabIndex = 18;
             // 
             // logtimer
             // 
-            this.logtimer.Tick += new System.EventHandler(this.logtimer_Tick);
             this.logtimer.Interval = 250;
+            this.logtimer.Tick += new System.EventHandler(this.logtimer_Tick);
+            // 
+            // bnConfigGenerator
+            // 
+            this.bnConfigGenerator.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.bnConfigGenerator.Location = new System.Drawing.Point(857, 55);
+            this.bnConfigGenerator.Name = "bnConfigGenerator";
+            this.bnConfigGenerator.Size = new System.Drawing.Size(75, 23);
+            this.bnConfigGenerator.TabIndex = 14;
+            this.bnConfigGenerator.Text = "Config";
+            this.bnConfigGenerator.UseVisualStyleBackColor = true;
+            this.bnConfigGenerator.Click += new System.EventHandler(this.bnConfigGenerator_Click);
             // 
             // MainForm
             // 
@@ -221,6 +233,7 @@ namespace NStub.Gui
             this.ClientSize = new System.Drawing.Size(939, 612);
             this.Controls.Add(this.cbGenerators);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.bnConfigGenerator);
             this.Controls.Add(this._browseOutputDirectoryButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this._outputDirectoryLabel);
@@ -260,6 +273,7 @@ namespace NStub.Gui
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ComboBox cbGenerators;
         private System.Windows.Forms.Timer logtimer;
+        private System.Windows.Forms.Button bnConfigGenerator;
 
 	}
 }

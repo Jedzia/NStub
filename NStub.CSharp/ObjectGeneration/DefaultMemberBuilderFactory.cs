@@ -15,21 +15,22 @@ namespace NStub.CSharp.ObjectGeneration
     /// <summary>
     /// Default implementation of a <see cref="ITestBuilderFactory"/>.
     /// </summary>
-    internal class DefaultTestBuilderFactory : TestBuilderFactory
+    internal class DefaultMemberBuilderFactory : MemberBuilderFactory
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultTestBuilderFactory"/> class.
+        /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class.
         /// </summary>
-        protected internal DefaultTestBuilderFactory()
+        protected internal DefaultMemberBuilderFactory()
         {
-            Handlers.Add(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext));
-            Handlers.Add(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext));
-            Handlers.Add(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext));
-            Handlers.Add(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext));
-            Handlers.Add(new BuildHandler(typeof(ConstructorBuilder), ConstructorBuilder.CanHandleContext));
-            Handlers.Add(new BuildHandler(typeof(StaticMethodBuilder), StaticMethodBuilder.CanHandleContext));
+
+            AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(PropertyBuilderParametersSetup)));
+            AddHandler(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+            AddHandler(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+            AddHandler(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+            AddHandler(new BuildHandler(typeof(ConstructorBuilder), ConstructorBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+            AddHandler(new BuildHandler(typeof(StaticMethodBuilder), StaticMethodBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
         }
 
         #endregion
@@ -39,12 +40,12 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Gets the service of this instance.
         /// </summary>
-        public override ITestBuilderFactory Factory
+        public override IMemberBuilderFactory Factory
         {
             get
             {
                 // return this.taskService ?? (this.taskService = TaskRegistry.GetInstance());
-                return new DefaultTestBuilderFactory();
+                return new DefaultMemberBuilderFactory();
             }
         }
 
