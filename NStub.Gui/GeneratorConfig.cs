@@ -19,17 +19,17 @@ namespace NStub.Gui
             InitializeComponent();
         }
 
-        private static PropertyBuilderParameters TestXmlSeria()
+        private static PropertyBuilderUser TestXmlSeria()
         {
-            var pb = new PropertyBuilderParameters();
+            var pb = new PropertyBuilderUser();
 
-            var pbps = new PropertyBuilderParametersSetup();
+            var pbps = new PropertyBuilderUserParameters();
             pbps.MethodSuffix = "OlderDepp";
             pbps.Moep = 42;
             pbps.UseDings = false;
             pb.Items.Add(pbps);
 
-            pbps = new PropertyBuilderParametersSetup();
+            pbps = new PropertyBuilderUserParameters();
             pbps.MethodSuffix = "OtherParameter";
             pbps.UseDings = true;
             pb.Items.Add(pbps);

@@ -178,15 +178,15 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     #endregion
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    public partial class PropertyBuilderParameters : EntityBase<PropertyBuilderParameters> {
+    public partial class PropertyBuilderUser : EntityBase<PropertyBuilderUser> {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
-        private List<PropertyBuilderParametersSetup> itemsField;
+        private List<PropertyBuilderUserParameters> itemsField;
         
-        public List<PropertyBuilderParametersSetup> Items {
+        public List<PropertyBuilderUserParameters> Items {
             get {
                 if ((this.itemsField == null)) {
-                    this.itemsField = new List<PropertyBuilderParametersSetup>();
+                    this.itemsField = new List<PropertyBuilderUserParameters>();
                 }
                 return this.itemsField;
             }
@@ -197,7 +197,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
-    public partial class PropertyBuilderParametersSetup : EntityBase<PropertyBuilderParametersSetup> {
+    public partial class PropertyBuilderUserParameters : EntityBase<PropertyBuilderUserParameters> {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
         private string methodSuffixField;

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="PropertyBuilderUser" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="PropertyBuilderUser" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_UserDSName="PropertyBuilderUser" msprop:Generator_DataSetName="PropertyBuilderUser" msprop:EnableTableAdapterManager="true">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="Parameters" msprop:Generator_UserTableName="Parameters" msprop:Generator_RowDeletedName="ParametersRowDeleted" msprop:Generator_RowChangedName="ParametersRowChanged" msprop:Generator_RowClassName="ParametersRow" msprop:Generator_RowChangingName="ParametersRowChanging" msprop:Generator_RowEvArgName="ParametersRowChangeEvent" msprop:Generator_RowEvHandlerName="ParametersRowChangeEventHandler" msprop:Generator_TableClassName="ParametersDataTable" msprop:Generator_TableVarName="tableParameters" msprop:Generator_RowDeletingName="ParametersRowDeleting" msprop:Generator_TablePropName="Parameters">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="MethodSuffix" msprop:Generator_UserColumnName="MethodSuffix" msprop:Generator_ColumnVarNameInTable="columnMethodSuffix" msprop:Generator_ColumnPropNameInRow="MethodSuffix" msprop:Generator_ColumnPropNameInTable="MethodSuffixColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="UseDings" msprop:Generator_UserColumnName="UseDings" msprop:Generator_ColumnVarNameInTable="columnUseDings" msprop:Generator_ColumnPropNameInRow="UseDings" msprop:Generator_ColumnPropNameInTable="UseDingsColumn" type="xs:boolean" />
+              <xs:element name="Moep" msprop:Generator_UserColumnName="Moep" msprop:Generator_ColumnVarNameInTable="columnMoep" msprop:Generator_ColumnPropNameInRow="Moep" msprop:Generator_ColumnPropNameInTable="MoepColumn" type="xs:int" />
+              <xs:element name="Enabled" msprop:Generator_UserColumnName="Enabled" msprop:Generator_ColumnVarNameInTable="columnEnabled" msprop:Generator_ColumnPropNameInRow="Enabled" msprop:Generator_ColumnPropNameInTable="EnabledColumn" type="xs:boolean" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

@@ -81,7 +81,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         #endregion
     }
-    public partial class PropertyBuilderParametersSetup : IBuilderSetupParameters //: EntityBase<PropertyBuilderParametersSetup> {
+    public partial class PropertyBuilderUserParameters : IBuilderSetupParameters //: EntityBase<PropertyBuilderParametersSetup> {
     {
         [System.Xml.Serialization.XmlIgnoreAttribute()]
         public string SampleXml
@@ -97,7 +97,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 @"  <Enabled>false</Enabled>" + Environment.NewLine +
 @"</PropertyBuilderParametersSetup>" + Environment.NewLine +
 @"";
-                return new PropertyBuilderParametersSetup().Serialize();
+                return new PropertyBuilderUserParameters().Serialize();
                 //return sampleXmlData;
             }
         }
@@ -127,8 +127,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         public new void Deserialize(string xml)
         {
-            PropertyBuilderParametersSetup deserObj;
-            var rdata = PropertyBuilderParametersSetup.Deserialize(xml, out deserObj);
+            PropertyBuilderUserParameters deserObj;
+            var rdata = PropertyBuilderUserParameters.Deserialize(xml, out deserObj);
             this.Enabled = deserObj.Enabled;
             this.MethodSuffix = deserObj.MethodSuffix;
             this.UseDings = deserObj.UseDings;

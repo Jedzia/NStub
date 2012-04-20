@@ -58,7 +58,11 @@ namespace NStub.Core
             this.logger = logger;
             this.csharpProjectGenerator = projectGenerator;
             this.createGeneratorCallback = createGeneratorCallback;
+
+            //properties = new BuildDataCollection();
         }
+
+        //private readonly BuildDataCollection properties;
 
         #endregion
 
@@ -255,7 +259,8 @@ namespace NStub.Core
             // sbs, codeNamespace, testBuilders, configuration
             // });
             
-            var codeGenerator = this.createGeneratorCallback(this.sbs, configuration, codeNamespace);
+            var buildSystem = this.sbs;
+            var codeGenerator = OnCreateCodeGenerator(codeNamespace, configuration, buildSystem);
 
             // codeNamespace.Dump(3);
             var nstub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
@@ -274,6 +279,12 @@ namespace NStub.Core
                     this.logger("Writing '" + fileName + "'");
                 }
             }
+        }
+
+        protected virtual ICodeGenerator OnCreateCodeGenerator(CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
+        {
+            var codeGenerator = this.createGeneratorCallback(buildSystem, configuration, codeNamespace);
+            return codeGenerator;
         }
     }
 }

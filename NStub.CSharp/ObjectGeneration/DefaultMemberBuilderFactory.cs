@@ -25,7 +25,7 @@ namespace NStub.CSharp.ObjectGeneration
         protected internal DefaultMemberBuilderFactory()
         {
 
-            AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(PropertyBuilderParametersSetup)));
+            AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(PropertyBuilderUserParameters)));
             AddHandler(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));

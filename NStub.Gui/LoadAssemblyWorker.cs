@@ -66,7 +66,7 @@ namespace NStub.Gui
 
         private void AfterGenerateTests()
         {
-             
+
             //this.InvokeIfRequired(() =>
             //{
             if (_browseInputAssemblyButton != null)
@@ -87,7 +87,7 @@ namespace NStub.Gui
         protected override void OnDoWork(DoWorkEventArgs e)
         {
             bg_DoWork(this, e);
-        
+
         }
 
         void bg_DoWork(object sender, DoWorkEventArgs e)
@@ -98,7 +98,7 @@ namespace NStub.Gui
                 var prjName = Path.GetFileNameWithoutExtension(parameters.InputAssemblyPath) + ".Tests";
                 var prj = new CSharpProjectGenerator(buildSystem, prjName, parameters.OutputFolder);
                 //var builderFactory = NStub.CSharp.ObjectGeneration.TestBuilderFactory.Default;
-                var testProjectBuilder = new TestProjectBuilder(buildSystem, prj, (pbuildSystem, configuration, codeNamespace) =>
+                var testProjectBuilder = new CSharpTestProjectBuilder(buildSystem, prj, (pbuildSystem, pbuildData, configuration, codeNamespace) =>
                 {
                     //var testBuilders = new TestBuilderFactory();
                     var codeGenerator = (ICodeGenerator)Activator.CreateInstance(parameters.GeneratorType, new object[]
@@ -106,18 +106,21 @@ namespace NStub.Gui
                              pbuildSystem, codeNamespace, null, configuration
                        });
                     //codeNamespace.Dump(3);
+                    if (codeGenerator is BaseCSharpCodeGenerator)
+                    {
+                        ((BaseCSharpCodeGenerator)codeGenerator).BuildProperties = pbuildData as NStub.CSharp.ObjectGeneration.BuildDataCollection;
+                    }
                     return codeGenerator;
-
                 }, this.Log);
                 testProjectBuilder.GenerateTests(parameters);
 
             }
             catch (Exception ex)
             {
-                this.Log(ex.Message);
+                this.Log(ex.ToString());
             }
         }
-        
+
         private void Log(string text)
         {
             if (Logger != null)

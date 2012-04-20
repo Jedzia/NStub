@@ -94,6 +94,7 @@
     <add key="VBdocman_comModules_BuildContext...SetupAndTearDownContextBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpProjectGenerator.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_CSharpTestProjectBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Exceptions.Designer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ImplicitVariableDeclarationStatement.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_MbUnitRhinoMocks...CSharpMbUnitRhinoMocksCodeGenerator.cs"><![CDATA[On]]></add>
@@ -113,7 +114,6 @@
     <add key="VBdocman_comModules_ObjectGeneration...ITestBuilderFactory.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ITestObjectBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ParameterInfoCollection.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...TestBuilderFactory.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilderBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Properties...AssemblyInfo.cs"><![CDATA[On]]></add>

@@ -139,6 +139,8 @@ namespace NStub.CSharp.ObjectGeneration
                     testClassDeclaration.Members.Add(assignment.MemberField);
 
                     // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                    //BuildData.AddDataItem(
+                    //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
                     // Add a local variable for the constructor parameter.
                     testMethod.Statements.Add(assignment.AssignStatement);
@@ -186,7 +188,7 @@ namespace NStub.CSharp.ObjectGeneration
                     // Add the member field to the test class.
                     testClassDeclaration.Members.Add(assignment.MemberField);
                     BuildData.AddDataItem(
-                        "Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                        "Assignments." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
                     // Add a local variable for the constructor parameter.
                     AddAssignStatement(assignment.AssignStatement);

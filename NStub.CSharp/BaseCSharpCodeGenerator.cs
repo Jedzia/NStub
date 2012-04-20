@@ -34,6 +34,36 @@ namespace NStub.CSharp
         private static readonly DuplicatedMemberComparer DuplicatedMemberComparerInstance = new DuplicatedMemberComparer();
         private readonly IBuildSystem buildSystem;
         private readonly IMemberBuilderFactory testBuilders;
+        private BuildDataCollection buildProps;
+
+        /// <summary>
+        /// Gets or sets the build properties.
+        /// </summary>
+        /// <value>
+        /// The build properties.
+        /// </value>
+        public BuildDataCollection BuildProperties
+        {
+            get
+            {
+                if (buildProps == null)
+                {
+                    buildProps = new BuildDataCollection();
+                }
+                return buildProps;
+            }
+
+            set
+            {
+                Guard.NotNull(() => value, value);
+                if (buildProps != null)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot set the BuildProperties twice or after access to it.");
+                }
+                buildProps = value;
+            }
+        }
 
         #endregion
 
@@ -270,15 +300,13 @@ namespace NStub.CSharp
 
                 var initialMembers = testClassDeclaration.Members.Cast<CodeTypeMember>().ToArray();
 
-                var buildProperties = new BuildDataCollection();
-
                 // Setup and TearDown
                 var setTearContext = this.GenerateSetupAndTearDown(
                     codeNamespace,
                     testClassDeclaration,
                     testObjectName,
                     testObjectMemberField,
-                    buildProperties);
+                    BuildProperties);
 
                 this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
@@ -290,7 +318,7 @@ namespace NStub.CSharp
                     testClassDeclaration,
                     codeNamespace,
                     initialMembers,
-                    buildProperties,
+                    BuildProperties,
                     setTearContext);
 
                 // Set out member names correctly 

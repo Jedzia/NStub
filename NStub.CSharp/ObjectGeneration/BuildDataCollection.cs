@@ -15,9 +15,30 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
 
     /// <summary>
+    /// Bundles a list of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
+    /// </summary>
+    public interface IBuildDataCollection : IEnumerable<IBuilderData>
+    {
+        /// <summary>
+        /// Adds the specified data item to the "General" topic of this list.
+        /// </summary>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="item">The data item to add.</param>
+        void AddDataItem(string key, IBuilderData item);
+
+        /// <summary>
+        /// Adds the specified data item to the specified category of this list.
+        /// </summary>
+        /// <param name="category">The category of the item.</param>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="item">The data item to add.</param>
+        void AddDataItem(string category, string key, IBuilderData item);
+    }
+
+    /// <summary>
     /// List of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
     /// </summary>
-    public class BuildDataCollection : IEnumerable<IBuilderData>
+    public class BuildDataCollection : IBuildDataCollection
     {
         #region Fields
 
