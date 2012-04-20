@@ -104,11 +104,7 @@ namespace NStub.Gui
             Dumper();
             //GenerateTests();
 
-            BeforeGenerateTests();
-
-            var bg = new BackgroundWorker();
-            bg.DoWork += new DoWorkEventHandler(bg_DoWork);
-            bg.RunWorkerCompleted += bg_RunWorkerCompleted;
+            //BeforeGenerateTests();
 
             string outputFolder = this._outputDirectoryTextBox.Text;
             Type generatorType = (Type)cbGenerators.SelectedItem;
@@ -117,10 +113,22 @@ namespace NStub.Gui
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
             var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
-            //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
+            var bg = new LoadAssemblyWorker(sbs, this)
+            {
+               _browseInputAssemblyButton = this._browseInputAssemblyButton,
+               _browseOutputDirectoryButton = this._browseOutputDirectoryButton,
+               _goButton = this._goButton,
+                Logger = Log,
+            };
+            //bg.DoWork += new DoWorkEventHandler(bg_DoWork);
+            //bg.RunWorkerCompleted += bg_RunWorkerCompleted;
             bg.RunWorkerAsync(data);
+
+            //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
+            //bg.RunWorkerAsync(data);
         }
 
+        /*
         private void BeforeGenerateTests()
         {
             Cursor.Current = Cursors.WaitCursor;
@@ -171,7 +179,7 @@ namespace NStub.Gui
                 this.Log(ex.Message);
             }
         }
-
+        */
         private void Dumper()
         {
             Log("------------------------------------------------");
