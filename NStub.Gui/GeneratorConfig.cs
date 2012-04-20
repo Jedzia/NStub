@@ -46,12 +46,12 @@ namespace NStub.Gui
             var mf = memberfactory as MemberBuilderFactory;
                             var sampleXmlData =
 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
-@"  <PropertyBuilderParametersSetup>" + Environment.NewLine +
+@"  <PropertyBuilderUserParameters>" + Environment.NewLine +
 @"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
 @"    <UseDings>false</UseDings>" + Environment.NewLine +
 @"    <Moep>0</Moep>" + Environment.NewLine +
 @"    <Enabled>false</Enabled>" + Environment.NewLine +
-@"  </PropertyBuilderParametersSetup>" + Environment.NewLine +
+@"  </PropertyBuilderUserParameters>" + Environment.NewLine +
 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
 
                             /*var xxxx =*/
@@ -80,7 +80,8 @@ namespace NStub.Gui
 
             //tbConfig.Text = mf.GetSampleSetupData(SelectedType);
             //tbConfig.Text = mf.GetParameters(SelectedType, properties).Serialize();
-            tbConfig.Text = mf.SerializeSetupData(SelectedType, properties);
+            //tbConfig.Text = mf.SerializeSetupData(SelectedType, properties);
+            tbConfig.Text = mf.SerializeParametersForBuilderType(properties);
             var sample = memberfactory.GetParameters(SelectedType, properties);
             propGrid.SelectedObject = sample;
             return;

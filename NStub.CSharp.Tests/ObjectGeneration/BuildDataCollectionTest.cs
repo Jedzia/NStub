@@ -119,7 +119,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         public void TryGetCategoryTest()
         {
             // category not in list.
-            Dictionary<string, IBuilderData> actual;
+            IDictionary<string, IBuilderData> actual;
             var found = testObject.TryGetCategory("NotPresentCategory", out actual);
             Assert.IsFalse(found);
             Assert.IsNull(actual);

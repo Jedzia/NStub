@@ -22,22 +22,37 @@ namespace NStub.CSharp
         /// <param name="logger">The logging method.</param>
         public CSharpTestProjectBuilder(
             IBuildSystem sbs,
-            //IBuildDataCollection buildData,
+            IBuildDataCollection buildData,
             IProjectGenerator projectGenerator,
             Func<IBuildSystem, IBuildDataCollection, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback,
             Action<string> logger)
             : base(sbs, projectGenerator, OldOnCreateCodeGenerator, logger)
         {
+            Guard.NotNull(() => buildData, buildData);
             Guard.NotNull(() => createGeneratorCallback, createGeneratorCallback);
             this.createGeneratorCallback = createGeneratorCallback;
 
-            properties = SetUpBuildProperties();
+            //properties = SetUpBuildProperties();
+            properties = SetUpBuildProperties(buildData);
         }
 
-        private static BuildDataCollection SetUpBuildProperties()
+        private readonly BuildDataCollection buildData;// = new BuildDataCollection();
+
+        private static BuildDataCollection SetUpBuildProperties(IBuildDataCollection buildData)
         {
             var props = new BuildDataCollection();
+
+            //ReadOnlyCollection
+            foreach (var category in buildData.Data())
+            {
+                foreach (var item in category.Value)
+                {
+                    props.AddDataItem(category.Key, item.Key, item.Value);
+                }
+                //props.AddDataItem(item.Key, item,);
+            }
             props.AddDataItem("DasGuuuut", MemberBuilder.EmptyParameters);
+            // Todo: !!!
             return props;
         }
 

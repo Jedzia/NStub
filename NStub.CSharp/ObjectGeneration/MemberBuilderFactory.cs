@@ -189,6 +189,39 @@ namespace NStub.CSharp.ObjectGeneration
             return PrettyPrintXml(xmlDoc.OuterXml);
         }
 
+        public string SerializeParametersForBuilderType(/*Type builderType, string setupInnerName,*/  BuildDataCollection globalProperties)
+        {
+            var xmlDoc = new XmlDocument();
+            var root = xmlDoc.CreateElement("BuilderData");
+            xmlDoc.AppendChild(root);
+            foreach (var item in this.handlers.Values)
+            {
+                var setupPara = GetParameters(item.Type, globalProperties);
+                var setupParaType = item.ParameterDataType;
+                var builderType = item.Type;
+                
+                var ele = xmlDoc.CreateElement(builderType.FullName);
+                var ele2 = xmlDoc.CreateElement(setupParaType.Name);
+                root.AppendChild(ele);
+                ele.AppendChild(ele2);
+
+                try
+                {
+                    var innerDoc = new XmlDocument();
+                    innerDoc.LoadXml(setupPara.Serialize());
+                    ele2.InnerXml = innerDoc[setupParaType.Name].InnerXml;
+                }
+                catch (Exception ex)
+                {
+
+                    //throw;
+                }
+
+            }
+            return PrettyPrintXml(xmlDoc.OuterXml);
+        }
+
+
         public string GetSampleSetupData(Type builderType)
         {
             var paraType = handlers[builderType].ParameterDataType;
@@ -243,9 +276,17 @@ namespace NStub.CSharp.ObjectGeneration
             var paraType = result.ParameterDataType;
             var paraInstance = Activator.CreateInstance(paraType);
             var setupPara = (IBuilderSetupParameters)paraInstance;
-            setupPara.Deserialize(fc.InnerXml);
+            try
+            {
+                setupPara.Deserialize(fc.InnerXml);
+                globalProperties.AddDataItem("" + result.Type.FullName, setupPara);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidCastException("Problem building " + result.Type.FullName + " from serialization data." +
+                Environment.NewLine + fc.InnerXml + Environment.NewLine, ex);
+            }
 
-            globalProperties.AddDataItem("" + result.Type.FullName, setupPara);
             return setupPara;
             
             //var found = handlers.TryGetValue(fcName, out result);

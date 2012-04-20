@@ -48,6 +48,9 @@ namespace NStub.Gui
         {
             this.InitializeComponent();
             this.cbGenerators.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", global::NStub.Gui.Properties.Settings.Default, "SelectedGenerator", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+
+            buildData = new BuildDataCollection();
+            buildData.AddDataItem("FromMainForm", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
         }
 
         #endregion Constructor (Public)
@@ -98,12 +101,13 @@ namespace NStub.Gui
 
         private static readonly IBuildSystem sbs = new StandardBuildSystem();
         //private TestBuilder agb;
+        private readonly IBuildDataCollection buildData;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
             Dumper();
 
-            var bg = new LoadAssemblyWorker(sbs, this)
+            var bg = new LoadAssemblyWorker(sbs, this.buildData, this)
             {
                _browseInputAssemblyButton = this._browseInputAssemblyButton,
                _browseOutputDirectoryButton = this._browseOutputDirectoryButton,
@@ -270,6 +274,7 @@ namespace NStub.Gui
 
                     Server.Default.TextChanged += new EventHandler<TextWrittenEventArgs>(Default_TextChanged);
                     this.logtimer.Enabled = true;
+
                 }
             }
 
@@ -284,6 +289,14 @@ namespace NStub.Gui
             // this.cbGenerators.SelectedIndex = 2;
             this.cbGenerators.SelectedIndex = global::NStub.Gui.Properties.Settings.Default.SelectedGenerator;
             ad.AssemblyResolve += this.ad_AssemblyResolve;
+
+            LoadBuildPropertyData();
+
+        }
+
+        private void LoadBuildPropertyData()
+        {
+            buildData.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
         }
 
 

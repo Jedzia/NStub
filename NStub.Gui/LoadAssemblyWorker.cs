@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using NStub.Gui.Util;
 using NStub.CSharp;
+using NStub.CSharp.ObjectGeneration;
 
 namespace NStub.Gui
 {
@@ -16,6 +17,8 @@ namespace NStub.Gui
     {
         private readonly MainForm mainform;
         private readonly IBuildSystem buildSystem;
+        private readonly IBuildDataCollection buildData;
+
         public Action<string> Logger { get; set; }
         public Button _browseInputAssemblyButton { get; set; }
         public Button _browseOutputDirectoryButton { get; set; }
@@ -24,10 +27,12 @@ namespace NStub.Gui
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadAssemblyWorker"/> class.
         /// </summary>
-        public LoadAssemblyWorker(IBuildSystem buildSystem, MainForm mainform)
+        public LoadAssemblyWorker(IBuildSystem buildSystem,IBuildDataCollection buildData, MainForm mainform)
         {
             Guard.NotNull(() => buildSystem, buildSystem);
             this.buildSystem = buildSystem;
+            Guard.NotNull(() => buildData, buildData);
+            this.buildData = buildData;
             Guard.NotNull(() => mainform, mainform);
             this.mainform = mainform;
         }
@@ -98,7 +103,7 @@ namespace NStub.Gui
                 var prjName = Path.GetFileNameWithoutExtension(parameters.InputAssemblyPath) + ".Tests";
                 var prj = new CSharpProjectGenerator(buildSystem, prjName, parameters.OutputFolder);
                 //var builderFactory = NStub.CSharp.ObjectGeneration.TestBuilderFactory.Default;
-                var testProjectBuilder = new CSharpTestProjectBuilder(buildSystem, prj, (pbuildSystem, pbuildData, configuration, codeNamespace) =>
+                var testProjectBuilder = new CSharpTestProjectBuilder(buildSystem, buildData, prj, (pbuildSystem, pbuildData, configuration, codeNamespace) =>
                 {
                     //var testBuilders = new TestBuilderFactory();
                     var codeGenerator = (ICodeGenerator)Activator.CreateInstance(parameters.GeneratorType, new object[]

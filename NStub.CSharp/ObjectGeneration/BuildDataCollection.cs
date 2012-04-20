@@ -13,6 +13,59 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+
+    public interface IReadOnlyDictionary<TKey, TValue> : IEnumerable
+    {
+        bool ContainsKey(TKey key);
+        ICollection<TKey> Keys { get; }
+        ICollection<TValue> Values { get; }
+        int Count { get; }
+        bool TryGetValue(TKey key, out TValue value);
+        TValue this[TKey key] { get; }
+        bool Contains(KeyValuePair<TKey, TValue> item);
+        void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex);
+        IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();
+    }
+
+    public class ReadOnlyDictionary<TKey, TValue> : IReadOnlyDictionary<TKey, TValue>
+    {
+        readonly IDictionary<TKey, TValue> _dictionary;
+        public ReadOnlyDictionary(IDictionary<TKey, TValue> dictionary)
+        {
+            _dictionary = dictionary;
+        }
+        public bool ContainsKey(TKey key) { return _dictionary.ContainsKey(key); }
+        public ICollection<TKey> Keys { get { return _dictionary.Keys; } }
+        public bool TryGetValue(TKey key, out TValue value) { return _dictionary.TryGetValue(key, out value); }
+        public ICollection<TValue> Values { get { return _dictionary.Values; } }
+        public TValue this[TKey key] { get { return _dictionary[key]; } }
+        public bool Contains(KeyValuePair<TKey, TValue> item) { return _dictionary.Contains(item); }
+        public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex) { _dictionary.CopyTo(array, arrayIndex); }
+        public int Count { get { return _dictionary.Count; } }
+        public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() { return _dictionary.GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator() { return _dictionary.GetEnumerator(); }
+    }
+
+    public interface IBuildDataReadOnlyCollection : IReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>>
+    {
+    }
+
+    public class BuildDataReadOnlyCollection : ReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>>, IBuildDataReadOnlyCollection
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:FCKW"/> class.
+        /// </summary>
+        public BuildDataReadOnlyCollection(IDictionary<string, IReadOnlyDictionary<string, IBuilderData>> root)
+            : base(root)
+        {
+        }
+    }
+
+
+    //public class FJAJKSDAK : IReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>>
+    //{
+    //}
 
     /// <summary>
     /// Bundles a list of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
@@ -33,6 +86,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="key">The key of the item.</param>
         /// <param name="item">The data item to add.</param>
         void AddDataItem(string category, string key, IBuilderData item);
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the category collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        IEnumerable<KeyValuePair<string, IDictionary<string, IBuilderData>>> GetData();
+
+        IBuildDataReadOnlyCollection Data();
     }
 
     /// <summary>
@@ -42,8 +105,8 @@ namespace NStub.CSharp.ObjectGeneration
     {
         #region Fields
 
-        private readonly Dictionary<string, Dictionary<string, IBuilderData>> data =
-            new Dictionary<string, Dictionary<string, IBuilderData>>();
+        private readonly Dictionary<string, IDictionary<string, IBuilderData>> data =
+            new Dictionary<string, IDictionary<string, IBuilderData>>();
 
         private readonly Dictionary<string, IBuilderData> generalData;
 
@@ -83,11 +146,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// Gets the <see cref="IBuilderData"/> lookup of the specified category.
         /// </summary>
         /// <param name="category">The category of the requested data items.</param>
-        public Dictionary<string, IBuilderData> this[string category]
+        public IDictionary<string, IBuilderData> this[string category]
         {
             get
             {
-                Dictionary<string, IBuilderData> catLookup;
+                IDictionary<string, IBuilderData> catLookup;
                 this.TryGetCategory(category, out catLookup);
                 return catLookup;
             }
@@ -148,7 +211,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="item">The data item to add.</param>
         public void AddDataItem(string category, string key, IBuilderData item)
         {
-            Dictionary<string, IBuilderData> catLookup;
+            IDictionary<string, IBuilderData> catLookup;
             var found = this.TryGetCategory(category, out catLookup);
             if (!found)
             {
@@ -171,6 +234,59 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
+        /// Returns an enumerator that iterates through the category collection.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+        /// </returns>
+        public IEnumerable<KeyValuePair<string, IDictionary<string, IBuilderData>>> GetData()
+        {
+            return this.data;
+        }
+
+        //public abstract class mapCollection<T,K> : Gallio.Common.Collections.ReadOnlyDictionary<T,K>, ICollection<T> //where T : new()
+        //{
+        //}
+
+        public IEnumerable<KeyValuePair<string, IDictionary<string, IBuilderData>>> TestGetData()
+        {
+            //public interface IDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable
+            //public interface IDictionary<TKey, TValue> : ICollection<KeyValuePair<TKey, TValue>>, IEnumerable<KeyValuePair<TKey, TValue>>, IEnumerable
+            //IEnumerable<KeyValuePair<string, IDictionary<string, IBuilderData>>>
+            //ICollection<KeyValuePair<string, IDictionary<string, IBuilderData>>>
+            //this.data.
+
+            //IDictionary<string, IBuilderData> moese = this.data["adf"];
+            IEnumerable<KeyValuePair<string, IBuilderData>> moese = this.data["adf"];
+
+
+
+            //IEnumerable<KeyValuePair<string, ICollection<KeyValuePair<string, IBuilderData>>>> aaaaa = this.data;
+
+            //var moese =                this.data["adf"];
+
+
+
+
+            return this.data;
+        }
+
+        //public IReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>> Moep()
+        public IBuildDataReadOnlyCollection Data()
+        {
+
+            var rlist = new Dictionary<string, IReadOnlyDictionary<string, IBuilderData>>();
+            foreach (var item in this.data)
+            {
+                var sub = new ReadOnlyDictionary<string, IBuilderData>(item.Value);
+                rlist.Add(item.Key, sub);
+            }
+            var xxxx = new BuildDataReadOnlyCollection(rlist);
+            // var ro = new ReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>>(rlist);
+            return xxxx;
+        }
+
+        /// <summary>
         /// Gets the category associated with the specified key.
         /// </summary>
         /// <param name="category">The key of the value to get.</param>
@@ -180,7 +296,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns><c>true</c> if the this instance contains an
         /// element with the specified key; otherwise, <c>false</c>.</returns>
         /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
-        public bool TryGetCategory(string category, out Dictionary<string, IBuilderData> value)
+        public bool TryGetCategory(string category, out IDictionary<string, IBuilderData> value)
         {
             return this.data.TryGetValue(category, out value);
         }
@@ -215,7 +331,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
         public bool TryGetValue(string category, string key, out IBuilderData value)
         {
-            Dictionary<string, IBuilderData> catLookup;
+            IDictionary<string, IBuilderData> catLookup;
             var found = this.TryGetCategory(category, out catLookup);
             if (found)
             {
