@@ -12,6 +12,7 @@ namespace NStub.Core
 {
     using System.Collections.Generic;
     using System.Reflection;
+using System;
 
     /// <summary>
     /// Holds data for running a <see cref="TestProjectBuilder"/>.
@@ -24,25 +25,27 @@ namespace NStub.Core
         /// Initializes a new instance of the <see cref="GeneratorRunnerData"/> class.
         /// </summary>
         /// <param name="outputFolder">The output folder.</param>
+        /// <param name="generatorType">Type of the generator.</param>
         /// <param name="inputAssemblyPath">The input assembly path.</param>
         /// <param name="mainNodes">The main nodes.</param>
         /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
         public GeneratorRunnerData(
             string outputFolder,
+            Type generatorType,
             string inputAssemblyPath,
             IList<TestNode> mainNodes,
             IList<AssemblyName> referencedAssemblies)
         {
             Guard.NotNullOrEmpty(() => outputFolder, outputFolder);
 
-            // Guard.NotNull(() => generatorType, generatorType);
+            Guard.NotNull(() => generatorType, generatorType);
             Guard.NotNullOrEmpty(() => inputAssemblyPath, inputAssemblyPath);
             Guard.NotNull(() => mainNodes, mainNodes);
             Guard.NotNull(() => referencedAssemblies, referencedAssemblies);
 
             this.OutputFolder = outputFolder;
 
-            // this.GeneratorType = generatorType;
+            this.GeneratorType = generatorType;
             this.InputAssemblyPath = inputAssemblyPath;
             this.RootNodes = mainNodes;
             this.ReferencedAssemblies = referencedAssemblies;
@@ -50,14 +53,15 @@ namespace NStub.Core
 
         #endregion
 
-        // /// <summary>
-        // /// Gets the type of the generator.
-        // /// </summary>
-        // /// <value>
-        // /// The type of the generator.
-        // /// </value>
-        // public Type GeneratorType { get; private set; }
         #region Properties
+
+        /// <summary>
+        /// Gets the type of the generator.
+        /// </summary>
+        /// <value>
+        /// The type of the generator.
+        /// </value>
+        public Type GeneratorType { get; private set; }
 
         /// <summary>
         /// Gets the path to the input assembly.

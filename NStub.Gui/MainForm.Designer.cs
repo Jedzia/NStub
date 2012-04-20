@@ -212,6 +212,7 @@ namespace NStub.Gui
             // logtimer
             // 
             this.logtimer.Tick += new System.EventHandler(this.logtimer_Tick);
+            this.logtimer.Interval = 250;
             // 
             // MainForm
             // 

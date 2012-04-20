@@ -111,11 +111,11 @@ namespace NStub.Gui
             bg.RunWorkerCompleted += bg_RunWorkerCompleted;
 
             string outputFolder = this._outputDirectoryTextBox.Text;
-            // Type generatorType = (Type)cbGenerators.SelectedItem;
+            Type generatorType = (Type)cbGenerators.SelectedItem;
             string inputAssemblyPath = this._inputAssemblyTextBox.Text;
             IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-            var data = new GeneratorRunnerData(outputFolder, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
             //var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
             bg.RunWorkerAsync(data);
@@ -192,7 +192,14 @@ namespace NStub.Gui
             p = p.TrimEnd('\r', '\n');
             //this.logText.AppendText(DateTime.Now + ": " + p + Environment.NewLine);
             var ct = DateTime.Now;
-            logsb.Append(ct + "." + ct.Millisecond + ": " + p + Environment.NewLine);
+            //var msg = string.Format("{0}.{1}: {2}{3}", ct, ct.Millisecond, p, Environment.NewLine);
+            //logsb.Append(ct + "." + ct.Millisecond + ": " + p + Environment.NewLine);
+            logsb.Append(ct);
+            logsb.Append(".");
+            logsb.AppendFormat("{0:000}", ct.Millisecond);
+            logsb.Append(": ");
+            logsb.Append(p);
+            logsb.Append(Environment.NewLine);
         }
 
         private void logtimer_Tick(object sender, EventArgs e)
@@ -273,8 +280,11 @@ namespace NStub.Gui
         /// </summary>
         private void LoadAssembly()
         {
+            var asf = new AssemblyFetcher(this._inputAssemblyOpenFileDialog.FileName, this._inputAssemblyOpenFileDialog.FileNames);
+            var resss = asf.LoadAssembly();
             this._assemblyGraphTreeView.Nodes.Clear();
-
+            this._assemblyGraphTreeView.Nodes.Add(resss.Nodes[0].MapToTree());
+            return;
             for (int theAssembly = 0; theAssembly < this._inputAssemblyOpenFileDialog.FileNames.Length; theAssembly++)
             {
                 // Load our input assembly and create its node in the tree
@@ -358,6 +368,7 @@ namespace NStub.Gui
                 try
                 {
                     this.LoadAssembly();
+                    
                 }
                 catch (Exception ex)
                 {

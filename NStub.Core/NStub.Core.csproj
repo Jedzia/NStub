@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AssemblyFetcher.cs" />
     <Compile Include="BuildSystem.cs" />
     <Compile Include="CodeGeneratorParameters.cs" />
     <Compile Include="CodeGeneratorParametersBase.cs" />

@@ -14,6 +14,7 @@ namespace NStub.Core
     using System.CodeDom;
     using System.Collections.Generic;
     using System.Reflection;
+    using System.Threading;
 
     /// <summary>
     /// Builds the test files.
@@ -69,7 +70,7 @@ namespace NStub.Core
         {
             Guard.NotNull(() => data, data);
             this.GenerateTests(
-                data.OutputFolder, data.InputAssemblyPath, data.RootNodes, data.ReferencedAssemblies);
+                data.OutputFolder, data.GeneratorType, data.InputAssemblyPath, data.RootNodes, data.ReferencedAssemblies);
         }
 
         /// <summary>
@@ -84,7 +85,7 @@ namespace NStub.Core
         /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
         public void GenerateTests(
             string outputFolder,
-            // Type generatorType,
+            Type generatorType,
             string inputAssemblyPath,
             IList<TestNode> mainNodes,
             IList<AssemblyName> referencedAssemblies)
@@ -120,7 +121,7 @@ namespace NStub.Core
                 {
                     if (!rootsubnode.Checked)
                     {
-                        continue;
+                        //continue;
                     }
 
                     // Create the namespace and initial inputs
@@ -129,6 +130,7 @@ namespace NStub.Core
                     // At the type level
                     foreach (var rootsubsubnode in rootsubnode.Nodes)
                     {
+
                         // TODO: This namespace isn't being set correctly.  
                         // Also one namespace per run probably won't work, we may 
                         // need to break this up more.
@@ -139,7 +141,13 @@ namespace NStub.Core
                         {
                             continue;
                         }
-                            
+
+                        Thread.Sleep(1);
+                        if (this.logger != null)
+                        {
+                            this.logger("Building '" + rootsubsubnode.Text + "'");
+                        }
+    
                         // Create the class
                         var testClass = new CodeTypeDeclaration(rootsubsubnode.Text);
                         codeNamespace.Types.Add(testClass);
@@ -246,6 +254,7 @@ namespace NStub.Core
             // {
             // sbs, codeNamespace, testBuilders, configuration
             // });
+            
             var codeGenerator = this.createGeneratorCallback(this.sbs, configuration, codeNamespace);
 
             // codeNamespace.Dump(3);
@@ -259,6 +268,7 @@ namespace NStub.Core
                 fileName = fileName.Remove(0, fileName.LastIndexOf(".") + 1);
                 fileName += ".cs";
                 this.csharpProjectGenerator.ClassFiles.Add(fileName);
+                Thread.Sleep(1);
                 if (this.logger != null)
                 {
                     this.logger("Writing '" + fileName + "'");

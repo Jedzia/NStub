@@ -14,6 +14,7 @@ namespace NStub.Gui
     using System.Linq;
     using System.Windows.Forms;
     using NStub.Core;
+    using System;
 
     /// <summary>
     /// Maps from <see cref="TreeView"/> <see cref="TreeNode"/>s to <see cref="TestNode"/>s.
@@ -27,19 +28,88 @@ namespace NStub.Gui
         /// <returns>A new <see cref="TestNode"/> initialized with the data of the <paramref name="treeNode"/>.</returns>
         public static TestNode MapToNode(this TreeNode treeNode)
         {
-            var returnValue = new TestNode(treeNode.Text, treeNode.Tag);
-
-            /*{
-                                                  Checked = treeNode.Checked,
-                                                  Tag = treeNode.Tag,
-                                                  Text = treeNode.Text,
-                                                  Nodes = new List<TestNode>(treeNode.Nodes.Count)
-                                              };*/
+            TestNodeType testNodeType = TestNodeType.Root;
+            switch (treeNode.ImageIndex)
+            {
+                case 11:
+                    testNodeType = TestNodeType.Root;
+                    break;
+                case 0:
+                    testNodeType = TestNodeType.Assembly;
+                    break;
+                case 1:
+                    testNodeType = TestNodeType.Method;
+                    break;
+                case 2:
+                    testNodeType = TestNodeType.Module;
+                    break;
+                case 3:
+                    testNodeType = TestNodeType.Class;
+                    break;
+                default:
+                    testNodeType = TestNodeType.Root;
+                    break;
+            }
+            var returnValue = new TestNode(treeNode.Text, testNodeType, treeNode.Tag)
+            {
+                Checked = treeNode.Checked,
+                //Tag = treeNode.Tag,
+                // Text = treeNode.Text,
+                //Nodes = new List<TestNode>(treeNode.Nodes.Count)
+            };
             foreach (TreeNode item in treeNode.Nodes)
             {
-                if (item.Checked)
+                //if (item.Checked)
                 {
                     returnValue.Nodes.Add(item.MapToNode());
+                }
+            }
+
+            return returnValue;
+        }
+
+        public static TreeNode MapToTree(this TestNode testNode)
+        {
+            object tag = testNode.MethodInfo;
+            if (testNode.IsClass)
+            {
+                tag = testNode.ClrType;
+            }
+
+            var returnValue = new TreeNode(testNode.Text)
+            {
+                Checked = testNode.Checked,
+                Tag = tag,
+            };
+
+            switch (testNode.TestNodeType)
+            {
+                case TestNodeType.Root:
+                    returnValue.ImageIndex = 11;
+                    break;
+                case TestNodeType.Assembly:
+                    returnValue.ImageIndex = 0;
+                    returnValue.Expand();
+                    break;
+                case TestNodeType.Module:
+                    returnValue.ImageIndex = 2;
+                    returnValue.Expand();
+                    break;
+                case TestNodeType.Class:
+                    returnValue.ImageIndex = 3;
+                    break;
+                case TestNodeType.Method:
+                    returnValue.ImageIndex = 1;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException("testNode", "TestNode.TestNodeType is undefined");
+            }
+
+            foreach (TestNode item in testNode.Nodes)
+            {
+                //if (item.Checked)
+                {
+                    returnValue.Nodes.Add(item.MapToTree());
                 }
             }
 
@@ -66,7 +136,7 @@ namespace NStub.Gui
             var returnValue = new List<TestNode>();
             foreach (var item in mainNodes)
             {
-                if (item.Checked)
+                //if (item.Checked)
                 {
                     returnValue.Add(item.MapToNode());
                 }
