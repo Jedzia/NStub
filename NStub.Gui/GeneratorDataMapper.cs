@@ -68,6 +68,11 @@ namespace NStub.Gui
             return returnValue;
         }
 
+        /// <summary>
+        /// Maps from <see cref="TestNode"/> to <see cref="TreeNode"/>.
+        /// </summary>
+        /// <param name="testNode">The test node to translate.</param>
+        /// <returns>A new <see cref="TreeNode"/> populated with the data of <paramref name="testNode"/>.</returns>
         public static TreeNode MapToTree(this TestNode testNode)
         {
             object tag = testNode.MethodInfo;

@@ -83,7 +83,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        IEnumerable<IMemberBuilderParameters> DeserializeAll(string xml, IBuildDataDictionary properties);
+        IEnumerable<IMemberBuilderParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties);
 
         /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.

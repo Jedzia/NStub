@@ -31,13 +31,16 @@ namespace NStub.Gui
     /// <summary>e
     /// This is the main UI form for the NStub application.
     /// </summary>
-    public partial class MainForm : Form
+    public partial class MainForm : Form, ILoggable
     {
 
         private readonly IList<AssemblyName> _referencedAssemblies =
             new List<AssemblyName>();
         private readonly LoadAssemblyWorker bg;
-        private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
+        //private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
+        private static readonly IBuildSystem sbs = new StandardBuildSystem();
+        //private TestBuilder agb;
+        //private readonly BuildDataDictionary buildData;
 
 
         #region Constructor (Public)
@@ -50,11 +53,12 @@ namespace NStub.Gui
         {
             this.InitializeComponent();
             this.cbGenerators.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", global::NStub.Gui.Properties.Settings.Default, "SelectedGenerator", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            bpc.Logger = this;
 
-            buildData = new BuildDataDictionary();
-            buildData.AddDataItem("FromMainForm", MemberBuilder.EmptyParameters);
+            //buildData = new BuildDataDictionary();
+            bpc.BuildProperties.AddDataItem("FromMainForm", MemberBuilder.EmptyParameters);
 
-            bg = new LoadAssemblyWorker(sbs, this.buildData, this)
+            bg = new LoadAssemblyWorker(sbs, bpc.BuildProperties, this)
             {
                 BrowseInputAssemblyButton = this._browseInputAssemblyButton,
                 BrowseOutputDirectoryButton = this._browseOutputDirectoryButton,
@@ -109,9 +113,6 @@ namespace NStub.Gui
             }
         }
 
-        private static readonly IBuildSystem sbs = new StandardBuildSystem();
-        //private TestBuilder agb;
-        private readonly BuildDataDictionary buildData;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
@@ -150,9 +151,14 @@ namespace NStub.Gui
         }
 
         StringBuilder logsb = new StringBuilder();
-        private void Log(string p)
+
+        /// <summary>
+        /// Logs the specified text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        public void Log(string text)
         {
-            p = p.TrimEnd('\r', '\n');
+            text = text.TrimEnd('\r', '\n');
             //this.logText.AppendText(DateTime.Now + ": " + p + Environment.NewLine);
             var ct = DateTime.Now;
             //var msg = string.Format("{0}.{1}: {2}{3}", ct, ct.Millisecond, p, Environment.NewLine);
@@ -161,7 +167,7 @@ namespace NStub.Gui
             logsb.Append(".");
             logsb.AppendFormat("{0:000}", ct.Millisecond);
             logsb.Append(": ");
-            logsb.Append(p);
+            logsb.Append(text);
             logsb.Append(Environment.NewLine);
         }
 
@@ -254,9 +260,7 @@ namespace NStub.Gui
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Settings.Default.Save();
-
-            SaveBuildPropertyData();
-            //this.buildData
+            // bpc.SaveBuildPropertyData();
         }
 
 
@@ -304,50 +308,9 @@ namespace NStub.Gui
             this.cbGenerators.SelectedIndex = global::NStub.Gui.Properties.Settings.Default.SelectedGenerator;
             ad.AssemblyResolve += this.ad_AssemblyResolve;
 
-            LoadBuildPropertyData();
+            bpc.LoadBuildPropertyData();
 
         }
-
-        private void LoadBuildPropertyData()
-        {
-            buildData.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
-            GeneratorConfigLoad(this.buildData);
-
-            var xml = this.memberfactory.SerializeAllSetupData(this.buildData);
-            Log("Property data loaded:");
-            Log(xml);
-            Log("---------------------");
-
-        }
-
-        private void SaveBuildPropertyData()
-        {
-            var xml = this.memberfactory.SerializeAllSetupData(this.buildData);
-            var filename = Path.Combine(Application.StartupPath, "Parameters.xml");
-            // File.WriteAllText(filename, xml);
-        }
-
-        private void GeneratorConfigLoad(IBuildDataDictionary properties)
-        {
-            // {[NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder, NStub.CSharp.ObjectGeneration.BuildHandler]}
-            var sampleXmlData =
-@"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
-@"  <PropertyBuilderUserParameters>" + Environment.NewLine +
-@"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
-@"    <UseDings>true</UseDings>" + Environment.NewLine +
-@"    <Moep>0</Moep>" + Environment.NewLine +
-@"    <Enabled>false</Enabled>" + Environment.NewLine +
-@"  </PropertyBuilderUserParameters>" + Environment.NewLine +
-@"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
-
-            /*var xxxx =*/
-            //mf.SetParameters(sampleXmlData, properties);
-
-            var filename = Path.Combine(Application.StartupPath, "Parameters.xml");
-            var xml = File.ReadAllText(filename);
-            this.memberfactory.DeserializeAll(xml, properties);
-        }
-
 
         private Assembly ad_AssemblyResolve(object sender, ResolveEventArgs args)
         {
@@ -368,9 +331,21 @@ namespace NStub.Gui
 
         private void bnConfigGenerator_Click(object sender, EventArgs e)
         {
-            var wnd = new GeneratorConfig(this.buildData);
+            var wnd = new GeneratorConfig(bpc.BuildProperties);
             var result = wnd.ShowDialog();
         }
 
+    }
+
+    /// <summary>
+    /// Provides simple logging capabilities.
+    /// </summary>
+    public interface ILoggable
+    {
+        /// <summary>
+        /// Logs the specified text.
+        /// </summary>
+        /// <param name="text">The text.</param>
+        void Log(string text);
     }
 }

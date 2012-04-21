@@ -14,11 +14,11 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Xml;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
-    using System.Reflection;
 
     /// <summary>
     /// Provides builders for test method generation. 
@@ -235,7 +235,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        public IEnumerable<IMemberBuilderParameters> DeserializeAll(string xml, IBuildDataDictionary properties)
+        public IEnumerable<IMemberBuilderParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
         {
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
             List<IMemberBuilderParameters> plist = new List<IMemberBuilderParameters>();
@@ -248,6 +248,7 @@ namespace NStub.CSharp.ObjectGeneration
                 
                 // yield return para;
             }
+
             return plist;
         }
 
@@ -287,42 +288,21 @@ namespace NStub.CSharp.ObjectGeneration
 
             var xxxx = paraType.BaseType.GetGenericTypeDefinition();
             var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
-            //var serializer = serializer2.GetMethod("Deserialize", new Type[] { typeof(string) });
-            //var methods = serializer2.GetMethods(BindingFlags.Static | BindingFlags.Public);
-
-            //var methods2 = paraType.GetMethods();
-
-            //typeof(BuilderParametersBase)
-
-            //var mmm = typeof(BuilderParametersBase<PropertyBuilderUserParameters>).GetMethod("Deserialize", new Type[] { typeof(string) });
-            //var srlr = serializer2.GetMethod("Deserialize", new Type[] { typeof(string) });
 
             var paraInstance = serializer2
                 .MakeGenericType(paraType)
                 .GetMethod("Deserialize", new Type[] { typeof(string) })
                 .Invoke(null, new object[] { firstChild.InnerXml });
 
-            //var paraInstance = Activator.CreateInstance(paraType);
-
-            //var xsrlr = srlr.MakeGenericMethod(new Type[] { paraType });
-            //var xsrlrm = srlr.Invoke(null, new object[] { firstChild.InnerXml });
-
-            //PropertyBuilderUserParameters.Deserialize("aaskh");
-            //var srlr = serializer.MakeGenericMethod(new Type[] { paraType });
-            //var rrr = mmm.Invoke(null, new object[] { firstChild.InnerXml });
-
             var setupPara = (IMemberBuilderParameters)paraInstance;
             try
             {
-                //setupPara.Deserialize(firstChild.InnerXml);
                 var propertyKey = string.Empty + result.Type.FullName;
-                IBuilderData property;
 
+                // IBuilderData property;
                 // var found = properties.TryGetValue(propertyKey, out property);
                 // if (found)
                 // {
-                
-                // Todo replaces
                 properties.AddDataItem(propertyKey, setupPara, true);
                
                 // return setupPara;

@@ -8,8 +8,15 @@ using NStub.CSharp.ObjectGeneration.Builders;
 
 namespace NStub.Gui
 {
+    /// <summary>
+    /// Test class for the object dumper. DeleteME
+    /// </summary>
     public class MyObjectDumper
     {
+        /// <summary>
+        /// Tests this instance.
+        /// </summary>
+        /// <returns>the dumped object </returns>
         public string Test()
         {
 
@@ -28,12 +35,13 @@ namespace NStub.Gui
             testObject.Dump("The description", 5);
             //var res = Extensions.Text;
             return string.Empty;
-            var ms = new MemoryStream();
+            
+            /* var ms = new MemoryStream();
             var writer = new StreamWriter(ms);
             var swriter = new StringWriter();
             ObjectDumper.Write(testObject, int.MaxValue, swriter);
             //var xx = ms.ToString();
-            var result = swriter.ToString();
+            var result = swriter.ToString();*/
         }
 
         /*private static void TestXmlSeria()

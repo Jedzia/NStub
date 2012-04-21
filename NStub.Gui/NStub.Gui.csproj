@@ -62,6 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildPropertyComponent.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="BuildPropertyComponent.Designer.cs">
+      <DependentUpon>BuildPropertyComponent.cs</DependentUpon>
+    </Compile>
     <Compile Include="GeneratorConfig.cs">
       <SubType>Form</SubType>
     </Compile>

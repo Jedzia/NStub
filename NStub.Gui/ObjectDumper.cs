@@ -6,19 +6,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 
-// See the ReadMe.html for additional information
+/// <summary>
+/// Object low level dumper.
+/// </summary>
 public class ObjectDumper {
 
+    /// <summary>
+    /// Writes the specified element to the output.
+    /// </summary>
+    /// <param name="element">The element.</param>
     public static void Write(object element)
     {
         Write(element, 0);
     }
 
+    /// <summary>
+    /// Writes the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="depth">The iteration level.</param>
     public static void Write(object element, int depth)
     {
         Write(element, depth, Console.Out);
     }
 
+    /// <summary>
+    /// Writes the specified element.
+    /// </summary>
+    /// <param name="element">The element.</param>
+    /// <param name="depth">The iteration level.</param>
+    /// <param name="log">The output logger.</param>
     public static void Write(object element, int depth, TextWriter log)
     {
         ObjectDumper dumper = new ObjectDumper(depth);
@@ -39,11 +56,20 @@ public class ObjectDumper {
     int level;
     int depth;
 
+    /// <summary>
+    /// Prevents a default instance of the <see cref="ObjectDumper"/> class from being created.
+    /// </summary>
+    /// <param name="depth">The iteration level.</param>
     private ObjectDumper(int depth)
     {
         this.depth = depth;
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ObjectDumper"/> class.
+    /// </summary>
+    /// <param name="depth">The iteration level.</param>
+    /// <param name="writer">The output text writer.</param>
     internal ObjectDumper(int depth, TextWriter writer)
     {
         this.depth = depth;

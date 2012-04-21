@@ -48,6 +48,7 @@ namespace NStub.Gui
             this.cbGenerators = new System.Windows.Forms.ComboBox();
             this.logtimer = new System.Windows.Forms.Timer(this.components);
             this.bnConfigGenerator = new System.Windows.Forms.Button();
+            this.bpc = new NStub.Gui.BuildPropertyComponent(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -274,6 +275,7 @@ namespace NStub.Gui
         private System.Windows.Forms.ComboBox cbGenerators;
         private System.Windows.Forms.Timer logtimer;
         private System.Windows.Forms.Button bnConfigGenerator;
+        private BuildPropertyComponent bpc;
 
 	}
 }

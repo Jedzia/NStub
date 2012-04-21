@@ -32,7 +32,10 @@ namespace NStub.Gui
             this.Text = text;
         }
     }
-    
+
+    /// <summary>
+    /// Fake output writer. does not really write xhtml .... do be done ... later
+    /// </summary>
     public class XhtmlWriter : StringWriter
     {
 
@@ -82,6 +85,13 @@ namespace NStub.Gui
             }
         }
 
+        /// <summary>
+        /// Writes a character to this instance of the StringWriter.
+        /// </summary>
+        /// <param name="value">The character to write.</param>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// The writer is closed.
+        ///   </exception>
         public override void Write(char value)
         {
             base.Write(value);
@@ -90,6 +100,13 @@ namespace NStub.Gui
             FlushForEvent();
         }
 
+        /// <summary>
+        /// Writes a string to this instance of the StringWriter.
+        /// </summary>
+        /// <param name="value">The string to write.</param>
+        /// <exception cref="T:System.ObjectDisposedException">
+        /// The writer is closed.
+        ///   </exception>
         public override void Write(string value)
         {
             base.Write(value);
@@ -140,6 +157,9 @@ namespace NStub.Gui
             //RaiseTextChanged(ms.ToString());
         }
 
+        /// <summary>
+        /// Closes the current <see cref="T:System.IO.StringWriter"/> and the underlying stream.
+        /// </summary>
         public override void Close()
         {
             base.Close();
@@ -152,11 +172,17 @@ namespace NStub.Gui
         }
     }
 
+    /// <summary>
+    /// Main instance provider for object dumping. 
+    /// </summary>
     public class Server
     {
         XhtmlWriter lambdaFormatter;
         static Server defaultServer;
 
+        /// <summary>
+        /// Gets the default server singleton instance.
+        /// </summary>
         public static Server Default
         {
             get 
@@ -170,6 +196,9 @@ namespace NStub.Gui
             //set { Server.lambdaFormatter = value; }
         }
 
+        /// <summary>
+        /// Gets the default lambda formatter.
+        /// </summary>
         public TextWriter LambdaFormatter
         {
             get { return this.lambdaFormatter; }
@@ -177,7 +206,7 @@ namespace NStub.Gui
         }
 
         /// <summary>
-        /// Occurs when 
+        /// Occurs when the dumper text changes.
         /// </summary>
         public event EventHandler<TextWrittenEventArgs> TextChanged
         {
@@ -203,6 +232,9 @@ namespace NStub.Gui
         }
     }
 
+    /// <summary>
+    /// Object dumper extensions.
+    /// </summary>
     public static class Extensions
     {
         // Methods
@@ -211,21 +243,57 @@ namespace NStub.Gui
             return Disassembler.Disassemble(method);
         }*/
 
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
         public static T Dump<T>(this T o)
         {
             return o.Dump<T>(null, null);
         }
 
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
         public static T Dump<T>(this T o, int maximumDepth)
         {
             return o.Dump<T>(null, new int?(maximumDepth));
         }
 
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="description">The description.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
         public static T Dump<T>(this T o, string description)
         {
             return o.Dump<T>(description, null);
         }
-        //public static string Text { get; private set; }
+
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="description">The description text.</param>
+        /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
         public static T Dump<T>(this T o, string description, int? maximumDepth)
         {
             if (maximumDepth < 0)
@@ -255,7 +323,7 @@ namespace NStub.Gui
             if (expr != null)
             {
                 throw new NotImplementedException("Dump: o is Expression");
-                try
+                /*try
                 {
                     //ExpressionToken token = ExpressionToken.Visit(expr);
                     //if (token != null)
@@ -266,7 +334,7 @@ namespace NStub.Gui
                 catch (Exception exception)
                 {
                     //Log.Write(exception, "Dump ExpressionToken Visit");
-                }
+                }*/
             }
             //XhtmlWriter currentResultsWriter = Server.CurrentResultsWriter;
             var currentResultsWriter = new ObjectDumper(maximumDepth.GetValueOrDefault(), lambdaFormatter);
@@ -369,7 +437,18 @@ namespace NStub.Gui
     {
         // Fields
         public object Content;
+        
+        /// <summary>
+        /// Gets or sets the heading.
+        /// </summary>
+        /// <value>
+        /// The heading.
+        /// </value>
         public object Heading { get; set; }
+        
+        /// <summary>
+        /// Hide the presenter.
+        /// </summary>
         internal bool HidePresenter;
         
         /// <summary>
