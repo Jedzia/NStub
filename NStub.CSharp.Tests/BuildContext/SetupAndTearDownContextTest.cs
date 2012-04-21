@@ -7,7 +7,7 @@ namespace NStub.CSharp.Tests.BuildContext
     public partial class SetupAndTearDownContextTest
     {
         
-        private NStub.CSharp.ObjectGeneration.BuildDataCollection buildData;
+        private NStub.CSharp.ObjectGeneration.BuildDataDictionary buildData;
         
         private System.CodeDom.CodeNamespace codeNamespace;
         
@@ -30,7 +30,7 @@ namespace NStub.CSharp.Tests.BuildContext
         [SetUp()]
         public void SetUp()
         {
-            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataCollection();
+            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataDictionary();
             this.codeNamespace = new System.CodeDom.CodeNamespace();
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             this.setUpMethod = new System.CodeDom.CodeMemberMethod();
@@ -50,7 +50,7 @@ namespace NStub.CSharp.Tests.BuildContext
         public void ConstructWithParametersBuildDataCodeNamespaceTestClassDeclarationSetUpMethodTearDownMethodCreatorTest()
         {
             // TODO: Implement unit test for ConstructWithParametersBuildDataCodeNamespaceTestClassDeclarationSetUpMethodTearDownMethodCreator
-            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataCollection();
+            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataDictionary();
             this.codeNamespace = new System.CodeDom.CodeNamespace();
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             this.setUpMethod = new System.CodeDom.CodeMemberMethod();

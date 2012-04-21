@@ -10,17 +10,24 @@
 
 namespace NStub.CSharp.BuildContext
 {
+    using System;
     using System.CodeDom;
+    using System.Reflection;
     using NStub.Core;
     using NStub.CSharp.ObjectGeneration;
-    using System;
-    using System.Reflection;
 
     /// <summary>
     /// Abstract base class for data used to create new unit tests.
     /// </summary>
     public abstract class MemberBuildContextBase : IMemberBuildContext
     {
+        #region Fields
+
+        private MethodInfo memberInfo;
+        private Type testObjectType;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -32,10 +39,10 @@ namespace NStub.CSharp.BuildContext
         /// <param name="buildData">The additional build data lookup.</param>
         /// <param name="setUpTearDownContext">Contains data specific to SetUp and TearDown test-methods.</param>
         protected MemberBuildContextBase(
-            CodeNamespace codeNamespace, 
-            CodeTypeDeclaration testClassDeclaration, 
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration testClassDeclaration,
             CodeTypeMember typeMember,
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             ISetupAndTearDownContext setUpTearDownContext)
         {
             Guard.NotNull(() => codeNamespace, codeNamespace);
@@ -51,72 +58,19 @@ namespace NStub.CSharp.BuildContext
             this.SetUpTearDownContext = setUpTearDownContext;
         }
 
-        /// <summary>
-        /// Gets the test method info for this test object member.
-        /// </summary>
-        /// <param name="typeMember">The type member that hold the Userdata of the current test object member.</param>
-        /// <returns>The test method info for this test object member.</returns>
-        protected abstract MethodInfo GetTestMethodInfo(CodeTypeMember typeMember);
-
-        /// <summary>
-        /// Gets the type of the object under test.
-        /// </summary>
-        /// <param name="testClassDeclaration">The test class declaration.</param>
-        /// <returns>The type of the object under test.</returns>
-        protected abstract Type GetTestObjectClassType(CodeTypeDeclaration testClassDeclaration);
-
         #endregion
 
         #region Properties
 
         /// <summary>
+        /// Contains information about the build members in a dictionary form.
+        /// </summary>
+        public BuildDataDictionary BuildData { get; private set; }
+
+        /// <summary>
         /// Gets the code namespace.
         /// </summary>
         public CodeNamespace CodeNamespace { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the key associated with the test.
-        /// </summary>
-        /// <value>
-        /// The key associated with the test.
-        /// </value>
-        public string TestKey { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is a property.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is a property; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsProperty
-        {
-            get
-            {
-                if (this.MemberInfo == null)
-                {
-                    return false;
-                }
-                return this.MemberInfo.Name.StartsWith("get_") || this.MemberInfo.Name.StartsWith("set_");
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this instance is an event.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is an event; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsEvent
-        {
-            get
-            {
-                if (this.MemberInfo == null)
-                {
-                    return false;
-                }
-                return this.MemberInfo.Name.StartsWith("add_") || this.MemberInfo.Name.StartsWith("remove_");
-            }
-        }
 
         /// <summary>
         /// Gets a value indicating whether this instance is a constructor.
@@ -137,38 +91,48 @@ namespace NStub.CSharp.BuildContext
                     
                 }*/
                 return this.TypeMember is CodeConstructor;
-                //return this.MemberInfo.Name.StartsWith("add_") || this.MemberInfo.Name.StartsWith("remove_");
+
+                // return this.MemberInfo.Name.StartsWith("add_") || this.MemberInfo.Name.StartsWith("remove_");
             }
         }
 
         /// <summary>
-        /// Contains information about the build members in a dictionary form.
+        /// Gets a value indicating whether this instance is an event.
         /// </summary>
-        public BuildDataCollection BuildData { get; private set; }
-
-        /// <summary>
-        /// Gets test class declaration.( early testObject ).
-        /// </summary>
-        public CodeTypeDeclaration TestClassDeclaration { get; private set; }
-
-        private Type testObjectType;
-
-        /// <summary>
-        /// Gets type of the object under test.
-        /// </summary>
-        public Type TestObjectType
+        /// <value>
+        /// <c>true</c> if this instance is an event; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsEvent
         {
             get
             {
-                if (testObjectType == null)
+                if (this.MemberInfo == null)
                 {
-                    this.testObjectType = GetTestObjectClassType(this.TestClassDeclaration);
+                    return false;
                 }
-                return testObjectType;
+
+                return this.MemberInfo.Name.StartsWith("add_") || this.MemberInfo.Name.StartsWith("remove_");
             }
         }
 
-        private MethodInfo memberInfo;
+        /// <summary>
+        /// Gets a value indicating whether this instance is a property.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a property; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsProperty
+        {
+            get
+            {
+                if (this.MemberInfo == null)
+                {
+                    return false;
+                }
+
+                return this.MemberInfo.Name.StartsWith("get_") || this.MemberInfo.Name.StartsWith("set_");
+            }
+        }
 
         /// <summary>
         /// Gets the member info about the current test method.
@@ -179,11 +143,53 @@ namespace NStub.CSharp.BuildContext
             {
                 if (this.memberInfo == null)
                 {
-                    this.memberInfo = GetTestMethodInfo(TypeMember);
+                    this.memberInfo = this.GetTestMethodInfo(this.TypeMember);
                 }
+
                 return this.memberInfo;
             }
         }
+
+        /// <summary>
+        /// Gets the data specific to SetUp and TearDown test-methods.
+        /// </summary>
+        public ISetupAndTearDownContext SetUpTearDownContext { get; private set; }
+
+        /// <summary>
+        /// Gets test class declaration.( early testObject ).
+        /// </summary>
+        public CodeTypeDeclaration TestClassDeclaration { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the key associated with the test.
+        /// </summary>
+        /// <value>
+        /// The key associated with the test.
+        /// </value>
+        public string TestKey { get; set; }
+
+        /// <summary>
+        /// Gets type of the object under test.
+        /// </summary>
+        public Type TestObjectType
+        {
+            get
+            {
+                if (this.testObjectType == null)
+                {
+                    this.testObjectType = this.GetTestObjectClassType(this.TestClassDeclaration);
+                }
+
+                return this.testObjectType;
+            }
+        }
+
+        /// <summary>
+        /// Gets the current type to create a test method for.
+        /// </summary>
+        public CodeTypeMember TypeMember { get; private set; }
+
+        #endregion
 
         /// <summary>
         /// Gets the builder data specific to this builders key. <see cref="TestKey"/>.
@@ -197,7 +203,8 @@ namespace NStub.CSharp.BuildContext
         {
             if (string.IsNullOrEmpty(this.TestKey))
             {
-                throw new InvalidOperationException("Can't lookup category builder data without a correct TestKey propery.");
+                throw new InvalidOperationException(
+                    "Can't lookup category builder data without a correct TestKey propery.");
             }
 
             IBuilderData result;
@@ -210,21 +217,24 @@ namespace NStub.CSharp.BuildContext
             var dic = this.BuildData.General;
             IBuilderData userData;
             var found = dic.TryGetValue(builder.GetType().FullName, out userData);
-            //var userData = this.BuildData.General[builder.GetType().FullName];
-                //as PropertyBuilderUserParameters;
+
+            // var userData = this.BuildData.General[builder.GetType().FullName];
+            // as PropertyBuilderUserParameters;
             return userData as T;
         }
 
         /// <summary>
-        /// Gets the data specific to SetUp and TearDown test-methods.
+        /// Gets the test method info for this test object member.
         /// </summary>
-        public ISetupAndTearDownContext SetUpTearDownContext { get; private set; }
+        /// <param name="typeMember">The type member that hold the Userdata of the current test object member.</param>
+        /// <returns>The test method info for this test object member.</returns>
+        protected abstract MethodInfo GetTestMethodInfo(CodeTypeMember typeMember);
 
         /// <summary>
-        /// Gets the current type to create a test method for.
+        /// Gets the type of the object under test.
         /// </summary>
-        public CodeTypeMember TypeMember { get; private set; }
-
-        #endregion
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <returns>The type of the object under test.</returns>
+        protected abstract Type GetTestObjectClassType(CodeTypeDeclaration testClassDeclaration);
     }
 }

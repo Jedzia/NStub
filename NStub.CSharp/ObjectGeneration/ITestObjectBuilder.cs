@@ -29,7 +29,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Gets the build data dictionary that stores generation wide category/key/value properties.
         /// </summary>
-        BuildDataCollection BuildData { get; }
+        BuildDataDictionary BuildData { get; }
 
         /// <summary>
         /// Gets the SetUpMethod.

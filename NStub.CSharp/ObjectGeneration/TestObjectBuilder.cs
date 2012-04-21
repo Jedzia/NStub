@@ -38,7 +38,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectName">The TestObjectName</param>
         /// <param name="testObjectType">Type of the test object.</param>
         internal TestObjectBuilder(
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
             string testObjectName,
@@ -139,7 +139,7 @@ namespace NStub.CSharp.ObjectGeneration
                     testClassDeclaration.Members.Add(assignment.MemberField);
 
                     // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
-                    //BuildData.AddDataItem(
+                    //  BuildData.AddDataItem(
                     //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
                     // Add a local variable for the constructor parameter.

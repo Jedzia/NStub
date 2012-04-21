@@ -31,7 +31,7 @@ namespace NStub.CSharp.BuildContext
         /// <param name="tearDownMethod">The tear down method.</param>
         /// <param name="creator">The test object member field generator of the test SetUp method.</param>
         protected SetupAndTearDownContextBase(
-            BuildDataCollection buildData, 
+            BuildDataDictionary buildData, 
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod setUpMethod, 
@@ -60,7 +60,7 @@ namespace NStub.CSharp.BuildContext
         /// <summary>
         /// Gets the build data dictionary that stores generation wide category/key/value properties.
         /// </summary>
-        public BuildDataCollection BuildData { get; private set; }
+        public BuildDataDictionary BuildData { get; private set; }
         
         /// <summary>
         /// Gets the code namespace.

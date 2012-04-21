@@ -23,8 +23,7 @@ namespace NStub.Core
     {
         #region Fields
 
-        private readonly Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator>
-            createGeneratorCallback;
+        private readonly Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback;
 
         private readonly IProjectGenerator csharpProjectGenerator;
 
@@ -38,15 +37,15 @@ namespace NStub.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="TestProjectBuilder"/> class.
         /// </summary>
-        /// <param name="sbs">The build system.</param>
+        /// <param name="sbs">The system wide build system.</param>
         /// <param name="projectGenerator">The project generator.</param>
         /// <param name="createGeneratorCallback">The callback to create new code 
         /// generators per test class <see cref="CodeNamespace"/>.</param>
         /// <param name="logger">The logging method.</param>
         public TestProjectBuilder(
-            IBuildSystem sbs,
-            IProjectGenerator projectGenerator,
-            Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback,
+            IBuildSystem sbs, 
+            IProjectGenerator projectGenerator, 
+            Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback, 
             Action<string> logger)
         {
             Guard.NotNull(() => sbs, sbs);
@@ -58,11 +57,7 @@ namespace NStub.Core
             this.logger = logger;
             this.csharpProjectGenerator = projectGenerator;
             this.createGeneratorCallback = createGeneratorCallback;
-
-            //properties = new BuildDataCollection();
         }
-
-        //private readonly BuildDataCollection properties;
 
         #endregion
 
@@ -84,14 +79,15 @@ namespace NStub.Core
         /// generated.
         /// </summary>
         /// <param name="outputFolder">The output folder.</param>
+        /// <param name="generatorType">Type of the code generator to use.</param>
         /// <param name="inputAssemblyPath">The input assembly path.</param>
         /// <param name="mainNodes">The main nodes.</param>
         /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
         public void GenerateTests(
-            string outputFolder,
-            Type generatorType,
-            string inputAssemblyPath,
-            IList<TestNode> mainNodes,
+            string outputFolder, 
+            Type generatorType, 
+            string inputAssemblyPath, 
+            IList<TestNode> mainNodes, 
             IList<AssemblyName> referencedAssemblies)
         {
             // string outputFolder = this._outputDirectoryTextBox.Text;
@@ -102,7 +98,7 @@ namespace NStub.Core
             // IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
 
             // Create a new directory for each assembly
-            foreach (var mainnode in mainNodes)
+            foreach(var mainnode in mainNodes)
             {
                 string outputDirectory = outputFolder +
                                          this.sbs.DirectorySeparatorChar +
@@ -114,27 +110,26 @@ namespace NStub.Core
 
                 // Add our referenced assemblies to the project generator so we
                 // can build the resulting project
-                foreach (AssemblyName assemblyName in referencedAssemblies)
+                foreach(AssemblyName assemblyName in referencedAssemblies)
                 {
                     this.csharpProjectGenerator.ReferencedAssemblies.Add(assemblyName);
                 }
 
                 // Generate the new test namespace
                 // At the assembly level
-                foreach (var rootsubnode in mainnode.Nodes)
+                foreach(var rootsubnode in mainnode.Nodes)
                 {
                     if (!rootsubnode.Checked)
                     {
-                        //continue;
+                        // continue;
                     }
 
                     // Create the namespace and initial inputs
                     var codeNamespace = new CodeNamespace();
 
                     // At the type level
-                    foreach (var rootsubsubnode in rootsubnode.Nodes)
+                    foreach(var rootsubsubnode in rootsubnode.Nodes)
                     {
-
                         // TODO: This namespace isn't being set correctly.  
                         // Also one namespace per run probably won't work, we may 
                         // need to break this up more.
@@ -151,7 +146,7 @@ namespace NStub.Core
                         {
                             this.logger("Building '" + rootsubsubnode.Text + "'");
                         }
-    
+
                         // Create the class
                         var testClass = new CodeTypeDeclaration(rootsubsubnode.Text);
                         codeNamespace.Types.Add(testClass);
@@ -160,7 +155,7 @@ namespace NStub.Core
 
                         // At the method level
                         // Create a test method for each method in this type
-                        foreach (var rootsubsubsubnode in rootsubsubnode.Nodes)
+                        foreach(var rootsubsubsubnode in rootsubsubnode.Nodes)
                         {
                             try
                             {
@@ -202,25 +197,49 @@ namespace NStub.Core
             }
         }
 
+        /// <summary>
+        /// Called when the <c>TestProjectBuilder</c> is about to create the code generator.
+        /// </summary>
+        /// <param name="codeNamespace">The code namespace.</param>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="buildSystem">The build system.</param>
+        /// <returns>An with the parameters initialized code generator.</returns>
+        /// <remarks>Override this method to instantiate others than the standard generators.
+        /// <example>The default implementation is:
+        /// <code><![CDATA[
+        /// protected virtual ICodeGenerator OnCreateCodeGenerator(CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
+        /// {
+        ///     var codeGenerator = this.createGeneratorCallback(buildSystem, configuration, codeNamespace);
+        ///     return codeGenerator;
+        /// }
+        /// ]]></code></example>
+        /// </remarks>
+        protected virtual ICodeGenerator OnCreateCodeGenerator(
+            CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
+        {
+            var codeGenerator = this.createGeneratorCallback(buildSystem, configuration, codeNamespace);
+            return codeGenerator;
+        }
+
         private CodeMemberMethod CreateMethod(string methodName, MethodInfo methodInfo)
         {
             // Create the method
             var codeMemberMethod = new CodeMemberMethod
-            {
-                Attributes = (MemberAttributes)methodInfo.Attributes,
-                Name = methodName,
-                ReturnType = new CodeTypeReference(methodInfo.ReturnType)
-            };
+                                       {
+                                           Attributes = (MemberAttributes)methodInfo.Attributes, 
+                                           Name = methodName, 
+                                           ReturnType = new CodeTypeReference(methodInfo.ReturnType)
+                                       };
 
             // Set the return type for the method
 
             // Setup and add the parameters
             ParameterInfo[] methodParameters = methodInfo.GetParameters();
-            foreach (ParameterInfo parameter in methodParameters)
+            foreach(ParameterInfo parameter in methodParameters)
             {
                 codeMemberMethod.Parameters.Add(
                     new CodeParameterDeclarationExpression(
-                        parameter.ParameterType,
+                        parameter.ParameterType, 
                         parameter.Name));
             }
 
@@ -258,16 +277,15 @@ namespace NStub.Core
             // {
             // sbs, codeNamespace, testBuilders, configuration
             // });
-            
             var buildSystem = this.sbs;
-            var codeGenerator = OnCreateCodeGenerator(codeNamespace, configuration, buildSystem);
+            var codeGenerator = this.OnCreateCodeGenerator(codeNamespace, configuration, buildSystem);
 
             // codeNamespace.Dump(3);
             var nstub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
             nstub.GenerateCode();
-
+            
             // Add all of our classes to the project
-            foreach (CodeTypeDeclaration codeType in nstub.CodeNamespace.Types)
+            foreach(CodeTypeDeclaration codeType in nstub.CodeNamespace.Types)
             {
                 string fileName = codeType.Name;
                 fileName = fileName.Remove(0, fileName.LastIndexOf(".") + 1);
@@ -279,12 +297,6 @@ namespace NStub.Core
                     this.logger("Writing '" + fileName + "'");
                 }
             }
-        }
-
-        protected virtual ICodeGenerator OnCreateCodeGenerator(CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
-        {
-            var codeGenerator = this.createGeneratorCallback(buildSystem, configuration, codeNamespace);
-            return codeGenerator;
         }
     }
 }

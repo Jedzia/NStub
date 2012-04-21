@@ -9,7 +9,7 @@ namespace NStub.CSharp.Tests.BuildContext
     public partial class MemberBuildContextBaseTest
     {
 
-        private NStub.CSharp.ObjectGeneration.BuildDataCollection buildData;
+        private NStub.CSharp.ObjectGeneration.BuildDataDictionary buildData;
         private System.CodeDom.CodeNamespace codeNamespace;
         private MockRepository mocks;
         private NStub.CSharp.BuildContext.ISetupAndTearDownContext setUpTearDownContext;
@@ -28,7 +28,7 @@ namespace NStub.CSharp.Tests.BuildContext
             this.codeNamespace = new System.CodeDom.CodeNamespace();
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             this.typeMember = new System.CodeDom.CodeTypeMember();
-            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataCollection();
+            this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataDictionary();
             this.mocks = new MockRepository();
             this.builderData = this.mocks.StrictMock<IBuilderData>();
             this.buildData.AddDataItem("CAT", "TheKey", builderData);

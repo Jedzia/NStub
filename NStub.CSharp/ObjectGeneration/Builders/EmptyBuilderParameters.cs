@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BuilderData.cs" company="EvePanix">
+// <copyright file="EmptyBuilderParameters.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,64 +8,54 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
-    using NStub.Core;
-
     /// <summary>
-    /// Stores information for an <see cref="IMemberBuilder"/>. 
+    /// Provides an implementation of the <see cref="IMemberBuilderParameters"/> user data, that has an empty set of data.
     /// </summary>
-    /// <typeparam name="T">The type of the stored data.</typeparam>
-    public class BuilderData<T> : IBuilderData
+    public class EmptyBuilderParameters : IMemberBuilderParameters
     {
-        #region Fields
-
-        private readonly T data;
-
-        #endregion
-
-        #region Constructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BuilderData&lt;T&gt;"/> class.
-        /// </summary>
-        /// <param name="dataObject">The data object.</param>
-        public BuilderData(T dataObject)
-        {
-            Guard.NotNull(() => dataObject, dataObject);
-            this.data = dataObject;
-        }
-
-        #endregion
-
+        // : EntityBase<PropertyBuilderParametersSetup> {
         #region Properties
 
         /// <summary>
-        /// Gets the data of this instance.
+        /// Gets or sets a value indicating whether this <see cref="IMemberBuilderParameters"/> is enabled.
         /// </summary>
-        public T Data
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        public bool Enabled
         {
             get
             {
-                return this.data;
+                return false;
+            }
+
+            set
+            {
             }
         }
 
         /// <summary>
-        /// Gets a value indicating whether the information of this instance is complete.
+        /// Gets the sample XML.
         /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is complete; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsComplete
+        public string SampleXml
         {
             get
             {
-                return true;
+                return "<Test>This is sample data</Test>";
             }
         }
 
         #endregion
+
+        /// <summary>
+        /// Deserializes the specified XML to the current instance.
+        /// </summary>
+        /// <param name="xml">The XML text, representing the data.</param>
+        public void Deserialize(string xml)
+        {
+        }
 
         /// <summary>
         /// Gets the data of this instance.
@@ -75,7 +65,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public object GetData()
         {
-            return this.data;
+            return this;
         }
 
         /// <summary>
@@ -87,7 +77,18 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public bool HasDataForType(IMemberBuilder builder)
         {
-            return true;
+            return false;
+        }
+
+        /// <summary>
+        /// Serializes this instance to a XML string.
+        /// </summary>
+        /// <returns>
+        /// The data of the current instance as xml text.
+        /// </returns>
+        public string Serialize()
+        {
+            return "<EmptyBuilderParameters />";
         }
 
         /// <summary>

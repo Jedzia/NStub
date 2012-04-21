@@ -11,7 +11,7 @@ namespace NStub.CSharp.Tests.BuildContext
 
         private MockRepository mocks;
         private SetupAndTearDownContextBase testObject;
-        BuildDataCollection buildData;
+        BuildDataDictionary buildData;
         CodeNamespace codeNamespace;
         CodeTypeDeclaration testClassDeclaration;
         CodeMemberMethod setUpMethod;
@@ -27,7 +27,7 @@ namespace NStub.CSharp.Tests.BuildContext
         {
             this.mocks = new MockRepository();
 
-            buildData = new BuildDataCollection();
+            buildData = new BuildDataDictionary();
             codeNamespace = new CodeNamespace();
             testClassDeclaration = new CodeTypeDeclaration();
             setUpMethod = new CodeMemberMethod();

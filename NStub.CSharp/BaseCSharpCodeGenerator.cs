@@ -31,39 +31,12 @@ namespace NStub.CSharp
     {
         #region Fields
 
-        private static readonly DuplicatedMemberComparer DuplicatedMemberComparerInstance = new DuplicatedMemberComparer();
+        private static readonly DuplicatedMemberComparer DuplicatedMemberComparerInstance =
+            new DuplicatedMemberComparer();
+
         private readonly IBuildSystem buildSystem;
         private readonly IMemberBuilderFactory testBuilders;
-        private BuildDataCollection buildProps;
-
-        /// <summary>
-        /// Gets or sets the build properties.
-        /// </summary>
-        /// <value>
-        /// The build properties.
-        /// </value>
-        public BuildDataCollection BuildProperties
-        {
-            get
-            {
-                if (buildProps == null)
-                {
-                    buildProps = new BuildDataCollection();
-                }
-                return buildProps;
-            }
-
-            set
-            {
-                Guard.NotNull(() => value, value);
-                if (buildProps != null)
-                {
-                    throw new InvalidOperationException(
-                        "Cannot set the BuildProperties twice or after access to it.");
-                }
-                buildProps = value;
-            }
-        }
+        private BuildDataDictionary buildProps;
 
         #endregion
 
@@ -108,9 +81,10 @@ namespace NStub.CSharp
             if (testBuilders == null)
             {
                 testBuilders = MemberBuilderFactory.Default;
-                //throw new ArgumentNullException(
-                //    "testBuilders",
-                //    Exceptions.ParameterCannotBeNull);
+
+                // throw new ArgumentNullException(
+                // "testBuilders",
+                // Exceptions.ParameterCannotBeNull);
             }
 
             if (outputDirectory == null)
@@ -142,6 +116,38 @@ namespace NStub.CSharp
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets or sets the build properties.
+        /// </summary>
+        /// <value>
+        /// The build properties.
+        /// </value>
+        /// <exception cref="InvalidOperationException">Cannot set the BuildProperties twice or after access to it.</exception>
+        public BuildDataDictionary BuildProperties
+        {
+            get
+            {
+                if (this.buildProps == null)
+                {
+                    this.buildProps = new BuildDataDictionary();
+                }
+
+                return this.buildProps;
+            }
+
+            set
+            {
+                Guard.NotNull(() => value, value);
+                if (this.buildProps != null)
+                {
+                    throw new InvalidOperationException(
+                        "Cannot set the BuildProperties twice or after access to it.");
+                }
+
+                this.buildProps = value;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="System.CodeDom.CodeNamespace"/> object 
@@ -177,14 +183,14 @@ namespace NStub.CSharp
             }
 
             /*set
-                        {
-                            if (this.testBuilders != null)
-                            {
-                                throw new InvalidOperationException("The TestBuilders can only set once.");
-                            }
+                                    {
+                                        if (this.testBuilders != null)
+                                        {
+                                            throw new InvalidOperationException("The TestBuilders can only set once.");
+                                        }
 
-                            this.testBuilders = value;
-                        }*/
+                                        this.testBuilders = value;
+                                    }*/
         }
 
         /*public IBuildSystem buildSystem
@@ -306,7 +312,7 @@ namespace NStub.CSharp
                     testClassDeclaration,
                     testObjectName,
                     testObjectMemberField,
-                    BuildProperties);
+                    this.BuildProperties);
 
                 this.GenerateAdditional(setTearContext, testObjectName, testObjectMemberField);
 
@@ -318,7 +324,7 @@ namespace NStub.CSharp
                     testClassDeclaration,
                     codeNamespace,
                     initialMembers,
-                    BuildProperties,
+                    this.BuildProperties,
                     setTearContext);
 
                 // Set out member names correctly 
@@ -367,7 +373,7 @@ namespace NStub.CSharp
         /// Is <c>null</c>, when none is created.
         /// </returns>
         protected virtual ITestObjectBuilder ComposeTestSetupMethod(
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
             string testObjectName,
@@ -533,7 +539,9 @@ namespace NStub.CSharp
         private static void RemoveDuplicatedMembers(CodeTypeDeclaration codeTypeDeclaration)
         {
             // var ctm = codeTypeDeclaration.Members.OfType<CodeTypeMember>().ToArray();
-            var ctm2 = codeTypeDeclaration.Members.OfType<CodeTypeMember>().Distinct(DuplicatedMemberComparerInstance).ToArray();
+            var ctm2 =
+                codeTypeDeclaration.Members.OfType<CodeTypeMember>().Distinct(DuplicatedMemberComparerInstance).ToArray(
+                    );
             codeTypeDeclaration.Members.Clear();
             foreach (var item in ctm2)
             {
@@ -588,7 +596,7 @@ namespace NStub.CSharp
         private void GenerateCodeTypeMember(IMemberBuildContext context)
         {
             var typeMember = context.TypeMember;
-            
+
             // var initialTypeMemberName = typeMember.Name;
             if (typeMember is CodeMemberMethod)
             {
@@ -598,15 +606,15 @@ namespace NStub.CSharp
                     // before stub has created.
                     // PreComputeCodeMemberProperty(typeMember);
                 }*/
-                
                 var builders = this.TestBuilders.GetBuilder(context).ToArray();
+
                 /*foreach (var memberBuilder in builders)
-                {
-                    // Set the test name from the pre computed one.
-                    // var testName = context.TypeMember.Name;
-                    // testName = ComputeTestName(memberBuilder, context, testName);
-                    // context.TypeMember.Name = testName;
-                }*/
+                                {
+                                    // Set the test name from the pre computed one.
+                                    // var testName = context.TypeMember.Name;
+                                    // testName = ComputeTestName(memberBuilder, context, testName);
+                                    // context.TypeMember.Name = testName;
+                                }*/
 
                 // set the test method name to the context key that is the normalized test name.
                 context.TypeMember.Name = context.TestKey;
@@ -661,7 +669,7 @@ namespace NStub.CSharp
             CodeTypeDeclaration testClassDeclaration,
             string testObjectName,
             CodeMemberField testObjectMemberField,
-            BuildDataCollection buildData)
+            BuildDataDictionary buildData)
         {
             var setUpMethod = this.CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
             var testObjectType = testClassDeclaration.UserData["TestObjectClassType"] as Type;
@@ -696,7 +704,7 @@ namespace NStub.CSharp
             CodeTypeDeclaration testClassDeclaration,
             CodeNamespace codeNamespace,
             IEnumerable<CodeTypeMember> initialMembers,
-            BuildDataCollection propertyData,
+            BuildDataDictionary propertyData,
             ISetupAndTearDownCreationContext setTearContext)
         {
             var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();

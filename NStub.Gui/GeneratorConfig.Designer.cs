@@ -67,7 +67,7 @@
             this.lvParameters.Name = "lvParameters";
             this.lvParameters.Size = new System.Drawing.Size(645, 109);
             this.lvParameters.TabIndex = 0;
-            this.lvParameters.SelectedIndexChanged += new System.EventHandler(this.lvParameters_SelectedIndexChanged);
+            this.lvParameters.SelectedIndexChanged += new System.EventHandler(this.LvParametersSelectedIndexChanged);
             // 
             // panel2
             // 
@@ -104,7 +104,7 @@
             this.Controls.Add(this.panel1);
             this.Name = "GeneratorConfig";
             this.Text = "GeneratorConfig";
-            this.Load += new System.EventHandler(this.GeneratorConfig_Load);
+            this.Load += new System.EventHandler(this.GeneratorConfigLoad);
             this.panel1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);

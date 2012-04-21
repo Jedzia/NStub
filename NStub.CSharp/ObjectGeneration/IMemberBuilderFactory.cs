@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ITestBuilderFactory.cs" company="EvePanix">
+// <copyright file="IMemberBuilderFactory.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -10,9 +10,9 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using System;
     using System.Collections.Generic;
     using NStub.CSharp.BuildContext;
-    using System;
     using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
@@ -30,6 +30,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         MethodBuilder MethodBuilder { get; }
         */
+        #region Properties
 
         /// <summary>
         /// Gets the name of the builders.
@@ -41,6 +42,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         IEnumerable<Type> BuilderTypes { get; }
 
+        #endregion
+
         /// <summary>
         /// Tries to get the builder for the specified context.
         /// </summary>
@@ -48,6 +51,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.</returns>
         IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context);
 
-        IBuilderSetupParameters GetParameters(Type sampleDataType, IBuildDataCollection globalProperties);
+        /// <summary>
+        /// Get the parameters for the specified builder type, possibly creating it, if there
+        /// is not yet one in the build data collection.
+        /// </summary>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
+        IMemberBuilderParameters GetParameters(Type builderType, IBuildDataDictionary properties);
     }
 }

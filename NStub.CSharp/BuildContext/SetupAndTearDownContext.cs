@@ -30,7 +30,7 @@ namespace NStub.CSharp.BuildContext
         /// <param name="tearDownMethod">The tear down method.</param>
         /// <param name="creator">The test object member field generator of the test SetUp method.</param>
         public SetupAndTearDownContext(
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             CodeNamespace codeNamespace, 
             CodeTypeDeclaration testClassDeclaration, 
             CodeMemberMethod setUpMethod, 

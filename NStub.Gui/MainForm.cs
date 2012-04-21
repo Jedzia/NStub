@@ -22,6 +22,7 @@ namespace NStub.Gui
     using NStub.CSharp.MbUnit;
     using NStub.CSharp.MbUnitRhinoMocks;
     using NStub.CSharp.ObjectGeneration;
+    using NStub.CSharp.ObjectGeneration.Builders;
     using NStub.Gui.Properties;
     using System.Text;
     using System.ComponentModel;
@@ -41,6 +42,8 @@ namespace NStub.Gui
 
         #region Constructor (Public)
 
+        private readonly LoadAssemblyWorker bg;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
         /// </summary>
@@ -49,8 +52,16 @@ namespace NStub.Gui
             this.InitializeComponent();
             this.cbGenerators.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", global::NStub.Gui.Properties.Settings.Default, "SelectedGenerator", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
 
-            buildData = new BuildDataCollection();
-            buildData.AddDataItem("FromMainForm", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
+            buildData = new BuildDataDictionary();
+            buildData.AddDataItem("FromMainForm", MemberBuilder.EmptyParameters);
+
+            bg = new LoadAssemblyWorker(sbs, this.buildData, this)
+            {
+                BrowseInputAssemblyButton = this._browseInputAssemblyButton,
+                BrowseOutputDirectoryButton = this._browseOutputDirectoryButton,
+                GoButton = this._goButton,
+                Logger = Log,
+            };
         }
 
         #endregion Constructor (Public)
@@ -101,19 +112,19 @@ namespace NStub.Gui
 
         private static readonly IBuildSystem sbs = new StandardBuildSystem();
         //private TestBuilder agb;
-        private readonly IBuildDataCollection buildData;
+        private readonly IBuildDataDictionary buildData;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
             Dumper();
 
-            var bg = new LoadAssemblyWorker(sbs, this.buildData, this)
+            /*var bg = new LoadAssemblyWorker(sbs, this.buildData, this)
             {
-               _browseInputAssemblyButton = this._browseInputAssemblyButton,
-               _browseOutputDirectoryButton = this._browseOutputDirectoryButton,
-               _goButton = this._goButton,
+               BrowseInputAssemblyButton = this._browseInputAssemblyButton,
+               BrowseOutputDirectoryButton = this._browseOutputDirectoryButton,
+               GoButton = this._goButton,
                 Logger = Log,
-            };
+            };*/
 
             string outputFolder = this._outputDirectoryTextBox.Text;
             Type generatorType = (Type)cbGenerators.SelectedItem;
@@ -300,7 +311,7 @@ namespace NStub.Gui
             GeneratorConfigLoad(this.buildData);
         }
 
-        private void GeneratorConfigLoad(IBuildDataCollection properties)
+        private void GeneratorConfigLoad(IBuildDataDictionary properties)
         {
             // {[NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder, NStub.CSharp.ObjectGeneration.BuildHandler]}
             var mf = memberfactory as MemberBuilderFactory;

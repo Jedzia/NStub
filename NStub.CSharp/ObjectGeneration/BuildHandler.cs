@@ -23,8 +23,8 @@ namespace NStub.CSharp.ObjectGeneration
         #region Fields
 
         private readonly Func<IMemberBuildContext, bool> handler;
-        private readonly Type type;
         private readonly Type parameterDataType;
+        private readonly Type type;
 
         #endregion
 
@@ -34,14 +34,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="BuildHandler"/> class.
         /// </summary>
         /// <param name="type">The type of the <see cref="IMemberBuilder"/> worker.</param>
-        /// <param name="handler">The handler that can determine if the <paramref name="type"/> can 
+        /// <param name="handler">The handler that can determine if the <paramref name="type"/> can
         /// accept an <see cref="IMemberBuildContext"/> order.</param>
+        /// <param name="parameterDataType">Type of the associated parameter data.</param>
         public BuildHandler(Type type, Func<IMemberBuildContext, bool> handler, Type parameterDataType)
         {
             Guard.CanBeAssigned(() => type, type, typeof(IMemberBuilder));
             Guard.NotNull(() => handler, handler);
-            //Guard.NotNull(() => parameterDataType, parameterDataType);
-            Guard.CanBeAssigned(() => parameterDataType, parameterDataType, typeof(IBuilderSetupParameters));
+
+            // Guard.NotNull(() => parameterDataType, parameterDataType);
+            Guard.CanBeAssigned(() => parameterDataType, parameterDataType, typeof(IMemberBuilderParameters));
 
             this.type = type;
             this.handler = handler;
@@ -64,6 +66,20 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
+        /// Gets the type of the parameter data.
+        /// </summary>
+        /// <value>
+        /// The type of the parameter data.
+        /// </value>
+        public Type ParameterDataType
+        {
+            get
+            {
+                return this.parameterDataType;
+            }
+        }
+
+        /// <summary>
         /// Gets the associated <see cref="IMemberBuilder"/> type that can handle the request specified in the <see cref="CanHandle"/> method.
         /// </summary>
         public Type Type
@@ -71,14 +87,6 @@ namespace NStub.CSharp.ObjectGeneration
             get
             {
                 return this.type;
-            }
-        }
-
-        public Type ParameterDataType
-        {
-            get
-            {
-                return this.parameterDataType;
             }
         }
 

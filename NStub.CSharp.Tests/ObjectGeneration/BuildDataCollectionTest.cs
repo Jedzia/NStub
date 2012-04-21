@@ -9,7 +9,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     public partial class BuildDataCollectionTest
     {
         
-        private BuildDataCollection testObject;
+        private BuildDataDictionary testObject;
         
         public BuildDataCollectionTest()
         {
@@ -18,7 +18,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         [SetUp()]
         public void SetUp()
         {
-            this.testObject = new BuildDataCollection();
+            this.testObject = new BuildDataDictionary();
         }
         
         [TearDown()]
@@ -30,7 +30,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         [Test()]
         public void ConstructTest()
         {
-            this.testObject = new BuildDataCollection();
+            this.testObject = new BuildDataDictionary();
             // unit test for Empty list. Always has the 'General' category.
             Assert.AreEqual(1, testObject.Count);
             Assert.IsNotEmpty(testObject);

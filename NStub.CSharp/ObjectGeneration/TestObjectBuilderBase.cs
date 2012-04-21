@@ -39,7 +39,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectName">The name of the test object.</param>
         /// <param name="testObjectType">Type of the test object.</param>
         protected TestObjectBuilderBase(
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
             string testObjectName,
@@ -76,7 +76,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Gets the build data dictionary that stores generation wide category/key/value properties.
         /// </summary>
-        public BuildDataCollection BuildData { get; private set; }
+        public BuildDataDictionary BuildData { get; private set; }
 
         /// <summary>
         /// Gets the method where the test object is initialized.

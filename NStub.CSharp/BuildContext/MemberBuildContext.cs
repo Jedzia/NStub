@@ -10,10 +10,10 @@
 
 namespace NStub.CSharp.BuildContext
 {
-    using System.CodeDom;
-    using NStub.CSharp.ObjectGeneration;
     using System;
+    using System.CodeDom;
     using System.Reflection;
+    using NStub.CSharp.ObjectGeneration;
 
     /// <summary>
     /// Implementation of a data class used to create new unit tests.
@@ -31,14 +31,14 @@ namespace NStub.CSharp.BuildContext
         /// <param name="buildData">The additional build data lookup.</param>
         /// <param name="setUpTearDownContext">Contains data specific to SetUp and TearDown test-methods.</param>
         public MemberBuildContext(
-            CodeNamespace codeNamespace, 
-            CodeTypeDeclaration testClassDeclaration, 
+            CodeNamespace codeNamespace,
+            CodeTypeDeclaration testClassDeclaration,
             CodeTypeMember typeMember,
-            BuildDataCollection buildData,
+            BuildDataDictionary buildData,
             ISetupAndTearDownContext setUpTearDownContext)
             : base(
-                codeNamespace, 
-                testClassDeclaration, 
+                codeNamespace,
+                testClassDeclaration,
                 typeMember,
                 buildData,
                 setUpTearDownContext)
@@ -46,6 +46,19 @@ namespace NStub.CSharp.BuildContext
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets the test method info for this test object member.
+        /// </summary>
+        /// <param name="typeMember">The type member that hold the User data of the current test object member.</param>
+        /// <returns>
+        /// The test method info for this test object member.
+        /// </returns>
+        protected override MethodInfo GetTestMethodInfo(CodeTypeMember typeMember)
+        {
+            // Get the RuntimeMethodInfo of the current test method.
+            return (MethodInfo)typeMember.UserData["MethodMemberInfo"];
+        }
 
         /// <summary>
         /// Gets the type of the object under test.
@@ -59,19 +72,5 @@ namespace NStub.CSharp.BuildContext
             // Get the RuntimeType of the test class.
             return (Type)TestClassDeclaration.UserData["TestObjectClassType"];
         }
-
-        /// <summary>
-        /// Gets the test method info for this test object member.
-        /// </summary>
-        /// <param name="typeMember">The type member that hold the Userdata of the current test object member.</param>
-        /// <returns>
-        /// The test method info for this test object member.
-        /// </returns>
-        protected override MethodInfo GetTestMethodInfo(CodeTypeMember typeMember)
-        {
-            // Get the RuntimeMethodInfo of the current test method.
-            return (MethodInfo)typeMember.UserData["MethodMemberInfo"];
-        }
-
     }
 }
