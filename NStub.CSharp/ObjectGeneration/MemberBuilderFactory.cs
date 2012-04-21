@@ -18,6 +18,7 @@ namespace NStub.CSharp.ObjectGeneration
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
+    using System.Reflection;
 
     /// <summary>
     /// Provides builders for test method generation. 
@@ -234,6 +235,78 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
+        public void DeserializeAll(string xml, IBuildDataDictionary properties)
+        {
+            // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+            var doc = new XmlDocument();
+            doc.LoadXml(xml);
+            foreach (XmlElement item in doc["BuilderData"])
+            {
+                SetParameters(item.OuterXml, properties);
+            }
+            var firstChild = doc.FirstChild;
+
+            return;
+            // var asd = handlers;
+            /*IBuildHandler result = null;
+            foreach (var item in this.handlers.Values)
+            {
+                if (item.Type.FullName == firstChild.Name)
+                {
+                    result = item;
+                }
+            }
+
+            if (result == null)
+            {
+                // Todo: or throw?
+                //return MemberBuilder.EmptyParameters;
+            }
+
+            var paraType = result.ParameterDataType;
+            var paraInstance = Activator.CreateInstance(paraType);
+            var setupPara = (IMemberBuilderParameters)paraInstance;
+            try
+            {
+                setupPara.Deserialize(firstChild.InnerXml);
+                var propertyKey = string.Empty + result.Type.FullName;
+                IBuilderData property;
+
+                // var found = properties.TryGetValue(propertyKey, out property);
+                // if (found)
+                // {
+
+                // Todo replaces
+                properties.AddDataItem(propertyKey, setupPara, true);
+
+                // return setupPara;
+                // }
+                // properties.AddDataItem(propertyKey, setupPara);
+            }
+            catch (Exception ex)
+            {
+                var message = string.Format(
+                    "Problem building {0} from serialization data.{1}{2}{3}",
+                    result.Type.FullName,
+                    Environment.NewLine,
+                    firstChild.InnerXml,
+                    Environment.NewLine);
+                throw new InvalidCastException(message, ex);
+            }
+
+            //return setupPara;
+             */
+        }
+
+        /// <summary>
+        /// Set the parameters in the properties storage from a specified xml representation of the data.
+        /// </summary>
+        /// <param name="xml">The xml representation of the data.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
         public IMemberBuilderParameters SetParameters(string xml, IBuildDataDictionary properties)
         {
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
@@ -258,11 +331,37 @@ namespace NStub.CSharp.ObjectGeneration
             }
 
             var paraType = result.ParameterDataType;
-            var paraInstance = Activator.CreateInstance(paraType);
+
+            var xxxx = paraType.BaseType.GetGenericTypeDefinition();
+            var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
+            //var serializer = serializer2.GetMethod("Deserialize", new Type[] { typeof(string) });
+            //var methods = serializer2.GetMethods(BindingFlags.Static | BindingFlags.Public);
+
+            //var methods2 = paraType.GetMethods();
+
+            //typeof(BuilderParametersBase)
+
+            //var mmm = typeof(BuilderParametersBase<PropertyBuilderUserParameters>).GetMethod("Deserialize", new Type[] { typeof(string) });
+            //var srlr = serializer2.GetMethod("Deserialize", new Type[] { typeof(string) });
+
+            var paraInstance = serializer2
+                .MakeGenericType(paraType)
+                .GetMethod("Deserialize", new Type[] { typeof(string) })
+                .Invoke(null, new object[] { firstChild.InnerXml });
+
+            //var paraInstance = Activator.CreateInstance(paraType);
+
+            //var xsrlr = srlr.MakeGenericMethod(new Type[] { paraType });
+            //var xsrlrm = srlr.Invoke(null, new object[] { firstChild.InnerXml });
+
+            //PropertyBuilderUserParameters.Deserialize("aaskh");
+            //var srlr = serializer.MakeGenericMethod(new Type[] { paraType });
+            //var rrr = mmm.Invoke(null, new object[] { firstChild.InnerXml });
+
             var setupPara = (IMemberBuilderParameters)paraInstance;
             try
             {
-                setupPara.Deserialize(firstChild.InnerXml);
+                //setupPara.Deserialize(firstChild.InnerXml);
                 var propertyKey = string.Empty + result.Type.FullName;
                 IBuilderData property;
 

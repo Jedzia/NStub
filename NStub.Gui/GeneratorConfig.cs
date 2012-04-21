@@ -89,7 +89,7 @@ namespace NStub.Gui
             var sampleXmlData =
                 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
                 @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
-                @"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
+                @"    <MethodSuffix>BistEinAlterSack</MethodSuffix>" + Environment.NewLine +
                 @"    <UseDings>false</UseDings>" + Environment.NewLine +
                 @"    <Moep>0</Moep>" + Environment.NewLine +
                 @"    <Enabled>true</Enabled>" + Environment.NewLine +
@@ -97,7 +97,7 @@ namespace NStub.Gui
                 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
 
             /*var xxxx =*/
-            this.memberfactory.SetParameters(sampleXmlData, this.properties);
+            //this.memberfactory.SetParameters(sampleXmlData, this.properties);
 
             foreach (var builderType in this.memberfactory.BuilderTypes)
             {

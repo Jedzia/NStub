@@ -243,16 +243,16 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         #endregion
 
-        /// <summary>
+        /*/// <summary>
         /// Deserializes the specified XML to the current instance.
         /// </summary>
         /// <param name="xml">The XML text, representing the data.</param>
-        public new void Deserialize(string xml)
+        public new virtual void Deserialize(string xml)
         {
             T deserObj;
             Deserialize(xml, out deserObj);
             this.Enabled = deserObj.Enabled;
-        }
+        }*/
 
         /// <summary>
         /// Gets the data of this instance.

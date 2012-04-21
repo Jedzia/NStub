@@ -15,10 +15,9 @@
         <xs:element name="Parameters" msprop:Generator_UserTableName="Parameters" msprop:Generator_RowDeletedName="ParametersRowDeleted" msprop:Generator_RowChangedName="ParametersRowChanged" msprop:Generator_RowClassName="ParametersRow" msprop:Generator_RowChangingName="ParametersRowChanging" msprop:Generator_RowEvArgName="ParametersRowChangeEvent" msprop:Generator_RowEvHandlerName="ParametersRowChangeEventHandler" msprop:Generator_TableClassName="ParametersDataTable" msprop:Generator_TableVarName="tableParameters" msprop:Generator_RowDeletingName="ParametersRowDeleting" msprop:Generator_TablePropName="Parameters">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="MethodSuffix" msprop:Generator_UserColumnName="MethodSuffix" msprop:Generator_ColumnVarNameInTable="columnMethodSuffix" msprop:Generator_ColumnPropNameInRow="MethodSuffix" msprop:Generator_ColumnPropNameInTable="MethodSuffixColumn" type="xs:string" minOccurs="0" />
-              <xs:element name="UseDings" msprop:Generator_UserColumnName="UseDings" msprop:Generator_ColumnVarNameInTable="columnUseDings" msprop:Generator_ColumnPropNameInRow="UseDings" msprop:Generator_ColumnPropNameInTable="UseDingsColumn" type="xs:boolean" />
-              <xs:element name="Moep" msprop:Generator_UserColumnName="Moep" msprop:Generator_ColumnVarNameInTable="columnMoep" msprop:Generator_ColumnPropNameInRow="Moep" msprop:Generator_ColumnPropNameInTable="MoepColumn" type="xs:int" />
-              <xs:element name="Enabled" msprop:Generator_UserColumnName="Enabled" msprop:Generator_ColumnVarNameInTable="columnEnabled" msprop:Generator_ColumnPropNameInRow="Enabled" msprop:Generator_ColumnPropNameInTable="EnabledColumn" type="xs:boolean" />
+              <xs:element name="MethodSuffix" msprop:Generator_UserColumnName="MethodSuffix" msprop:Generator_ColumnPropNameInRow="MethodSuffix" msprop:Generator_ColumnVarNameInTable="columnMethodSuffix" msprop:Generator_ColumnPropNameInTable="MethodSuffixColumn" type="xs:string" minOccurs="0" />
+              <xs:element name="UseDings" msprop:Generator_UserColumnName="UseDings" msprop:Generator_ColumnPropNameInRow="UseDings" msprop:Generator_ColumnVarNameInTable="columnUseDings" msprop:Generator_ColumnPropNameInTable="UseDingsColumn" type="xs:boolean" />
+              <xs:element name="Moep" msprop:Generator_UserColumnName="Moep" msprop:Generator_ColumnPropNameInRow="Moep" msprop:Generator_ColumnVarNameInTable="columnMoep" msprop:Generator_ColumnPropNameInTable="MoepColumn" type="xs:int" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

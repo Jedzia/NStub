@@ -256,6 +256,8 @@ namespace NStub.Gui
             Settings.Default.Save();
 
             var xml = this.memberfactory.SerializeAllSetupData(this.buildData);
+            var filename = Path.Combine(Application.StartupPath, "Parameters.xml");
+            File.WriteAllText(filename, xml);
             //this.buildData
         }
 
@@ -327,14 +329,18 @@ namespace NStub.Gui
 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
 @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
 @"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
-@"    <UseDings>false</UseDings>" + Environment.NewLine +
+@"    <UseDings>true</UseDings>" + Environment.NewLine +
 @"    <Moep>0</Moep>" + Environment.NewLine +
 @"    <Enabled>false</Enabled>" + Environment.NewLine +
 @"  </PropertyBuilderUserParameters>" + Environment.NewLine +
 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
 
             /*var xxxx =*/
-            mf.SetParameters(sampleXmlData, properties);
+            //mf.SetParameters(sampleXmlData, properties);
+
+            var filename = Path.Combine(Application.StartupPath, "Parameters.xml");
+            var xml = File.ReadAllText(filename);
+            mf.DeserializeAll(xml, properties);
         }
 
 

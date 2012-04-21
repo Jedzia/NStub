@@ -36,7 +36,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// Deserializes the specified XML to the current instance.
         /// </summary>
         /// <param name="xml">The XML text, representing the data.</param>
-        void Deserialize(string xml);
+        //void Deserialize(string xml);
 
         /// <summary>
         /// Serializes this instance to a XML string.
