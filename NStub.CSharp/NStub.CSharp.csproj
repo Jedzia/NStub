@@ -86,13 +86,13 @@
     <Compile Include="ObjectGeneration\Builders\BuilderSerializer.cs" />
     <Compile Include="ObjectGeneration\Builders\DefaultMethodEraser.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilderParameters.cs" />
-    <Compile Include="ObjectGeneration\Builders\PropertyBuilderUser.Designer.cs">
+    <Compile Include="ObjectGeneration\Builders\BuilderParameter.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>PropertyBuilderUser.xsd</DependentUpon>
+      <DependentUpon>BuilderParameter.xsd</DependentUpon>
     </Compile>
     <Compile Include="ObjectGeneration\Builders\EmptyBuilderParameters.cs" />
-    <Compile Include="ObjectGeneration\Builders\PropertyBuilderUserParameters.cs" />
+    <Compile Include="ObjectGeneration\Builders\BuilderParameterPropertyBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\StaticMethodBuilder.cs" />
     <Compile Include="ObjectGeneration\BuildHandler.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposer.cs" />
@@ -163,11 +163,11 @@
     <None Include="..\Settings.StyleCop">
       <Link>Settings.StyleCop</Link>
     </None>
-    <None Include="ObjectGeneration\Builders\PropertyBuilderUser.xsd">
+    <None Include="ObjectGeneration\Builders\BuilderParameter.xsd">
       <SubType>
       </SubType>
       <Generator>Xsd2CodeCustomTool</Generator>
-      <LastGenOutput>PropertyBuilderUser.Designer.cs</LastGenOutput>
+      <LastGenOutput>BuilderParameter.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

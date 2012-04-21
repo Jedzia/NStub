@@ -98,7 +98,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var propertyData = context.GetBuilderData("Property");
 
             //var userData = context.BuildData.General[this.GetType().FullName] as PropertyBuilderUserParameters;
-            var userData = context.GetBuilderData<PropertyBuilderUserParameters>(this);
+            var userData = context.GetBuilderData<BuilderParameterPropertyBuilder>(this);
             if (userData != null)
             {
             }

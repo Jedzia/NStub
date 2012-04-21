@@ -69,14 +69,14 @@ namespace NStub.Gui
 
         #endregion
 
-        private static PropertyBuilderUser TestXmlSeria()
+        private static BuilderParameter TestXmlSeria()
         {
-            var pb = new PropertyBuilderUser();
+            var pb = new BuilderParameter();
 
-            var pbps = new PropertyBuilderUserParameters { MethodSuffix = "OlderDepp", Moep = 42, UseDings = false };
+            var pbps = new BuilderParameterPropertyBuilder { MethodSuffix = "OlderDepp", Moep = 42, UseDings = false };
             pb.Items.Add(pbps);
 
-            pbps = new PropertyBuilderUserParameters { MethodSuffix = "OtherParameter", UseDings = true };
+            pbps = new BuilderParameterPropertyBuilder { MethodSuffix = "OtherParameter", UseDings = true };
             pb.Items.Add(pbps);
             return pb;
         }
