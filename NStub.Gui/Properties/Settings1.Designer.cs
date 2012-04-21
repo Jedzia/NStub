@@ -70,5 +70,17 @@ namespace NStub.Gui.Properties {
                 this["SelectedGenerator"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GoInstall {
+            get {
+                return ((bool)(this["GoInstall"]));
+            }
+            set {
+                this["GoInstall"] = value;
+            }
+        }
     }
 }

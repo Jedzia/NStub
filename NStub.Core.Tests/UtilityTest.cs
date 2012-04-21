@@ -1,4 +1,4 @@
-using NUnit.Framework;
+using global::MbUnit.Framework;
 
 namespace NStub.Core.Tests
 {

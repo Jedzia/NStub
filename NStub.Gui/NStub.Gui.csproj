@@ -62,10 +62,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuildPropertyComponent.cs">
+    <Compile Include="Components\BuildPropertyComponent.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="BuildPropertyComponent.Designer.cs">
+    <Compile Include="Components\BuildPropertyComponent.Designer.cs">
       <DependentUpon>BuildPropertyComponent.cs</DependentUpon>
     </Compile>
     <Compile Include="GeneratorConfig.cs">
@@ -75,8 +75,8 @@
       <DependentUpon>GeneratorConfig.cs</DependentUpon>
     </Compile>
     <Compile Include="GeneratorDataMapper.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="LoadAssemblyWorker.cs">
+    <Compile Include="Util\Dumper\Extensions.cs" />
+    <Compile Include="Components\LoadAssemblyWorker.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -86,7 +86,7 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MyObjectDumper.cs" />
-    <Compile Include="ObjectDumper.cs" />
+    <Compile Include="Util\Dumper\ObjectDumper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs" />
@@ -96,6 +96,8 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Util\FormExtensions.cs" />
+    <Compile Include="Components\SettingsHelperComponent.cs" />
+    <Compile Include="Util\SettingsHelper.cs" />
     <Compile Include="Util\ThreadingExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

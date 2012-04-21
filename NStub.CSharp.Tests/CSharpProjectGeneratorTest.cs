@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 //using System.IO;
 using System.Reflection;
-using NUnit.Framework;
+using global::MbUnit.Framework;
 using NStub.Core;
 
 namespace NStub.CSharp.Tests
@@ -68,7 +68,7 @@ namespace NStub.CSharp.Tests
 		/// Performs the initial setup for the entire test fixture.  Sets our
 		/// output directory to a valid, temporary path.
 		/// </summary>
-		[TestFixtureSetUp]
+		[FixtureSetUp]
 		public void TestFixtureSetUp()
 		{
 			_outputDirectory = System.IO.Path.GetTempPath();
@@ -82,7 +82,7 @@ namespace NStub.CSharp.Tests
 		/// Performs the final cleanup following execution of all of the tests.
 		/// If the temporary output directory still exists, it will be removed.
 		/// </summary>
-		[TestFixtureTearDown]
+		[FixtureTearDown]
 		public void TestFixtureTearDown()
 		{
 			/*if (Directory.Exists(_outputDirectory))

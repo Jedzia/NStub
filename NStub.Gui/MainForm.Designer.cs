@@ -49,6 +49,7 @@ namespace NStub.Gui
             this.logtimer = new System.Windows.Forms.Timer(this.components);
             this.bnConfigGenerator = new System.Windows.Forms.Button();
             this.bpc = new NStub.Gui.BuildPropertyComponent(this.components);
+            this.settings = new NStub.Gui.SettingsHelperComponent(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -227,6 +228,14 @@ namespace NStub.Gui
             this.bnConfigGenerator.UseVisualStyleBackColor = true;
             this.bnConfigGenerator.Click += new System.EventHandler(this.bnConfigGenerator_Click);
             // 
+            // bpc
+            // 
+            this.bpc.Logger = null;
+            // 
+            // settings
+            // 
+            this.settings.MainForm = this;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -276,6 +285,7 @@ namespace NStub.Gui
         private System.Windows.Forms.Timer logtimer;
         private System.Windows.Forms.Button bnConfigGenerator;
         private BuildPropertyComponent bpc;
+        private SettingsHelperComponent settings;
 
 	}
 }

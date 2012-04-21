@@ -1,7 +1,7 @@
 using System;
 using System.CodeDom;
 using System.IO;
-using NUnit.Framework;
+using global::MbUnit.Framework;
 using Rhino.Mocks;
 
 namespace NStub.Core.Tests
@@ -29,7 +29,7 @@ namespace NStub.Core.Tests
 		/// an temporary output directory for code generation.  This directory
 		/// will be deleted during cleanup.
 		/// </summary>
-		[TestFixtureSetUp]
+		[FixtureSetUp]
 		public void TestFixtureSetUp()
 		{
 			_outputDirectory = Path.GetTempPath();
@@ -42,7 +42,7 @@ namespace NStub.Core.Tests
 		/// The scratch ouput directory created for testing will be 
 		/// completely removed.
 		/// </summary>
-		[TestFixtureTearDown]
+		[FixtureTearDown]
 		public void TestFixtureTearDown()
 		{
 			if (Directory.Exists(_outputDirectory))

@@ -52,6 +52,7 @@ namespace NStub.Gui
         public MainForm()
         {
             this.InitializeComponent();
+            this.settings.Settings = Settings.Default;
             this.cbGenerators.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", global::NStub.Gui.Properties.Settings.Default, "SelectedGenerator", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             bpc.Logger = this;
 
@@ -259,21 +260,19 @@ namespace NStub.Gui
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Settings.Default.Save();
+            // Settings.Default.Save();
             // bpc.SaveBuildPropertyData();
         }
 
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            Settings.Default.Reload();
+            // Settings.Default.Reload();
             if (!string.IsNullOrEmpty(this._inputAssemblyTextBox.Text))
             {
                 this._browseOutputDirectoryButton.Enabled = true;
                 this._inputAssemblyOpenFileDialog.FileName = this._inputAssemblyTextBox.Text;
 
-                // Cursor swapCursor = Cursor.Current;
-                // Cursor.Current = Cursors.WaitCursor;
                 try
                 {
                     this.LoadAssembly();
@@ -298,13 +297,10 @@ namespace NStub.Gui
 
             AppDomain ad = AppDomain.CurrentDomain;
 
-            // ad.AssemblyResolve += new ResolveEventHandler(ad_AssemblyResolve);
-            // ad.TypeResolve += new ResolveEventHandler(ad_TypeResolve);
-
             this.cbGenerators.Items.Add(typeof(CSharpCodeGenerator));
             this.cbGenerators.Items.Add(typeof(CSharpMbUnitCodeGenerator));
             this.cbGenerators.Items.Add(typeof(CSharpMbUnitRhinoMocksCodeGenerator));
-            // this.cbGenerators.SelectedIndex = 2;
+            
             this.cbGenerators.SelectedIndex = global::NStub.Gui.Properties.Settings.Default.SelectedGenerator;
             ad.AssemblyResolve += this.ad_AssemblyResolve;
 

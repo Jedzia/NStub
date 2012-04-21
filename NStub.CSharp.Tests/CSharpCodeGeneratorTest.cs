@@ -1,7 +1,7 @@
 using System;
 using System.CodeDom;
 using System.IO;
-using NUnit.Framework;
+using global::MbUnit.Framework;
 using NStub.Core;
 using NStub.CSharp.ObjectGeneration;
 
@@ -28,7 +28,7 @@ namespace NStub.CSharp.Tests
 		/// Performs the intial setup for the entire test fixture.  Sets our
 		/// output directory to a valid, temporary path.
 		/// </summary>
-		[TestFixtureSetUp]
+		[FixtureSetUp]
 		public void TestFixtureSetUp()
 		{
 			_outputDirectory = Path.GetTempPath();
@@ -42,7 +42,7 @@ namespace NStub.CSharp.Tests
 		/// Performs the final tear down after all tests in the test fixture
 		/// have executed.  Removes our output directory from the system.
 		/// </summary>
-		[TestFixtureTearDown]
+		[FixtureTearDown]
 		public void TestFixtureTearDown()
 		{
 			if (Directory.Exists(_outputDirectory))
