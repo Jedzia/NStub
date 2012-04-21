@@ -32,6 +32,8 @@ namespace NStub.CSharp.ObjectGeneration
         
         Type ParameterDataType { get; }
 
+        string Description { get; }
+
         #endregion
 
         /// <summary>

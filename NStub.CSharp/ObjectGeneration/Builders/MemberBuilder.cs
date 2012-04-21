@@ -10,8 +10,46 @@
 
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
+    using System;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
+
+    /// <summary>
+    /// Base class for a test method processing class.
+    /// </summary>
+    public abstract class MultiBuilder : MemberBuilder, IMultiBuilder
+    {
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MultiBuilder"/> class.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        protected MultiBuilder(IMemberSetupContext context)
+            : base(context)
+        {
+        }
+
+        #region IMultiBuilder Members
+
+        /// <summary>
+        /// Gets the identification of the Builder.
+        /// </summary>
+        public Guid Id
+        {
+            get { return Guid.NewGuid(); }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Builds the test method member with the specified context.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <returns>
+        ///   <c>true</c> on success.
+        /// </returns>
+        protected abstract override bool BuildMember(IMemberBuildContext context);
+    }
 
     /// <summary>
     /// Base class for a test method processing class.
@@ -24,7 +62,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         public static EmptyBuildParameters EmptyParameters
         {
             get { return MemberBuilder.defaults; }
-        } 
+        }
 
 
         #region Constructors

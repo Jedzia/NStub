@@ -11,9 +11,11 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System;
+    using System.Linq;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
+    using System.ComponentModel;
 
     /// <summary>
     /// Checks if a registered <see cref="IMemberBuilder"/> can handle a <see cref="IMemberBuildContext"/> request.
@@ -23,6 +25,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Fields
 
         private readonly Func<IMemberBuildContext, bool> handler;
+        private readonly string description;
         private readonly Type parameterDataType;
         private readonly Type type;
 
@@ -52,9 +55,14 @@ namespace NStub.CSharp.ObjectGeneration
             CheckForAttributes(parameterDataType);
         }
 
-        private static void CheckForAttributes(Type parameterDataType)
+        private static string CheckForAttributes(Type parameterDataType)
         {
-            var description = parameterDataType.GetCustomAttributes(false);
+            var descriptionAttrs = (DescriptionAttribute[])parameterDataType.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            if (descriptionAttrs != null)
+            {
+                return descriptionAttrs.Select(e=>e.Description).FirstOrDefault();
+            }
+            return "";
         }
 
         #endregion
@@ -69,6 +77,14 @@ namespace NStub.CSharp.ObjectGeneration
             get
             {
                 return this.handler;
+            }
+        }
+
+        public string Description
+        {
+            get
+            {
+                return this.description;
             }
         }
 

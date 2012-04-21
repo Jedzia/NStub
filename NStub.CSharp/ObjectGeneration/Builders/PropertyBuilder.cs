@@ -12,12 +12,14 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
     using System.CodeDom;
+    using System.ComponentModel;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
 
     /// <summary>
     /// Test method generator for property type members.
     /// </summary>
+    [Description("Whuut a nerdy builder.")]
     public class PropertyBuilder : MemberBuilder
     {
         #region Constructors
