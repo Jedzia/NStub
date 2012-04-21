@@ -38,6 +38,15 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     public partial class PropertyBuilderUserParameters : EmptyBuilderParametersBase<PropertyBuilderUserParameters> {
         
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        private string methodSuffixField;
+        
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        private bool useDingsField;
+        
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        private int moepField;
+        
     public string MethodSuffix {get; set;}
 
     public bool UseDings {get; set;}

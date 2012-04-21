@@ -158,16 +158,11 @@
     <None Include="..\Settings.StyleCop">
       <Link>Settings.StyleCop</Link>
     </None>
-    <None Include="ObjectGeneration\Builders\PropertyBuilderUser.xsc">
-      <DependentUpon>PropertyBuilderUser.xsd</DependentUpon>
-    </None>
     <None Include="ObjectGeneration\Builders\PropertyBuilderUser.xsd">
-      <SubType>Designer</SubType>
+      <SubType>
+      </SubType>
       <Generator>Xsd2CodeCustomTool</Generator>
       <LastGenOutput>PropertyBuilderUser.Designer.cs</LastGenOutput>
-    </None>
-    <None Include="ObjectGeneration\Builders\PropertyBuilderUser.xss">
-      <DependentUpon>PropertyBuilderUser.xsd</DependentUpon>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
