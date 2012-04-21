@@ -118,7 +118,7 @@ namespace NStub.CSharp.ObjectGeneration
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
             // Todo: maybe cache em.
-            foreach(var buildHandler in this.handlers.Values)
+            foreach (var buildHandler in this.handlers.Values)
             {
                 var canHandleContext = buildHandler.CanHandle(context);
                 if (!canHandleContext)
@@ -181,12 +181,13 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
-        public string SerializeParametersForBuilderType(IBuildDataDictionary properties)
+        public string SerializeAllSetupData(IBuildDataDictionary properties)
         {
+            Guard.NotEmpty(() => properties, properties);
             var xmlDoc = new XmlDocument();
             var root = xmlDoc.CreateElement("BuilderData");
             xmlDoc.AppendChild(root);
-            foreach(var item in this.handlers.Values)
+            foreach (var item in this.handlers.Values)
             {
                 var setupPara = this.GetParameters(item.Type, properties);
                 var setupParaType = item.ParameterDataType;
@@ -242,7 +243,7 @@ namespace NStub.CSharp.ObjectGeneration
 
             // var asd = handlers;
             IBuildHandler result = null;
-            foreach(var item in this.handlers.Values)
+            foreach (var item in this.handlers.Values)
             {
                 if (item.Type.FullName == firstChild.Name)
                 {
@@ -262,15 +263,27 @@ namespace NStub.CSharp.ObjectGeneration
             try
             {
                 setupPara.Deserialize(firstChild.InnerXml);
-                properties.AddDataItem(string.Empty + result.Type.FullName, setupPara);
+                var propertyKey = string.Empty + result.Type.FullName;
+                IBuilderData property;
+
+                // var found = properties.TryGetValue(propertyKey, out property);
+                // if (found)
+                // {
+                
+                // Todo replaces
+                properties.AddDataItem(propertyKey, setupPara, true);
+               
+                // return setupPara;
+                // }
+                // properties.AddDataItem(propertyKey, setupPara);
             }
             catch (Exception ex)
             {
                 var message = string.Format(
-                    "Problem building {0} from serialization data.{1}{2}{3}", 
-                    result.Type.FullName, 
-                    Environment.NewLine, 
-                    firstChild.InnerXml, 
+                    "Problem building {0} from serialization data.{1}{2}{3}",
+                    result.Type.FullName,
+                    Environment.NewLine,
+                    firstChild.InnerXml,
                     Environment.NewLine);
                 throw new InvalidCastException(message, ex);
             }

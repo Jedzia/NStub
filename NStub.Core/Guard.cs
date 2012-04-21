@@ -11,9 +11,11 @@
 namespace NStub.Core
 {
     using System;
+    using System.Linq;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq.Expressions;
+    using System.Collections;
 
     /// <summary>
     /// Expression style argument checking.
@@ -118,6 +120,33 @@ namespace NStub.Core
         {
             NotNull(reference, value);
             if (value.Length == 0)
+            {
+                throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
+            }
+        }
+
+        /// <summary>
+        /// Ensures the given list <paramref name="values"/> is not <c>null</c> or empty.
+        /// Throws <see cref="ArgumentNullException"/> in the first case, or
+        /// <see cref="ArgumentException"/> in the latter.
+        /// </summary>
+        /// <param name="reference">The reference.</param>
+        /// <param name="values">The values.</param>
+        /// <exception cref="ArgumentException">Argument list cannot be <c>null</c> or empty</exception>
+        public static void NotEmpty<T>(Expression<Func<T>> reference, IEnumerable values)
+        {
+            if (values == null)
+            {
+                throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
+            }
+            
+            int valueCount = 0;
+            foreach (var item in values)
+            {
+                valueCount++;
+            }
+            
+            if (valueCount == 0)
             {
                 throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
             }

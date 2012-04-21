@@ -131,12 +131,36 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
+        /// Adds the specified data item to the "General" topic of this list.
+        /// </summary>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="item">The data item to add.</param>
+        /// <param name="replace">if set to <c>true</c> replaces the data if present.</param>
+        public void AddDataItem(string key, IBuilderData item, bool replace)
+        {
+            this.AddDataItem("General", key, item, replace);
+        }
+
+
+        /// <summary>
         /// Adds the specified data item to the specified category of this list.
         /// </summary>
         /// <param name="category">The category of the item.</param>
         /// <param name="key">The key of the item.</param>
         /// <param name="item">The data item to add.</param>
         public void AddDataItem(string category, string key, IBuilderData item)
+        {
+            this.AddDataItem(category, key, item, false);
+        }
+
+        /// <summary>
+        /// Adds the specified data item to the specified category of this list.
+        /// </summary>
+        /// <param name="category">The category of the item.</param>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="item">The data item to add.</param>
+        /// <param name="replace">if set to <c>true</c> replaces the data if present.</param>
+        public void AddDataItem(string category, string key, IBuilderData item, bool replace)
         {
             IDictionary<string, IBuilderData> catLookup;
             var found = this.TryGetCategory(category, out catLookup);
@@ -146,7 +170,21 @@ namespace NStub.CSharp.ObjectGeneration
                 this.data.Add(category, catLookup);
             }
 
-            catLookup.Add(key, item);
+            if (!replace)
+            {
+                catLookup.Add(key, item);
+            }
+            else
+            {
+                if(catLookup.ContainsKey(key))
+                {
+                    catLookup[key] = item;
+                }
+                else
+                {
+                    catLookup.Add(key, item);
+                }
+            }
         }
 
         /// <summary>

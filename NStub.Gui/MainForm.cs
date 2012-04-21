@@ -33,16 +33,15 @@ namespace NStub.Gui
     /// </summary>
     public partial class MainForm : Form
     {
-        #region Member Variables (Private)
 
         private readonly IList<AssemblyName> _referencedAssemblies =
             new List<AssemblyName>();
+        private readonly LoadAssemblyWorker bg;
+        private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
 
-        #endregion Member Variables (Private)
 
         #region Constructor (Public)
 
-        private readonly LoadAssemblyWorker bg;
         
         /// <summary>
         /// Initializes a new instance of the <see cref="MainForm"/> class.
@@ -112,7 +111,7 @@ namespace NStub.Gui
 
         private static readonly IBuildSystem sbs = new StandardBuildSystem();
         //private TestBuilder agb;
-        private readonly IBuildDataDictionary buildData;
+        private readonly BuildDataDictionary buildData;
 
         private void btnGo_Click(object sender, EventArgs e)
         {
@@ -255,6 +254,9 @@ namespace NStub.Gui
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Settings.Default.Save();
+
+            var xml = this.memberfactory.SerializeAllSetupData(this.buildData);
+            //this.buildData
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -309,6 +311,12 @@ namespace NStub.Gui
         {
             buildData.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
             GeneratorConfigLoad(this.buildData);
+
+            var xml = this.memberfactory.SerializeAllSetupData(this.buildData);
+            Log("Property data loaded:");
+            Log(xml);
+            Log("---------------------");
+
         }
 
         private void GeneratorConfigLoad(IBuildDataDictionary properties)
@@ -329,7 +337,6 @@ namespace NStub.Gui
             mf.SetParameters(sampleXmlData, properties);
         }
 
-        private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
 
         private Assembly ad_AssemblyResolve(object sender, ResolveEventArgs args)
         {
@@ -350,7 +357,7 @@ namespace NStub.Gui
 
         private void bnConfigGenerator_Click(object sender, EventArgs e)
         {
-            var wnd = new GeneratorConfig();
+            var wnd = new GeneratorConfig(this.buildData);
             var result = wnd.ShowDialog();
         }
 

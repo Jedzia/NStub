@@ -8,12 +8,13 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Xml.Serialization;
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
     /// <summary>
     /// Provides an implementation of the <see cref="IMemberBuilderParameters"/> user data, that has an empty set of data.
     /// </summary>
-    public class EmptyBuilderParameters : IMemberBuilderParameters
+    public class EmptyBuilderParameters : EntityBase<EmptyBuilderParameters>, IMemberBuilderParameters
     {
         // : EntityBase<PropertyBuilderParametersSetup> {
         #region Properties
@@ -24,21 +25,12 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        public bool Enabled
-        {
-            get
-            {
-                return false;
-            }
-
-            set
-            {
-            }
-        }
+        public bool Enabled { get; set; }
 
         /// <summary>
         /// Gets the sample XML.
         /// </summary>
+        [XmlIgnore]
         public string SampleXml
         {
             get
@@ -53,8 +45,11 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// Deserializes the specified XML to the current instance.
         /// </summary>
         /// <param name="xml">The XML text, representing the data.</param>
-        public void Deserialize(string xml)
+        public new void Deserialize(string xml)
         {
+            EmptyBuilderParameters deserObj;
+            Deserialize(xml, out deserObj);
+            this.Enabled = deserObj.Enabled;
         }
 
         /// <summary>
@@ -80,7 +75,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             return false;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Serializes this instance to a XML string.
         /// </summary>
         /// <returns>
@@ -89,7 +84,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         public string Serialize()
         {
             return "<EmptyBuilderParameters />";
-        }
+        }*/
 
         /// <summary>
         /// Sets the data via the specified method info.

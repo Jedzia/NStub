@@ -4,9 +4,10 @@
 	<Favorites>
 		<FavoritesEntry>ff30b704-ad55-464b-b47b-239c79e283c2</FavoritesEntry>
 	</Favorites>
-	<OpenDiagrams activeDiagram="0904761b-5280-435a-815b-dc190602d097">
+	<OpenDiagrams activeDiagram="1eb43dad-79fd-46f6-8bdd-0536be803ae8">
 		<OpenDiagramEntry>b547062b-3e9e-4c79-a981-9a9f1a5d94d3</OpenDiagramEntry>
 		<OpenDiagramEntry>0904761b-5280-435a-815b-dc190602d097</OpenDiagramEntry>
+		<OpenDiagramEntry>1eb43dad-79fd-46f6-8bdd-0536be803ae8</OpenDiagramEntry>
 	</OpenDiagrams>
 	<Model>
 		<Package uuid="00000001-7510-11d9-86f2-000476a22f44" name="Root" visibility="public">
@@ -8865,7 +8866,7 @@
 														<CodeFileName name="ObjectGeneration\BuildDataReadOnlyDictionary.cs"/>
 													</codeFileName>
 													<interfaceRealization>
-														<InterfaceRealization uuid="60617aef-d512-4369-a3ad-3c2ba8a9d62d" visibility="public" contract="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
+														<InterfaceRealization uuid="ad4cfaa4-c74b-4098-bba0-36e2c22843e5" visibility="public" contract="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
 													</interfaceRealization>
 													<ownedComment>
 														<Comment uuid="eaa6c73d-0918-4341-9bf6-6c573d1897e7" body="&lt;summary&gt;&#13;Wraps build properties of the &lt;see cref=&quot;BuildDataDictionary&quot;/&gt; as read only values.&#13;&lt;/summary&gt;">
@@ -10808,9 +10809,9 @@
 														</Operation>
 													</ownedOperation>
 												</Interface>
-												<Interface uuid="f278b1ec-5470-4475-9239-eb9d57c11e7f" name="IBuildDataReadOnlyCollection" visibility="public" usedForCodeSyncronization="true" DocComment="3cf7a3db-4455-43c0-9a91-215bee9e72ef">
+												<Interface uuid="f278b1ec-5470-4475-9239-eb9d57c11e7f" name="IBuildDataReadOnlyDictionary" visibility="public" usedForCodeSyncronization="true" DocComment="3cf7a3db-4455-43c0-9a91-215bee9e72ef">
 													<codeFileName>
-														<CodeFileName name="ObjectGeneration\IBuildDataReadOnlyCollection.cs"/>
+														<CodeFileName name="ObjectGeneration\IBuildDataReadOnlyDictionary.cs"/>
 													</codeFileName>
 													<ownedComment>
 														<Comment uuid="3cf7a3db-4455-43c0-9a91-215bee9e72ef" body="&lt;summary&gt;&#13;Provides read only access to &lt;see cref=&quot;IBuilderData&quot;/&gt; organized as a categorized dictionary lookup with read only access.&#13;&lt;/summary&gt;">
@@ -18303,7 +18304,6 @@
 						<NodeLink uuid="c2d0a8a1-930f-4d50-a60f-94ec115e8a8c" guiLink_Element="f278b1ec-5470-4475-9239-eb9d57c11e7f">
 							<nodeRect Left="10" Top="10" Right="60" Bottom="60"/>
 						</NodeLink>
-						<LineLink uuid="d6705385-50a9-43f1-bd8f-203af85f38e6" guiLink_Element="60617aef-d512-4369-a3ad-3c2ba8a9d62d" guiLineLink_LineBegin="f4b984c0-6685-4452-aa76-2102b95566df" guiLineLink_LineEnd="c2d0a8a1-930f-4d50-a60f-94ec115e8a8c"/>
 						<NodeLink uuid="e78f9183-64e6-437e-a0a1-483e132ad0a1" guiLink_Element="d6f73223-9a9d-46fc-a18e-15013a0c85a5">
 							<nodeRect Left="10" Top="10" Right="60" Bottom="60"/>
 						</NodeLink>
@@ -18474,6 +18474,7 @@
 						<NodeLink uuid="3588c9a5-7742-4e0d-8117-f1daf20c00bf" guiLink_Element="261185b0-f51d-4d28-b713-e9cebfad802e">
 							<nodeRect Left="10" Top="10" Right="60" Bottom="60"/>
 						</NodeLink>
+						<LineLink uuid="5f6039dc-29d7-4ebf-8caf-3e405f21da3a" guiLink_Element="ad4cfaa4-c74b-4098-bba0-36e2c22843e5" guiLineLink_LineBegin="f4b984c0-6685-4452-aa76-2102b95566df" guiLineLink_LineEnd="c2d0a8a1-930f-4d50-a60f-94ec115e8a8c"/>
 					</guiDiagramGuiLink>
 				</ClassDiagram>
 				<ClassDiagram uuid="0ef5163e-2566-43fd-895d-a71a6002b964" name="Content of Tests" guiDiagramLinkedOwner="49d1ce9e-642d-4d1a-8789-5736a44dbfda" guiDiagram_GenerationSettingsElement="49d1ce9e-642d-4d1a-8789-5736a44dbfda">
@@ -21341,6 +21342,16 @@
 						<DiagramLayer uuid="179cbe4b-320d-484b-a6a6-9b7ee7a4ea49" name="Default"/>
 					</guiDiagramLayer>
 				</ClassDiagram>
+				<ClassDiagram uuid="1eb43dad-79fd-46f6-8bdd-0536be803ae8" name="ClassDiagram1" guiDiagramLinkedOwner="df508567-b556-404a-9da1-9c1001f07a23">
+					<guiDiagramGuiLink>
+						<NodeLink uuid="ce51023a-5f2e-4494-a922-9c8cf1443390" guiLink_Element="f278b1ec-5470-4475-9239-eb9d57c11e7f">
+							<nodeRect Left="90" Top="120" Right="358" Bottom="196"/>
+						</NodeLink>
+					</guiDiagramGuiLink>
+					<guiDiagramLayer>
+						<DiagramLayer uuid="052371a2-f963-4146-b2ac-0b971887b9d5" name="Default"/>
+					</guiDiagramLayer>
+				</ClassDiagram>
 			</guiRootGuiDiagram>
 		</RootElement>
 	</Diagrams>
@@ -23350,183 +23361,183 @@
 										</Class>
 										<Class uuid="1c7a7b39-f7d3-457d-8cb3-0e939efe707e" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="07713b18-55ca-46e1-ad9b-e6b05eeb4879" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
+												<TemplateBinding uuid="057ec078-b1af-468b-acfd-47a1c09dcd13" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="c8446923-4283-4296-a2d3-1c83780eb41a" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
+														<TemplateParameterSubstitution uuid="98ebc579-fac7-4d52-8a89-3b5b059aff33" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="ad1fc5f9-f9c4-481c-8639-d6e3247f152d" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="1255963c-407e-4154-a448-0e38ad99e6af" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
+												<TemplateBinding uuid="ebc21a05-bf6d-4ff8-a9b0-d43b06317237" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="bcd31f8b-9857-4ee1-887b-3d31e4d8ed0f" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="d7fa6aa7-599b-47d0-947d-dabbfaf56126" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Interface uuid="e38c6571-fe9a-4ec5-b1e3-d2f5d006581c" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="de99babc-eb57-49b2-b78f-3341a13d345b" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="09f293ff-1e6e-4f9b-b029-749f9ff906b6" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="89d95132-b288-4b65-9882-14c778f9ae6d" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="c0630b37-f8d5-4cae-9ef1-57c498a92d99" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Interface>
 										<Class uuid="214f83d5-9fc1-4136-9c16-2874e7107cab" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="f6010c34-b971-4d86-9843-71298d5efc4c" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="294fc99e-6c48-4956-a361-6872c6dbd01c" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="27d27beb-a158-406b-aa12-f37c01f4b0e5" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="23312475-6740-4fbc-af8c-a6ca9d9bb2f5"/>
+														<TemplateParameterSubstitution uuid="e3bc26be-0999-4cdc-9c62-6cd6f758a3a1" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="23312475-6740-4fbc-af8c-a6ca9d9bb2f5"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="5ea97f37-cc01-4e04-802f-933019474839" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="b330e208-569c-4f18-8828-602463219942" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="9e634c58-77c9-48a4-9e27-36dbbbea5013" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="cf865d91-c115-4dec-86bd-787d0959345a" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
+														<TemplateParameterSubstitution uuid="cc4251bc-c67c-499e-805a-93bf75139312" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="a4503ddd-ff2e-475c-87d5-ab5528d2405f" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="ee234b37-8404-433f-9e63-f6c733506664" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="eee3cb82-3ba6-4f29-853c-f840e7842ab7" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="4a4731a1-261b-4381-b635-9970b074b664" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="000f2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="dce8638c-65d6-464e-af90-6ba11cc91724" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="000f2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="6d28444b-9567-4679-bc8f-535dd5fb6759" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="c41c4234-6ebc-4e18-bf1a-116f6d6c5abc" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="38b64897-25e4-4757-b935-a633597d48bc" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="27b0d7e9-ad59-4185-9ba0-305947686237" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="a4503ddd-ff2e-475c-87d5-ab5528d2405f"/>
+														<TemplateParameterSubstitution uuid="54af4af0-294a-4294-8e2e-ade8dfbe7aec" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="a4503ddd-ff2e-475c-87d5-ab5528d2405f"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="3865c325-5e7a-4536-b669-81d963bf56a8" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="31ad8ef8-99b0-4403-a646-4c016f677078" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="d9e87c04-4580-430e-bd29-a1eb165069fb" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="dfbf42f5-2a24-4443-8dac-274fdd3e6a69" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="6b52f68d-33f0-47f5-90b8-4ff057710597"/>
+														<TemplateParameterSubstitution uuid="25ffc170-bd90-4bf7-82b9-d5cfb6f6335e" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="6b52f68d-33f0-47f5-90b8-4ff057710597"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="07c67477-8a6f-4eec-a122-ea1499f38ee4" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="48078184-e3bd-480d-a630-6fc2d8309732" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="a48b30d1-1130-4a99-879a-a9c101b386c6" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="8b0c9d14-d43e-4132-b33c-62639a28bfb2" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="3865c325-5e7a-4536-b669-81d963bf56a8"/>
+														<TemplateParameterSubstitution uuid="b3a24996-02a0-4968-93e6-76e66febcc39" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="3865c325-5e7a-4536-b669-81d963bf56a8"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="54f5478a-5b71-4ef7-a37c-348bb33dc042" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="c0776dec-48f1-4439-a8fe-e77aaf9e3f93" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="3bbf5674-6529-4696-8991-46fd4ea1163f" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="358a43c6-c6d5-4fa6-815d-3a5c3889c302" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="d52f0ee2-a2f9-43de-a59c-4717afeefab0"/>
+														<TemplateParameterSubstitution uuid="0f4e0d7b-8775-4703-9f8d-47904657289e" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="d52f0ee2-a2f9-43de-a59c-4717afeefab0"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="a1935d66-e1ef-4dc9-a214-a42fa6457526" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="c3fd66a6-3055-476b-87ae-73753bad6bb6" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="2ab2d5c3-d607-4334-bc26-6a738a1e5334" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="6841fe56-7efc-4bbc-a8fb-d9aeddcd8316" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="54f5478a-5b71-4ef7-a37c-348bb33dc042"/>
+														<TemplateParameterSubstitution uuid="6e5940bd-82b6-4a45-ba92-570f4e28b879" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="54f5478a-5b71-4ef7-a37c-348bb33dc042"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="4e4bee36-faba-40f0-ba11-37b3d1816db5" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="4ba346c1-afb8-4708-98aa-c1d8be7a3370" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="30b43e04-a949-4ae9-9227-f5ce5816c5b6" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="6aae2c66-0dc4-45cf-95cd-2799f523be83" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="35de23d6-4bbd-4653-a165-19a222b4473d" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="7cfc4cd2-15fc-40d0-a7dd-b898925c3d76" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="72a048bc-5e5f-4ef7-b2a4-c6d46ca888ea" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="2051fb66-03de-4992-8a64-4a2da0bfa4d0" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="0ef25026-210c-480e-9159-0eb6a9685b4f" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="4e4bee36-faba-40f0-ba11-37b3d1816db5"/>
+														<TemplateParameterSubstitution uuid="45f4882b-39e8-46df-859a-a7652592f483" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="4e4bee36-faba-40f0-ba11-37b3d1816db5"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="57514b2c-fd10-464f-ac0b-f71d0d2645f5" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="37a586f7-c696-4007-92a8-aeda6f72ca3b" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="7c524ae8-abf1-4a34-9a89-6bc057ec8c2c" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="9d624336-3a65-4388-9553-11b961885c88" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="1ef25e6f-c7c1-45bd-bad0-cfb33473f292"/>
+														<TemplateParameterSubstitution uuid="f9cf4392-e4dd-4fd3-9c5c-0464b969ca5a" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="1ef25e6f-c7c1-45bd-bad0-cfb33473f292"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="18366912-44a3-4648-9cef-df8c7ae75cb4" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="ead7d1a5-023c-4c7c-b3c3-59c2f87d360b" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="e1f0aaaa-9eb1-427c-82b6-bc3c9fe1ce77" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="7b60b192-f4e7-411f-b9ba-a819ca05bf38" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="57514b2c-fd10-464f-ac0b-f71d0d2645f5"/>
+														<TemplateParameterSubstitution uuid="c5f9acc0-82cc-4099-b2ad-e1333453105e" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="57514b2c-fd10-464f-ac0b-f71d0d2645f5"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="338341bf-ce1e-45d9-b9d8-3dea10d7ef92" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="5f8dbe7a-61e6-447c-acf8-affae550a434" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="10cab84f-ddc7-4e92-a6d2-71fe6ee0b25b" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="11c5b5e2-549c-4559-8f5d-06b1761a6461" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="7f4fefac-337c-4e00-b6b5-c26af5dfcc2e"/>
+														<TemplateParameterSubstitution uuid="049b7cd2-c231-49a3-ad6d-cdb83400cbd7" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="7f4fefac-337c-4e00-b6b5-c26af5dfcc2e"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="85cc9b14-1d5b-419b-a81a-a52adcd23015" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="5ea276a7-898c-4008-8978-e9b6fe389927" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+												<TemplateBinding uuid="d7ff99f6-4a6d-479b-9f99-bc8eb64b65c2" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="ca691677-63db-444e-a8ce-dc1043304a7d" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="338341bf-ce1e-45d9-b9d8-3dea10d7ef92"/>
+														<TemplateParameterSubstitution uuid="49cd8d1c-be12-48d7-9410-14929117a2dc" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="338341bf-ce1e-45d9-b9d8-3dea10d7ef92"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="472b6e09-2de1-426e-b7f5-ffe0799c14e4" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="f5151300-9af3-4731-8274-712852f3bcd3" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="e52274aa-83d2-4528-9673-1e1d203dc61e" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="4542a960-2c23-40fa-b2e7-b0e6701a28dd" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="7c54d0f5-e116-4423-a1ea-e16a8b021442" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="cf1c8a5f-c6d4-4c1b-8163-6ce7820e4e30" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="c9557495-cc7c-46a7-bace-34e50e1ec7d1" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="d05ef6fa-66fe-479b-931a-ede48a8a4b51" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="bf14dab1-a05f-4e13-b947-54f5892ad6e9" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0ea0a84b-5207-4d9a-8033-a38c78788d1b"/>
-														<TemplateParameterSubstitution uuid="e940c127-72ee-41c4-afa3-c01bc5f34434" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="f0f322c9-5e24-4697-810d-1aa85cff48f1"/>
-														<TemplateParameterSubstitution uuid="ffbabb5b-fc83-4c96-83d3-e38ed978bbff" formal="1d27c00f-e281-4800-b69a-5ab4f4d7bbce" actual="34b1653f-b465-4259-9463-e80ae7880226"/>
-														<TemplateParameterSubstitution uuid="8cb6c13a-371d-47e7-9386-c2d132e4f3cf" formal="dfeb6082-c877-43b1-afb9-a54827ac6e42" actual="ff30b704-ad55-464b-b47b-239c79e283c2"/>
+														<TemplateParameterSubstitution uuid="3ca4539e-99a9-4d40-b2c4-28d4648a2869" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0ea0a84b-5207-4d9a-8033-a38c78788d1b"/>
+														<TemplateParameterSubstitution uuid="d6ec09ca-1d77-4624-8a68-cfbe5b1dfb98" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="f0f322c9-5e24-4697-810d-1aa85cff48f1"/>
+														<TemplateParameterSubstitution uuid="f20a9344-6ec9-4495-b37d-23b16396db11" formal="1d27c00f-e281-4800-b69a-5ab4f4d7bbce" actual="34b1653f-b465-4259-9463-e80ae7880226"/>
+														<TemplateParameterSubstitution uuid="ce704ecf-97c1-4ca7-bd01-614a43f6cd54" formal="dfeb6082-c877-43b1-afb9-a54827ac6e42" actual="ff30b704-ad55-464b-b47b-239c79e283c2"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="f5f37c53-1ab4-4007-a693-1e42184f7d3c" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="65a4f13e-6e3b-4971-8f01-0b2c131493e3" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
+												<TemplateBinding uuid="1c603362-b0ad-49c0-8554-bbff2b258a05" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="3dad35fe-568c-45f8-a629-7e169733d8a1" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="38ed3661-fa96-4557-af54-1cda04c7e725" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
@@ -25915,191 +25926,191 @@
 														</Class>
 														<Class uuid="dc31e604-34ee-4c17-a4e4-522852716d8d" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="67cdafcd-4318-4858-8dc7-3da16c500a04" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="1e595bfc-0a9e-49a1-9dbc-034cbe05b8f5" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="d0e43d07-c595-4ea5-b135-bd3123b87f6b" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="00072103-7510-11d9-86f2-000476a22f44"/>
+																		<TemplateParameterSubstitution uuid="da184870-530d-4903-af65-de0c43534281" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="00072103-7510-11d9-86f2-000476a22f44"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="95fabd69-3ba0-44e2-bf89-899ba7445056" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="a741d090-23a6-43f2-855c-34c6d3935a1a" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
+																<TemplateBinding uuid="99ecc830-8f0b-4ebc-95ea-8d5480ad4196" signature="7d491bd0-431c-467a-9e06-d2ddc24a5216">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="d7580293-c660-43a4-ab04-3a630b8089a7" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="dc31e604-34ee-4c17-a4e4-522852716d8d"/>
+																		<TemplateParameterSubstitution uuid="254ebb42-316b-4def-baa5-c0f30ba1d658" formal="3e0b1545-e756-48b2-b85b-041dca8fece4" actual="dc31e604-34ee-4c17-a4e4-522852716d8d"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Interface uuid="3b30f1cd-63aa-4f55-a5c3-c32004164845" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="b77c1834-08cf-4a88-84ef-0a390bc9026b" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+																<TemplateBinding uuid="31840f04-3859-4190-bcd9-a62340d5bf40" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="49ab7732-cfc9-4546-a5fa-672dff018d6e" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="6d7b863c-fdf2-4912-959e-aca3d8555c1a"/>
+																		<TemplateParameterSubstitution uuid="bfbda02d-ecf5-4bb7-bb15-88c00f8fbd2a" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="6d7b863c-fdf2-4912-959e-aca3d8555c1a"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Interface>
 														<Class uuid="c683b550-5c6b-4829-b587-b07423f2965c" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="e2200c9d-2c80-449d-88f5-7b2871401a86" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
+																<TemplateBinding uuid="d698db9f-599c-494c-88a2-40dd12592218" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="8c6b42b6-8501-4344-86f8-4e288fb3de7f" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="6d7b863c-fdf2-4912-959e-aca3d8555c1a"/>
+																		<TemplateParameterSubstitution uuid="e94ecbdf-74a4-4814-ab04-e7bd9e56675f" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="6d7b863c-fdf2-4912-959e-aca3d8555c1a"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="3f855fa9-d421-46b0-8efe-95bd76b14929" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="3bfacb1b-811e-46bd-a235-c46917a3d5cd" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="66ed66fd-4d45-4727-acef-51088112c4dc" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="aa58ecbd-0acf-4f15-aea2-ce69776a16fb" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="bb5fca4f-3fd4-47be-96a3-2dd0cfd82b7b"/>
-																		<TemplateParameterSubstitution uuid="834f0676-7718-46b7-9563-3b3edc3ddff0" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="14fd91db-fcc0-40ea-b546-e1cb04f7b807" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="bb5fca4f-3fd4-47be-96a3-2dd0cfd82b7b"/>
+																		<TemplateParameterSubstitution uuid="8d1ba2b4-8ba7-44a9-ad0c-858939d9ea71" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="fdbf6fe7-35c8-4a30-9496-57d0ebb08d91" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="ccf35505-31a1-4417-a768-aad950ba99ce" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="46b9ed7c-9fb3-441e-a6e0-cb8d6f28f305" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="d2797e04-f929-476c-b713-cb07fa1d867c" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4cfc0cca-4910-4ad4-ad9e-9b2929ccad9d"/>
-																		<TemplateParameterSubstitution uuid="e65aa5fa-0dbd-4bb5-b065-6907e1405ea9" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="95b93333-7a5b-486b-9d2e-838a90dac640" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4cfc0cca-4910-4ad4-ad9e-9b2929ccad9d"/>
+																		<TemplateParameterSubstitution uuid="e524edfc-cd86-47fa-b4b7-f1bfea7756c6" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="a98bc3d0-935c-4fca-ac0f-7a65f335608b" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="80bdccde-3bc0-4f73-948e-b9b6a9d77bd9" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="db576a06-0fcc-48c7-80d7-7a40bdf3aca8" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="afa5caa3-5eeb-46b7-a0cf-9f190ccb4230" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="d8cefb8e-3cd0-4c9e-8012-5f413a13a5fa"/>
-																		<TemplateParameterSubstitution uuid="1362d6aa-8e65-4bc5-94a7-c8b88033b2e0" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="207bbd3d-2083-4d2c-ad86-35c8cf482540" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="d8cefb8e-3cd0-4c9e-8012-5f413a13a5fa"/>
+																		<TemplateParameterSubstitution uuid="6c8403af-0034-42f5-a06f-02690123a759" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="46c473d4-9b2b-48a1-b7ab-0340f509554a" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="4f9f8708-9c26-45e6-ab2f-b184b68c780a" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="608daaa4-9ddc-4553-8cb1-d00eda81b3ea" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="520fce66-838a-43dc-806f-832b083eef53" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0b9db425-b470-4ad9-b138-4ada9625b69f"/>
-																		<TemplateParameterSubstitution uuid="8737adfd-6de3-494a-b9e8-75f8dfdcf8b5" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="82e7b3f2-387f-4551-b32c-87113af066a3" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0b9db425-b470-4ad9-b138-4ada9625b69f"/>
+																		<TemplateParameterSubstitution uuid="88839994-d195-4c74-8206-539cd010aaeb" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="cc4945e3-c69c-4bf2-9143-5c3e51f1e0fc" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="4cffd2ad-41d0-43a9-b9ba-fce9edbad629" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="f9c22e4d-3ee8-4461-8dbc-be837cd27c67" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="0f14e15b-6112-4cac-a86b-8df922ba37b8" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="9ff1a3e6-339a-49d6-af6b-88d95a599006"/>
-																		<TemplateParameterSubstitution uuid="d16be1c8-8143-42c2-9f5c-90f25fe312a3" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="9c5d7ea5-e747-44b1-a735-04f2abf4dcf8"/>
+																		<TemplateParameterSubstitution uuid="bdafbd50-69a9-4850-aa14-8654dbe8c016" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="9ff1a3e6-339a-49d6-af6b-88d95a599006"/>
+																		<TemplateParameterSubstitution uuid="ca1a3ff1-bf4c-4c3e-b561-85bb73ef8ce9" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="9c5d7ea5-e747-44b1-a735-04f2abf4dcf8"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Interface uuid="95e56358-114f-4fa6-a834-ceabe02587c8" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="b67fa250-8df4-48cb-8dce-b0ee51621392" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+																<TemplateBinding uuid="ad0801fb-099c-41da-ba6f-39529654bd23" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="7c5a7ac7-1531-4fe1-b5bf-00c68af9ed8a" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="ae530ab3-7251-4aec-9336-71a3bbf15ff9" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Interface>
 														<Class uuid="0c8f4129-e15a-4f8f-9bbc-1143c8780983" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="e0af2e14-e744-41db-a078-29f7a5706b47" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
+																<TemplateBinding uuid="8fac49c5-d56c-49ec-963f-24e7137bb7bb" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="bad448b7-28c5-437a-9423-7174b76a1a3b" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="4f3ee9c7-c1db-48b8-add7-8110e62ce421"/>
+																		<TemplateParameterSubstitution uuid="bba6d7a1-8911-41d7-9d78-88b49eb030b2" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="4f3ee9c7-c1db-48b8-add7-8110e62ce421"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Interface uuid="f3e9493b-9096-4f2a-95b6-5c36980fc6ee" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="6aa62371-9550-4ef6-8818-8be5737cbff0" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+																<TemplateBinding uuid="6fb74fe5-10e8-49c0-8453-1cff0e9c4aed" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="7d9018f0-0a95-4587-868f-06ce58a824d8" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="4f3ee9c7-c1db-48b8-add7-8110e62ce421"/>
+																		<TemplateParameterSubstitution uuid="de4e29c4-12ee-4248-b09e-e98c12fec06d" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="4f3ee9c7-c1db-48b8-add7-8110e62ce421"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Interface>
 														<Class uuid="dcabf24c-a087-492f-9c0d-db56567573ea" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="1950f3a5-d569-4f64-be03-ac0bdc2286f7" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
+																<TemplateBinding uuid="63f7859b-ad46-4a57-a1e6-4e1886bbdce0" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="389ca106-24e7-4a4d-a4df-c20df5d2422b" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="5561ef91-4f5b-4970-a3d5-3534f870dbd6"/>
+																		<TemplateParameterSubstitution uuid="0a2e225f-a18c-4289-83a8-fc0d9baafaba" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="5561ef91-4f5b-4970-a3d5-3534f870dbd6"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="169b24df-574e-46f3-9053-6c49f394eeca" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="4578a86d-64ac-40c4-80a1-f08633af6f54" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
+																<TemplateBinding uuid="d838dbcf-348c-49a4-86fa-e39b33cd8776" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="f14eb84e-2b83-41e0-b132-9e127134cd93" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="0177cefe-4b02-4cec-8add-b7903d49f170"/>
+																		<TemplateParameterSubstitution uuid="e957f3f8-70a1-4193-897a-f454f1aa7a2e" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="0177cefe-4b02-4cec-8add-b7903d49f170"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="00c0101b-07b1-4e21-937b-e42bc309ce00" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="c2d6ffed-dfe8-4a3a-8bff-751c8b5210f9" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="0763ba22-4f1d-42e7-a32f-12b28318f925" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="562dfa4e-0aff-4f6c-aa83-368302b7dd8b" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="a994feea-4b0f-44dc-bc41-b5309527e74b"/>
-																		<TemplateParameterSubstitution uuid="34f0e2a3-1028-4e59-8b43-d995f4d7bdc1" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="9b032c95-b637-4fbf-8484-7cc4878a95c2" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="a994feea-4b0f-44dc-bc41-b5309527e74b"/>
+																		<TemplateParameterSubstitution uuid="50d16032-8265-43e4-9e8f-e3773c29314b" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="aa8d4a96-e85a-4d77-81fb-45767974b9f6" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="34c917e1-0255-4098-b6e0-849408969229" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="6633d709-1ecb-4110-959a-9ee5aff57cfa" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="5b04c0f5-b524-40f5-b575-b9937c08bbf1" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="83eb3ee3-1d90-49f2-8aba-a556b22f4357"/>
-																		<TemplateParameterSubstitution uuid="9e28540f-d89b-49bb-90aa-13d2cc476ad9" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="1e68a115-ab29-4c55-8b2b-7144457064b6" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="83eb3ee3-1d90-49f2-8aba-a556b22f4357"/>
+																		<TemplateParameterSubstitution uuid="579ffccc-0f14-4c5f-aa90-aa9c667a00c4" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="962b3980-9d9e-4b6a-b97c-fcdddc94c8c6" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="e9fa784b-ba81-4443-b897-8b81eb4ded11" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="3b61ee20-8098-41a9-9beb-a8a88fc07464" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="4b644b85-9515-48cb-b5a8-327c8d4e0d24" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="6eea804d-c0da-4ba3-a2cc-4dbdff449819"/>
-																		<TemplateParameterSubstitution uuid="8f663979-e0c8-440a-93ba-4fa7c156a20f" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="8d90c329-3fd3-4686-a822-15c41d04a7ce" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="6eea804d-c0da-4ba3-a2cc-4dbdff449819"/>
+																		<TemplateParameterSubstitution uuid="2a40e857-95ef-4244-9d5d-da71fef3cc13" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="79de0d0a-318c-43c7-857f-b36113ff1bd5" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="f2bb8e16-4ff7-4372-94de-a24b41a8cc9a" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="a2bbc104-f534-427f-a365-7a7f0dc025f6" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="cfc044ac-c4f5-47df-8748-88eb45613a13" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="a8b9e6b6-db6b-44ac-be8f-47e8eba2e733"/>
-																		<TemplateParameterSubstitution uuid="af948f73-97de-4147-ad69-42d8126be2d4" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="ff15b886-351e-4fc7-827b-155ad4ecdaee" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="a8b9e6b6-db6b-44ac-be8f-47e8eba2e733"/>
+																		<TemplateParameterSubstitution uuid="f9614909-5230-4d91-9991-2c84c068c47f" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="328a463e-2369-43b5-a22f-e4ba9436581b" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="809219d6-5fae-4b6d-a61a-93015da60c09" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="3d1ca7f7-3e69-4e4a-8115-ca6bc41b2627" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="fe831911-a313-42a7-a63b-c479a475bbc2" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="7a4d6035-2e57-4809-860c-575d2c835903"/>
-																		<TemplateParameterSubstitution uuid="e53428f8-7eb7-44e6-b913-738aac5178f3" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="04579b90-36c3-468b-a4ad-7df916a1c9bf" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="7a4d6035-2e57-4809-860c-575d2c835903"/>
+																		<TemplateParameterSubstitution uuid="13c0f762-d085-4094-bc08-5479af8cef22" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="237d6c65-a736-408e-99f0-d8276fb1df2e" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="13b78756-e434-421a-bc6f-8af3a08fccee" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="683bb7f1-b7b2-4998-9917-b0f8bde49bc2" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="81ca72ec-b4e6-440f-b2c6-1bffd93172a4" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="2e98398d-5148-4e65-96c8-c926c60949f2"/>
-																		<TemplateParameterSubstitution uuid="b2d8a6f9-29a0-4859-ba76-d203fc585526" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
+																		<TemplateParameterSubstitution uuid="f538b610-7b90-4260-adb5-c28f7c15cd01" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="2e98398d-5148-4e65-96c8-c926c60949f2"/>
+																		<TemplateParameterSubstitution uuid="7f7954c8-6e0c-4eb6-85a4-191577ba4ffd" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="ce7bb85e-73bd-4638-a574-01afb992dbad"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
@@ -27795,19 +27806,19 @@
 														</Class>
 														<Class uuid="060cc20b-6028-4581-afc7-a5902c3b7551" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="29b62154-c094-4225-a133-23bab2ef7b57" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
+																<TemplateBinding uuid="34250d1b-a53f-4836-b0d5-58fb8a46ebce" signature="54fbd5bf-f19f-401d-b6be-1a3549cd0d8f">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="e5e06166-5204-4108-992b-dafdfce8b7e2" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="0e8d08fc-f31e-45de-99a8-c4af0646add5"/>
+																		<TemplateParameterSubstitution uuid="d4403168-ae89-4195-8024-6c5947723584" formal="e36d4afa-b7cf-42a7-91a1-01a2d2c838c4" actual="0e8d08fc-f31e-45de-99a8-c4af0646add5"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="9a5e2145-21e7-4a8b-9694-76f33b87d501" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="557b5520-68d3-4a2a-a7ce-921983799f3e" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+																<TemplateBinding uuid="29e64f89-9c35-4292-8b44-77e4e7460600" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="2dd3a83a-e13a-4fec-8449-783c42c6b40f" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4091c675-b08c-4b16-9b35-d76b38454932"/>
-																		<TemplateParameterSubstitution uuid="5113c023-4f60-4003-a587-c44261793d44" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="00072103-7510-11d9-86f2-000476a22f44"/>
+																		<TemplateParameterSubstitution uuid="42b3d40c-2eb7-4b1c-a09c-66120469e43c" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4091c675-b08c-4b16-9b35-d76b38454932"/>
+																		<TemplateParameterSubstitution uuid="93157ee0-50de-4458-8f5f-f2e13e8ed0aa" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="00072103-7510-11d9-86f2-000476a22f44"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
@@ -27949,18 +27960,18 @@
 												</Package>
 												<Class uuid="dfe821c9-9205-4215-8baa-f3be98f7f0bf" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="d8be77da-c603-453b-bd1b-067f18125411" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+														<TemplateBinding uuid="efb4926d-0e3e-4498-bb0f-2439fd9ac4e5" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="2e2fcd9a-e0d6-460a-a823-11afdc83ec24" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="c2fdaf5b-c2b5-47c0-b4f3-c31399e0da18" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="7762e8c9-3d12-42b1-8850-e23ff8e91ab4" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="4511457d-9c41-4221-bc6c-53870f09cac2" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+														<TemplateBinding uuid="ca9bf933-8dde-4878-bec4-e810cbe86125" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="2a5d2efa-32b4-4ba1-b471-fb4efe374df4" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
+																<TemplateParameterSubstitution uuid="fede8d92-586e-4155-a3d3-a9be801d948a" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
@@ -29735,9 +29746,9 @@
 														</Class>
 														<Interface uuid="e5c1335f-c23f-4176-9014-386ea345040b" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="4d958807-acb0-4001-bd41-6781500b6a51" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+																<TemplateBinding uuid="81347ae0-5951-4300-af13-9508a5e7fada" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="063dd14d-7eb6-4df5-a535-c1e7b8a4c1e5" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="002670fb-e527-440b-a2e7-72147d18d7a3"/>
+																		<TemplateParameterSubstitution uuid="5ec583fd-800d-441d-b914-e1ed3da5f7f9" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="002670fb-e527-440b-a2e7-72147d18d7a3"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
@@ -30052,7 +30063,7 @@
 														<CodeFileName name="ObjectGeneration\BuildDataReadOnlyDictionary.cs"/>
 													</codeFileName>
 													<interfaceRealization>
-														<InterfaceRealization uuid="60617aef-d512-4369-a3ad-3c2ba8a9d62d" visibility="public" contract="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
+														<InterfaceRealization uuid="ad4cfaa4-c74b-4098-bba0-36e2c22843e5" visibility="public" contract="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
 													</interfaceRealization>
 													<ownedComment>
 														<Comment uuid="eaa6c73d-0918-4341-9bf6-6c573d1897e7" body="&lt;summary&gt;&#13;Wraps build properties of the &lt;see cref=&quot;BuildDataDictionary&quot;/&gt; as read only values.&#13;&lt;/summary&gt;">
@@ -31465,27 +31476,27 @@
 														</Class>
 														<Class uuid="7c06f992-d0c9-4901-81e0-290ceead92ad" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="2ed1cb43-fe25-49cf-a7ac-ce93dabecb11" signature="0ba065d5-999d-4890-8e91-1f33945c6eb1">
+																<TemplateBinding uuid="b5439fca-5e49-44e5-9ff1-d7babdb740f9" signature="0ba065d5-999d-4890-8e91-1f33945c6eb1">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="a2c42866-c63c-4794-af4f-e92dc1bf0a6a" formal="c452704c-286c-4512-b57f-813823ac868b" actual="9d038848-bbee-49f7-8f5d-3b6fe5d00b7f"/>
+																		<TemplateParameterSubstitution uuid="1136873f-4437-4f8f-9aa0-907ed758682b" formal="c452704c-286c-4512-b57f-813823ac868b" actual="9d038848-bbee-49f7-8f5d-3b6fe5d00b7f"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="c2406e55-29e2-447c-817e-09c21ea5511f" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="7edb4766-f211-4348-9f54-c0e77d48ad7e" signature="0ba065d5-999d-4890-8e91-1f33945c6eb1">
+																<TemplateBinding uuid="55d77ea9-7d40-4227-8aae-81cee12e7059" signature="0ba065d5-999d-4890-8e91-1f33945c6eb1">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="1bc66c8e-9f9b-43aa-9c0c-f9cd9c207423" formal="c452704c-286c-4512-b57f-813823ac868b" actual="87b4bd86-0127-4f7c-b4e0-89a68ac92d29"/>
+																		<TemplateParameterSubstitution uuid="3045b7d6-6464-43ef-aaaa-27ae421f65b0" formal="c452704c-286c-4512-b57f-813823ac868b" actual="87b4bd86-0127-4f7c-b4e0-89a68ac92d29"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
 														</Class>
 														<Class uuid="d8ad99f9-0733-4582-ab8b-8414f25e985b" visibility="public">
 															<templateBinding>
-																<TemplateBinding uuid="044d28c7-6eee-4466-a674-e5e3f2bc4a17" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
+																<TemplateBinding uuid="eb831152-6df3-4ccc-852c-dafb149236ae" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
 																	<parameterSubstitution>
-																		<TemplateParameterSubstitution uuid="93748a0a-61ca-4d8e-9a14-841f228cf70f" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="87b4bd86-0127-4f7c-b4e0-89a68ac92d29"/>
+																		<TemplateParameterSubstitution uuid="4bd4a025-98dc-4c1f-9210-a56ff14bd062" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="87b4bd86-0127-4f7c-b4e0-89a68ac92d29"/>
 																	</parameterSubstitution>
 																</TemplateBinding>
 															</templateBinding>
@@ -31979,19 +31990,6 @@
 															</ownedParameter>
 														</Operation>
 													</ownedOperation>
-												</Interface>
-												<Interface uuid="f278b1ec-5470-4475-9239-eb9d57c11e7f" name="IBuildDataReadOnlyCollection" visibility="public" usedForCodeSyncronization="true" DocComment="3cf7a3db-4455-43c0-9a91-215bee9e72ef">
-													<codeFileName>
-														<CodeFileName name="ObjectGeneration\IBuildDataReadOnlyCollection.cs"/>
-													</codeFileName>
-													<ownedComment>
-														<Comment uuid="3cf7a3db-4455-43c0-9a91-215bee9e72ef" body="&lt;summary&gt;&#13;Provides read only access to &lt;see cref=&quot;IBuilderData&quot;/&gt; organized as a categorized dictionary lookup with read only access.&#13;&lt;/summary&gt;">
-															<annotatedElement idref="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
-														</Comment>
-													</ownedComment>
-													<generalization>
-														<Generalization uuid="0b9b6e2d-d4a9-417f-95a4-7db5b2a068c9" general="5c742862-1a05-443e-91d6-78e92f584359"/>
-													</generalization>
 												</Interface>
 												<Interface uuid="d6f73223-9a9d-46fc-a18e-15013a0c85a5" name="IBuilderData" visibility="public" usedForCodeSyncronization="true" DocComment="d06cb723-71d5-4fda-959b-537314ff1910">
 													<codeFileName>
@@ -33544,343 +33542,356 @@
 												</Class>
 												<Interface uuid="edf71195-efaa-4fe8-9233-27ca01c8756f" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="fd7eb164-cf68-4665-905a-de7bc8f24efe" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="dce6344d-d88c-40d8-b47a-70f791accf8a" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="b77e79ac-cb2e-4476-936d-73e23b7965ff" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
+																<TemplateParameterSubstitution uuid="c15b7c4b-6721-4c29-aa4e-5ec9bf4e73b7" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="decba117-da0d-4569-ba8b-f676537c5692" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="fa639134-634a-4a87-acef-11f7703bcd4d" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
+														<TemplateBinding uuid="98d730b2-e7de-456d-bfeb-2d206be5ae97" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="3225992a-dc2b-415f-b6e3-4ad586d97ac9" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="0e987237-f595-4f98-9dad-75f5b5cea5c3" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
+																<TemplateParameterSubstitution uuid="51108f48-04fd-4ba5-99e5-5272ae7fc616" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="a4d45267-b272-4592-aead-286858d72709" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Class uuid="287b0321-7f03-4e65-a108-ceb8d5bf900e" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="ede6b436-3fc0-44b1-9402-9f3330c5ca0e" signature="9ed2b43c-0f96-485c-ad67-8130597460dc">
+														<TemplateBinding uuid="42a60f8c-6bff-434c-a86b-97b14e6f2817" signature="9ed2b43c-0f96-485c-ad67-8130597460dc">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="3d2ae507-fc42-46bb-b3e8-47bd24e295ec" formal="af9a78b5-d398-4c4d-ac21-a45165fbe603" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="9af0ca28-c772-4d34-8887-a84bb399ec4a" formal="6b6b929f-3f63-4719-8ad1-64ab07728123" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
+																<TemplateParameterSubstitution uuid="424c5f61-ab95-4dc3-b05e-49ed60807c15" formal="af9a78b5-d398-4c4d-ac21-a45165fbe603" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="017576c2-a11f-4a5d-b95a-09bac6d3b95a" formal="6b6b929f-3f63-4719-8ad1-64ab07728123" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Interface uuid="47cb188b-d2a8-43a2-871f-bf52db7a91b7" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="352499de-ac03-4ea3-8cb0-cf37b21ba505" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="2e7ba7ef-543d-4a11-99cf-e7145375484f" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="95d6ced6-3a8e-404e-b601-4da544604676" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
+																<TemplateParameterSubstitution uuid="c75cfa3a-5b23-4226-b266-d560835c49ff" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="d897ad0e-d51c-4551-80fd-ad4c68e7c0a0" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="00228ed5-319a-42af-acdd-1a186e8b2f44" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="e7322166-32d2-416d-b325-49cf52293ff7" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="8f74afca-9562-4ff0-be02-3528c546b922" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
+																<TemplateParameterSubstitution uuid="452f96ea-fed5-4b18-aab7-3a0faab9acac" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="5c742862-1a05-443e-91d6-78e92f584359" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="0cd09249-64de-40cd-8cef-24e70261b1f6" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
+														<TemplateBinding uuid="c8e8352c-5fa8-4cc9-88a4-4a5f75547dea" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="ec1e1ecc-b9b2-4def-8adb-cdea06e38a2c" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="2492c61d-c18e-45e8-9f2b-e8e99ed40338" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
+																<TemplateParameterSubstitution uuid="7d470ea6-7740-43af-839f-6f278fabdd75" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="b288e4cd-2b4c-4470-9262-2af4a93da739" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="f03377a5-492b-4e60-bba9-17d684ca7c35" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="75ae553e-56cb-4e9f-b862-b71b207eda94" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="90be6fd9-50e7-4ab9-a522-be702c74433f" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="9d3e421d-a549-4708-ba4c-c2a6a866ba81" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
+																<TemplateParameterSubstitution uuid="74dec210-61d2-4e86-a809-284c323f15f4" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="3b748aad-143f-42ec-b18e-8e970244c48b" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="c3b7edf2-5c6a-402c-ba20-f64380c96da5" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
+														<TemplateBinding uuid="7f9dc061-439a-499b-81e3-33f567d7e43d" signature="f43af4f4-5cef-4c20-82a1-f1303dc8d2ad">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="86a8e4b7-f4ca-4446-9f1e-36b0c63c5814" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
-																<TemplateParameterSubstitution uuid="d4bd7aa5-e51e-4599-b0f0-f7981ade3dca" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
+																<TemplateParameterSubstitution uuid="c0b165cc-7d97-472d-9a41-2905e8d70810" formal="6167d153-ca37-4442-81c1-8720fd7d6f62" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
+																<TemplateParameterSubstitution uuid="2bce3f15-a984-4149-8f2b-9348062d3b06" formal="04860450-4cc2-45c5-b144-349141d0d4e8" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="cde221bf-b158-4081-87c8-23665a7dc06b" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="af1abbc2-beb1-4d70-b3b4-318dfb13ab56" signature="51430c7f-71ba-4949-84c7-134dee33daea">
+														<TemplateBinding uuid="7be93bea-0e1f-4b4b-9861-6c926c502cc7" signature="51430c7f-71ba-4949-84c7-134dee33daea">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="30149f1a-8972-4cdc-b047-7b83dd3afb25" formal="76b13948-d4ef-4f5a-94c5-e0d157f32244" actual="2ef78b24-b866-4b89-a796-8c7ec28ad9da"/>
+																<TemplateParameterSubstitution uuid="e47c8f81-741b-44fe-a9d7-8798ac793e66" formal="76b13948-d4ef-4f5a-94c5-e0d157f32244" actual="2ef78b24-b866-4b89-a796-8c7ec28ad9da"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Class uuid="fc2d8ca8-2319-4cc8-8d1a-a0eeaad02ef9" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="7e33bc58-54f3-4fd3-a652-74550191e5c8" signature="28567b32-a047-469b-b781-2079b3c7d868">
+														<TemplateBinding uuid="5ea732ff-b471-464c-8f1f-bfe3c285ed2a" signature="28567b32-a047-469b-b781-2079b3c7d868">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="764d2a4f-ef9c-4a85-92bd-d93a8e445aa1" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="87e6c659-0d6e-481d-ae90-f9ddbe6b1100" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
+																<TemplateParameterSubstitution uuid="e64bfbef-0ccb-4a5f-9071-c6ff240e4f90" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="1616ccfe-029a-474d-85bf-bc1dfd964123" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="0e351f71-7077-43a9-9283-bb3b9ef9cf2b" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="b01b2f4f-8e17-415c-b77c-fb745b2977a7" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="76ecdc33-d5dc-492c-ad4c-9879b18e48d0" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="11910fe4-faf8-4b2b-aa98-df85b5fb4687" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
+																<TemplateParameterSubstitution uuid="3608351c-faef-44ef-a8f4-c8cfe83087bf" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="93474100-1f9a-4e3d-b9fd-62a074d0c860"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="da280614-7360-4ec4-bec0-78e5cae6fa67" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="1977e507-9ab3-4313-bac5-9d199a61ac4f" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
+														<TemplateBinding uuid="98cefc68-77f9-4bf4-bfcb-316a1dcf2713" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="c827eada-83c8-4607-aae7-bc0fe4a25b78" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="3894f8b5-ad7a-4131-93a4-29adf967a1ba" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
+																<TemplateParameterSubstitution uuid="9cb6b91f-6f60-4745-b7e2-470944ec1ee5" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="365ebdd5-9e9c-4ab7-9f21-7a762d72e43b" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="23faa490-feaf-48ef-9ba2-a4475c7f11f4" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="3e8d8d39-1816-4408-b30e-d68ec2aacf93" signature="28567b32-a047-469b-b781-2079b3c7d868">
+														<TemplateBinding uuid="ec987aec-8041-4225-b740-b087d8fade4c" signature="28567b32-a047-469b-b781-2079b3c7d868">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="bba8b934-f0f3-4494-acbd-c8d6d10fa2a8" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="b421b53d-7785-4fad-afa5-281d4cac91cd" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="da280614-7360-4ec4-bec0-78e5cae6fa67"/>
+																<TemplateParameterSubstitution uuid="0841f09f-c73f-4c16-ba31-a09881a4eca9" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="ef1f4930-ef33-45b3-b6db-f02cf0cbd103" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="da280614-7360-4ec4-bec0-78e5cae6fa67"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="0600fd47-f904-46bb-8171-ec901fe32e34" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="ff03554e-2607-40da-9365-36177d592eae" signature="28567b32-a047-469b-b781-2079b3c7d868">
+														<TemplateBinding uuid="9b07a221-6ea1-493c-9ebd-8faf194c6d95" signature="28567b32-a047-469b-b781-2079b3c7d868">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="90fde402-a531-46f1-8e7c-ed141ed852e6" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="c8565bf4-5bfd-4c88-8cdb-86c92e30b4ac" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
+																<TemplateParameterSubstitution uuid="e9e56f75-7af5-4b4f-8b72-dda0a7bc1071" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="33131e25-f417-442c-a7cd-b705ef141b93" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="e4d4d21c-9e9f-4eb3-848a-7899f324ea01" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="0424f2f1-3bbb-4917-b34c-b89ee6f3840c" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
+														<TemplateBinding uuid="3eecc0b8-34ee-48b3-ab69-1f3eeb29eac0" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="ccb08280-a99b-445d-b040-3feb22430d45" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="2d468012-2003-44ff-8756-ed6ae7fbe124" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="da280614-7360-4ec4-bec0-78e5cae6fa67"/>
+																<TemplateParameterSubstitution uuid="fc4ecb5f-b8a6-4365-a76a-3442f0515d6c" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="f0107f52-0d4e-40b8-a320-0c22e27b6ead" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="da280614-7360-4ec4-bec0-78e5cae6fa67"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Interface uuid="56b8f859-b64a-4a71-97b1-b9f4349c6654" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="5aff4613-59fd-476b-a07c-c7aa919589a8" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="a5e50a95-3f8d-46df-9ec4-1dfaa566a7d6" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="eb2a13d0-7bc4-4daa-8e4f-5ce26fb569d3" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="e4d4d21c-9e9f-4eb3-848a-7899f324ea01"/>
+																<TemplateParameterSubstitution uuid="d3e43efc-d0cc-41f2-9fd4-54c7bccfaf4d" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="e4d4d21c-9e9f-4eb3-848a-7899f324ea01"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Class uuid="cad94c90-61ab-4357-a3a9-83fdcbb9ca94" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="1cc91d62-4adb-42fb-ba02-fc4f5953439e" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="947c5947-4438-4b1b-87ac-b095bf43a36a" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="dd6473ed-7a6e-4975-873d-ead0e928b538" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
+																<TemplateParameterSubstitution uuid="114372a6-236c-41ed-904f-7529bc842046" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="d6f73223-9a9d-46fc-a18e-15013a0c85a5"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="d8a76686-5db1-464c-a71a-e08c5e1d41b1" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="70b940d5-1b19-450d-b162-3e39b815f2f3" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
+														<TemplateBinding uuid="0003a7bd-bf1c-47b1-8c90-f8b5a3453d93" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="de0f2b88-1615-44c4-82b1-03b92a62550e" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
-																<TemplateParameterSubstitution uuid="ff45eaf5-bad7-4197-8913-4d12e684b367" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
+																<TemplateParameterSubstitution uuid="53766047-ad61-408a-a6ca-ed75d2841eea" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="f6dfb8b6-19c4-489a-b9e2-fb0799aca8a2" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="decba117-da0d-4569-ba8b-f676537c5692"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="e52226ec-c07a-4ea3-a8ba-96ac907ba5f1" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="b03aac1f-d615-41ed-90a6-a1b8a94b0d02" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+														<TemplateBinding uuid="ee84f48d-6ab7-46c3-a066-c0f6a70be9fc" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="d0fa4bbf-892b-4ca7-b70e-a6633ede6e2f" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4091c675-b08c-4b16-9b35-d76b38454932"/>
-																<TemplateParameterSubstitution uuid="1ad92ab0-f823-4e85-ac1d-d53c5c91d3c6" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="00072103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="e14b284d-3027-4adb-a35e-87791d7f7333" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="4091c675-b08c-4b16-9b35-d76b38454932"/>
+																<TemplateParameterSubstitution uuid="066fc1e4-aef8-4de6-b08a-575245471239" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="00072103-7510-11d9-86f2-000476a22f44"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="2716835c-74a2-4201-9640-b95f7da291ec" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="b4e0f184-95cf-404f-adc1-4307a51592b8" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
+														<TemplateBinding uuid="18105afa-95ed-485c-9b1b-5d9f63114d00" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="6ae7cefe-de27-429a-bd1f-4a7412802c79" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
+																<TemplateParameterSubstitution uuid="28bc1b61-86fd-4c09-9a6d-95b6e6232e5b" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="144e79ff-daf7-4a98-9468-38f57df0e7c0" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="c5fe716f-1c15-49e0-8462-6d0b34b91329" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="51d9227a-2608-49c8-95c5-7e0a1965b4a9" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="b652ead9-f28d-4032-a9e1-12b8a06e7bcf" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
+																<TemplateParameterSubstitution uuid="c65f9f6f-c310-4127-8d0e-ab370538ef8a" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="38a90463-fb08-4ef5-adf0-76a0034409ac"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Interface uuid="1a4de36b-6ee0-4aca-8757-9836fa538bf6" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="bd1bbaea-ecfa-4b13-8900-9063e33036fd" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="8e7110ab-5f99-41a6-b17e-aa08f7c70e44" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="c1cf19f8-60a2-438a-a91b-594d8e7a5591" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="4dccf7fa-5d2d-49c5-bf5d-4624fb25b2d5" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="a56de5a0-da7a-47c0-aa6c-96cf91a12b16" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="b6520155-2883-4ad4-8c5c-775b3f365020" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="a8c5536c-09b3-4e40-a8bf-93ec0efafc88" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="f6ece105-575c-47bb-a0b6-d104897063a7" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="73dcf036-0c74-4389-903d-62bf6ec76008"/>
+																<TemplateParameterSubstitution uuid="ebe59c72-61a3-422c-afec-e7406b86b8d3" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="73dcf036-0c74-4389-903d-62bf6ec76008"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Interface uuid="570b8817-a826-4ee2-8f67-726ff7b5ac9f" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="f2c848df-b2fc-43de-8d15-b5420bbbbd84" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="70bc9fea-8902-47c9-ada8-79fc1cee5b4c" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="c7bea3d2-fe12-4763-b62a-c66cedf261c2" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="f92bf2a6-d317-4e90-8d5d-031398fe310c"/>
+																<TemplateParameterSubstitution uuid="4d385772-3aac-45bc-bde4-f39fd3e76e0a" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="f92bf2a6-d317-4e90-8d5d-031398fe310c"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Interface>
 												<Class uuid="fe23ad94-dc87-46d7-a168-b7e005af4027" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="01c60c32-563b-4670-bc17-487a7b87b3a5" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
+														<TemplateBinding uuid="597c8c51-33ec-4079-b549-a5684c05069b" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="805b79e5-21ec-4e53-85d5-2bf57f8b81d7" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="f4f58074-ac2d-4142-8740-4feec33c6861"/>
+																<TemplateParameterSubstitution uuid="72f8b075-2660-4a3a-90ef-3353bdf0fa55" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="f4f58074-ac2d-4142-8740-4feec33c6861"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="a472c890-b81e-4126-acd0-fc35ecc08e9b" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="98b030c6-1fad-417a-bda8-543bfc18c2dd" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
+														<TemplateBinding uuid="1a6f94e5-7051-4388-b4d6-6c08143c2044" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="3af197b2-36e4-4c0e-879b-30f9550179bb" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="3933c0e1-99d0-44af-8454-09ff4da51b9f"/>
+																<TemplateParameterSubstitution uuid="4b728189-2509-4567-987c-aaa75497b41e" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="3933c0e1-99d0-44af-8454-09ff4da51b9f"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="fef6e06a-901a-4246-a6b7-3128762c07d3" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="31b0c79d-66f7-4c8b-9a9d-f4f86c9a547d" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
+														<TemplateBinding uuid="4118ffec-5e61-4d0a-8e5e-69f16620e6c4" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="179719db-38e1-45df-ae40-3381a1b851bc" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="f4f58074-ac2d-4142-8740-4feec33c6861"/>
-																<TemplateParameterSubstitution uuid="2ea5da87-588b-4401-bf82-10dd7bd421c4" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="3933c0e1-99d0-44af-8454-09ff4da51b9f"/>
+																<TemplateParameterSubstitution uuid="c45c26a6-6fab-4315-875d-775c57532be3" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="f4f58074-ac2d-4142-8740-4feec33c6861"/>
+																<TemplateParameterSubstitution uuid="42824e5e-bc60-430b-ab4d-cba4edd9bea5" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="3933c0e1-99d0-44af-8454-09ff4da51b9f"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="dcfb6639-13e1-4e6a-9860-aadcf44753fb" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="2930b4af-ddb5-4e38-bc49-6ffba94669d9" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="676aa612-e764-452a-900a-6f3d4840a7d2" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="1ecadd13-4711-445f-b4ce-aa55b079c2b2" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="fef6e06a-901a-4246-a6b7-3128762c07d3"/>
+																<TemplateParameterSubstitution uuid="294c4ea7-2b9c-4808-b3cc-344f59e8b73f" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="fef6e06a-901a-4246-a6b7-3128762c07d3"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="d043fb44-fabb-4fee-9741-b7bbe89ab13a" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="37870fd5-7bc8-46a6-bf59-5d344466205f" signature="28567b32-a047-469b-b781-2079b3c7d868">
+														<TemplateBinding uuid="51ea5bab-daf5-4b74-bb3b-e0895849270d" signature="28567b32-a047-469b-b781-2079b3c7d868">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="6c8b5f2b-c8c4-48a2-83a7-acbb291e9609" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="73dcf036-0c74-4389-903d-62bf6ec76008"/>
-																<TemplateParameterSubstitution uuid="a0d40a85-59eb-4aea-8023-fad086c4ea3d" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="2ca7d638-279e-4e28-91eb-12a694a53939"/>
+																<TemplateParameterSubstitution uuid="18019e7d-6075-4796-ac8f-143061841c12" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="73dcf036-0c74-4389-903d-62bf6ec76008"/>
+																<TemplateParameterSubstitution uuid="3350767a-48a4-4349-b53a-3c7661fb8047" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="2ca7d638-279e-4e28-91eb-12a694a53939"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="8f786c84-4e49-4a37-98be-39bdbddf6f58" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="47ba5bb7-07c3-4da3-8832-3eb1895cce40" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
+														<TemplateBinding uuid="6f1b0d20-08bc-444c-a670-a1ebeb0c0fca" signature="6643d512-2f1f-4cc9-86b3-05faaa76d5e7">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="8816cce3-3975-4065-8b4a-8a97338f1b36" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
+																<TemplateParameterSubstitution uuid="6fb99af7-5888-4ecf-a1fb-db46f05b017f" formal="3b219d87-8a8f-49a8-9701-1be30e371932" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="a78689d3-e573-428f-aaa5-70f5de7c24bc" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="5e267948-3954-41e1-8922-296ce9baab8d" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="761e2a86-3a0a-40b7-a0de-0b6afd7fa994" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="fc4fcb14-96cd-4f20-b96e-a8c0d576abce" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
+																<TemplateParameterSubstitution uuid="99cfdd99-08b7-4d33-959a-ad7d569d41e0" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="2b8fd736-6e48-4696-a7de-a0d84936b211"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="81d45246-e095-418f-b1e4-3cda02d43a97" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="cd69ff0c-f759-4806-8873-3228bb377a94" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
+														<TemplateBinding uuid="fd025244-308a-4ba2-81f1-e52b751f8768" signature="782ff588-aaa6-4eae-a917-65ca2ba35985">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="48a7dff7-5d1c-421e-9bcc-d799efae0a4f" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
-																<TemplateParameterSubstitution uuid="8716fbba-0a06-4ef5-b5fa-547ee9b11606" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
+																<TemplateParameterSubstitution uuid="c733dc8d-8e04-4a1d-a9ae-48593e05a8ab" formal="acd2c5f7-0a60-411b-8847-0976e50c1b69" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
+																<TemplateParameterSubstitution uuid="dab780a2-9ba7-4db9-ba29-d6dfb7ab96e1" formal="62094d28-f7d2-4c6f-a2f9-259eba0f1945" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="39548bbf-e7e5-40d5-95db-ade375a36621" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="5fecf9ac-3f49-42f9-8e0f-0c0d5d905689" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
+														<TemplateBinding uuid="06de6446-d805-4306-975f-0ac00f24f36f" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="d3917819-19e3-43c2-b021-669dfd196f7b" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
+																<TemplateParameterSubstitution uuid="7b577002-981d-4da2-90cd-27f7ebcc82e0" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="5e2bb146-b312-4327-abfa-6bc36a35b62b" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="58d04a27-829b-46e5-ac9d-27db6ff92c76" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
+														<TemplateBinding uuid="483fca3b-62b0-42a5-a6b6-5677368af5d7" signature="a22d45a3-976f-467f-b03e-e89b0153878a">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="ae687a1f-6441-4a3c-adab-86f5387edfe1" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
+																<TemplateParameterSubstitution uuid="0bf1d7db-ac97-4075-8dc0-d6fc5849643a" formal="33aabe3d-dcdf-41b1-b6ff-d7f59ddca90c" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="79caaaac-577b-436d-9200-429e5bec3117" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="4ee13c08-3b14-4f60-8e37-083962a10aff" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
+														<TemplateBinding uuid="d7cf8ca6-4a1b-4126-80bd-b1c6bfe6c266" signature="e170f899-2e22-4e33-8981-0d418b3f2561">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="3e83fd9d-8b2c-441c-89ac-c91a348c3aa9" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
-																<TemplateParameterSubstitution uuid="9a90944b-ae1d-4500-94e4-f84194da4c8a" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
+																<TemplateParameterSubstitution uuid="23de1d9a-a5f3-42cc-a803-b87c183b9862" formal="425c1cad-16e9-491b-b7c5-23617154f282" actual="8383af27-6b72-40bc-ba9c-a279fa958618"/>
+																<TemplateParameterSubstitution uuid="fae13c88-16f5-4b3b-adc2-c9b153a195d2" formal="c0bb6089-6dfb-4946-96fc-a84dd270cd21" actual="d37bd14e-a493-4c22-af3a-37fc608be4de"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
 												<Class uuid="6c081dfb-520d-40b7-96ec-eeee307d4ac1" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="e9b4c220-a50f-4236-a5b7-c660869da8b0" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
+														<TemplateBinding uuid="ed51ef0c-965f-4302-afea-40a9fa2e94af" signature="6d47382e-765c-455d-91bd-5fab99cc3aca">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="0027361c-38b4-48f7-ab9f-1c8592502409" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="79caaaac-577b-436d-9200-429e5bec3117"/>
+																<TemplateParameterSubstitution uuid="5c989b74-509e-4958-b5bc-d67e84ec50cf" formal="230304b3-9ed2-425e-98c7-1f3d770627d3" actual="79caaaac-577b-436d-9200-429e5bec3117"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
 												</Class>
+												<Interface uuid="f278b1ec-5470-4475-9239-eb9d57c11e7f" name="IBuildDataReadOnlyDictionary" visibility="public" usedForCodeSyncronization="true" DocComment="3cf7a3db-4455-43c0-9a91-215bee9e72ef">
+													<codeFileName>
+														<CodeFileName name="ObjectGeneration\IBuildDataReadOnlyDictionary.cs"/>
+													</codeFileName>
+													<ownedComment>
+														<Comment uuid="3cf7a3db-4455-43c0-9a91-215bee9e72ef" body="&lt;summary&gt;&#13;Provides read only access to &lt;see cref=&quot;IBuilderData&quot;/&gt; organized as a categorized dictionary lookup with read only access.&#13;&lt;/summary&gt;">
+															<annotatedElement idref="f278b1ec-5470-4475-9239-eb9d57c11e7f"/>
+														</Comment>
+													</ownedComment>
+													<generalization>
+														<Generalization uuid="0b9b6e2d-d4a9-417f-95a4-7db5b2a068c9" general="5c742862-1a05-443e-91d6-78e92f584359"/>
+													</generalization>
+												</Interface>
 											</packagedElement>
 										</Package>
 										<Class uuid="43992fc1-19de-4bf2-a957-9fe8649d0f50" name="AllIwantToTest" visibility="public" usedForCodeSyncronization="true" DocComment="394fc0eb-012f-4ed1-9e22-167a0cdba5fb">
@@ -36129,9 +36140,9 @@
 												</Class>
 												<Interface uuid="30202c6c-1f09-4266-ad4f-70231b5d31b9" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="54a517b7-2ed5-499c-90e2-6565f58c6cec" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="6c118de0-49b0-4178-876b-852e93ec0b6b" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="53844314-25a1-4eab-89ed-be924678c585" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+																<TemplateParameterSubstitution uuid="a62ee6be-451d-4cbf-b3dc-b3315e683007" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
@@ -36234,9 +36245,9 @@
 												</Class>
 												<Interface uuid="0c4685c7-827d-4c2d-abfc-3dc9330793c7" visibility="public">
 													<templateBinding>
-														<TemplateBinding uuid="99ba4b49-6160-4744-8a42-549e5809ecfe" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+														<TemplateBinding uuid="48c10d90-4c03-4e65-8752-c780120cc3ae" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 															<parameterSubstitution>
-																<TemplateParameterSubstitution uuid="2f098a5d-a005-4840-a683-63414bd72302" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="9ff1a3e6-339a-49d6-af6b-88d95a599006"/>
+																<TemplateParameterSubstitution uuid="f1b90776-d107-457c-ace5-c5707e67738c" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="9ff1a3e6-339a-49d6-af6b-88d95a599006"/>
 															</parameterSubstitution>
 														</TemplateBinding>
 													</templateBinding>
@@ -36395,113 +36406,113 @@
 										</Class>
 										<Class uuid="de526df5-aaee-44cc-86b0-51632a0060a5" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="46b5c852-a422-4302-a99c-80bbadced159" signature="b81d8391-ee6b-47a2-967e-567034497723">
+												<TemplateBinding uuid="39ccc4e3-1876-451c-b56c-b3aa3ade1c3b" signature="b81d8391-ee6b-47a2-967e-567034497723">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="e257e12c-18a8-4851-bc05-a26365ceaf91" formal="5a46f00d-7c1b-4f79-abbf-0d0ad84bc721" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
+														<TemplateParameterSubstitution uuid="e734c173-2ea1-48a4-9b2a-67aa13f60b18" formal="5a46f00d-7c1b-4f79-abbf-0d0ad84bc721" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="7d4e8bc7-37aa-498f-8595-bd02d457a469" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="ff1e33bd-099a-42ad-8783-82cbafde4f4a" signature="6eb04a6e-c19f-48bd-9c85-0b0b528520db">
+												<TemplateBinding uuid="de535e54-60cd-4a0b-a163-ccd48ff99f3f" signature="6eb04a6e-c19f-48bd-9c85-0b0b528520db">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="6f40b760-ffcb-4c6b-b323-27f1959e96c1" formal="2866390d-d79a-4aa0-bbcf-943c644ce844" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
+														<TemplateParameterSubstitution uuid="b3f5548a-1355-41e8-9c91-213d5b289531" formal="2866390d-d79a-4aa0-bbcf-943c644ce844" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="f001e3a9-db9e-4e5e-a49a-0991fc116345" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="5724cc1b-2f68-4daa-9d06-560541ea56b0" signature="6eb04a6e-c19f-48bd-9c85-0b0b528520db">
+												<TemplateBinding uuid="9b92f702-cb49-4b13-b5ce-48b05fe23fa4" signature="6eb04a6e-c19f-48bd-9c85-0b0b528520db">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="ddc2b570-1f0a-4be8-81d6-61d3e346408d" formal="2866390d-d79a-4aa0-bbcf-943c644ce844" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="88270500-d7fe-4d14-9c0a-9dcd651d9e90" formal="2866390d-d79a-4aa0-bbcf-943c644ce844" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Interface uuid="981e699a-1758-4ce4-bb21-7463603ccd25" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="07a8c18c-cf27-4d82-8224-40131aab6bd8" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="e3bcdd6b-ae9e-4b8a-8036-4cbbbed33099" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="adadf422-a2b8-455e-8962-68ab47694104" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="72d9c31f-c72b-48fb-a7ac-5fbb52efcd7c" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Interface>
 										<Class uuid="3557e721-b083-4f74-b01c-331196126195" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="1b002e95-023a-4211-b626-77c3a99d8e71" signature="28567b32-a047-469b-b781-2079b3c7d868">
+												<TemplateBinding uuid="2beb1e49-8a62-461b-8dd7-2f3cbbf10e13" signature="28567b32-a047-469b-b781-2079b3c7d868">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="1b870317-a7e3-4c96-ad8a-1e24330dbdf5" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
-														<TemplateParameterSubstitution uuid="0ab8c9a9-fee5-47b7-ac58-fa55d6668f61" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="8d2c65db-6ed6-49b0-8bcc-891ec42d5ac4"/>
+														<TemplateParameterSubstitution uuid="57ca5201-6310-4c2c-918e-9b01cf0e3f09" formal="c6484c1a-8ae1-4e8a-be66-7984e5cda323" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
+														<TemplateParameterSubstitution uuid="9bea6af8-b4c3-4443-ba1c-4369c6adbda2" formal="7ad5f975-23c1-458c-a457-c1a362244af0" actual="8d2c65db-6ed6-49b0-8bcc-891ec42d5ac4"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Interface uuid="1acb1809-b381-4e8b-b5b1-a424bda67ddc" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="72c908fc-df13-4d35-ae95-433f567de3be" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="4756d622-7f8c-4029-921a-030d5bca934c" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="005853e0-a1d3-4898-b076-5ebc056e67e2" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
+														<TemplateParameterSubstitution uuid="ce98eb16-796d-4bd8-9379-f64fdba2f263" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="47f6e932-293b-46a4-9201-1328674f517c"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Interface>
 										<Class uuid="07f40c88-ee81-4c42-83e4-35b4d52ef13f" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="990a8ee3-925c-4d01-841b-b46e8e801026" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="174d6dc0-c769-4894-9d27-a817b47e8172" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="4fbb63a6-df7d-41e0-9cde-b463882f329d" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
+														<TemplateParameterSubstitution uuid="005daf0b-3d56-48a9-b8a9-89598a622716" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="4008d337-5065-4117-a34c-84e21b311ea5" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="8bad67da-fcc5-43d8-9876-464c0f63c401" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="4fe9ef46-b8f7-43e9-9abd-57354550b5de" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="66c281f8-8fc5-406b-b7cb-499f1ed171b4" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="13f9d816-7d81-4189-8df6-bd4be819f3f7" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="3a554988-7f33-409c-9325-0fc592581be8" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="0a57df6f-3a87-4b0e-bb26-194538d61ab8" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
+												<TemplateBinding uuid="ce92559f-e0d3-4d03-8b49-dbd07019a66c" signature="b1b832ff-64d9-49cd-9815-01d834446d96">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="98b8311b-4c89-4fae-8d82-ee33f19a51e6" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0ea0a84b-5207-4d9a-8033-a38c78788d1b"/>
-														<TemplateParameterSubstitution uuid="5fbfb293-8678-41b6-885e-337c0fd03e8e" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="89e44fbf-169a-4cec-ba9a-188e42146baf"/>
-														<TemplateParameterSubstitution uuid="3b1685fa-fdf3-4ab7-bfad-ef1917b40eb4" formal="1d27c00f-e281-4800-b69a-5ab4f4d7bbce" actual="f0f322c9-5e24-4697-810d-1aa85cff48f1"/>
-														<TemplateParameterSubstitution uuid="42d57d3c-7b32-484e-b740-747e7068822d" formal="dfeb6082-c877-43b1-afb9-a54827ac6e42" actual="34b1653f-b465-4259-9463-e80ae7880226"/>
-														<TemplateParameterSubstitution uuid="fc31d6fe-19fd-4006-b900-db92ea46f907" formal="64a7d67d-ca64-4eba-93da-c57e01d12c16" actual="ff30b704-ad55-464b-b47b-239c79e283c2"/>
+														<TemplateParameterSubstitution uuid="09d22e1c-0f76-4c7e-8596-61e972a12c32" formal="c8f57fb1-441f-435b-9db5-330646352974" actual="0ea0a84b-5207-4d9a-8033-a38c78788d1b"/>
+														<TemplateParameterSubstitution uuid="65d45dcc-af83-4c82-ab99-3638e4122024" formal="c0f34fed-4b42-4a9a-915e-938bc74a4bc6" actual="89e44fbf-169a-4cec-ba9a-188e42146baf"/>
+														<TemplateParameterSubstitution uuid="9354683a-4fe4-4e10-8f38-5b65a879c851" formal="1d27c00f-e281-4800-b69a-5ab4f4d7bbce" actual="f0f322c9-5e24-4697-810d-1aa85cff48f1"/>
+														<TemplateParameterSubstitution uuid="28fad832-4f62-4823-bbab-0d22e31bc58e" formal="dfeb6082-c877-43b1-afb9-a54827ac6e42" actual="34b1653f-b465-4259-9463-e80ae7880226"/>
+														<TemplateParameterSubstitution uuid="79cb985c-7140-42be-bb46-c6e7afbae208" formal="64a7d67d-ca64-4eba-93da-c57e01d12c16" actual="ff30b704-ad55-464b-b47b-239c79e283c2"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="45dd86d8-2185-4d88-aa95-86b385c89d47" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="96304b84-fd2e-4fa5-a7fe-1faaed618b10" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
+												<TemplateBinding uuid="2efb2964-dcb9-4a0d-b218-5e114325bc50" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="21f55c59-082d-443c-9a9d-2232aaae8d1f" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="0114a538-e3d3-4a14-bc8e-3a6646277c57" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Interface uuid="0b4b5286-4583-4a59-90bc-18ef07e19922" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="26ba4211-8ac7-42c8-928e-2a29aa383ee6" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="cc036255-7ffe-4361-9f61-1807a866657f" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="823e4732-e1c4-4f4d-b174-82fb057202d1" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="0816c491-f4e8-47db-891e-e678c2aebf9e"/>
+														<TemplateParameterSubstitution uuid="e881060f-20ea-4057-8881-6c4a57c0bdfc" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="0816c491-f4e8-47db-891e-e678c2aebf9e"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Interface>
 										<Interface uuid="14dddab0-c225-4a05-8473-b46f18657d96" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="8c7a4b02-5f67-47df-87c6-87816d151ed8" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="f08b0ac6-b4c8-4e45-a304-0a4dc0211c1e" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="a04aa452-9d7d-43b8-a8a1-1d640437405c" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="0ccd91c2-f5eb-488b-b5b9-2c85a86bbc30"/>
+														<TemplateParameterSubstitution uuid="96e0a16a-fc73-430f-9165-380f69b16140" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="0ccd91c2-f5eb-488b-b5b9-2c85a86bbc30"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
@@ -37890,45 +37901,45 @@
 										</Package>
 										<Class uuid="12901518-8175-4899-b48e-ab3e94a51045" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="ac1c549c-e59d-4a8a-aab3-4c6a6d70bfb5" signature="b80e56f9-51b3-4722-963f-30352b9a2de0">
+												<TemplateBinding uuid="82f5e358-b8d9-4879-adc1-219750d15628" signature="b80e56f9-51b3-4722-963f-30352b9a2de0">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="bafce16d-3a05-42d3-9a10-5fb8082f8051" formal="7090de48-6e72-475e-9889-d60744b0d64a" actual="4dc513b3-21f1-4c2c-83ac-1be29bc7251f"/>
+														<TemplateParameterSubstitution uuid="81cc1259-62c6-47b0-af30-a648f5efca1a" formal="7090de48-6e72-475e-9889-d60744b0d64a" actual="4dc513b3-21f1-4c2c-83ac-1be29bc7251f"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="480e22ec-788e-4ad8-a50a-ed16f61cbb15" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="5ed16d3c-4278-4fff-ba8f-b5c06ff7981a" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="fbf55c28-f7c7-4783-90a9-4dd7af95bb31" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="d2b4e4f4-8e19-49a2-a744-78053de587b1" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="23312475-6740-4fbc-af8c-a6ca9d9bb2f5"/>
+														<TemplateParameterSubstitution uuid="bd295930-80e3-414e-aae4-6f915c0ea79d" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="23312475-6740-4fbc-af8c-a6ca9d9bb2f5"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Interface uuid="c3ec5679-1746-4707-a05f-ea19d2f1a62b" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="e3c77936-39b0-4808-b667-ae0db99be58e" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
+												<TemplateBinding uuid="88a82829-2fd2-4bb6-9260-86bc05938cf1" signature="92690b99-e66f-4466-af6e-b9c32f05547e">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="7bf42732-17c3-4f94-b2ad-aa2f1296ba3c" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="e75b32d9-bf7f-48b9-a71a-9af52f4f1213"/>
+														<TemplateParameterSubstitution uuid="79731345-5119-44d0-8cef-3fc89c9aedd5" formal="45ce1262-9215-455e-a7dd-630bcba3f3e3" actual="e75b32d9-bf7f-48b9-a71a-9af52f4f1213"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Interface>
 										<Class uuid="61df6c64-53a2-44aa-9647-ed6356236c06" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="2af2dded-cf73-419e-9e51-45ce50ba8c6c" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
+												<TemplateBinding uuid="bb8e1204-22a7-48fa-9a27-6da2173395c0" signature="d55d89f3-7413-4486-8eff-888f05d26f86">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="d3f80ec1-e46b-4076-8bf5-018904fde209" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
+														<TemplateParameterSubstitution uuid="5f418dcb-4fc3-4193-92af-a1d0e947fa93" formal="618dc619-e624-43d6-9f66-cc9a163e8343" actual="000e2103-7510-11d9-86f2-000476a22f44"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
 										</Class>
 										<Class uuid="e2cb8dff-78d4-4da1-a68f-7c02321e4143" visibility="public">
 											<templateBinding>
-												<TemplateBinding uuid="e9472048-15da-44a5-ad50-72fe85ace1e7" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
+												<TemplateBinding uuid="afabe4b4-0bf2-45eb-ac4c-9050167817ed" signature="8c614ddf-03d9-4df6-bd01-d5df5bfe5ccd">
 													<parameterSubstitution>
-														<TemplateParameterSubstitution uuid="b645c70c-5a1e-45ee-a09a-d56e3ff104ac" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
+														<TemplateParameterSubstitution uuid="f09ddd63-01d9-4e8e-ba73-46e604563dbe" formal="6ce295a3-8f36-4e81-9261-bc0dff45279b" actual="860222cc-4c20-47cb-8e39-5c76e9074d43"/>
 													</parameterSubstitution>
 												</TemplateBinding>
 											</templateBinding>
@@ -38512,6 +38523,7 @@
 						</Class>
 					</packagedElement>
 				</Package>
+				<Package uuid="df508567-b556-404a-9da1-9c1001f07a23" name="!General" visibility="public"/>
 			</packagedElement>
 		</Package>
 	</ModelHistory>

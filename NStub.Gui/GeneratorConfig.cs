@@ -14,6 +14,7 @@ namespace NStub.Gui
     using System.Windows.Forms;
     using NStub.CSharp.ObjectGeneration;
     using NStub.CSharp.ObjectGeneration.Builders;
+    using NStub.Core;
 
     /// <summary>
     /// Application <see cref="BuildDataDictionary"/> data configurator.
@@ -23,7 +24,7 @@ namespace NStub.Gui
         #region Fields
 
         private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
-        private readonly BuildDataDictionary properties = new BuildDataDictionary();
+        private readonly BuildDataDictionary properties;
 
         #endregion
 
@@ -34,6 +35,17 @@ namespace NStub.Gui
         /// </summary>
         public GeneratorConfig()
         {
+            properties = new BuildDataDictionary();
+            this.InitializeComponent();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GeneratorConfig"/> class.
+        /// </summary>
+        public GeneratorConfig(BuildDataDictionary buildData)
+        {
+            Guard.NotNull(() => buildData, buildData);
+            properties = buildData;
             this.InitializeComponent();
         }
 
@@ -71,25 +83,29 @@ namespace NStub.Gui
 
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {
-            foreach (var builderName in this.memberfactory.BuilderTypes)
-            {
-                var lvItem = this.lvParameters.Items.Add(builderName);
-            }
 
             // {[NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder, NStub.CSharp.ObjectGeneration.BuildHandler]}
-            var mf = this.memberfactory as MemberBuilderFactory;
+            //var mf = this.memberfactory as MemberBuilderFactory;
             var sampleXmlData =
                 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
                 @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
                 @"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
                 @"    <UseDings>false</UseDings>" + Environment.NewLine +
                 @"    <Moep>0</Moep>" + Environment.NewLine +
-                @"    <Enabled>false</Enabled>" + Environment.NewLine +
+                @"    <Enabled>true</Enabled>" + Environment.NewLine +
                 @"  </PropertyBuilderUserParameters>" + Environment.NewLine +
                 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
 
             /*var xxxx =*/
-            mf.SetParameters(sampleXmlData, this.properties);
+            this.memberfactory.SetParameters(sampleXmlData, this.properties);
+
+            foreach (var builderType in this.memberfactory.BuilderTypes)
+            {
+                var para = this.memberfactory.GetParameters(builderType, this.properties);
+                var lvItemIndex = this.lvParameters.Items.Add(builderType);
+                this.lvParameters.SetItemChecked(lvItemIndex, para.Enabled);
+            }
+
         }
 
         private void LvParametersSelectedIndexChanged(object sender, EventArgs e)
@@ -99,12 +115,11 @@ namespace NStub.Gui
                 return;
             }
 
-            var mf = this.memberfactory as MemberBuilderFactory;
-
             // tbConfig.Text = mf.GetSampleSetupData(SelectedType);
             // tbConfig.Text = mf.GetParameters(SelectedType, properties).Serialize();
             // tbConfig.Text = mf.SerializeSetupData(SelectedType, properties);
-            this.tbConfig.Text = mf.SerializeParametersForBuilderType(this.properties);
+            //this.tbConfig.Text = this.memberfactory.SerializeParametersForAllBuilderTypes(this.properties);
+            this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             var sample = this.memberfactory.GetParameters(this.SelectedType, this.properties);
             this.propGrid.SelectedObject = sample;
             return;

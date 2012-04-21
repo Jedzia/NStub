@@ -62,5 +62,35 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
         IMemberBuilderParameters GetParameters(Type builderType, IBuildDataDictionary properties);
+
+        /// <summary>
+        /// Set the parameters in the properties storage from a specified xml representation of the data.
+        /// </summary>
+        /// <param name="xml">The xml representation of the data.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
+        IMemberBuilderParameters SetParameters(string xml, IBuildDataDictionary properties);
+
+        /// <summary>
+        /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
+        /// </summary>
+        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuilderParameters"/> data to serialize.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        string SerializeAllSetupData(IBuildDataDictionary properties);
+
+        /// <summary>
+        /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
+        /// </summary>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuilderParameters"/> data to serialize.</param>
+        /// <returns>
+        /// The serialized data of the specified <paramref name="builderType"/>.
+        /// </returns>
+        string SerializeSetupData(Type builderType, BuildDataDictionary properties);
     }
 }
