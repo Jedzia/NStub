@@ -72,6 +72,8 @@ namespace NStub.CSharp.ObjectGeneration
     /// </summary>
     public interface IBuildDataCollection : IEnumerable<IBuilderData>
     {
+        IReadOnlyDictionary<string, IBuilderData> General { get; }
+
         /// <summary>
         /// Adds the specified data item to the "General" topic of this list.
         /// </summary>
@@ -86,6 +88,18 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="key">The key of the item.</param>
         /// <param name="item">The data item to add.</param>
         void AddDataItem(string category, string key, IBuilderData item);
+
+                /// <summary>
+        /// Gets the value associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <param name="value">When this method returns, contains the value associated with the specified
+        /// key, if the key is found; otherwise, the default value for the type of the
+        /// value parameter. This parameter is passed uninitialized.</param>
+        /// <returns><c>true</c> if the this instance contains an
+        /// element with the specified key; otherwise, <c>false</c>.</returns>
+        /// <exception cref="ArgumentNullException">key is <c>null</c>.</exception>
+        bool TryGetValue(string key, out IBuilderData value);
 
         /// <summary>
         /// Returns an enumerator that iterates through the category collection.
@@ -126,6 +140,14 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         #region Properties
+
+        public IReadOnlyDictionary<string, IBuilderData> General
+        {
+            get
+            {
+                return new ReadOnlyDictionary<string, IBuilderData>(this.generalData);
+            }
+        }
 
         /// <summary>
         /// Gets the number of data items.

@@ -186,7 +186,7 @@ namespace NStub.CSharp.BuildContext
         }
 
         /// <summary>
-        /// Gets the builder data specific to this builders key.
+        /// Gets the builder data specific to this builders key. <see cref="TestKey"/>.
         /// </summary>
         /// <param name="category">Name of the category to request.</param>
         /// <returns>
@@ -203,6 +203,16 @@ namespace NStub.CSharp.BuildContext
             IBuilderData result;
             this.BuildData.TryGetValue(category, this.TestKey, out result);
             return result;
+        }
+
+        public T GetBuilderData<T>(IMemberBuilder builder) where T : class, IBuilderData
+        {
+            var dic = this.BuildData.General;
+            IBuilderData userData;
+            var found = dic.TryGetValue(builder.GetType().FullName, out userData);
+            //var userData = this.BuildData.General[builder.GetType().FullName];
+                //as PropertyBuilderUserParameters;
+            return userData as T;
         }
 
         /// <summary>

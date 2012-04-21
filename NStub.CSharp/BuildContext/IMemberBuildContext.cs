@@ -32,6 +32,8 @@ namespace NStub.CSharp.BuildContext
         /// <returns>The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.</returns>
         IBuilderData GetBuilderData(string category);
 
+        T GetBuilderData<T>(IMemberBuilder builder) where T : class, IBuilderData;
+
         /// <summary>
         /// Gets the data specific to SetUp and TearDown test-methods.
         /// </summary>
@@ -39,5 +41,6 @@ namespace NStub.CSharp.BuildContext
         /// Contains the SetUp and TearDown initialization.
         /// </remarks>
         ISetupAndTearDownContext SetUpTearDownContext { get; }
+
     }
 }

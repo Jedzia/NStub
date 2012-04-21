@@ -48,6 +48,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.</returns>
         IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context);
 
-        IBuilderSetupParameters GetParameters(Type sampleDataType, BuildDataCollection globalProperties);
+        IBuilderSetupParameters GetParameters(Type sampleDataType, IBuildDataCollection globalProperties);
     }
 }

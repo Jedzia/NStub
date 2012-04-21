@@ -138,7 +138,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
         /// <returns>A new instance of a matching parameter data set for the specified builder.</returns>
         /// <exception cref="KeyNotFoundException">The given builderType was not present in the lookup.</exception>
-        public IBuilderSetupParameters GetParameters(Type builderType, BuildDataCollection globalProperties)
+        public IBuilderSetupParameters GetParameters(Type builderType, IBuildDataCollection globalProperties)
         {
             IBuilderData result;
             var found = globalProperties.TryGetValue("" + builderType.FullName, out result);
@@ -189,7 +189,7 @@ namespace NStub.CSharp.ObjectGeneration
             return PrettyPrintXml(xmlDoc.OuterXml);
         }
 
-        public string SerializeParametersForBuilderType(/*Type builderType, string setupInnerName,*/  BuildDataCollection globalProperties)
+        public string SerializeParametersForBuilderType(/*Type builderType, string setupInnerName,*/  IBuildDataCollection globalProperties)
         {
             var xmlDoc = new XmlDocument();
             var root = xmlDoc.CreateElement("BuilderData");
@@ -248,7 +248,7 @@ namespace NStub.CSharp.ObjectGeneration
             return str;
         }
 
-        public IBuilderSetupParameters SetParameters(string xml, BuildDataCollection globalProperties)
+        public IBuilderSetupParameters SetParameters(string xml, IBuildDataCollection globalProperties)
         {
             //<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
             var doc = new XmlDocument();

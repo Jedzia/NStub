@@ -97,6 +97,11 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
             var propertyData = context.GetBuilderData("Property");
 
+            //var userData = context.BuildData.General[this.GetType().FullName] as PropertyBuilderUserParameters;
+            var userData = context.GetBuilderData<PropertyBuilderUserParameters>(this);
+            if (userData != null)
+            {
+            }
             // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, propertyName);

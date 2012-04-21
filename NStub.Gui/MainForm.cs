@@ -297,8 +297,28 @@ namespace NStub.Gui
         private void LoadBuildPropertyData()
         {
             buildData.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
+            GeneratorConfigLoad(this.buildData);
         }
 
+        private void GeneratorConfigLoad(IBuildDataCollection properties)
+        {
+            // {[NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder, NStub.CSharp.ObjectGeneration.BuildHandler]}
+            var mf = memberfactory as MemberBuilderFactory;
+            var sampleXmlData =
+@"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
+@"  <PropertyBuilderUserParameters>" + Environment.NewLine +
+@"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
+@"    <UseDings>false</UseDings>" + Environment.NewLine +
+@"    <Moep>0</Moep>" + Environment.NewLine +
+@"    <Enabled>false</Enabled>" + Environment.NewLine +
+@"  </PropertyBuilderUserParameters>" + Environment.NewLine +
+@"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
+
+            /*var xxxx =*/
+            mf.SetParameters(sampleXmlData, properties);
+        }
+
+        private readonly IMemberBuilderFactory memberfactory = MemberBuilderFactory.Default;
 
         private Assembly ad_AssemblyResolve(object sender, ResolveEventArgs args)
         {
