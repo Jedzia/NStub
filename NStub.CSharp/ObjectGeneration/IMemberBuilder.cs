@@ -11,15 +11,6 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using NStub.CSharp.BuildContext;
-using System;
-
-        /// <summary>
-    /// Implements a test method generator for type members.
-    /// </summary>
-    public interface IMultiBuilder : IMemberBuilder
-    {
-        Guid Id { get; }
-    }
 
     /// <summary>
     /// Implements a test method generator for type members.

@@ -23,10 +23,12 @@ namespace NStub.Gui
     using NStub.CSharp.MbUnitRhinoMocks;
     using NStub.CSharp.ObjectGeneration;
     using NStub.CSharp.ObjectGeneration.Builders;
+    using NStub.Gui.Components;
     using NStub.Gui.Properties;
     using System.Text;
     using System.ComponentModel;
     using NStub.Gui.Util;
+    using NStub.Gui.Util.Dumper;
 
     /// <summary>e
     /// This is the main UI form for the NStub application.
@@ -331,17 +333,5 @@ namespace NStub.Gui
             var result = wnd.ShowDialog();
         }
 
-    }
-
-    /// <summary>
-    /// Provides simple logging capabilities.
-    /// </summary>
-    public interface ILoggable
-    {
-        /// <summary>
-        /// Logs the specified text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        void Log(string text);
     }
 }

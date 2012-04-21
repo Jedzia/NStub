@@ -15,11 +15,6 @@ namespace NStub.Core
     using System.Reflection;
 
     /// <summary>
-    /// Defines the data type of a <see cref="TestNode"/>.
-    /// </summary>
-    public enum TestNodeType { Root, Assembly, Module, Class, Method }
-
-    /// <summary>
     /// Tree-structure data for the representation of class and member types in an assembly.
     /// </summary>
     public class TestNode
@@ -35,18 +30,11 @@ namespace NStub.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="TestNode"/> class.
         /// </summary>
-        internal TestNode()
-        {
-            this.TestNodeType = TestNodeType.Root;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TestNode"/> class.
-        /// </summary>
         /// <param name="text">The text of the node.</param>
+        /// <param name="testNodeType">Type of the test node.</param>
         /// <param name="tagValue">The tag value.</param>
         /// <remarks>
-        /// The <paramref name="tagValue"/> is put into the <see cref="TestNode.MethodInfo"/> field as 
+        /// The <paramref name="tagValue"/> is put into the <see cref="TestNode.MethodInfo"/> field as
         /// <see cref="MethodInfo"/> or into the <see cref="ClrType"/>, when it is a <see cref="Type"/>.
         /// </remarks>
         public TestNode(string text, TestNodeType testNodeType, object tagValue)
@@ -75,15 +63,23 @@ namespace NStub.Core
             }*/
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TestNode"/> class.
+        /// </summary>
+        internal TestNode()
+        {
+            this.TestNodeType = TestNodeType.Root;
+        }
+
         #endregion
 
         #region Properties
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="TestNode"/> is marked to be processed. 
+        /// Gets or sets a value indicating whether this <see cref="TestNode"/> is marked to be processed.
         /// </summary>
         /// <value>
-        /// <c>true</c> if to processed; otherwise, <c>false</c>.
+        ///   <c>true</c> if to processed; otherwise, <c>false</c>.
         /// </value>
         public bool Checked { get; set; }
 
@@ -129,14 +125,6 @@ namespace NStub.Core
         public MethodInfo MethodInfo { get; private set; }
 
         /// <summary>
-        /// Gets the type of the test node.
-        /// </summary>
-        /// <value>
-        /// The type of the test node.
-        /// </value>
-        public TestNodeType TestNodeType { get; private set; }
-
-        /// <summary>
         /// Gets the list of child nodes.
         /// </summary>
         public IList<TestNode> Nodes
@@ -146,6 +134,14 @@ namespace NStub.Core
                 return this.nodes ?? (this.nodes = new List<TestNode>());
             }
         }
+
+        /// <summary>
+        /// Gets the type of the test node.
+        /// </summary>
+        /// <value>
+        /// The type of the test node.
+        /// </value>
+        public TestNodeType TestNodeType { get; private set; }
 
         /// <summary>
         /// Gets the full qualified name of the type.

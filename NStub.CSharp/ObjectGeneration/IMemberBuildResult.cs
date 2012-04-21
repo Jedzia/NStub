@@ -10,13 +10,13 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
-    using NStub.CSharp.BuildContext;
-
     /// <summary>
     /// Provides feedback in the pre build phase of test object generation.
     /// </summary>
     public interface IMemberBuildResult
     {
+        #region Properties
+
         /// <summary>
         /// Gets or sets a value indicating whether to exclude the member from the test generation.
         /// </summary>
@@ -24,5 +24,7 @@ namespace NStub.CSharp.ObjectGeneration
         ///   <c>true</c> if excluding the member from the test generation; otherwise, <c>false</c>.
         /// </value>
         bool ExcludeMember { get; set; }
+
+        #endregion
     }
 }

@@ -12,9 +12,8 @@ namespace NStub.Gui
 {
     using System;
     using System.Windows.Forms;
-    using NStub.CSharp.ObjectGeneration;
-    using NStub.CSharp.ObjectGeneration.Builders;
     using NStub.Core;
+    using NStub.CSharp.ObjectGeneration;
 
     /// <summary>
     /// Application <see cref="BuildDataDictionary"/> data configurator.
@@ -35,17 +34,18 @@ namespace NStub.Gui
         /// </summary>
         public GeneratorConfig()
         {
-            properties = new BuildDataDictionary();
+            this.properties = new BuildDataDictionary();
             this.InitializeComponent();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GeneratorConfig"/> class.
         /// </summary>
+        /// <param name="buildData">The build data property store.</param>
         public GeneratorConfig(BuildDataDictionary buildData)
         {
             Guard.NotNull(() => buildData, buildData);
-            properties = buildData;
+            this.properties = buildData;
             this.InitializeComponent();
         }
 
@@ -80,14 +80,30 @@ namespace NStub.Gui
             pb.Items.Add(pbps);
             return pb;
         }*/
-
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {
-            foreach (var builderType in this.memberfactory.BuilderTypes)
+            foreach(var builderType in this.memberfactory.BuilderTypes)
             {
                 var para = this.memberfactory.GetParameters(builderType, this.properties);
                 var lvItemIndex = this.lvParameters.Items.Add(builderType);
                 this.lvParameters.SetItemChecked(lvItemIndex, para.Enabled);
+            }
+        }
+
+        private void LvParametersItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var current = e.CurrentValue;
+            if (this.SelectedType == null)
+            {
+                return;
+            }
+
+            var item = this.memberfactory.GetParameters(this.SelectedType, this.properties);
+            var newValue = e.CurrentValue != CheckState.Checked;
+            if (item.Enabled != newValue)
+            {
+                item.Enabled = newValue;
+                this.SetXmlConfigTextFromType(this.SelectedType);
             }
         }
 
@@ -99,29 +115,12 @@ namespace NStub.Gui
             }
 
             this.propGrid.SelectedObject = this.memberfactory.GetParameters(this.SelectedType, this.properties);
-            SetXmlConfigTextFromType(this.SelectedType);
-        }
-
-        private void LvParametersItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            var current = e.CurrentValue;
-            if (SelectedType == null)
-            {
-                return;
-            }
-
-            var item = this.memberfactory.GetParameters(this.SelectedType, this.properties);
-            var newValue = e.CurrentValue != CheckState.Checked;
-            if (item.Enabled != newValue)
-            {
-                item.Enabled = newValue;
-                SetXmlConfigTextFromType(this.SelectedType);
-            }
+            this.SetXmlConfigTextFromType(this.SelectedType);
         }
 
         private void PropGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            SetXmlConfigTextFromType(this.SelectedType);
+            this.SetXmlConfigTextFromType(this.SelectedType);
         }
 
         private void SetXmlConfigTextFromType(Type parameterType)
@@ -130,6 +129,7 @@ namespace NStub.Gui
             {
                 return;
             }
+
             this.tbConfig.Text = this.memberfactory.SerializeSetupData(parameterType, this.properties);
         }
     }

@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.Gui
+namespace NStub.Gui.Components
 {
     using System;
     using System.ComponentModel;

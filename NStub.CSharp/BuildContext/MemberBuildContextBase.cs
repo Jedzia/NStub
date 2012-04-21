@@ -65,7 +65,7 @@ namespace NStub.CSharp.BuildContext
         #region Properties
 
         /// <summary>
-        /// Contains information about the build members in a dictionary form.
+        /// Gets information about the build members in a dictionary form.
         /// </summary>
         public BuildDataDictionary BuildData { get; private set; }
 
@@ -177,12 +177,8 @@ namespace NStub.CSharp.BuildContext
         {
             get
             {
-                if (this.testObjectType == null)
-                {
-                    this.testObjectType = this.GetTestObjectClassType(this.TestClassDeclaration);
-                }
-
-                return this.testObjectType;
+                return this.testObjectType ??
+                       (this.testObjectType = this.GetTestObjectClassType(this.TestClassDeclaration));
             }
         }
 
@@ -192,7 +188,7 @@ namespace NStub.CSharp.BuildContext
         public CodeTypeMember TypeMember { get; private set; }
 
         /// <summary>
-        /// Gets the build result feedback object in the pre build phase of test object generation.
+        /// Gets the build result feedback object in the pre-build phase of test object generation.
         /// </summary>
         public IMemberBuildResult BuildResult { get; private set; }
 
@@ -205,7 +201,7 @@ namespace NStub.CSharp.BuildContext
         /// <returns>
         /// The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.
         /// </returns>
-        /// <exception cref="InvalidOperationException">Can't lookup category builder data without a correct TestKey propery.</exception>
+        /// <exception cref="InvalidOperationException">Can't lookup category builder data without a correct <see cref="TestKey"/> property.</exception>
         public IBuilderData GetBuilderData(string category)
         {
             if (string.IsNullOrEmpty(this.TestKey))
@@ -219,11 +215,19 @@ namespace NStub.CSharp.BuildContext
             return result;
         }
 
+        /// <summary>
+        /// Gets the builder data specific to this builders key.
+        /// </summary>
+        /// <typeparam name="T">Type of the <see cref="IMemberBuilder"/></typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>
+        /// The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.
+        /// </returns>
         public T GetBuilderData<T>(IMemberBuilder builder) where T : class, IBuilderData
         {
             var dic = this.BuildData.General;
             IBuilderData userData;
-            var found = dic.TryGetValue(builder.GetType().FullName, out userData);
+            dic.TryGetValue(builder.GetType().FullName, out userData);
 
             // var userData = this.BuildData.General[builder.GetType().FullName];
             // as PropertyBuilderUserParameters;
@@ -233,7 +237,7 @@ namespace NStub.CSharp.BuildContext
         /// <summary>
         /// Gets the test method info for this test object member.
         /// </summary>
-        /// <param name="typeMember">The type member that hold the Userdata of the current test object member.</param>
+        /// <param name="typeMember">The type member that hold the User data of the current test object member.</param>
         /// <returns>The test method info for this test object member.</returns>
         protected abstract MethodInfo GetTestMethodInfo(CodeTypeMember typeMember);
 

@@ -1,6 +1,8 @@
 namespace NStub.Gui
 {
-	partial class MainForm
+    using NStub.Gui.Components;
+
+    partial class MainForm
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -48,8 +50,8 @@ namespace NStub.Gui
             this.cbGenerators = new System.Windows.Forms.ComboBox();
             this.logtimer = new System.Windows.Forms.Timer(this.components);
             this.bnConfigGenerator = new System.Windows.Forms.Button();
-            this.bpc = new NStub.Gui.BuildPropertyComponent(this.components);
-            this.settings = new NStub.Gui.SettingsHelperComponent(this.components);
+            this.bpc = new BuildPropertyComponent(this.components);
+            this.settings = new SettingsHelperComponent(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();

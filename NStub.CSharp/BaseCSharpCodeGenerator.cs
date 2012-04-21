@@ -48,7 +48,7 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="buildSystem">The build system.</param>
         /// <param name="codeNamespace">The code namespace.</param>
-        /// <param name="testBuilders">The test builder repository. If null, is substituted with <see cref="TestBuilderFactory.Default"/></param>
+        /// <param name="testBuilders">The test builder repository. If <c>null</c>, is substituted with <see cref="MemberBuilderFactory.Default"/></param>
         /// <param name="configuration">The configuration of the generator.</param>
         /// <exception cref="System.ArgumentNullException"><paramref name="codeNamespace"/> or
         /// <cref name="ICodeGeneratorParameters.OutputDirectory"/> is <c>null</c>.</exception>
@@ -90,7 +90,7 @@ namespace NStub.CSharp
             if (outputDirectory == null)
             {
                 throw new ArgumentNullException(
-                    "outputDirectory",
+                    "configuration",
                     Exceptions.ParameterCannotBeNull);
             }
 
@@ -99,7 +99,7 @@ namespace NStub.CSharp
             {
                 throw new ArgumentException(
                     Exceptions.StringCannotBeEmpty,
-                    "outputDirectory");
+                    "configuration");
             }
 
             // Ensure that the output directory is valid
@@ -336,13 +336,10 @@ namespace NStub.CSharp
                 }
 
                 // pre calculate property data and test names.
-                this.PreCalculateMemberBuildContext(
+                this.DetermineTestNameAndSetPropertyBuildData(
                     contextLookup,
-                    testClassDeclaration,
-                    codeNamespace,
                     initialMembers,
-                    this.BuildProperties,
-                    setTearContext);
+                    this.BuildProperties);
 
                 // Run test generation main routine.
                 foreach (CodeTypeMember typeMember in initialMembers)
@@ -792,26 +789,15 @@ namespace NStub.CSharp
             return contextLookup;
         }
 
-
-        private void PreCalculateMemberBuildContext(
+        private void DetermineTestNameAndSetPropertyBuildData(
             Dictionary<CodeTypeMember, MemberBuildContext> contextLookup,
-            CodeTypeDeclaration testClassDeclaration,
-            CodeNamespace codeNamespace,
             IEnumerable<CodeTypeMember> initialMembers,
-            BuildDataDictionary propertyData,
-            ISetupAndTearDownCreationContext setTearContext)
+            BuildDataDictionary propertyData)
         {
-            //var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
-            // var propertyData = new Dictionary<string, IBuilderData>();
-            // buildData.AddDataItem(propertyData);
             foreach (CodeTypeMember typeMember in initialMembers)
             {
-                //var memberBuildContext = new MemberBuildContext(
-                //    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
                 var memberBuildContext = contextLookup[typeMember];
 
-                // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
-                // if i put the stuff here into this.GenerateCodeTypeMember(...)
                 var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
                 var composedTestName = memberBuildContext.TypeMember.Name;
                 foreach (var memberBuilder in builders)
@@ -820,8 +806,6 @@ namespace NStub.CSharp
                 }
 
                 memberBuildContext.TestKey = composedTestName;
-
-                //contextLookup.Add(typeMember, memberBuildContext);
 
                 // Setting the memberinfo for properties in the category 'Property' with the composedTestName as key.
                 // Todo: hmmm, this was all about that IBuildData and property get/set detection ... and how to find out

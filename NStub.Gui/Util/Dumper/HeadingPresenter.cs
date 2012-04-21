@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ParameterDescriptionAttribute.cs" company="EvePanix">
+// <copyright file="HeadingPresenter.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,25 +8,31 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp
+namespace NStub.Gui.Util.Dumper
 {
-    using System;
-
-    /// <summary>
-    /// Describes a parameter class.
-    /// </summary>
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-    public sealed class ParameterDescriptionAttribute : Attribute
+    internal class HeadingPresenter
     {
+        // Fields
+        #region Fields
+
+        public object Content;
+
+        /// <summary>
+        /// Hide the presenter.
+        /// </summary>
+        internal bool HidePresenter;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterDescriptionAttribute"/> class.
+        /// Initializes a new instance of the <see cref="HeadingPresenter"/> class.
         /// </summary>
-        /// <param name="description">The description.</param>
-        public ParameterDescriptionAttribute(string description)
+        public HeadingPresenter(string heading, object content)
         {
-            this.Description = description;
+            this.Heading = heading;
+            this.Content = content;
         }
 
         #endregion
@@ -34,12 +40,12 @@ namespace NStub.CSharp
         #region Properties
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets or sets the heading.
         /// </summary>
         /// <value>
-        /// The description.
+        /// The heading.
         /// </value>
-        public string Description { get; set; }
+        public object Heading { get; set; }
 
         #endregion
     }

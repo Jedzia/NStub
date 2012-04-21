@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ParameterDescriptionAttribute.cs" company="EvePanix">
+// <copyright file="TextWrittenEventArgs.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,25 +8,24 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp
+namespace NStub.Gui.Util.Dumper
 {
     using System;
 
     /// <summary>
-    /// Describes a parameter class.
+    /// Provides data for the <see cref="XhtmlWriter.Event"/> event.
     /// </summary>
-    [AttributeUsage(AttributeTargets.All, Inherited = false, AllowMultiple = true)]
-    public sealed class ParameterDescriptionAttribute : Attribute
+    [Serializable]
+    public class TextWrittenEventArgs : EventArgs
     {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ParameterDescriptionAttribute"/> class.
+        /// Initializes a new instance of the <see cref="TextWrittenEventArgs"/> class
         /// </summary>
-        /// <param name="description">The description.</param>
-        public ParameterDescriptionAttribute(string description)
+        public TextWrittenEventArgs(string text)
         {
-            this.Description = description;
+            this.Text = text;
         }
 
         #endregion
@@ -34,12 +33,9 @@ namespace NStub.CSharp
         #region Properties
 
         /// <summary>
-        /// Gets or sets the description.
+        /// Gets the text of this instance.
         /// </summary>
-        /// <value>
-        /// The description.
-        /// </value>
-        public string Description { get; set; }
+        public string Text { get; private set; }
 
         #endregion
     }

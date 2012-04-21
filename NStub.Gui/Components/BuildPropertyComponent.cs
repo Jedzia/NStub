@@ -8,19 +8,13 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.Gui
+namespace NStub.Gui.Components
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Windows.Forms;
-    using NStub.Core;
     using NStub.CSharp.ObjectGeneration;
-    
+
     /// <summary>
     /// Component which holds the application wide <see cref="BuildDataDictionary"/> BuildProperties.
     /// </summary>
@@ -67,7 +61,7 @@ namespace NStub.Gui
         public bool HasSkippedLoading { get; private set; }
 
         /// <summary>
-        /// Gets the memberfactory.
+        /// Gets the member factory.
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public IMemberBuilderFactory Memberfactory { get; private set; }
@@ -108,7 +102,7 @@ namespace NStub.Gui
         /// </summary>
         public void LoadBuildPropertyData()
         {
-            BuildProperties.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
+            BuildProperties.AddDataItem("EXTRA", "From Main StartUp", CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
             GeneratorConfigLoad(this.BuildProperties);
         }
 
@@ -125,7 +119,7 @@ namespace NStub.Gui
         /// <summary>
         /// Clean up any resources being used.
         /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        /// <param name="disposing"><c>true</c> if managed resources should be disposed; otherwise, <c>false</c>.</param>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -145,7 +139,7 @@ namespace NStub.Gui
         {
             Log("--------- Loading Property Data (Start) ------------");
 
-            var sampleXmlData =
+/*            var sampleXmlData =
 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
 @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
 @"    <MethodSuffix>HeuteMalWasNeues</MethodSuffix>" + Environment.NewLine +
@@ -154,6 +148,7 @@ namespace NStub.Gui
 @"    <Enabled>false</Enabled>" + Environment.NewLine +
 @"  </PropertyBuilderUserParameters>" + Environment.NewLine +
 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
+*/
 
             // IBuildSystem sys;
             // sys.
@@ -166,6 +161,7 @@ namespace NStub.Gui
             else
             {
                 Log("Build parameter file '" + filename + "' does not exist. Skipped loading.");
+                HasSkippedLoading = true;
             }
 
             // log the parsed data to the logger.

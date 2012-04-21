@@ -1,4 +1,4 @@
-﻿namespace NStub.Gui
+﻿namespace NStub.Gui.Components
 {
     partial class BuildPropertyComponent
     {

@@ -17,22 +17,7 @@ namespace NStub.CSharp.BuildContext
     /// </summary>
     public interface IMemberBuildContext : IMemberSetupContext
     {
-        /// <summary>
-        /// Gets or sets the key associated with the test.
-        /// </summary>
-        /// <value>
-        /// The key associated with the test.
-        /// </value>
-        string TestKey { get; }
-
-        /// <summary>
-        /// Gets the builder data specific to this builders key.
-        /// </summary>
-        /// <param name="category">Name of the category to request.</param>
-        /// <returns>The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.</returns>
-        IBuilderData GetBuilderData(string category);
-
-        T GetBuilderData<T>(IMemberBuilder builder) where T : class, IBuilderData;
+        #region Properties
 
         /// <summary>
         /// Gets the data specific to SetUp and TearDown test-methods.
@@ -42,5 +27,31 @@ namespace NStub.CSharp.BuildContext
         /// </remarks>
         ISetupAndTearDownContext SetUpTearDownContext { get; }
 
+        /// <summary>
+        /// Gets the key associated with the test.
+        /// </summary>
+        /// <value>
+        /// The key associated with the test.
+        /// </value>
+        string TestKey { get; }
+
+        #endregion
+
+        /// <summary>
+        /// Gets the builder data specific to this builders key.
+        /// </summary>
+        /// <param name="category">Name of the category to request.</param>
+        /// <returns>The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.</returns>
+        IBuilderData GetBuilderData(string category);
+
+        /// <summary>
+        /// Gets the builder data specific to this builders key.
+        /// </summary>
+        /// <typeparam name="T">Type of the <see cref="IMemberBuilder"/></typeparam>
+        /// <param name="builder">The builder.</param>
+        /// <returns>
+        /// The builder data with the <see cref="TestKey"/> or <c>null</c> if nothing is found.
+        /// </returns>
+        T GetBuilderData<T>(IMemberBuilder builder) where T : class, IBuilderData;
     }
 }

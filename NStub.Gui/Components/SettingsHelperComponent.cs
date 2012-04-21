@@ -9,7 +9,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.Gui
+namespace NStub.Gui.Components
 {
     #region Imports
 
@@ -30,8 +30,8 @@ namespace NStub.Gui
     /// <para>
     /// <list type="items">Easy setup steps: <item>
     /// 1. Drag the SettingsHelperComponent onto your Main Form. 
-    /// </item><item>2. Set the MainForm property of the component to your
-    /// mainform. This attaches it to the Closing event and saves the settings when you leave the application.
+    /// </item><item>2. Set the <see cref="MainForm"/> property of the component to your
+    /// main form. This attach's it to the Closing event and saves the settings when you leave the application.
     /// </item><item>3. Set the Settings property of the component to your application settings.
     /// <code><![CDATA[
     /// public MainForm()

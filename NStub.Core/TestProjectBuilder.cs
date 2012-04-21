@@ -96,7 +96,6 @@ namespace NStub.Core
             // //TreeNodeCollection mainNodes = this._assemblyGraphTreeView.Nodes;
             // IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             // IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-
             if (this.logger != null)
             {
                 this.logger("-----------------------------------------------------------------------------");
@@ -196,6 +195,7 @@ namespace NStub.Core
                                     this.logger(
                                         ex.Message + Environment.NewLine + ex + Environment.NewLine);
                                 }
+
                                 return;
                             }
                         }

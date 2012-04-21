@@ -1,13 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.CodeDom;
-using System.IO;
-using NStub.CSharp.ObjectGeneration.Builders;
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="MyObjectDumper.cs" company="EvePanix">
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
+//   See the license notes shipped with this source and the GNU GPL.
+// </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
+// --------------------------------------------------------------------------------------------------------------------
 
 namespace NStub.Gui
 {
+    using System.CodeDom;
+    using NStub.Gui.Util.Dumper;
+
     /// <summary>
     /// Test class for the object dumper. DeleteME
     /// </summary>
@@ -19,23 +24,22 @@ namespace NStub.Gui
         /// <returns>the dumped object </returns>
         public string Test()
         {
-
-            //TestXmlSeria();
-
+            // TestXmlSeria();
             var testObject = new CodeTypeDeclaration("DeclClass");
-            var method = new CodeMemberMethod() { Name = "MyMethod" };
+            var method = new CodeMemberMethod { Name = "MyMethod" };
             testObject.Members.Add(method);
-            var method2 = new CodeMemberMethod() { Name = "OtherMethod" };
+            var method2 = new CodeMemberMethod { Name = "OtherMethod" };
             testObject.Members.Add(method2);
             var comment = new CodeCommentStatement("This is a comment");
             method.Statements.Add(comment);
-            var prop = new CodeMemberProperty() { Name = "MyProperty", Type = new CodeTypeReference(typeof(string)) };
+            var prop = new CodeMemberProperty { Name = "MyProperty", Type = new CodeTypeReference(typeof(string)) };
             testObject.Members.Add(prop);
 
             testObject.Dump("The description", 5);
-            //var res = Extensions.Text;
+
+            // var res = Extensions.Text;
             return string.Empty;
-            
+
             /* var ms = new MemoryStream();
             var writer = new StreamWriter(ms);
             var swriter = new StringWriter();
@@ -62,5 +66,4 @@ namespace NStub.Gui
             pb.SaveToFile("PropertyBuilderParametersSetup.xml");
         }*/
     }
-
 }

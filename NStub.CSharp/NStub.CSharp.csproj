@@ -69,6 +69,7 @@
     <Compile Include="AllIwantToTest.cs" />
     <Compile Include="BaseCSharpCodeGenerator.cs" />
     <Compile Include="BuildContext\IMemberBuildContext.cs" />
+    <Compile Include="BuildContext\IMemberPreBuildContext.cs" />
     <Compile Include="BuildContext\IMemberSetupContext.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownCreationContext.cs" />
     <Compile Include="BuildContext\MemberBuildContext.cs" />
@@ -85,13 +86,17 @@
     <Compile Include="ObjectGeneration\BuilderData.cs" />
     <Compile Include="ObjectGeneration\Builders\BuilderSerializer.cs" />
     <Compile Include="ObjectGeneration\Builders\DefaultMethodEraser.cs" />
-    <Compile Include="ObjectGeneration\IMemberBuilderParameters.cs" />
+    <Compile Include="ObjectGeneration\Builders\EmptyBuildParameters.cs" />
+    <Compile Include="ObjectGeneration\Builders\EmptyBuildParametersBase.cs" />
+    <Compile Include="ObjectGeneration\Builders\IBuilderSerializer.cs" />
+    <Compile Include="ObjectGeneration\Builders\MultiBuilder.cs" />
+    <Compile Include="ObjectGeneration\IMemberBuildParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\BuildParameters.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BuildParameters.xsd</DependentUpon>
     </Compile>
-    <Compile Include="ObjectGeneration\Builders\EmptyBuilderParameters.cs" />
+    <Compile Include="ObjectGeneration\Builders\BuildParametersBase.cs" />
     <Compile Include="ObjectGeneration\Builders\BuildParametersOfPropertyBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\StaticMethodBuilder.cs" />
     <Compile Include="ObjectGeneration\BuildHandler.cs" />
@@ -126,6 +131,7 @@
     <Compile Include="ObjectGeneration\IBuildHandler.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilder.cs" />
     <Compile Include="ObjectGeneration\IMemberBuildResult.cs" />
+    <Compile Include="ObjectGeneration\IMultiBuilder.cs" />
     <Compile Include="ObjectGeneration\IReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />

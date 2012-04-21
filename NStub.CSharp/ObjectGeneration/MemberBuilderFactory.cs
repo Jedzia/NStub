@@ -13,7 +13,6 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
@@ -25,20 +24,25 @@ namespace NStub.CSharp.ObjectGeneration
     {
         #region Fields
 
-        private readonly Dictionary<Type, IBuildHandler> handlers = new Dictionary<Type, IBuildHandler>();
+        private readonly Dictionary<Type, IBuildHandler> buildHandlers = new Dictionary<Type, IBuildHandler>();
         private readonly IBuilderSerializer serializer;
         private static IMemberBuilderFactory defaultfactory;
 
         #endregion
 
+        #region Constructors
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:MemberBuilderFactory"/> class.
+        /// Initializes a new instance of the <see cref="MemberBuilderFactory"/> class.
         /// </summary>
+        /// <param name="serializer">The build parameter serializer.</param>
         protected MemberBuilderFactory(IBuilderSerializer serializer)
         {
             Guard.NotNull(() => serializer, serializer);
             this.serializer = serializer;
         }
+
+        #endregion
 
         #region Properties
 
@@ -84,7 +88,7 @@ namespace NStub.CSharp.ObjectGeneration
         {
             get
             {
-                var result = this.handlers.Values.Select(e => e.Type.FullName);
+                var result = this.buildHandlers.Values.Select(e => e.Type.FullName);
                 return result;
             }
         }
@@ -96,7 +100,7 @@ namespace NStub.CSharp.ObjectGeneration
         {
             get
             {
-                var result = this.handlers.Values.Select(e => e.Type);
+                var result = this.buildHandlers.Values.Select(e => e.Type);
                 return result;
             }
         }
@@ -114,7 +118,22 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="handler">The handler to be added.</param>
         public void AddHandler(IBuildHandler handler)
         {
-            this.handlers.Add(handler.Type, handler);
+            this.buildHandlers.Add(handler.Type, handler);
+        }
+
+        /// <summary>
+        /// Set the parameters in the properties storage from a specified xml representation of the data.
+        /// </summary>
+        /// <param name="xml">The xml representation of the data.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
+        public IEnumerable<IMemberBuildParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
+        {
+            var handlers = this.buildHandlers.Values.AsEnumerable();
+            return this.serializer.DeserializeAllSetupData(xml, properties, handlers);
         }
 
         /// <summary>
@@ -127,22 +146,22 @@ namespace NStub.CSharp.ObjectGeneration
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
             // So we have property Enabled/Disabled checks as default behavior.
-            return GetBuilder(context, true);
+            return this.GetBuilder(context, true);
         }
 
         /// <summary>
-        /// Tries to get the builder for the specified context dependant on user property activation.
+        /// Tries to get the builder for the specified context dependent on user property activation.
         /// </summary>
         /// <param name="context">The context of the current test object.</param>
         /// <param name="useUserActivation">if set to <c>true</c> use user activation in context.BuildData stored values.
-        /// Means: Enable/Disable by setting the corresponding propertystore value.</param>
+        /// Means: Enable/Disable by setting the corresponding property store value.</param>
         /// <returns>
         /// A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.
         /// </returns>
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context, bool useUserActivation)
         {
             // Todo: maybe cache em.
-            foreach (var buildHandler in this.handlers.Values)
+            foreach (var buildHandler in this.buildHandlers.Values)
             {
                 var canHandleContext = buildHandler.CanHandle(context);
                 if (!canHandleContext)
@@ -178,7 +197,7 @@ namespace NStub.CSharp.ObjectGeneration
         public IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties)
         {
             Guard.NotNull(() => properties, properties);
-            var paraType = this.handlers[builderType].ParameterDataType;
+            var paraType = this.buildHandlers[builderType].ParameterDataType;
             return this.serializer.GetParameters(builderType, paraType, properties);
         }
 
@@ -191,52 +210,38 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public string GetSampleSetupData(Type builderType)
         {
-            var paraType = this.handlers[builderType].ParameterDataType;
-            return serializer.GetSampleSetupData(builderType, paraType);
+            var paraType = this.buildHandlers[builderType].ParameterDataType;
+            return this.serializer.GetSampleSetupData(builderType, paraType);
         }
 
         /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
-        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuilderParameters"/> data to serialize.</param>
+        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuildParameters"/> data to serialize.</param>
         /// <returns>
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         public string SerializeAllSetupData(IBuildDataDictionary properties)
         {
             Guard.NotEmpty(() => properties, properties);
-            var handlers = this.handlers.Values.AsEnumerable();
-            return serializer.SerializeAllHandlers(properties, handlers);
-            //return NewMethod(properties, handlers);
+            var handlers = this.buildHandlers.Values.AsEnumerable();
+            return this.serializer.SerializeAllHandlers(properties, handlers);
+
+            // return NewMethod(properties, buildHandlers);
         }
 
         /// <summary>
         /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
         /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
-        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuilderParameters"/> data to serialize.</param>
+        /// <param name="properties">The properties storage which stores the <see cref="IMemberBuildParameters"/> data to serialize.</param>
         /// <returns>
         /// The serialized data of the specified <paramref name="builderType"/>.
         /// </returns>
         public string SerializeSetupData(Type builderType, BuildDataDictionary properties)
         {
             var setupPara = this.GetParameters(builderType, properties);
-            return serializer.SerializeParametersForBuilderType(builderType, setupPara);
-        }
-
-        /// <summary>
-        /// Set the parameters in the properties storage from a specified xml representation of the data.
-        /// </summary>
-        /// <param name="xml">The xml representation of the data.</param>
-        /// <param name="properties">The global properties storage.</param>
-        /// <returns>
-        /// A new instance of a matching parameter data set for the specified builder.
-        /// </returns>
-        /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        public IEnumerable<IMemberBuildParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
-        {
-            var handlers = this.handlers.Values.AsEnumerable();
-            return serializer.DeserializeAllSetupData(xml, properties, handlers);
+            return this.serializer.SerializeParametersForBuilderType(builderType, setupPara);
         }
 
         /// <summary>
@@ -251,10 +256,10 @@ namespace NStub.CSharp.ObjectGeneration
         public IMemberBuildParameters SetParameters(string xml, IBuildDataDictionary properties)
         {
             Guard.NotNull(() => properties, properties);
-            
-            var handlers = this.handlers.Values.AsEnumerable();
-            IBuildHandler handler = serializer.DetermineIMemberBuilderFromXmlFragment(xml, handlers);
-            return serializer.SetParameters(xml, properties, handler);
+
+            var handlers = this.buildHandlers.Values.AsEnumerable();
+            IBuildHandler handler = this.serializer.DetermineIMemberBuilderFromXmlFragment(xml, handlers);
+            return this.serializer.SetParameters(xml, properties, handler);
         }
     }
 }

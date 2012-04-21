@@ -11,11 +11,10 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System;
+    using System.ComponentModel;
     using System.Linq;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
-    using NStub.CSharp.ObjectGeneration.Builders;
-    using System.ComponentModel;
 
     /// <summary>
     /// Checks if a registered <see cref="IMemberBuilder"/> can handle a <see cref="IMemberBuildContext"/> request.
@@ -24,8 +23,8 @@ namespace NStub.CSharp.ObjectGeneration
     {
         #region Fields
 
-        private readonly Func<IMemberBuildContext, bool> handler;
         private readonly string description;
+        private readonly Func<IMemberBuildContext, bool> handler;
         private readonly Type parameterDataType;
         private readonly Type type;
 
@@ -52,17 +51,7 @@ namespace NStub.CSharp.ObjectGeneration
             this.handler = handler;
             this.parameterDataType = parameterDataType;
 
-            CheckForAttributes(parameterDataType);
-        }
-
-        private static string CheckForAttributes(Type parameterDataType)
-        {
-            var descriptionAttrs = (DescriptionAttribute[])parameterDataType.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            if (descriptionAttrs != null)
-            {
-                return descriptionAttrs.Select(e=>e.Description).FirstOrDefault();
-            }
-            return "";
+            this.description = CheckForAttributes(parameterDataType);
         }
 
         #endregion
@@ -80,6 +69,9 @@ namespace NStub.CSharp.ObjectGeneration
             }
         }
 
+        /// <summary>
+        /// Gets the description of the builder.
+        /// </summary>
         public string Description
         {
             get
@@ -128,6 +120,13 @@ namespace NStub.CSharp.ObjectGeneration
             var parameters = new object[] { context };
             var memberBuilder = (IMemberBuilder)Activator.CreateInstance(this.Type, parameters);
             return memberBuilder;
+        }
+
+        private static string CheckForAttributes(Type parameterDataType)
+        {
+            var descriptionAttrs =
+                (DescriptionAttribute[])parameterDataType.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return descriptionAttrs.Select(e => e.Description).FirstOrDefault();
         }
     }
 }

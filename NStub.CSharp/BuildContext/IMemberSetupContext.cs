@@ -78,15 +78,4 @@ namespace NStub.CSharp.BuildContext
 
         #endregion
     }
-
-    /// <summary>
-    /// Represents the data used to setup unit tests in the pre-build phase.
-    /// </summary>
-    public interface IMemberPreBuildContext : IMemberSetupContext
-    {
-        /// <summary>
-        /// Gets the build result.
-        /// </summary>
-        IMemberBuildResult BuildResult { get; }
-    }
 }
