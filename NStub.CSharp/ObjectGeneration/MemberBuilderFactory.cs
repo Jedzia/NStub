@@ -175,7 +175,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
-        public IMemberBuilderParameters GetParameters(Type builderType, IBuildDataDictionary properties)
+        public IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties)
         {
             Guard.NotNull(() => properties, properties);
             var paraType = this.handlers[builderType].ParameterDataType;
@@ -233,7 +233,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        public IEnumerable<IMemberBuilderParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
+        public IEnumerable<IMemberBuildParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
         {
             var handlers = this.handlers.Values.AsEnumerable();
             return serializer.DeserializeAllSetupData(xml, properties, handlers);
@@ -248,7 +248,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        public IMemberBuilderParameters SetParameters(string xml, IBuildDataDictionary properties)
+        public IMemberBuildParameters SetParameters(string xml, IBuildDataDictionary properties)
         {
             Guard.NotNull(() => properties, properties);
             

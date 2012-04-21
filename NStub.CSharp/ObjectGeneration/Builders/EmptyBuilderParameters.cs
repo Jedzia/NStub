@@ -14,7 +14,7 @@ using System.ComponentModel;
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
     #region Base entity class
-    public partial class BuilderParametersBase<T>
+    public partial class BuildParametersBase<T>
     {
 
         private static System.Xml.Serialization.XmlSerializer serializer;
@@ -209,7 +209,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// <summary>
     /// Provides an implementation of the <see cref="IMemberBuilderParameters"/> user data, that has an empty set of data.
     /// </summary>
-    public class EmptyBuilderParameters : EmptyBuilderParametersBase<EmptyBuilderParameters>, IMemberBuilderParameters
+    public class EmptyBuildParameters : EmptyBuildParametersBase<EmptyBuildParameters>, IMemberBuildParameters
     {
     }
 
@@ -217,7 +217,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// Base class for implementations of the <see cref="IMemberBuilderParameters"/> user data with a Enabled property, serialization
     /// and deserialization capability.
     /// </summary>
-    public class EmptyBuilderParametersBase<T> : BuilderParametersBase<T>, IMemberBuilderParameters where T : IMemberBuilderParameters
+    public class EmptyBuildParametersBase<T> : BuildParametersBase<T>, IMemberBuildParameters where T : IMemberBuildParameters
     {
         // : EntityBase<PropertyBuilderParametersSetup> {
         #region Properties

@@ -69,7 +69,7 @@ namespace NStub.Gui
 
         #endregion
 
-        private static BuilderParameter TestXmlSeria()
+        /*private static BuilderParameter TestXmlSeria()
         {
             var pb = new BuilderParameter();
 
@@ -79,7 +79,7 @@ namespace NStub.Gui
             pbps = new BuilderParameterPropertyBuilder { MethodSuffix = "OtherParameter", UseDings = true };
             pb.Items.Add(pbps);
             return pb;
-        }
+        }*/
 
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {

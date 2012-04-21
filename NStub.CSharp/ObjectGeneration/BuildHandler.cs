@@ -43,7 +43,7 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => handler, handler);
 
             // Guard.NotNull(() => parameterDataType, parameterDataType);
-            Guard.CanBeAssigned(() => parameterDataType, parameterDataType, typeof(IMemberBuilderParameters));
+            Guard.CanBeAssigned(() => parameterDataType, parameterDataType, typeof(IMemberBuildParameters));
 
             this.type = type;
             this.handler = handler;

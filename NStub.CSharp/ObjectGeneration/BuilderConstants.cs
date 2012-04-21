@@ -23,6 +23,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Xml-Element identifier for the collection of <see cref="NStub.CSharp.ObjectGeneration.Builders.IMemberBuilderParameters"/>.
         /// </summary>
-        public const string BuilderParametersXmlId = "BuilderData";
+        public const string BuildParametersXmlId = "BuildParameters";
     }
 }

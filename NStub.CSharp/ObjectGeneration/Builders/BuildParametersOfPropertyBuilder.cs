@@ -8,16 +8,18 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-// <NameSpace>NStub.CSharp.ObjectGeneration.Builders</NameSpace><Collection>List</Collection><codeType>CSharp</codeType><EnableDataBinding>False</EnableDataBinding><EnableLazyLoading>True</EnableLazyLoading><TrackingChangesEnable>False</TrackingChangesEnable><GenTrackingClasses>False</GenTrackingClasses><HidePrivateFieldInIDE>True</HidePrivateFieldInIDE><EnableSummaryComment>True</EnableSummaryComment><VirtualProp>False</VirtualProp><IncludeSerializeMethod>True</IncludeSerializeMethod><UseBaseClass>True</UseBaseClass><GenBaseClass>False</GenBaseClass><BaseClassName>EmptyBuilderParametersBase</BaseClassName><GenerateCloneMethod>False</GenerateCloneMethod><GenerateDataContracts>False</GenerateDataContracts><CodeBaseTag>Net35</CodeBaseTag><SerializeMethodName>Serialize</SerializeMethodName><DeserializeMethodName>Deserialize</DeserializeMethodName><SaveToFileMethodName>SaveToFile</SaveToFileMethodName><LoadFromFileMethodName>LoadFromFile</LoadFromFileMethodName><GenerateXMLAttributes>False</GenerateXMLAttributes><EnableEncoding>False</EnableEncoding><AutomaticProperties>True</AutomaticProperties><GenerateShouldSerialize>False</GenerateShouldSerialize><DisableDebug>True</DisableDebug><PropNameSpecified>Default</PropNameSpecified><Encoder>ASCII</Encoder><CustomUsings></CustomUsings><ExcludeIncludedTypes>False</ExcludeIncludedTypes><EnableInitializeFields>True</EnableInitializeFields>
+// <NameSpace>NStub.CSharp.ObjectGeneration.Builders</NameSpace><Collection>List</Collection><codeType>CSharp</codeType><EnableDataBinding>False</EnableDataBinding><EnableLazyLoading>True</EnableLazyLoading><TrackingChangesEnable>False</TrackingChangesEnable><GenTrackingClasses>False</GenTrackingClasses><HidePrivateFieldInIDE>True</HidePrivateFieldInIDE><EnableSummaryComment>True</EnableSummaryComment><VirtualProp>False</VirtualProp><IncludeSerializeMethod>True</IncludeSerializeMethod><UseBaseClass>True</UseBaseClass><GenBaseClass>False</GenBaseClass><BaseClassName>EmptyBuildParametersBase</BaseClassName><GenerateCloneMethod>False</GenerateCloneMethod><GenerateDataContracts>False</GenerateDataContracts><CodeBaseTag>Net35</CodeBaseTag><SerializeMethodName>Serialize</SerializeMethodName><DeserializeMethodName>Deserialize</DeserializeMethodName><SaveToFileMethodName>SaveToFile</SaveToFileMethodName><LoadFromFileMethodName>LoadFromFile</LoadFromFileMethodName><GenerateXMLAttributes>False</GenerateXMLAttributes><EnableEncoding>False</EnableEncoding><AutomaticProperties>True</AutomaticProperties><GenerateShouldSerialize>False</GenerateShouldSerialize><DisableDebug>True</DisableDebug><PropNameSpecified>Default</PropNameSpecified><Encoder>ASCII</Encoder><CustomUsings></CustomUsings><ExcludeIncludedTypes>False</ExcludeIncludedTypes><EnableInitializeFields>True</EnableInitializeFields>
 
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
+    using System.ComponentModel;
     using System.Xml.Serialization;
 
     /// <summary>
     /// Represents user provided data for the <see cref="PropertyBuilder"/> class.
     /// </summary>
-    public partial class BuilderParameterPropertyBuilder : IMemberBuilderParameters
+    [Description("Whuut a fuckin attribute!")]
+    public partial class BuildParametersOfPropertyBuilder : IMemberBuildParameters
     {
         // : EntityBase<PropertyBuilderParametersSetup> {
         #region Properties
@@ -39,7 +41,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                 // @"  <Enabled>false</Enabled>" + Environment.NewLine +
                 // @"</PropertyBuilderParametersSetup>" + Environment.NewLine +
                 // string.Empty;
-                return new BuilderParameterPropertyBuilder().Serialize();
+                return new BuildParametersOfPropertyBuilder().Serialize();
 
                 // return sampleXmlData;
             }

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" elementFormDefault="qualified" attributeFormDefault="qualified" id="BuilderParameter">
+<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" 
+           elementFormDefault="qualified" attributeFormDefault="qualified" id="BuildParameters">
     <xs:annotation>
         <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
     </xs:appinfo>
     </xs:annotation>
-    <xs:element name="BuilderParameter">
+    <xs:element name="BuildParameters">
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
-                <xs:element name="PropertyBuilder">
+                <xs:element name="OfPropertyBuilder">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="MethodSuffix" type="xs:string" minOccurs="0"/>

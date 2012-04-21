@@ -13,7 +13,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// <summary>
     /// Stores information about user provided parameters of a test method for an <see cref="IMemberBuilder"/>.
     /// </summary>
-    public interface IMemberBuilderParameters : IBuilderData
+    public interface IMemberBuildParameters : IBuilderData
     {
         #region Properties
 

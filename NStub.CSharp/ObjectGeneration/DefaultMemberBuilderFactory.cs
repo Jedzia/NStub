@@ -26,7 +26,7 @@ namespace NStub.CSharp.ObjectGeneration
             :base(new BuilderSerializer())
         {
 
-            AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(BuilderParameterPropertyBuilder)));
+            AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(BuildParametersOfPropertyBuilder)));
             AddHandler(new BuildHandler(typeof(PropertyGetBuilder), PropertyGetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(PropertySetBuilder), PropertySetBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));

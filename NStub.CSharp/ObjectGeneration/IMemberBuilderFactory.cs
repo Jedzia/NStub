@@ -71,7 +71,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
-        IMemberBuilderParameters GetParameters(Type builderType, IBuildDataDictionary properties);
+        IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties);
 
         /// <summary>
         /// Set the parameters in the properties storage from a specified xml representation of the data.
@@ -82,7 +82,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        IMemberBuilderParameters SetParameters(string xml, IBuildDataDictionary properties);
+        IMemberBuildParameters SetParameters(string xml, IBuildDataDictionary properties);
 
         /// <summary>
         /// Set the parameters in the properties storage from a specified xml representation of the data.
@@ -93,7 +93,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        IEnumerable<IMemberBuilderParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties);
+        IEnumerable<IMemberBuildParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties);
 
         /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
