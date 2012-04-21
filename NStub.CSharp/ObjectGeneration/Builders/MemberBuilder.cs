@@ -103,7 +103,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <remarks>
         /// The builders are called one after one, so an integral name resolution happens.
         /// </remarks>
-        public void RunPreBuild(IMemberSetupContext context)
+        public void RunPreBuild(IMemberPreBuildContext context)
         {
             this.PreBuild(context);
         }
@@ -138,7 +138,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <remarks>
         /// The builders are called one after one, so an integral name resolution happens.
         /// </remarks>
-        protected virtual void PreBuild(IMemberSetupContext context)
+        protected virtual void PreBuild(IMemberPreBuildContext context)
         {
         }
 

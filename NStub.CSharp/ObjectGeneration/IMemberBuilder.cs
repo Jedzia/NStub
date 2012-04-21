@@ -41,6 +41,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// <remarks>
         /// The builders are called one after one, so an integral name resolution happens.
         /// </remarks>
-        void RunPreBuild(IMemberSetupContext context);
+        void RunPreBuild(IMemberPreBuildContext context);
     }
 }

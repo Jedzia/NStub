@@ -304,7 +304,7 @@ namespace NStub.CSharp
                 var codeConstructor = new CodeConstructor { Attributes = MemberAttributes.Public };
                 testClassDeclaration.Members.Add(codeConstructor);
 
-                var initialMembers = testClassDeclaration.Members.Cast<CodeTypeMember>().ToArray();
+                var initialMembers = testClassDeclaration.Members.Cast<CodeTypeMember>().ToList();
 
                 // Setup and TearDown
                 var setTearContext = this.GenerateSetupAndTearDown(
@@ -319,24 +319,32 @@ namespace NStub.CSharp
                 // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(testClassDeclaration);
 
-                // run the pre build step.
-                var contextLookup1 = this.PreBuildStep(
+                // run the pre build step and builds the context lookup dictionary.
+                List<CodeTypeMember> exludedMembers;
+                var contextLookup = this.PreBuildStep(
+                    testClassDeclaration,
+                    codeNamespace,
+                    initialMembers,
+                    this.BuildProperties,
+                    setTearContext,
+                    out exludedMembers);
+
+                foreach (var item in exludedMembers)
+                {
+                    initialMembers.Remove(item);
+                    testClassDeclaration.Members.Remove(item);
+                }
+
+                // pre calculate property data and test names.
+                this.PreCalculateMemberBuildContext(
+                    contextLookup,
                     testClassDeclaration,
                     codeNamespace,
                     initialMembers,
                     this.BuildProperties,
                     setTearContext);
 
-                // pre calculate property data.
-                var contextLookup = this.PreCalculateMemberBuildContext(
-                    testClassDeclaration,
-                    codeNamespace,
-                    initialMembers,
-                    this.BuildProperties,
-                    setTearContext);
-
-                // Set out member names correctly 
-                // foreach (CodeTypeMember typeMember in testClassDeclaration.Members)
+                // Run test generation main routine.
                 foreach (CodeTypeMember typeMember in initialMembers)
                 {
                     /*var memberBuildContext = new MemberBuildContext(
@@ -459,10 +467,8 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
         /// <param name="context">The build context of the test method member.</param>
-        /// <param name="originalName">Initial name of the test method name.</param>
-        /// <returns>The calculated test method name.</returns>
         protected virtual void ComputePreBuildStep(
-            IMemberBuilder memberBuilder, IMemberBuildContext context)
+            IMemberBuilder memberBuilder, IMemberPreBuildContext context)
         {
             memberBuilder.RunPreBuild(context);
         }
@@ -722,13 +728,15 @@ namespace NStub.CSharp
         }
 
         private Dictionary<CodeTypeMember, MemberBuildContext> PreBuildStep(
-    CodeTypeDeclaration testClassDeclaration,
-    CodeNamespace codeNamespace,
-    IEnumerable<CodeTypeMember> initialMembers,
-    BuildDataDictionary propertyData,
-    ISetupAndTearDownCreationContext setTearContext)
+            CodeTypeDeclaration testClassDeclaration,
+            CodeNamespace codeNamespace,
+            IEnumerable<CodeTypeMember> initialMembers,
+            BuildDataDictionary propertyData,
+            ISetupAndTearDownCreationContext setTearContext,
+            out List<CodeTypeMember> exludedMembers)
         {
             var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
+            var exclusions = new Dictionary<CodeTypeMember, bool>();
 
             // var propertyData = new Dictionary<string, IBuilderData>();
             // buildData.AddDataItem(propertyData);
@@ -744,6 +752,17 @@ namespace NStub.CSharp
                 foreach (var memberBuilder in builders)
                 {
                     this.ComputePreBuildStep(memberBuilder, memberBuildContext);
+                    var buildResult = memberBuildContext.BuildResult;
+                    if (buildResult.ExcludeMember)
+                    {
+                        // bool isExcluded;
+                        // bool found = exclusions.TryGetValue(typeMember, out isExcluded);
+                        if (!exclusions.ContainsKey(typeMember))
+                        {
+                            exclusions[typeMember] = true;
+                            //break;
+                        }
+                    }
                 }
 
                 contextLookup.Add(typeMember, memberBuildContext);
@@ -769,25 +788,27 @@ namespace NStub.CSharp
                 }*/
             }
 
+            exludedMembers = exclusions.Keys.ToList();
             return contextLookup;
         }
 
 
-        private Dictionary<CodeTypeMember, MemberBuildContext> PreCalculateMemberBuildContext(
+        private void PreCalculateMemberBuildContext(
+            Dictionary<CodeTypeMember, MemberBuildContext> contextLookup,
             CodeTypeDeclaration testClassDeclaration,
             CodeNamespace codeNamespace,
             IEnumerable<CodeTypeMember> initialMembers,
             BuildDataDictionary propertyData,
             ISetupAndTearDownCreationContext setTearContext)
         {
-            var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
-
+            //var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
             // var propertyData = new Dictionary<string, IBuilderData>();
             // buildData.AddDataItem(propertyData);
             foreach (CodeTypeMember typeMember in initialMembers)
             {
-                var memberBuildContext = new MemberBuildContext(
-                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+                //var memberBuildContext = new MemberBuildContext(
+                //    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+                var memberBuildContext = contextLookup[typeMember];
 
                 // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
                 // if i put the stuff here into this.GenerateCodeTypeMember(...)
@@ -800,8 +821,12 @@ namespace NStub.CSharp
 
                 memberBuildContext.TestKey = composedTestName;
 
-                contextLookup.Add(typeMember, memberBuildContext);
+                //contextLookup.Add(typeMember, memberBuildContext);
 
+                // Setting the memberinfo for properties in the category 'Property' with the composedTestName as key.
+                // Todo: hmmm, this was all about that IBuildData and property get/set detection ... and how to find out
+                // a way to store properties .... So IBuildData is code generator internal and IMemberBuilderParameters is
+                // for user setup. well. look into the usefullness of this. ... later
                 if (memberBuildContext.IsProperty)
                 {
                     IBuilderData propertyDataItem;
@@ -822,8 +847,6 @@ namespace NStub.CSharp
                     }
                 }
             }
-
-            return contextLookup;
         }
 
         /// <summary>

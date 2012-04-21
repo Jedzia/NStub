@@ -19,7 +19,7 @@ namespace NStub.CSharp.BuildContext
     /// <summary>
     /// Abstract base class for data used to create new unit tests.
     /// </summary>
-    public abstract class MemberBuildContextBase : IMemberBuildContext
+    public abstract class MemberBuildContextBase : IMemberBuildContext, IMemberPreBuildContext
     {
         #region Fields
 
@@ -57,7 +57,7 @@ namespace NStub.CSharp.BuildContext
             this.BuildData = buildData;
             this.SetUpTearDownContext = setUpTearDownContext;
 
-            this.buildResult = new MemberBuildResult();
+            this.BuildResult = new MemberBuildResult();
         }
 
         #endregion
@@ -191,7 +191,10 @@ namespace NStub.CSharp.BuildContext
         /// </summary>
         public CodeTypeMember TypeMember { get; private set; }
 
-        public IMemberBuildResult buildResult { get; private set; }
+        /// <summary>
+        /// Gets the build result feedback object in the pre build phase of test object generation.
+        /// </summary>
+        public IMemberBuildResult BuildResult { get; private set; }
 
         #endregion
 

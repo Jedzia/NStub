@@ -52,6 +52,16 @@ namespace NStub.CSharp.ObjectGeneration
         IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context);
 
         /// <summary>
+        /// Tries to get the builder for the specified context dependant on user property activation.
+        /// </summary>
+        /// <param name="context">The context of the current test object.</param>
+        /// <param name="useUserActivation">if set to <c>true</c> use user activation in context.BuildData stored values.</param>
+        /// <returns>
+        /// A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.
+        /// </returns>
+        IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context, bool useUserActivation);
+
+        /// <summary>
         /// Get the parameters for the specified builder type, possibly creating it, if there
         /// is not yet one in the build data collection.
         /// </summary>

@@ -118,6 +118,32 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
+
+            return GetBuilder(context, true);
+            // Todo: maybe cache em.
+            /*foreach (var buildHandler in this.handlers.Values)
+            {
+                var canHandleContext = buildHandler.CanHandle(context);
+                if (!canHandleContext)
+                {
+                    continue;
+                }
+
+                var memberBuilder = buildHandler.CreateInstance(context);
+                yield return memberBuilder;
+            }*/
+        }
+
+        /// <summary>
+        /// Tries to get the builder for the specified context dependant on user property activation.
+        /// </summary>
+        /// <param name="context">The context of the current test object.</param>
+        /// <param name="useUserActivation">if set to <c>true</c> use user activation in context.BuildData stored values.</param>
+        /// <returns>
+        /// A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.
+        /// </returns>
+        public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context, bool useUserActivation)
+        {
             // Todo: maybe cache em.
             foreach (var buildHandler in this.handlers.Values)
             {
@@ -125,6 +151,15 @@ namespace NStub.CSharp.ObjectGeneration
                 if (!canHandleContext)
                 {
                     continue;
+                }
+
+                if (useUserActivation)
+                {
+                    var parameter = this.GetParameters(buildHandler.Type, context.BuildData);
+                    if (!parameter.Enabled)
+                    {
+                        continue;
+                    }
                 }
 
                 var memberBuilder = buildHandler.CreateInstance(context);

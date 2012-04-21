@@ -45,34 +45,21 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// </returns>
         public static bool CanHandleContext(IMemberBuildContext context)
         {
-            if (context.MemberInfo != null)
-            {
-            }
-
-            if (context.TestKey != null)
-            {
-                if (context.TestObjectType.Name.Contains("AllIwantToTest"))
-                {
-                    if (context.TestKey.Contains("Static"))
-                    {
-                        // var abc = context.TestKey;
-                        // var older = context.TestObjectType.Name;
-                        // var mstatic = context.MemberInfo;
-                    }
-                }
-            }
-
             return !context.IsConstructor && !context.IsProperty && !context.IsEvent && context.MemberInfo != null &&
                    !context.MemberInfo.IsStatic;
-
-            // return context.TypeMember.Name.StartsWith("get_") || context.TypeMember.Name.StartsWith("set_");
         }
 
-        protected override void PreBuild(IMemberSetupContext context)
+        private static readonly string[] TestsToRemove = new[] { "Equals", "GetType", "GetHashCode", "ToString", };
+
+        /// <summary>
+        /// Runs before anything else on the test method.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        protected override void PreBuild(IMemberPreBuildContext context)
         {
-            if (context.MemberInfo.Name == "GetHashCode")
+            if (TestsToRemove.Any(e=> e == context.MemberInfo.Name))
             {
-                // context.TestClassDeclaration.Members.Remove(context.TypeMember);
+                context.BuildResult.ExcludeMember = true;
             }
         }
 
@@ -85,19 +72,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// </returns>
         protected override bool BuildMember(IMemberBuildContext context)
         {
-            /*Guard.NotNull(() => context, context);
-            var typeMember = context.TypeMember as CodeMemberMethod;
-            if (context.MemberInfo.Name == "GetHashCode")
-            {
-                context.TestClassDeclaration.Members.Remove(context.TypeMember);
-            }*/
-            
             return true;
-        }
-
-        private void Log(string message)
-        {
-            Console.WriteLine(message);
         }
     }
 }

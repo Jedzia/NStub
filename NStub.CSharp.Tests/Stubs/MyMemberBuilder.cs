@@ -11,6 +11,7 @@ namespace NStub.CSharp.Tests.Stubs
     {
         #region IMemberBuilder Members
 
+        public int PreBuildCalled { get; set; }
         public int BuildCalled { get; set; }
         public int GetTestNameCalled { get; set; }
         public IMemberBuildContext Context { get; set; }
@@ -33,6 +34,16 @@ namespace NStub.CSharp.Tests.Stubs
         {
             GetTestNameCalled++;
             return "what a test";
+        }
+
+        #endregion
+
+        #region IMemberBuilder Members
+
+
+        public void RunPreBuild(IMemberPreBuildContext context)
+        {
+            PreBuildCalled++;
         }
 
         #endregion
