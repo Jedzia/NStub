@@ -48,6 +48,13 @@ namespace NStub.CSharp.ObjectGeneration
             this.type = type;
             this.handler = handler;
             this.parameterDataType = parameterDataType;
+
+            CheckForAttributes(parameterDataType);
+        }
+
+        private static void CheckForAttributes(Type parameterDataType)
+        {
+            var description = parameterDataType.GetCustomAttributes(false);
         }
 
         #endregion

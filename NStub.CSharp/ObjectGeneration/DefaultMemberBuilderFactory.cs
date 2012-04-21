@@ -23,6 +23,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class.
         /// </summary>
         protected internal DefaultMemberBuilderFactory()
+            :base(new BuilderSerializer())
         {
 
             AddHandler(new BuildHandler(typeof(PropertyBuilder), PropertyBuilder.CanHandleContext, typeof(PropertyBuilderUserParameters)));

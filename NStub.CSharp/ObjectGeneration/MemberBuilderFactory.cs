@@ -12,10 +12,8 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.Collections.Generic;
-    //using System.IO;
     using System.Linq;
     using System.Reflection;
-    //using System.Xml;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
@@ -28,7 +26,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Fields
 
         private readonly Dictionary<Type, IBuildHandler> handlers = new Dictionary<Type, IBuildHandler>();
-        private readonly BuilderSerializer serializer;
+        private readonly IBuilderSerializer serializer;
         private static IMemberBuilderFactory defaultfactory;
 
         #endregion
@@ -36,9 +34,10 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Initializes a new instance of the <see cref="T:MemberBuilderFactory"/> class.
         /// </summary>
-        protected MemberBuilderFactory()
+        protected MemberBuilderFactory(IBuilderSerializer serializer)
         {
-            this.serializer = new BuilderSerializer();
+            Guard.NotNull(() => serializer, serializer);
+            this.serializer = serializer;
         }
 
         #region Properties
@@ -127,27 +126,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context)
         {
-
+            // So we have property Enabled/Disabled checks as default behavior.
             return GetBuilder(context, true);
-            // Todo: maybe cache em.
-            /*foreach (var buildHandler in this.handlers.Values)
-            {
-                var canHandleContext = buildHandler.CanHandle(context);
-                if (!canHandleContext)
-                {
-                    continue;
-                }
-
-                var memberBuilder = buildHandler.CreateInstance(context);
-                yield return memberBuilder;
-            }*/
         }
 
         /// <summary>
         /// Tries to get the builder for the specified context dependant on user property activation.
         /// </summary>
         /// <param name="context">The context of the current test object.</param>
-        /// <param name="useUserActivation">if set to <c>true</c> use user activation in context.BuildData stored values.</param>
+        /// <param name="useUserActivation">if set to <c>true</c> use user activation in context.BuildData stored values.
+        /// Means: Enable/Disable by setting the corresponding propertystore value.</param>
         /// <returns>
         /// A list of member builders that can handle the request or an <c>empty</c> list if no one can be found.
         /// </returns>
@@ -164,6 +152,7 @@ namespace NStub.CSharp.ObjectGeneration
 
                 if (useUserActivation)
                 {
+                    Guard.NotNull(() => context.BuildData, context.BuildData);
                     var parameter = this.GetParameters(buildHandler.Type, context.BuildData);
                     if (!parameter.Enabled)
                     {
@@ -191,20 +180,6 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => properties, properties);
             var paraType = this.handlers[builderType].ParameterDataType;
             return this.serializer.GetParameters(builderType, paraType, properties);
-
-            /*IBuilderData result;
-            var found = properties.TryGetValue(string.Empty + builderType.FullName, out result);
-            if (found)
-            {
-                return result as IMemberBuilderParameters;
-            }
-
-            var paraType = this.handlers[builderType].ParameterDataType;
-            var paraInstance = Activator.CreateInstance(paraType);
-            var setupPara = (IMemberBuilderParameters)paraInstance;
-
-            properties.AddDataItem(string.Empty + builderType.FullName, setupPara);
-            return setupPara;*/
         }
 
         /// <summary>
@@ -218,11 +193,6 @@ namespace NStub.CSharp.ObjectGeneration
         {
             var paraType = this.handlers[builderType].ParameterDataType;
             return serializer.GetSampleSetupData(builderType, paraType);
-
-            /*var paraInstance = Activator.CreateInstance(paraType);
-            var setupPara = (IMemberBuilderParameters)paraInstance;
-
-            return SerializeParametersForBuilderType(builderType, setupPara.GetType().Name, setupPara.SampleXml);*/
         }
 
         /// <summary>
@@ -239,35 +209,6 @@ namespace NStub.CSharp.ObjectGeneration
             return serializer.SerializeAllHandlers(properties, handlers);
             //return NewMethod(properties, handlers);
         }
-
-        /*private string NewMethod(IBuildDataDictionary properties, IEnumerable<IBuildHandler> handlers)
-        {
-            var xmlDoc = new XmlDocument();
-            var root = xmlDoc.CreateElement(BuilderConstants.BuilderParametersXmlId);
-            xmlDoc.AppendChild(root);
-            foreach (var handler in handlers)
-            {
-                if (handler.Type == null || handler.Type.FullName == null)
-                {
-                    continue;
-                }
-                var setupPara = this.GetParameters(handler.Type, properties);
-
-                var setupParaType = handler.ParameterDataType;
-                var setupParaXml = setupPara.Serialize();
-
-                var ele = xmlDoc.CreateElement(handler.Type.FullName);
-                var ele2 = xmlDoc.CreateElement(setupParaType.Name);
-                root.AppendChild(ele);
-                ele.AppendChild(ele2);
-                var innerDoc = new XmlDocument();
-                var xml = setupParaXml;
-                innerDoc.LoadXml(xml);
-                ele2.InnerXml = innerDoc[setupParaType.Name].InnerXml;
-            }
-
-            return PrettyPrintXml(xmlDoc.OuterXml);
-        }*/
 
         /// <summary>
         /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
@@ -296,20 +237,6 @@ namespace NStub.CSharp.ObjectGeneration
         {
             var handlers = this.handlers.Values.AsEnumerable();
             return serializer.DeserializeAllSetupData(xml, properties, handlers);
-
-            // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
-            /*List<IMemberBuilderParameters> plist = new List<IMemberBuilderParameters>();
-            var doc = new XmlDocument();
-            doc.LoadXml(xml);
-            foreach (XmlElement item in doc[BuilderConstants.BuilderParametersXmlId])
-            {
-                var para = SetParameters(item.OuterXml, properties);
-                plist.Add(para);
-                
-                // yield return para;
-            }
-
-            return plist;*/
         }
 
         /// <summary>
@@ -328,110 +255,6 @@ namespace NStub.CSharp.ObjectGeneration
             var handlers = this.handlers.Values.AsEnumerable();
             IBuildHandler handler = serializer.DetermineIMemberBuilderFromXmlFragment(xml, handlers);
             return serializer.SetParameters(xml, properties, handler);
-            
-            /*if (result == null)
-            {
-                // Todo: or throw?
-                return MemberBuilder.EmptyParameters;
-            }
-
-            var paraType = result.ParameterDataType;
-
-            var xxxx = paraType.BaseType.GetGenericTypeDefinition();
-            var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
-
-            var paraInstance = serializer2
-                .MakeGenericType(paraType)
-                .GetMethod("Deserialize", new Type[] { typeof(string) })
-                .Invoke(null, new object[] { firstChild.InnerXml });
-
-            var setupPara = (IMemberBuilderParameters)paraInstance;
-            try
-            {
-                var propertyKey = string.Empty + result.Type.FullName;
-
-                // IBuilderData property;
-                // var found = properties.TryGetValue(propertyKey, out property);
-                // if (found)
-                // {
-                properties.AddDataItem(propertyKey, setupPara, true);
-               
-                // return setupPara;
-                // }
-                // properties.AddDataItem(propertyKey, setupPara);
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(
-                    "Problem building {0} from serialization data.{1}{2}{3}",
-                    result.Type.FullName,
-                    Environment.NewLine,
-                    firstChild.InnerXml,
-                    Environment.NewLine);
-                throw new InvalidCastException(message, ex);
-            }
-
-            return setupPara;*/
         }
-
-        /*/// <summary>
-        /// Pretty print XML data.
-        /// </summary>
-        /// <param name="xml">The string containing valid XML data.</param>
-        /// <returns>The xml data in indented and justified form.</returns>
-        private static string PrettyPrintXml(string xml)
-        {
-            var doc = new XmlDocument();
-            doc.LoadXml(xml);
-            doc.Normalize();
-
-            TextWriter wr = new StringWriter();
-            doc.Save(wr);
-            var str = wr.ToString();
-            return str;
-        }*/
-
-        /*/// <summary>
-        /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
-        /// </summary>
-        /// <param name="builderType">Type of the builder to request data for.</param>
-        /// <param name="parameters">The parameters with the data to serialize.</param>
-        /// <returns>
-        /// The serialized data of the specified <paramref name="builderType"/>.
-        /// </returns>
-        private static string SerializeParametersForBuilderType(Type builderType, IMemberBuilderParameters parameters)
-        {
-            return SerializeParametersForBuilderType(builderType, parameters.GetType().Name, parameters.Serialize());
-        }*/
-
-        /*/// <summary>
-        /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
-        /// </summary>
-        /// <param name="builderType">Type of the builder to request data for.</param>
-        /// <param name="parameterTypeShortName">Short name of the parameter type.</param>
-        /// <param name="parameterTypeXmlData">The data of the parameter type as XML representation.</param>
-        /// <returns>
-        /// The serialized data of the specified <paramref name="builderType"/>.
-        /// </returns>
-        private static string SerializeParametersForBuilderType(
-            Type builderType, string parameterTypeShortName, string parameterTypeXmlData)
-        {
-            var xmlDoc = new XmlDocument();
-            if (builderType != null && builderType.FullName != null)
-            {
-                var element = xmlDoc.CreateElement(builderType.FullName);
-                var innerElement = xmlDoc.CreateElement(parameterTypeShortName);
-                xmlDoc.AppendChild(element);
-                element.AppendChild(innerElement);
-                var innerDoc = new XmlDocument();
-                innerDoc.LoadXml(parameterTypeXmlData);
-                if (parameterTypeShortName != null)
-                {
-                    innerElement.InnerXml = innerDoc[parameterTypeShortName].InnerXml;
-                }
-            }
-
-            return PrettyPrintXml(xmlDoc.OuterXml);
-        }*/
     }
 }
