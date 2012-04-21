@@ -83,29 +83,12 @@ namespace NStub.Gui
 
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {
-
-            // {[NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder, NStub.CSharp.ObjectGeneration.BuildHandler]}
-            //var mf = this.memberfactory as MemberBuilderFactory;
-            var sampleXmlData =
-                @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
-                @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
-                @"    <MethodSuffix>BistEinAlterSack</MethodSuffix>" + Environment.NewLine +
-                @"    <UseDings>false</UseDings>" + Environment.NewLine +
-                @"    <Moep>0</Moep>" + Environment.NewLine +
-                @"    <Enabled>true</Enabled>" + Environment.NewLine +
-                @"  </PropertyBuilderUserParameters>" + Environment.NewLine +
-                @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
-
-            /*var xxxx =*/
-            //this.memberfactory.SetParameters(sampleXmlData, this.properties);
-
             foreach (var builderType in this.memberfactory.BuilderTypes)
             {
                 var para = this.memberfactory.GetParameters(builderType, this.properties);
                 var lvItemIndex = this.lvParameters.Items.Add(builderType);
                 this.lvParameters.SetItemChecked(lvItemIndex, para.Enabled);
             }
-
         }
 
         private void LvParametersSelectedIndexChanged(object sender, EventArgs e)
@@ -115,30 +98,39 @@ namespace NStub.Gui
                 return;
             }
 
-            // tbConfig.Text = mf.GetSampleSetupData(SelectedType);
-            // tbConfig.Text = mf.GetParameters(SelectedType, properties).Serialize();
-            // tbConfig.Text = mf.SerializeSetupData(SelectedType, properties);
-            //this.tbConfig.Text = this.memberfactory.SerializeParametersForAllBuilderTypes(this.properties);
-            this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
-            var sample = this.memberfactory.GetParameters(this.SelectedType, this.properties);
-            this.propGrid.SelectedObject = sample;
-            return;
+            this.propGrid.SelectedObject = this.memberfactory.GetParameters(this.SelectedType, this.properties);
+            SetXmlConfigTextFromType(this.SelectedType);
+        }
 
-            /*var xmlDoc = new XmlDocument();
-            var ele = xmlDoc.CreateElement(SelectedType.FullName);
-            var ele2 = xmlDoc.CreateElement("Sub");
-            xmlDoc.AppendChild(ele);
-            ele.AppendChild(ele2);
+        private void LvParametersItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            var current = e.CurrentValue;
+            if (SelectedType == null)
+            {
+                return;
+            }
 
-            var sample = memberfactory.GetParameters(SelectedType, properties);
-            //tbConfig.Text = sample.SampleXml;
-            var innerDoc = new XmlDocument();
-            innerDoc.LoadXml(sample.Serialize());
-            var sssss = innerDoc[SelectedType.Name];
-            //ele2.InnerXml = ;
+            var item = this.memberfactory.GetParameters(this.SelectedType, this.properties);
+            var newValue = e.CurrentValue != CheckState.Checked;
+            if (item.Enabled != newValue)
+            {
+                item.Enabled = newValue;
+                SetXmlConfigTextFromType(this.SelectedType);
+            }
+        }
 
-            tbConfig.Text = xmlDoc.OuterXml;
-            propGrid.SelectedObject = sample;*/
+        private void PropGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
+        {
+            SetXmlConfigTextFromType(this.SelectedType);
+        }
+
+        private void SetXmlConfigTextFromType(Type parameterType)
+        {
+            if (parameterType == null)
+            {
+                return;
+            }
+            this.tbConfig.Text = this.memberfactory.SerializeSetupData(parameterType, this.properties);
         }
     }
 }

@@ -186,7 +186,7 @@ namespace NStub.CSharp.ObjectGeneration
         {
             Guard.NotEmpty(() => properties, properties);
             var xmlDoc = new XmlDocument();
-            var root = xmlDoc.CreateElement("BuilderData");
+            var root = xmlDoc.CreateElement(BuilderConstants.BuilderParametersXmlId);
             xmlDoc.AppendChild(root);
             foreach (var item in this.handlers.Values)
             {
@@ -235,67 +235,20 @@ namespace NStub.CSharp.ObjectGeneration
         /// A new instance of a matching parameter data set for the specified builder.
         /// </returns>
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
-        public void DeserializeAll(string xml, IBuildDataDictionary properties)
+        public IEnumerable<IMemberBuilderParameters> DeserializeAll(string xml, IBuildDataDictionary properties)
         {
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+            List<IMemberBuilderParameters> plist = new List<IMemberBuilderParameters>();
             var doc = new XmlDocument();
             doc.LoadXml(xml);
-            foreach (XmlElement item in doc["BuilderData"])
+            foreach (XmlElement item in doc[BuilderConstants.BuilderParametersXmlId])
             {
-                SetParameters(item.OuterXml, properties);
+                var para = SetParameters(item.OuterXml, properties);
+                plist.Add(para);
+                
+                // yield return para;
             }
-            var firstChild = doc.FirstChild;
-
-            return;
-            // var asd = handlers;
-            /*IBuildHandler result = null;
-            foreach (var item in this.handlers.Values)
-            {
-                if (item.Type.FullName == firstChild.Name)
-                {
-                    result = item;
-                }
-            }
-
-            if (result == null)
-            {
-                // Todo: or throw?
-                //return MemberBuilder.EmptyParameters;
-            }
-
-            var paraType = result.ParameterDataType;
-            var paraInstance = Activator.CreateInstance(paraType);
-            var setupPara = (IMemberBuilderParameters)paraInstance;
-            try
-            {
-                setupPara.Deserialize(firstChild.InnerXml);
-                var propertyKey = string.Empty + result.Type.FullName;
-                IBuilderData property;
-
-                // var found = properties.TryGetValue(propertyKey, out property);
-                // if (found)
-                // {
-
-                // Todo replaces
-                properties.AddDataItem(propertyKey, setupPara, true);
-
-                // return setupPara;
-                // }
-                // properties.AddDataItem(propertyKey, setupPara);
-            }
-            catch (Exception ex)
-            {
-                var message = string.Format(
-                    "Problem building {0} from serialization data.{1}{2}{3}",
-                    result.Type.FullName,
-                    Environment.NewLine,
-                    firstChild.InnerXml,
-                    Environment.NewLine);
-                throw new InvalidCastException(message, ex);
-            }
-
-            //return setupPara;
-             */
+            return plist;
         }
 
         /// <summary>

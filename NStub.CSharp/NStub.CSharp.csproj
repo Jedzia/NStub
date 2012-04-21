@@ -81,6 +81,7 @@
     <Compile Include="ObjectGeneration\AssignmentInfoCollection.cs" />
     <Compile Include="ObjectGeneration\BuildDataDictionary.cs" />
     <Compile Include="ObjectGeneration\BuildDataReadOnlyDictionary.cs" />
+    <Compile Include="ObjectGeneration\BuilderConstants.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
     <Compile Include="ObjectGeneration\Builders\IMemberBuilderParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderUser.Designer.cs">
