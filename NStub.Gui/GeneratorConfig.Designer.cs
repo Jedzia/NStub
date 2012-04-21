@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.panel1 = new System.Windows.Forms.Panel();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.propGrid = new System.Windows.Forms.PropertyGrid();
+            this.tbConfig = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lvParameters = new System.Windows.Forms.CheckedListBox();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.tbConfig = new System.Windows.Forms.TextBox();
-            this.propGrid = new System.Windows.Forms.PropertyGrid();
             this.panel1.SuspendLayout();
-            this.groupBox1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -46,8 +46,37 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(772, 550);
+            this.panel1.Size = new System.Drawing.Size(772, 644);
             this.panel1.TabIndex = 0;
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.propGrid);
+            this.panel2.Controls.Add(this.tbConfig);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(0, 147);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(772, 497);
+            this.panel2.TabIndex = 3;
+            // 
+            // propGrid
+            // 
+            this.propGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.propGrid.Location = new System.Drawing.Point(0, 0);
+            this.propGrid.Name = "propGrid";
+            this.propGrid.Size = new System.Drawing.Size(772, 312);
+            this.propGrid.TabIndex = 2;
+            this.propGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PropGridPropertyValueChanged);
+            // 
+            // tbConfig
+            // 
+            this.tbConfig.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.tbConfig.Location = new System.Drawing.Point(0, 312);
+            this.tbConfig.Multiline = true;
+            this.tbConfig.Name = "tbConfig";
+            this.tbConfig.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.tbConfig.Size = new System.Drawing.Size(772, 185);
+            this.tbConfig.TabIndex = 1;
             // 
             // groupBox1
             // 
@@ -70,48 +99,19 @@
             this.lvParameters.SelectedIndexChanged += new System.EventHandler(this.LvParametersSelectedIndexChanged);
             this.lvParameters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.LvParametersItemCheck);
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.propGrid);
-            this.panel2.Controls.Add(this.tbConfig);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(0, 147);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(772, 403);
-            this.panel2.TabIndex = 3;
-            // 
-            // tbConfig
-            // 
-            this.tbConfig.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tbConfig.Location = new System.Drawing.Point(0, 291);
-            this.tbConfig.Multiline = true;
-            this.tbConfig.Name = "tbConfig";
-            this.tbConfig.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.tbConfig.Size = new System.Drawing.Size(772, 112);
-            this.tbConfig.TabIndex = 1;
-            // 
-            // propGrid
-            // 
-            this.propGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.propGrid.Location = new System.Drawing.Point(0, 0);
-            this.propGrid.Name = "propGrid";
-            this.propGrid.Size = new System.Drawing.Size(772, 291);
-            this.propGrid.TabIndex = 2;
-            this.propGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.PropGridPropertyValueChanged);
-            // 
             // GeneratorConfig
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(772, 550);
+            this.ClientSize = new System.Drawing.Size(772, 644);
             this.Controls.Add(this.panel1);
             this.Name = "GeneratorConfig";
             this.Text = "GeneratorConfig";
             this.Load += new System.EventHandler(this.GeneratorConfigLoad);
             this.panel1.ResumeLayout(false);
-            this.groupBox1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

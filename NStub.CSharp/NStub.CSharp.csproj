@@ -83,6 +83,7 @@
     <Compile Include="ObjectGeneration\BuildDataReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\BuilderConstants.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
+    <Compile Include="ObjectGeneration\Builders\BuilderSerializer.cs" />
     <Compile Include="ObjectGeneration\Builders\DefaultMethodEraser.cs" />
     <Compile Include="ObjectGeneration\Builders\IMemberBuilderParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderUser.Designer.cs">

@@ -10,6 +10,7 @@
 
 using System.Xml.Serialization;
 using System.IO;
+using System.ComponentModel;
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
     #region Base entity class
@@ -227,12 +228,14 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
+        [Description("Determines whether this builder part is ON or OFF.")]
         public bool Enabled { get; set; }
 
         /// <summary>
         /// Gets the sample XML.
         /// </summary>
         [XmlIgnore]
+        [Browsable(false)]
         public string SampleXml
         {
             get

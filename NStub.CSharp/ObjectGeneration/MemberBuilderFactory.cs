@@ -12,10 +12,10 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    //using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Xml;
+    //using System.Xml;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
@@ -28,9 +28,18 @@ namespace NStub.CSharp.ObjectGeneration
         #region Fields
 
         private readonly Dictionary<Type, IBuildHandler> handlers = new Dictionary<Type, IBuildHandler>();
+        private readonly BuilderSerializer serializer;
         private static IMemberBuilderFactory defaultfactory;
 
         #endregion
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:MemberBuilderFactory"/> class.
+        /// </summary>
+        protected MemberBuilderFactory()
+        {
+            this.serializer = new BuilderSerializer();
+        }
 
         #region Properties
 
@@ -179,7 +188,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
         public IMemberBuilderParameters GetParameters(Type builderType, IBuildDataDictionary properties)
         {
-            IBuilderData result;
+            Guard.NotNull(() => properties, properties);
+            var paraType = this.handlers[builderType].ParameterDataType;
+            return this.serializer.GetParameters(builderType, paraType, properties);
+
+            /*IBuilderData result;
             var found = properties.TryGetValue(string.Empty + builderType.FullName, out result);
             if (found)
             {
@@ -191,7 +204,7 @@ namespace NStub.CSharp.ObjectGeneration
             var setupPara = (IMemberBuilderParameters)paraInstance;
 
             properties.AddDataItem(string.Empty + builderType.FullName, setupPara);
-            return setupPara;
+            return setupPara;*/
         }
 
         /// <summary>
@@ -204,10 +217,12 @@ namespace NStub.CSharp.ObjectGeneration
         public string GetSampleSetupData(Type builderType)
         {
             var paraType = this.handlers[builderType].ParameterDataType;
-            var paraInstance = Activator.CreateInstance(paraType);
+            return serializer.GetSampleSetupData(builderType, paraType);
+
+            /*var paraInstance = Activator.CreateInstance(paraType);
             var setupPara = (IMemberBuilderParameters)paraInstance;
 
-            return SerializeParametersForBuilderType(builderType, setupPara.GetType().Name, setupPara.SampleXml);
+            return SerializeParametersForBuilderType(builderType, setupPara.GetType().Name, setupPara.SampleXml);*/
         }
 
         /// <summary>
@@ -220,32 +235,39 @@ namespace NStub.CSharp.ObjectGeneration
         public string SerializeAllSetupData(IBuildDataDictionary properties)
         {
             Guard.NotEmpty(() => properties, properties);
+            var handlers = this.handlers.Values.AsEnumerable();
+            return serializer.SerializeAllHandlers(properties, handlers);
+            //return NewMethod(properties, handlers);
+        }
+
+        /*private string NewMethod(IBuildDataDictionary properties, IEnumerable<IBuildHandler> handlers)
+        {
             var xmlDoc = new XmlDocument();
             var root = xmlDoc.CreateElement(BuilderConstants.BuilderParametersXmlId);
             xmlDoc.AppendChild(root);
-            foreach (var item in this.handlers.Values)
+            foreach (var handler in handlers)
             {
-                var setupPara = this.GetParameters(item.Type, properties);
-                var setupParaType = item.ParameterDataType;
-                var builderType = item.Type;
-
-                if (builderType == null || builderType.FullName == null)
+                if (handler.Type == null || handler.Type.FullName == null)
                 {
                     continue;
                 }
+                var setupPara = this.GetParameters(handler.Type, properties);
 
-                var ele = xmlDoc.CreateElement(builderType.FullName);
+                var setupParaType = handler.ParameterDataType;
+                var setupParaXml = setupPara.Serialize();
+
+                var ele = xmlDoc.CreateElement(handler.Type.FullName);
                 var ele2 = xmlDoc.CreateElement(setupParaType.Name);
                 root.AppendChild(ele);
                 ele.AppendChild(ele2);
                 var innerDoc = new XmlDocument();
-                var xml = setupPara.Serialize();
+                var xml = setupParaXml;
                 innerDoc.LoadXml(xml);
                 ele2.InnerXml = innerDoc[setupParaType.Name].InnerXml;
             }
 
             return PrettyPrintXml(xmlDoc.OuterXml);
-        }
+        }*/
 
         /// <summary>
         /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
@@ -258,7 +280,7 @@ namespace NStub.CSharp.ObjectGeneration
         public string SerializeSetupData(Type builderType, BuildDataDictionary properties)
         {
             var setupPara = this.GetParameters(builderType, properties);
-            return SerializeParametersForBuilderType(builderType, setupPara);
+            return serializer.SerializeParametersForBuilderType(builderType, setupPara);
         }
 
         /// <summary>
@@ -272,8 +294,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
         public IEnumerable<IMemberBuilderParameters> DeserializeAllSetupData(string xml, IBuildDataDictionary properties)
         {
+            var handlers = this.handlers.Values.AsEnumerable();
+            return serializer.DeserializeAllSetupData(xml, properties, handlers);
+
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
-            List<IMemberBuilderParameters> plist = new List<IMemberBuilderParameters>();
+            /*List<IMemberBuilderParameters> plist = new List<IMemberBuilderParameters>();
             var doc = new XmlDocument();
             doc.LoadXml(xml);
             foreach (XmlElement item in doc[BuilderConstants.BuilderParametersXmlId])
@@ -284,7 +309,7 @@ namespace NStub.CSharp.ObjectGeneration
                 // yield return para;
             }
 
-            return plist;
+            return plist;*/
         }
 
         /// <summary>
@@ -298,22 +323,13 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="InvalidCastException"><c>InvalidCastException</c> Problem building from serialization data.</exception>
         public IMemberBuilderParameters SetParameters(string xml, IBuildDataDictionary properties)
         {
-            // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
-            var doc = new XmlDocument();
-            doc.LoadXml(xml);
-            var firstChild = doc.FirstChild;
-
-            // var asd = handlers;
-            IBuildHandler result = null;
-            foreach (var item in this.handlers.Values)
-            {
-                if (item.Type.FullName == firstChild.Name)
-                {
-                    result = item;
-                }
-            }
-
-            if (result == null)
+            Guard.NotNull(() => properties, properties);
+            
+            var handlers = this.handlers.Values.AsEnumerable();
+            IBuildHandler handler = serializer.DetermineIMemberBuilderFromXmlFragment(xml, handlers);
+            return serializer.SetParameters(xml, properties, handler);
+            
+            /*if (result == null)
             {
                 // Todo: or throw?
                 return MemberBuilder.EmptyParameters;
@@ -355,10 +371,10 @@ namespace NStub.CSharp.ObjectGeneration
                 throw new InvalidCastException(message, ex);
             }
 
-            return setupPara;
+            return setupPara;*/
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Pretty print XML data.
         /// </summary>
         /// <param name="xml">The string containing valid XML data.</param>
@@ -373,9 +389,9 @@ namespace NStub.CSharp.ObjectGeneration
             doc.Save(wr);
             var str = wr.ToString();
             return str;
-        }
+        }*/
 
-        /// <summary>
+        /*/// <summary>
         /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
         /// <param name="builderType">Type of the builder to request data for.</param>
@@ -386,9 +402,9 @@ namespace NStub.CSharp.ObjectGeneration
         private static string SerializeParametersForBuilderType(Type builderType, IMemberBuilderParameters parameters)
         {
             return SerializeParametersForBuilderType(builderType, parameters.GetType().Name, parameters.Serialize());
-        }
+        }*/
 
-        /// <summary>
+        /*/// <summary>
         /// Gets the xml data representation of a single registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
         /// <param name="builderType">Type of the builder to request data for.</param>
@@ -416,6 +432,6 @@ namespace NStub.CSharp.ObjectGeneration
             }
 
             return PrettyPrintXml(xmlDoc.OuterXml);
-        }
+        }*/
     }
 }
