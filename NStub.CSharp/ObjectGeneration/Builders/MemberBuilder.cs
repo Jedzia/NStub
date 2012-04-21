@@ -97,6 +97,18 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         }
 
         /// <summary>
+        /// Runs before anything else on the test method.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <remarks>
+        /// The builders are called one after one, so an integral name resolution happens.
+        /// </remarks>
+        public void RunPreBuild(IMemberSetupContext context)
+        {
+            this.PreBuild(context);
+        }
+
+        /// <summary>
         /// Builds the test method member with the specified context.
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
@@ -118,5 +130,18 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         {
             return originalName;
         }
+
+        /// <summary>
+        /// Runs before anything else on the test method.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <remarks>
+        /// The builders are called one after one, so an integral name resolution happens.
+        /// </remarks>
+        protected virtual void PreBuild(IMemberSetupContext context)
+        {
+        }
+
     }
+
 }

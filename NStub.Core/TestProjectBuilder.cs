@@ -97,6 +97,13 @@ namespace NStub.Core
             // IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             // IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
 
+            if (this.logger != null)
+            {
+                this.logger("-----------------------------------------------------------------------------");
+                this.logger("Generating Test Project '" + this.csharpProjectGenerator.ProjectName + "'");
+                this.logger("-----------------------------------------------------------------------------");
+            }
+
             // Create a new directory for each assembly
             foreach(var mainnode in mainNodes)
             {
@@ -182,8 +189,13 @@ namespace NStub.Core
                                     }
                                 }
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
+                                if (this.logger != null)
+                                {
+                                    this.logger(
+                                        ex.Message + Environment.NewLine + ex + Environment.NewLine);
+                                }
                                 return;
                             }
                         }
@@ -194,6 +206,13 @@ namespace NStub.Core
 
                 // Now write the project file and add all of the test files to it
                 this.csharpProjectGenerator.GenerateProjectFile();
+            }
+            
+            if (this.logger != null)
+            {
+                this.logger("-----------------------------------------------------------------------------");
+                this.logger("Finished generating Project '" + this.csharpProjectGenerator.ProjectName + "'");
+                this.logger("-----------------------------------------------------------------------------");
             }
         }
 

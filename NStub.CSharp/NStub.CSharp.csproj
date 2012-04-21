@@ -83,6 +83,7 @@
     <Compile Include="ObjectGeneration\BuildDataReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\BuilderConstants.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
+    <Compile Include="ObjectGeneration\Builders\DefaultMethodEraser.cs" />
     <Compile Include="ObjectGeneration\Builders\IMemberBuilderParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderUser.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -130,6 +131,7 @@
     <Compile Include="ObjectGeneration\Builders\MemberBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\MethodBuilder.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttribute.cs" />
+    <Compile Include="ObjectGeneration\MemberBuildResult.cs" />
     <Compile Include="ObjectGeneration\ParameterInfoCollection.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderData.cs" />

@@ -56,6 +56,8 @@ namespace NStub.CSharp.BuildContext
             this.TypeMember = typeMember;
             this.BuildData = buildData;
             this.SetUpTearDownContext = setUpTearDownContext;
+
+            this.buildResult = new MemberBuildResult();
         }
 
         #endregion
@@ -188,6 +190,8 @@ namespace NStub.CSharp.BuildContext
         /// Gets the current type to create a test method for.
         /// </summary>
         public CodeTypeMember TypeMember { get; private set; }
+
+        public IMemberBuildResult buildResult { get; private set; }
 
         #endregion
 

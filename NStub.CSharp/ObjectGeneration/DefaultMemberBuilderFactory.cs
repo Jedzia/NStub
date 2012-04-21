@@ -31,6 +31,7 @@ namespace NStub.CSharp.ObjectGeneration
             AddHandler(new BuildHandler(typeof(EventBuilder), EventBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(ConstructorBuilder), ConstructorBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
             AddHandler(new BuildHandler(typeof(StaticMethodBuilder), StaticMethodBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+            AddHandler(new BuildHandler(typeof(DefaultMethodEraser), DefaultMethodEraser.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
         }
 
         #endregion

@@ -76,6 +76,11 @@ namespace NStub.CSharp.BuildContext
         /// </summary>
         CodeTypeMember TypeMember { get; }
 
+        /// <summary>
+        /// Gets the build result.
+        /// </summary>
+        IMemberBuildResult buildResult { get; }
+
         #endregion
     }
 }

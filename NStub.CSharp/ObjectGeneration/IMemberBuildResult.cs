@@ -13,10 +13,16 @@ namespace NStub.CSharp.ObjectGeneration
     using NStub.CSharp.BuildContext;
 
     /// <summary>
-    /// Provides access to the result of a <see cref="IMemberBuildContext"/> run. Not yet implemented.
+    /// Provides feedback in the pre build phase of test object generation.
     /// </summary>
     public interface IMemberBuildResult
     {
-        // Todo: provide this type in a IMemberBuildContext to return results and add test methods, etc.
+        /// <summary>
+        /// Gets or sets a value indicating whether to exclude the member from the test generation.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if excluding the member from the test generation; otherwise, <c>false</c>.
+        /// </value>
+        bool ExcludeMember { get; set; }
     }
 }

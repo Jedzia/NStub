@@ -173,7 +173,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                 // var def = default(parameterType);
                 try
                 {
-                    var cct = Activator.CreateInstance(parameterType);
+                    // var cct = Activator.CreateInstance(parameterType);
+                    var cct = "Use a better implementation of Object selector";
                     if (parameterType.FullName != null)
                     {
                         if (parameterType.FullName.StartsWith("System.") &&

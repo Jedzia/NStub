@@ -319,6 +319,14 @@ namespace NStub.CSharp
                 // Add test class to the CodeNamespace.
                 codeNamespace.Types.Add(testClassDeclaration);
 
+                // run the pre build step.
+                var contextLookup1 = this.PreBuildStep(
+                    testClassDeclaration,
+                    codeNamespace,
+                    initialMembers,
+                    this.BuildProperties,
+                    setTearContext);
+
                 // pre calculate property data.
                 var contextLookup = this.PreCalculateMemberBuildContext(
                     testClassDeclaration,
@@ -444,6 +452,19 @@ namespace NStub.CSharp
         {
             var testName = memberBuilder.GetTestName(context, originalName);
             return testName;
+        }
+
+        /// <summary>
+        /// Runs the pre build step of the test method via an <see cref="IMemberBuilder"/>.
+        /// </summary>
+        /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <param name="originalName">Initial name of the test method name.</param>
+        /// <returns>The calculated test method name.</returns>
+        protected virtual void ComputePreBuildStep(
+            IMemberBuilder memberBuilder, IMemberBuildContext context)
+        {
+            memberBuilder.RunPreBuild(context);
         }
 
         /*private Dictionary<string, CodeMemberField> testMemberFieldLookup =
@@ -699,6 +720,58 @@ namespace NStub.CSharp
                 codeNamespace.Imports.Add(new CodeNamespaceImport(rhinoImport));
             }*/
         }
+
+        private Dictionary<CodeTypeMember, MemberBuildContext> PreBuildStep(
+    CodeTypeDeclaration testClassDeclaration,
+    CodeNamespace codeNamespace,
+    IEnumerable<CodeTypeMember> initialMembers,
+    BuildDataDictionary propertyData,
+    ISetupAndTearDownCreationContext setTearContext)
+        {
+            var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
+
+            // var propertyData = new Dictionary<string, IBuilderData>();
+            // buildData.AddDataItem(propertyData);
+            foreach (CodeTypeMember typeMember in initialMembers)
+            {
+                var memberBuildContext = new MemberBuildContext(
+                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+
+                // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
+                // if i put the stuff here into this.GenerateCodeTypeMember(...)
+                var builders = this.TestBuilders.GetBuilder(memberBuildContext).ToArray();
+                var composedTestName = memberBuildContext.TypeMember.Name;
+                foreach (var memberBuilder in builders)
+                {
+                    this.ComputePreBuildStep(memberBuilder, memberBuildContext);
+                }
+
+                contextLookup.Add(typeMember, memberBuildContext);
+
+                /*if (memberBuildContext.IsProperty)
+                {
+                    IBuilderData propertyDataItem;
+                    var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
+                    if (found)
+                    {
+                        propertyDataItem.SetData(memberBuildContext.MemberInfo);
+                        if (propertyDataItem is PropertyBuilderData)
+                        {
+                            var propData = (PropertyBuilderData)propertyDataItem;
+                        }
+                    }
+                    else
+                    {
+                        var propdata = new PropertyBuilderData();
+                        propdata.SetData(memberBuildContext.MemberInfo);
+                        propertyData.AddDataItem("Property", composedTestName, propdata);
+                    }
+                }*/
+            }
+
+            return contextLookup;
+        }
+
 
         private Dictionary<CodeTypeMember, MemberBuildContext> PreCalculateMemberBuildContext(
             CodeTypeDeclaration testClassDeclaration,

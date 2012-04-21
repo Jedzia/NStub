@@ -34,5 +34,13 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         string GetTestName(IMemberBuildContext context, string originalName);
 
+        /// <summary>
+        /// Runs before anything else on the test method.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <remarks>
+        /// The builders are called one after one, so an integral name resolution happens.
+        /// </remarks>
+        void RunPreBuild(IMemberSetupContext context);
     }
 }

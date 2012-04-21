@@ -110,6 +110,7 @@
     <add key="VBdocman_comModules_ObjectGeneration...IBuilderData.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IMemberBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ITestObjectBuilder.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...MemberBuildResult.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ParameterInfoCollection.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilderBase.cs"><![CDATA[On]]></add>

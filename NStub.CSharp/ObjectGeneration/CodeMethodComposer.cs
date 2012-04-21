@@ -49,6 +49,10 @@ namespace NStub.CSharp.ObjectGeneration
         /// </remarks>
         public static CodeAssignStatement CreateAndInitializeMemberField(Type type, string memberField)
         {
+            if (type == typeof(object))
+            {
+
+            }
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
             CodeExpression assignExpr;
             if (type.IsAssignableFrom(typeof(string)))

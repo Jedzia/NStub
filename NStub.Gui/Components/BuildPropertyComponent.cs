@@ -18,6 +18,7 @@ namespace NStub.Gui
     using System.Linq;
     using System.Text;
     using System.Windows.Forms;
+    using NStub.Core;
     using NStub.CSharp.ObjectGeneration;
     
     /// <summary>
@@ -53,6 +54,17 @@ namespace NStub.Gui
         /// </summary>
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
         public BuildDataDictionary BuildProperties { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has skipped loading the parameter file.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has skipped loading the parameter file; otherwise, <c>false</c>.
+        /// </value>
+        /// <remarks>For further investigation of errors you should supply a logging handler to the
+        /// <see cref="Logger"/> property and check the error message produced by this instance.</remarks>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden), Browsable(false)]
+        public bool HasSkippedLoading { get; private set; }
 
         /// <summary>
         /// Gets the memberfactory.
@@ -98,12 +110,6 @@ namespace NStub.Gui
         {
             BuildProperties.AddDataItem("EXTRA", "From Main StartUp", NStub.CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
             GeneratorConfigLoad(this.BuildProperties);
-
-            var xml = Memberfactory.SerializeAllSetupData(BuildProperties);
-            
-            Log("Property data loaded:");
-            Log(xml);
-            Log("---------------------");
         }
 
         /// <summary>
@@ -137,6 +143,8 @@ namespace NStub.Gui
 
         private void GeneratorConfigLoad(IBuildDataDictionary properties)
         {
+            Log("--------- Loading Property Data (Start) ------------");
+
             var sampleXmlData =
 @"<NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>" + Environment.NewLine +
 @"  <PropertyBuilderUserParameters>" + Environment.NewLine +
@@ -147,9 +155,25 @@ namespace NStub.Gui
 @"  </PropertyBuilderUserParameters>" + Environment.NewLine +
 @"</NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>";
 
+            // IBuildSystem sys;
+            // sys.
             var filename = Path.Combine(Application.StartupPath, this.BuildPropertyFilename);
-            var xml = File.ReadAllText(filename);
-            Memberfactory.DeserializeAllSetupData(xml, properties);
+            if (File.Exists(filename))
+            {
+                var xml = File.ReadAllText(filename);
+                Memberfactory.DeserializeAllSetupData(xml, properties);
+            }
+            else
+            {
+                Log("Build parameter file '" + filename + "' does not exist. Skipped loading.");
+            }
+
+            // log the parsed data to the logger.
+            var xmlparsed = Memberfactory.SerializeAllSetupData(BuildProperties);
+
+            Log("Property data in property store:");
+            Log(xmlparsed);
+            Log("--------- Loading Property Data (End) ------------");
         }
 
         private void Log(string text)
