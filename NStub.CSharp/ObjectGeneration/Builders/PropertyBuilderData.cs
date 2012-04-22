@@ -138,7 +138,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <param name="methodInfo">The method info.</param>
         public void SetData(object data)
         {
-            Guard.CanBeAssigned<MethodInfo>(() => data, data);
+            Guard.CanBeAssignedTo<MethodInfo>(() => data, data);
             this.SetViaAccessorName((MethodInfo)data);
         }
 

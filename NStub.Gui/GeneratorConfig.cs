@@ -63,7 +63,15 @@ namespace NStub.Gui
         {
             get
             {
-                return this.lvParameters.SelectedItem as Type;
+                return this.chklbParameters.SelectedItem as Type;
+            }
+        }
+
+        protected MultiLookup SelectedMulti
+        {
+            get
+            {
+                return this.chklbParameters.SelectedItem as MultiLookup;
             }
         }
 
@@ -82,14 +90,57 @@ namespace NStub.Gui
         }*/
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {
-            foreach(var builderType in this.memberfactory.BuilderTypes)
+            foreach (var builderType in this.memberfactory.BuilderTypes)
             {
-                var para = this.memberfactory.GetParameters(builderType, this.properties);
-                var lvItemIndex = this.lvParameters.Items.Add(builderType);
-                this.lvParameters.SetItemChecked(lvItemIndex, para.Enabled);
+                if (typeof(IMultiBuilder).IsAssignableFrom(builderType))
+                {
+                    var lviewItem = this.lbBuilderTypes.Items.Add(builderType.Name);
+                    //AddMultiParameterToBox(builderType, 
+                    lviewItem.Tag = builderType;
+                }
+                else
+                {
+                    var para = this.memberfactory.GetParameters(builderType, this.properties);
+                    AddParameterToBox(builderType, para);
+                }
             }
+
+            var multis = ((MemberBuilderFactory)this.memberfactory).MultiParameters(properties);
+            foreach (var multi in multis)
+            {
+                AddMultiParameterToBox2(multi);
+
+                /*foreach (var item in multi.Lookup)
+                {
+                    var s = item.Value;
+                    var multipara = item.Value as IMultiBuildParameters;
+                    AddMultiParameterToBox(multi.BuilderType, multipara);
+                }*/
+            }
+
         }
 
+        private void AddParameterToBox(Type builderType, IMemberBuildParameters para)
+        {
+            var chkItemIndex = this.chklbParameters.Items.Add(builderType);
+            this.chklbParameters.SetItemChecked(chkItemIndex, para.Enabled);
+        }
+
+        private void AddMultiParameterToBox2(MultiLookup multi)
+        {
+            //var chkItemIndex = this.chklbParameters.Items.Add(para);
+            var chkItemIndex = this.chklbParameters.Items.Add(multi);
+            this.chklbParameters.SetItemChecked(chkItemIndex, multi.Parameters.Enabled);
+        }
+
+        /*private void AddMultiParameterToBox(Type builderType, IMultiBuildParameters para)
+        {
+            //var chkItemIndex = this.chklbParameters.Items.Add(para);
+            var chkItemIndex = this.chklbParameters.Items.Add(builderType);
+            this.chklbParameters.SetItemChecked(chkItemIndex, para.Enabled);
+        }*/
+
+        // todo bessere benamsung ... blickt ja keine sau mehr durch
         private void LvParametersItemCheck(object sender, ItemCheckEventArgs e)
         {
             var current = e.CurrentValue;
@@ -98,39 +149,96 @@ namespace NStub.Gui
                 return;
             }
 
-            var item = this.memberfactory.GetParameters(this.SelectedType, this.properties);
             var newValue = e.CurrentValue != CheckState.Checked;
-            if (item.Enabled != newValue)
+
+            if (this.SelectedType != null)
             {
-                item.Enabled = newValue;
-                this.SetXmlConfigTextFromType(this.SelectedType);
+                // das bloed, wieso nicht gleich den parameter speichern? ... oder im multi lookup?
+                var item = this.memberfactory.GetParameters(this.SelectedType, this.properties);
+                if (item.Enabled != newValue)
+                {
+                    item.Enabled = newValue;
+                    if (this.SelectedType != null)
+                    {
+                        this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
+                    }
+                }
+            }
+            else if (this.SelectedMulti != null)
+            {
+                var item = SelectedMulti.Parameters;
+                if (item.Enabled != newValue)
+                {
+                    item.Enabled = newValue;
+                    this.tbConfig.Text = this.memberfactory.SerializeSetupData(
+                        this.SelectedMulti.Parameters.Id,
+                        this.SelectedMulti.BuilderType,
+                        this.properties);
+                }
             }
         }
 
         private void LvParametersSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (this.SelectedType == null)
+            if (this.SelectedType != null)
             {
-                return;
+                this.propGrid.SelectedObject = this.memberfactory.GetParameters(this.SelectedType, this.properties);
+                if (this.SelectedType != null)
+                {
+                    this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
+                }
             }
-
-            this.propGrid.SelectedObject = this.memberfactory.GetParameters(this.SelectedType, this.properties);
-            this.SetXmlConfigTextFromType(this.SelectedType);
+            else if (this.SelectedMulti != null)
+            {
+                this.propGrid.SelectedObject = this.SelectedMulti.Parameters;
+                this.tbConfig.Text = this.memberfactory.SerializeSetupData(
+                    this.SelectedMulti.Parameters.Id,
+                    this.SelectedMulti.BuilderType,
+                    this.properties);
+            }
         }
 
         private void PropGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-            this.SetXmlConfigTextFromType(this.SelectedType);
+            if (this.SelectedType != null)
+            {
+                this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
+            }
+            else if (this.SelectedMulti != null)
+            {
+                this.tbConfig.Text = this.memberfactory.SerializeSetupData(
+                    this.SelectedMulti.Parameters.Id,
+                    this.SelectedMulti.BuilderType,
+                    this.properties);
+            }
         }
 
-        private void SetXmlConfigTextFromType(Type parameterType)
+
+        private void lbBuilderTypes_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (parameterType == null)
+
+        }
+
+        private void btnAdd_Click(object sender, EventArgs e)
+        {
+            if (this.lbBuilderTypes.SelectedItems.Count < 1)
             {
                 return;
             }
 
-            this.tbConfig.Text = this.memberfactory.SerializeSetupData(parameterType, this.properties);
+            var selected = this.lbBuilderTypes.SelectedItems[0];
+            var seltype = (Type)selected.Tag;
+            var mbf = memberfactory as MemberBuilderFactory;
+            var mbpara = mbf.GetMultiParameter(Guid.Empty, seltype, properties);
+            if (mbpara != null)
+            {
+                AddMultiParameterToBox2(new MultiLookup() { BuilderType = seltype, Parameters = mbpara });
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

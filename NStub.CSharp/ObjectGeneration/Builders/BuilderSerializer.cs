@@ -103,6 +103,89 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         }
 
         /// <summary>
+        /// Get the parameters for the specified builder type, possibly creating it, if there
+        /// is not yet one in the build data collection.
+        /// </summary>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="paraType">Type of the parameter class.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
+        public IReadOnlyDictionary<string, IBuilderData> GetMultiParameters(Type builderType, Type paraType, IBuildDataDictionary properties)
+        {
+            Guard.NotNull(() => properties, properties);
+            Guard.CanBeAssigned(() => paraType, paraType, typeof(IMultiBuildParameters));
+            //Guard.IsAssignableFrom<IMultiBuildParameters>(() => paraType, paraType);
+
+
+                IReadOnlyDictionary<string, IBuilderData> category;
+                var catfound = properties.Data().TryGetValue("Multi." + builderType.FullName, out category);
+                if (catfound)
+                {
+                }
+
+            return category;
+
+            //var paraInstance = Activator.CreateInstance(paraType);
+            //var setupPara = (IMemberBuildParameters)paraInstance;
+
+            //properties.AddDataItem(string.Empty + builderType.FullName, setupPara);
+            //return setupPara;
+        }
+
+        /// <summary>
+        /// Get the parameters for the specified builder type, possibly creating it, if there
+        /// is not yet one in the build data collection.
+        /// </summary>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="paraType">Type of the parameter class.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
+        public IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, Type paraType, IBuildDataDictionary properties)
+        {
+            Guard.NotNull(() => properties, properties);
+            Guard.CanBeAssigned(()=> paraType, paraType, typeof(IMultiBuildParameters));
+
+            IBuilderData result;
+
+            if (key == null || key == Guid.Empty)
+            {
+                key = Guid.NewGuid();
+            }
+            else
+            {
+                IReadOnlyDictionary<string, IBuilderData> category;
+                var catfound = properties.Data().TryGetValue("Multi." + builderType.FullName, out category);
+                if (catfound)
+                {
+                    var found = category.TryGetValue(key.ToString(), out result);
+                    if (found)
+                    {
+                        return result as IMultiBuildParameters;
+                    }
+                }
+            }
+
+            var paraInstance = Activator.CreateInstance(paraType);
+            var setupPara = (IMultiBuildParameters)paraInstance;
+
+            properties.AddDataItem("Multi." + builderType.FullName, key.ToString(), setupPara);
+            setupPara.Id = key;
+            return setupPara;
+
+            //var paraInstance = Activator.CreateInstance(paraType);
+            //var setupPara = (IMemberBuildParameters)paraInstance;
+
+            //properties.AddDataItem(string.Empty + builderType.FullName, setupPara);
+            //return setupPara;
+        }
+
+        /// <summary>
         /// Gets the sample setup xml data for a specified <see cref="IMemberBuilder"/>.
         /// </summary>
         /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
@@ -138,22 +221,57 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                     continue;
                 }
 
-                var setupPara = this.GetParameters(handler.Type, handler.ParameterDataType, properties);
-
-                var setupParaType = handler.ParameterDataType;
-                var setupParaXml = setupPara.Serialize();
-
-                var ele = xmlDoc.CreateElement(handler.Type.FullName);
-                var ele2 = xmlDoc.CreateElement(setupParaType.Name);
-                root.AppendChild(ele);
-                ele.AppendChild(ele2);
-                var innerDoc = new XmlDocument();
-                var xml = setupParaXml;
-                innerDoc.LoadXml(xml);
-                ele2.InnerXml = innerDoc[setupParaType.Name].InnerXml;
+                if (handler.IsMultiBuilder)
+                {
+                    var builderLookup = this.GetMultiParameters(handler.Type, handler.ParameterDataType, properties);
+                    if (builderLookup != null)
+                    {
+                        foreach (var item in builderLookup)
+                        {
+                            var key = item.Key;
+                            var builderData = item.Value;
+                            var multisetupPara = builderData as IMemberBuildParameters;
+                            if (multisetupPara == null)
+                            {
+                                continue;
+                            }
+                            SerializeParameterToXmlDocument(xmlDoc, root, multisetupPara, handler.Type.FullName);
+                        }
+                    }
+                }
+                else
+                {
+                    var setupPara = this.GetParameters(handler.Type, handler.ParameterDataType, properties);
+                    SerializeParameterToXmlDocument(xmlDoc, root, setupPara, handler.Type.FullName);
+                }
             }
 
             return PrettyPrintXml(xmlDoc.OuterXml);
+        }
+
+        private static void SerializeParameterToXmlDocument(XmlDocument xmlDoc, XmlElement root, IMemberBuildParameters setupPara, string builderFullName)
+        {
+            var setupParaType = setupPara.GetType(); // handler.ParameterDataType;
+            var setupParaXml = setupPara.Serialize();
+            var setupParaTypeName = setupParaType.Name;
+
+            var ele = xmlDoc.CreateElement(builderFullName);
+            var ele2 = xmlDoc.CreateElement(setupParaTypeName);
+            root.AppendChild(ele);
+            ele.AppendChild(ele2);
+            var innerDoc = new XmlDocument();
+            var xml = setupParaXml;
+            innerDoc.LoadXml(xml);
+            ele2.InnerXml = innerDoc[setupParaTypeName].InnerXml;
+            foreach (XmlAttribute item in innerDoc[setupParaTypeName].Attributes)
+            {
+                if (item.Name != "xmlns:xsi" && item.Name != "xmlns:xsd")
+                {
+                    var attr = xmlDoc.CreateAttribute(item.Name);
+                    attr.Value = item.Value;
+                    ele2.Attributes.Append(attr);
+                }
+            }
         }
 
         /// <summary>
@@ -191,8 +309,29 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
             var doc = new XmlDocument();
             doc.LoadXml(xml);
-            var firstChild = doc.FirstChild;
 
+            IMemberBuildParameters setupPara = null;
+            foreach (XmlNode child in doc.ChildNodes)
+            {
+                //var child = doc.FirstChild;
+                if (handler.IsMultiBuilder)
+                {
+                    // Hier HAPERTS !!!!!!!!!!!!!!!!!!! multi fetchen ... document node klappt nicht 
+                    // setupPara = SetSingleNode(properties, handler, child, "Multi." + handler.Type.FullName, string.Empty);
+                    setupPara = SetSingleNode(properties, handler, child);
+                }
+                else
+                {
+                    setupPara = SetSingleNode(properties, handler, child);
+                }
+            }
+
+            return setupPara;
+        }
+
+        private static IMemberBuildParameters SetSingleNode(IBuildDataDictionary properties, IBuildHandler handler, 
+            XmlNode firstChild)
+        {
             var paraType = handler.ParameterDataType;
 
             // null check paraType
@@ -211,13 +350,21 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var setupPara = (IMemberBuildParameters)paraInstance;
             try
             {
-                var propertyKey = string.Empty + handler.Type.FullName;
+                var propertyKey = handler.Type.FullName;
 
                 // IBuilderData property;
                 // var found = properties.TryGetValue(propertyKey, out property);
                 // if (found)
                 // {
-                properties.AddDataItem(propertyKey, setupPara, true);
+                if (handler.IsMultiBuilder)
+                {
+                    var multiPara = setupPara as IMultiBuildParameters;
+                    properties.AddDataItem("Multi." + handler.Type.FullName, multiPara.Id.ToString(), setupPara, true);
+                 }
+                 else
+                 {
+                    properties.AddDataItem(propertyKey, setupPara, true);
+                 }
 
                 // return setupPara;
                 // }
@@ -226,14 +373,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             catch (Exception ex)
             {
                 var message = string.Format(
-                    "Problem building {0} from serialization data.{1}{2}{3}", 
-                    handler.Type.FullName, 
-                    Environment.NewLine, 
-                    firstChild.InnerXml, 
+                    "Problem building {0} from serialization data.{1}{2}{3}",
+                    handler.Type.FullName,
+                    Environment.NewLine,
+                    firstChild.InnerXml,
                     Environment.NewLine);
                 throw new InvalidCastException(message, ex);
             }
-
             return setupPara;
         }
 

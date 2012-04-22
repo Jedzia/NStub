@@ -21,6 +21,14 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
+        /// Gets a value indicating whether this instance is a multi builder type.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a multi builder type; otherwise, <c>false</c>.
+        /// </value>
+        bool IsMultiBuilder { get; }
+
+        /// <summary>
         /// Gets the handler, that checks, if the associated <see cref="Type"/> can process an <see cref="IMemberBuildContext"/> assignment.
         /// </summary>
         Func<IMemberBuildContext, bool> CanHandle { get; }

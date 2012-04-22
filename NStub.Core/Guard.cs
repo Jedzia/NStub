@@ -32,14 +32,26 @@ namespace NStub.Core
 
         #endregion
 
-                /// <summary>
+        /// <summary>
         /// Determines whether this instance [can be assigned] with the specified reference.
         /// </summary>
+        /// <typeparam name="T">The type to assign.</typeparam>
+        /// <param name="reference">The reference.</param>
+        /// <param name="targetOfAssignment">Type of the target.</param>
+        /// <exception cref="ArgumentException"><c>ArgumentException</c>.</exception>
+        public static void IsAssignableFrom<T>(Expression<Func<object>> reference, object targetOfAssignment)
+        {
+            CanBeAssigned(reference, typeof(T), targetOfAssignment.GetType());
+        }
+
+        /// <summary>
+        /// Determines whether this instance [can be assigned] with the specified reference.
+        /// </summary>
+        /// <typeparam name="T">Type of the target.</typeparam>
         /// <param name="reference">The reference.</param>
         /// <param name="typeToAssign">The type to assign.</param>
-        /// <param name="targetType">Type of the target.</param>
         /// <exception cref="ArgumentException"><c>ArgumentException</c>.</exception>
-        public static void CanBeAssigned<T>(Expression<Func<object>> reference, object typeToAssign)
+        public static void CanBeAssignedTo<T>(Expression<Func<object>> reference, object typeToAssign)
         {
             CanBeAssigned(reference, typeToAssign.GetType(), typeof(T));
         }

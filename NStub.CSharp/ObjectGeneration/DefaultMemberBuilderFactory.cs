@@ -56,6 +56,12 @@ namespace NStub.CSharp.ObjectGeneration
                     typeof(DefaultMethodEraser), 
                     DefaultMethodEraser.CanHandleContext, 
                     MemberBuilder.EmptyParameters.GetType()));
+           
+            AddHandler(
+                new BuildHandler(
+                    typeof(RenamingBuilder),
+                    RenamingBuilder.CanHandleContext,
+                    typeof(EmptyMultiBuildParameters)));
         }
 
         #endregion

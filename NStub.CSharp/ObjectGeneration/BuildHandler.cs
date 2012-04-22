@@ -105,6 +105,20 @@ namespace NStub.CSharp.ObjectGeneration
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is a multi builder type.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a multi builder type; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsMultiBuilder
+        {
+            get
+            {
+                return typeof(IMultiBuilder).IsAssignableFrom(this.type);
+            }
+        }
+
         #endregion
 
         /// <summary>
@@ -118,7 +132,15 @@ namespace NStub.CSharp.ObjectGeneration
         public IMemberBuilder CreateInstance(IMemberBuildContext context)
         {
             var parameters = new object[] { context };
-            var memberBuilder = (IMemberBuilder)Activator.CreateInstance(this.Type, parameters);
+            IMemberBuilder memberBuilder = null;
+            //try
+            {
+                var inst = Activator.CreateInstance(this.Type, parameters);
+                memberBuilder = (IMemberBuilder)inst;
+            }
+            //catch (Exception ex)
+            //{
+            //}
             return memberBuilder;
         }
 

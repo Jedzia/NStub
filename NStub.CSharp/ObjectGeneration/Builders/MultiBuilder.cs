@@ -55,4 +55,35 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// </returns>
         protected abstract override bool BuildMember(IMemberBuildContext context);
     }
+
+    public class RenamingBuilder : MultiBuilder, IMemberBuilder
+    {
+        /// <summary>
+        /// Determines whether this instance can handle a specified build context.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        /// <returns>
+        /// <c>true</c> if this instance can handle the specified context; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool CanHandleContext(IMemberBuildContext context)
+        {
+            return true;
+            return !context.IsConstructor && !context.IsProperty && !context.IsEvent && context.MemberInfo != null &&
+                   !context.MemberInfo.IsStatic;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RenamingBuilder"/> class.
+        /// </summary>
+        /// <param name="context">The build context of the test method member.</param>
+        public RenamingBuilder(IMemberSetupContext context)
+            : base(context)
+        {
+        }
+
+        protected override bool BuildMember(IMemberBuildContext context)
+        {
+            return true;
+        }
+    }
 }

@@ -83,6 +83,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
         IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties);
 
+        IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties);
+
         /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
@@ -102,6 +104,17 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         string SerializeSetupData(Type builderType, BuildDataDictionary properties);
 
+        /// <summary>
+        /// Gets the xml data representation of multiple registered <see cref="IMultiBuilder"/>s parameters by key.
+        /// </summary>
+        /// <param name="key">The unique id of the multi parameter item.</param>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The properties storage which stores the <see cref="IMultiBuildParameters"/> data to serialize.</param>
+        /// <returns>
+        /// The serialized data of the specified <paramref name="builderType"/>.
+        /// </returns>
+        string SerializeSetupData(Guid key, Type builderType, BuildDataDictionary properties);
+        
         /// <summary>
         /// Set the parameters in the properties storage from a specified xml representation of the data.
         /// </summary>

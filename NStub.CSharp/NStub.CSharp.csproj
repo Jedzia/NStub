@@ -90,6 +90,11 @@
     <Compile Include="ObjectGeneration\Builders\EmptyBuildParametersBase.cs" />
     <Compile Include="ObjectGeneration\Builders\IBuilderSerializer.cs" />
     <Compile Include="ObjectGeneration\Builders\MultiBuilder.cs" />
+    <Compile Include="ObjectGeneration\Builders\XMLSchema1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>XMLSchema1.xsd</DependentUpon>
+    </Compile>
     <Compile Include="ObjectGeneration\IMemberBuildParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\BuildParameters.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -174,6 +179,10 @@
       </SubType>
       <Generator>Xsd2CodeCustomTool</Generator>
       <LastGenOutput>BuildParameters.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ObjectGeneration\Builders\XMLSchema1.xsd">
+      <Generator>Xsd2CodeCustomTool</Generator>
+      <LastGenOutput>XMLSchema1.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

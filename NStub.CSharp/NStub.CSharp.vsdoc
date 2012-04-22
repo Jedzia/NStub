@@ -104,6 +104,7 @@
     <add key="VBdocman_comModules_ObjectGeneration...BuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuilderConstants.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...Builders...BuilderSerializer.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_ObjectGeneration...Builders...XMLSchema1.Designer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...CodeMethodComposer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignment.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignmentCollection.cs"><![CDATA[On]]></add>

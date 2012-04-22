@@ -8,8 +8,18 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 namespace NStub.CSharp.ObjectGeneration
 {
+
+    public interface IMultiBuildParameters : IMemberBuildParameters
+    {
+        /// <summary>
+        /// Gets the identification of the Builder.
+        /// </summary>
+        Guid Id { get; set; }
+    }
+
     /// <summary>
     /// Stores information about user provided parameters of a test method for an <see cref="IMemberBuilder"/>.
     /// </summary>
