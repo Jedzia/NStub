@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.Gui.Util.Dumper
+namespace NStub.Core.Util.Dumper
 {
     internal class HeadingPresenter
     {

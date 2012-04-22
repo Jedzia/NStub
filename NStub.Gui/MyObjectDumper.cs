@@ -11,7 +11,7 @@
 namespace NStub.Gui
 {
     using System.CodeDom;
-    using NStub.Gui.Util.Dumper;
+    using NStub.Core.Util.Dumper;
 
     /// <summary>
     /// Test class for the object dumper. DeleteME

@@ -28,7 +28,7 @@ namespace NStub.Gui
     using System.Text;
     using System.ComponentModel;
     using NStub.Gui.Util;
-    using NStub.Gui.Util.Dumper;
+    using NStub.Core.Util.Dumper;
 
     /// <summary>e
     /// This is the main UI form for the NStub application.
@@ -59,7 +59,7 @@ namespace NStub.Gui
             bpc.Logger = this;
 
             //buildData = new BuildDataDictionary();
-            bpc.BuildProperties.AddDataItem("FromMainForm", MemberBuilder.EmptyParameters);
+            bpc.BuildProperties.AddDataItem("FromMainForm", new EmptyBuildParameters());
 
             bg = new LoadAssemblyWorker(sbs, bpc.BuildProperties, this)
             {

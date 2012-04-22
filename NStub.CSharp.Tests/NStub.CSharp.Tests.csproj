@@ -65,6 +65,7 @@
     <Compile Include="BuildContext\MemberBuildContextTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
+    <Compile Include="Data\TestDataProvider.cs" />
     <Compile Include="FluentChecking\CompareResult.cs" />
     <Compile Include="FluentChecking\CompareResultTest.cs" />
     <Compile Include="FluentChecking\FluentCodeMethodChecking.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="NamespaceDetectorTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
+    <Compile Include="ObjectGeneration\Builders\BuilderSerializerTest.cs" />
     <Compile Include="ObjectGeneration\Builders\ConstructorBuilderTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinderTest.cs" />
@@ -105,6 +107,9 @@
       <Project>{20A2C8B8-3C1E-47C4-AC56-277476293B62}</Project>
       <Name>NStub.CSharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\BuildParameters.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

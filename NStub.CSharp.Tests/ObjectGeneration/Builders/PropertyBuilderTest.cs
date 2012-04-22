@@ -7,6 +7,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using Rhino.Mocks;
     using System.CodeDom;
 
+    [TestFixture]
     public partial class PropertyBuilderTest
     {
 
@@ -65,7 +66,12 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var typeMember = new CodeMemberMethod() { Name = "TypeMemberTest" };
             var propData = mocks.Stub<IBuilderData>();
             Expect.Call(buildcontext.TypeMember).Return(typeMember);
-            Expect.Call(buildcontext.GetBuilderData("Property")).Return(propData);
+            //Expect.Call(buildcontext.GetBuilderData("Property")).Return(propData);
+            
+            // is not relevant ... just a devel-testing call to 
+            // "var userData = context.GetBuilderData<BuildParametersOfPropertyBuilder>(this);"
+            Expect.Call(buildcontext.GetBuilderData<BuildParametersOfPropertyBuilder>(testObject)).Return(null);
+            Expect.Call(buildcontext.GetBuilderData("Property")).Return(propData).Repeat.Any();
             //Expect.Call(buildcontext.IsProperty).Return(true);
             mocks.ReplayAll();
 

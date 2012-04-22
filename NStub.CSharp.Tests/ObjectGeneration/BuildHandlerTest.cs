@@ -29,7 +29,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             this.type = this.builder.GetType();
             this.handlerReturn = false;
             handler = (e) => { return this.handlerReturn; };
-            this.testObject = new BuildHandler(this.type, handler, MemberBuilder.EmptyParameters.GetType());
+            this.testObject = new BuildHandler(this.type, handler, typeof(EmptyBuildParameters));
         }
         
         [TearDown()]
@@ -46,7 +46,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         {
             // all other construction types than IMemberBuilder should throw.
             this.type = typeof(object);
-            Assert.Throws<ArgumentException>(() => new BuildHandler(this.type, handler, MemberBuilder.EmptyParameters.GetType()));
+            Assert.Throws<ArgumentException>(() => new BuildHandler(this.type, handler, typeof(EmptyBuildParameters)));
         }
         
         [Test()]
@@ -75,7 +75,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         public void CreateInstanceTest()
         {
             this.type = typeof(MyMemberBuilder);
-            this.testObject = new BuildHandler(this.type, handler, MemberBuilder.EmptyParameters.GetType());
+            this.testObject = new BuildHandler(this.type, handler, typeof(EmptyBuildParameters));
             mocks.ReplayAll();
 
             var actual = testObject.CreateInstance(this.buildContext);

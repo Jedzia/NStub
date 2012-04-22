@@ -101,7 +101,7 @@ namespace NStub.CSharp
                 // props.AddDataItem(item.Key, item,);
             }
 
-            props.AddDataItem("DasGuuuut", MemberBuilder.EmptyParameters);
+            props.AddDataItem("DasGuuuut", new EmptyBuildParameters());
 
             // Todo: !!!
             return props;

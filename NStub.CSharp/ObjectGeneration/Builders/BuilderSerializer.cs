@@ -303,7 +303,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             if (handler == null)
             {
                 // Todo: or throw?
-                return MemberBuilder.EmptyParameters;
+                return new EmptyBuildParameters();
             }
 
             // <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
@@ -332,8 +332,16 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         private static IMemberBuildParameters SetSingleNode(IBuildDataDictionary properties, IBuildHandler handler, 
             XmlNode firstChild)
         {
+            Guard.NotNull(() => properties, properties);
+            Guard.NotNull(() => handler, handler);
             var paraType = handler.ParameterDataType;
-
+            if (!typeof(IBuilderData).IsAssignableFrom(paraType))
+            {
+                throw new ArgumentOutOfRangeException("handler",
+                    "The handler for MemberBuilder '" + handler.Type.FullName +
+                    "' is mapping to a invalid parameter of '" + handler.ParameterDataType.FullName + "' type. " +
+                "Parameter types have to implement the '" + typeof(IBuilderData).FullName + "' interface.");
+            }
             // null check paraType
             var xxxx = paraType.BaseType.GetGenericTypeDefinition();
 
@@ -342,7 +350,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             // Todo: This strange thingy ... very good checking and logging! :)
             // null check serializer2
-            var paraInstance = serializer2
+            object paraInstance = serializer2
                 .MakeGenericType(paraType)
                 .GetMethod("Deserialize", new[] { typeof(string) })
                 .Invoke(null, new object[] { firstChild.InnerXml });

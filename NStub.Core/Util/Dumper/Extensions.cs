@@ -1,4 +1,4 @@
-﻿namespace NStub.Gui.Util.Dumper
+﻿namespace NStub.Core.Util.Dumper
 {
     using System;
     using System.IO;

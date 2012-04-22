@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.Gui.Util.Dumper
+namespace NStub.Core.Util.Dumper
 {
     using System;
     using System.IO;
@@ -20,7 +20,8 @@ namespace NStub.Gui.Util.Dumper
     {
         #region Fields
 
-        private readonly XhtmlWriter lambdaFormatter;
+        //private readonly XhtmlWriter lambdaFormatter;
+        private TextWriter lambdaFormatter;
         private static Server defaultServer;
 
         #endregion
@@ -49,12 +50,18 @@ namespace NStub.Gui.Util.Dumper
             add
             {
                 // this.textChanged += value;
-                this.lambdaFormatter.TextChanged += value;
+                if (this.lambdaFormatter is XhtmlWriter)
+                {
+                    ((XhtmlWriter)this.lambdaFormatter).TextChanged += value;
+                }
             }
 
             remove
             {
-                this.lambdaFormatter.TextChanged -= value;
+                if (this.lambdaFormatter is XhtmlWriter)
+                {
+                    ((XhtmlWriter)this.lambdaFormatter).TextChanged -= value;
+                }
             }
         }
 
@@ -62,6 +69,10 @@ namespace NStub.Gui.Util.Dumper
 
         #region Properties
 
+        public static void ToConsoleOut()
+        {
+            Default.LambdaFormatter = Console.Out;
+        }
         /// <summary>
         /// Gets the default server singleton instance.
         /// </summary>
@@ -90,7 +101,7 @@ namespace NStub.Gui.Util.Dumper
                 return this.lambdaFormatter;
             }
 
-            // set { Server.lambdaFormatter = value; }
+            set { this.lambdaFormatter = value; }
         }
 
         #endregion

@@ -32,30 +32,30 @@ namespace NStub.CSharp.ObjectGeneration
                 new BuildHandler(
                     typeof(PropertyGetBuilder), 
                     PropertyGetBuilder.CanHandleContext, 
-                    MemberBuilder.EmptyParameters.GetType()));
+                    typeof(EmptyBuildParameters)));
             AddHandler(
                 new BuildHandler(
                     typeof(PropertySetBuilder), 
-                    PropertySetBuilder.CanHandleContext, 
-                    MemberBuilder.EmptyParameters.GetType()));
+                    PropertySetBuilder.CanHandleContext,
+                    typeof(EmptyBuildParameters)));
             AddHandler(
                 new BuildHandler(
-                    typeof(EventBuilder), EventBuilder.CanHandleContext, MemberBuilder.EmptyParameters.GetType()));
+                    typeof(EventBuilder), EventBuilder.CanHandleContext, typeof(EmptyBuildParameters)));
             AddHandler(
                 new BuildHandler(
                     typeof(ConstructorBuilder), 
-                    ConstructorBuilder.CanHandleContext, 
-                    MemberBuilder.EmptyParameters.GetType()));
+                    ConstructorBuilder.CanHandleContext,
+                    typeof(EmptyBuildParameters)));
             AddHandler(
                 new BuildHandler(
                     typeof(StaticMethodBuilder), 
-                    StaticMethodBuilder.CanHandleContext, 
-                    MemberBuilder.EmptyParameters.GetType()));
+                    StaticMethodBuilder.CanHandleContext,
+                    typeof(EmptyBuildParameters)));
             AddHandler(
                 new BuildHandler(
                     typeof(DefaultMethodEraser), 
-                    DefaultMethodEraser.CanHandleContext, 
-                    MemberBuilder.EmptyParameters.GetType()));
+                    DefaultMethodEraser.CanHandleContext,
+                    typeof(EmptyBuildParameters)));
            
             AddHandler(
                 new BuildHandler(

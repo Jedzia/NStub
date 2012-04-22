@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-16"?>
+<BuildParameters>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+    <BuildParametersOfPropertyBuilder>
+      <Enabled>true</Enabled>
+      <MethodSuffix>CoolManDepp</MethodSuffix>
+      <UseDings>false</UseDings>
+      <Moep>5</Moep>
+    </BuildParametersOfPropertyBuilder>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertyGetBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertyGetBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertySetBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertySetBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.EventBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.EventBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.ConstructorBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.ConstructorBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.StaticMethodBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.StaticMethodBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <EmptyMultiBuildParameters Id="4cef6ad6-8971-4c16-9a37-4094d34ea5de">
+      <Enabled>false</Enabled>
+    </EmptyMultiBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <EmptyMultiBuildParameters Id="f24371d7-db32-4fd2-b97b-19c2c0d73be5">
+      <Enabled>true</Enabled>
+    </EmptyMultiBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <EmptyMultiBuildParameters Id="5ad71c5c-31c1-4a63-86f6-4e877c7aaaf4">
+      <Enabled>false</Enabled>
+    </EmptyMultiBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <EmptyMultiBuildParameters Id="047b328c-5c07-4ea5-943e-bf29d42ae11f">
+      <Enabled>false</Enabled>
+    </EmptyMultiBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+</BuildParameters>

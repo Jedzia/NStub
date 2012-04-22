@@ -283,6 +283,9 @@ namespace NStub.CSharp
 
             foreach (CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
             {
+                var fixtureAttr = new CodeAttributeDeclaration("TestFixture");
+                testClassDeclaration.CustomAttributes.Add(fixtureAttr);
+
                 if (testClassDeclaration.Name.Contains("MbUnit"))
                 {
                 }

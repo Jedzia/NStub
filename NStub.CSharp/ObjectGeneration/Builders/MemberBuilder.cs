@@ -20,7 +20,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     {
         #region Fields
 
-        private static readonly EmptyBuildParameters Defaults = new EmptyBuildParameters();
+        //private static readonly EmptyBuildParameters Defaults = new EmptyBuildParameters();
 
         #endregion
 
@@ -40,16 +40,17 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         #region Properties
 
-        /// <summary>
+        /*/// <summary>
         /// Gets the default empty parameters.
         /// </summary>
         public static EmptyBuildParameters EmptyParameters
         {
             get
             {
-                return Defaults;
+                //return Defaults;
+                return new EmptyBuildParameters();
             }
-        }
+        }*/
 
         /// <summary>
         /// Gets build context of the test method member.

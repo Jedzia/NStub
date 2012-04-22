@@ -25,6 +25,7 @@ namespace NStub.CSharp.ObjectGeneration
             new Dictionary<string, IDictionary<string, IBuilderData>>();
 
         private readonly Dictionary<string, IBuilderData> generalData;
+        private bool isDirty;
 
         #endregion
 
@@ -42,6 +43,20 @@ namespace NStub.CSharp.ObjectGeneration
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has uncomitted changes.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has uncomitted changes; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsDirty
+        {
+            get
+            {
+                return this.isDirty;
+            }
+        }
 
         /// <summary>
         /// Gets the number of data items.
@@ -128,6 +143,7 @@ namespace NStub.CSharp.ObjectGeneration
         public void AddDataItem(string key, IBuilderData item)
         {
             this.generalData.Add(key, item);
+            isDirty = true;
         }
 
         /// <summary>
@@ -168,21 +184,28 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 catLookup = new Dictionary<string, IBuilderData>();
                 this.data.Add(category, catLookup);
+                isDirty = true;
             }
 
             if (!replace)
             {
                 catLookup.Add(key, item);
+                isDirty = true;
             }
             else
             {
                 if(catLookup.ContainsKey(key))
                 {
+                    if (catLookup[key] != item)
+                    {
+                        isDirty = true;
+                    }
                     catLookup[key] = item;
                 }
                 else
                 {
                     catLookup.Add(key, item);
+                    isDirty = true;
                 }
             }
         }
@@ -208,7 +231,7 @@ namespace NStub.CSharp.ObjectGeneration
             return xxxx;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Returns an enumerator that iterates through the category collection.
         /// </summary>
         /// <returns>
@@ -217,7 +240,7 @@ namespace NStub.CSharp.ObjectGeneration
         public IEnumerable<KeyValuePair<string, IDictionary<string, IBuilderData>>> GetData()
         {
             return this.data;
-        }
+        }*/
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.

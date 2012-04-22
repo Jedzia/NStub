@@ -102,7 +102,7 @@ namespace NStub.Gui.Components
         /// </summary>
         public void LoadBuildPropertyData()
         {
-            BuildProperties.AddDataItem("EXTRA", "From Main StartUp", CSharp.ObjectGeneration.Builders.MemberBuilder.EmptyParameters);
+            BuildProperties.AddDataItem("EXTRA", "From Main StartUp", new NStub.CSharp.ObjectGeneration.Builders.EmptyBuildParameters());
             GeneratorConfigLoad(this.BuildProperties);
         }
 

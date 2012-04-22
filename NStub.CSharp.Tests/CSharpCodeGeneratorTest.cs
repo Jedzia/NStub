@@ -1,6 +1,6 @@
 using System;
 using System.CodeDom;
-using System.IO;
+//using System.IO;
 using global::MbUnit.Framework;
 using NStub.Core;
 using NStub.CSharp.ObjectGeneration;
@@ -31,7 +31,7 @@ namespace NStub.CSharp.Tests
 		[FixtureSetUp]
 		public void TestFixtureSetUp()
 		{
-			_outputDirectory = Path.GetTempPath();
+			_outputDirectory = System.IO.Path.GetTempPath();
 		} 
 
 		#endregion TestFixtureSetUp (Public)
@@ -45,9 +45,9 @@ namespace NStub.CSharp.Tests
 		[FixtureTearDown]
 		public void TestFixtureTearDown()
 		{
-			if (Directory.Exists(_outputDirectory))
+			//if (Directory.Exists(_outputDirectory))
 			{
-				Directory.Delete(_outputDirectory, true);
+				//Directory.Delete(_outputDirectory, true);
 			}
 		} 
 
