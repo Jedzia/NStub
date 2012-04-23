@@ -16,8 +16,11 @@ namespace NStub.Core.Util.Dumper
     using System.Threading;
 
     /// <summary>
-    /// Fake output writer. does not really write xhtml .... do be done ... later
+    /// StringWriter with an event that is fired on text changes.
     /// </summary>
+    /// <remarks>
+    /// Fake output writer. does not really write xhtml .... to be done ... later
+    /// </remarks>
     public class XhtmlWriter : StringWriter
     {
         #region Fields
@@ -34,19 +37,22 @@ namespace NStub.Core.Util.Dumper
         #region Events
 
         /// <summary>
-        /// Occurs when 
+        /// Occurs when the stream gets a <see cref="TextWriter.NewLine"/> or is flushed/closed and not empty. 
         /// </summary>
+        /// <remarks>
+        /// The <see cref="TextWrittenEventArgs.Text"/> parameter reflects the current text in the stream. 
+        /// After the event is fired, the internal memory is blanked and starts watching for <see cref="TextWriter.NewLine"/> again.
+        /// <para>The internal memory for event invocation has nothing to do with the underlying stream,
+        /// that behaves like a standard <see cref="StringWriter"/>.</para></remarks>
         public event EventHandler<TextWrittenEventArgs> TextChanged
         {
             add
             {
-                // TODO: write your implementation of the add accessor here
                 this.textChanged += value;
             }
 
             remove
             {
-                // TODO: write your implementation of the remove accessor here
                 this.textChanged -= value;
             }
         }
@@ -54,7 +60,7 @@ namespace NStub.Core.Util.Dumper
         #endregion
 
         /// <summary>
-        /// Closes the current <see cref="T:System.IO.StringWriter"/> and the underlying stream.
+        /// Closes the current <see cref="System.IO.StringWriter"/> and the underlying stream.
         /// </summary>
         public override void Close()
         {
@@ -69,6 +75,21 @@ namespace NStub.Core.Util.Dumper
         }
 
         /// <summary>
+        /// Clears all buffers for the current writer and causes any buffered data to be written to the underlying device.
+        /// </summary>
+        public override void Flush()
+        {
+            if (this.sb.Length > 0)
+            {
+                // if (sb.Length > 200)
+                var currentStr = this.sb.ToString();
+                this.RaiseTextChanged(currentStr);
+                this.sb.Length = 0;
+            }
+            base.Flush();
+        }
+
+        /// <summary>
         /// Writes a character to this instance of the StringWriter.
         /// </summary>
         /// <param name="value">The character to write.</param>
@@ -80,7 +101,7 @@ namespace NStub.Core.Util.Dumper
             base.Write(value);
 
             this.sb.Append(value);
-            this.FlushForEvent();
+            this.FlushForNewLine();
         }
 
         /// <summary>
@@ -95,7 +116,7 @@ namespace NStub.Core.Util.Dumper
             base.Write(value);
 
             this.sb.Append(value);
-            this.FlushForEvent();
+            this.FlushForNewLine();
         }
 
         // MemoryStream ms = new MemoryStream();
@@ -125,7 +146,7 @@ namespace NStub.Core.Util.Dumper
 
             // ms.Write(buffer, index, count);
             this.sb.Append(buffer, index, count);
-            this.FlushForEvent();
+            this.FlushForNewLine();
 
             // RaiseTextChanged(ms.ToString());
         }
@@ -153,12 +174,13 @@ namespace NStub.Core.Util.Dumper
             this.OnTextChanged(new TextWrittenEventArgs(text));
         }
 
-        private void FlushForEvent()
+        private void FlushForNewLine()
         {
-            if (this.sb.ToString().Contains(NewLine))
+            var currentStr = this.sb.ToString();
+            if (currentStr.Contains(NewLine))
             {
                 // if (sb.Length > 200)
-                this.RaiseTextChanged(this.sb.ToString());
+                this.RaiseTextChanged(currentStr);
                 this.sb.Length = 0;
             }
         }

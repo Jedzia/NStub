@@ -44,14 +44,14 @@ namespace NStub.Core.Util.Dumper
             this.maxCount = maxcount;
         }
 
-        /// <summary>
+        /*/// <summary>
         /// Prevents a default instance of the <see cref="ObjectDumper"/> class from being created.
         /// </summary>
         /// <param name="depth">The iteration level.</param>
         private ObjectDumper(int depth)
         {
             this.depth = depth;
-        }
+        }*/
 
         /// <summary>
         /// Prevents a default instance of the <see cref="ObjectDumper"/> class from being created.
@@ -124,7 +124,10 @@ namespace NStub.Core.Util.Dumper
         {
             ObjectDumper dumper = new ObjectDumper(depth, maxcount);
             dumper.writer = log;
-            dumper.Write("[" + element.GetType().Name + "]");
+            if (element != null)
+            {
+                dumper.Write("[" + element.GetType().Name + "]");
+            }
             dumper.WriteObject(null, element);
         }
 
@@ -231,44 +234,44 @@ namespace NStub.Core.Util.Dumper
                             Type t = f != null ? f.FieldType : p.PropertyType;
                             if (t.IsValueType || t == typeof(string))
                             {
-                                try
+                                //try
+                                //{
+                                if (f != null)
                                 {
-                                    if (f != null)
+                                    //if (f.FieldType == typeof(GenericParameterAttributes))
                                     {
-                                        //if (f.FieldType == typeof(GenericParameterAttributes))
-                                        {
                                         //    this.Write(f.Name + " is Generic. ");
-                                        }
-                                        //else
-                                        {
-                                            this.WriteValue(f.GetValue(element));
-                                        }
+                                    }
+                                    //else
+                                    {
+                                        this.WriteValue(f.GetValue(element));
+                                    }
+                                }
+                                else
+                                {
+                                    //if ((p.GetType() == typeof(GenericParameterAttributes)))
+                                    //if (p.PropertyType == typeof(GenericParameterAttributes))
+                                    if (p.ToString().Contains("Generic"))
+                                    {
+                                        //this.Write(p.Name + " is Generic. ");
                                     }
                                     else
                                     {
-                                        //if ((p.GetType() == typeof(GenericParameterAttributes)))
-                                        //if (p.PropertyType == typeof(GenericParameterAttributes))
-                                        if (p.ToString().Contains("Generic"))
-                                        {
-                                            //this.Write(p.Name + " is Generic. ");
-                                        }
-                                        else
-                                        {
-                                            this.WriteValue(p.GetValue(element, null));
-                                        }
+                                        this.WriteValue(p.GetValue(element, null));
                                     }
                                 }
-                                catch (Exception ex)
-                                {
-                                    //this.WriteLine();
-                                    //this.Write(ex.Message);
-                                    //if (ex.InnerException != null)
-                                     //   this.Write(ex.InnerException.Message);
-                                    //this.WriteLine();
-                                    throw;
-                                    //return;
-                                }
-
+                                
+                                //}
+                                //catch (Exception ex)
+                                //{
+                                //this.WriteLine();
+                                //this.Write(ex.Message);
+                                //if (ex.InnerException != null)
+                                //   this.Write(ex.InnerException.Message);
+                                //this.WriteLine();
+                                //throw;
+                                //return;
+                                //}
                             }
                             else
                             {

@@ -37,3 +37,4 @@ using System.Security;
 // by using the '*' as shown below:
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: System.Runtime.CompilerServices.InternalsVisibleTo("NStub.Core.Tests")]

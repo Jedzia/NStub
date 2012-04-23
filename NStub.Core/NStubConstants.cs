@@ -23,7 +23,5 @@ namespace NStub.Core
         /// For each <i>class under test</i> in each method, property, event, etc., this user data 
         /// stores the associated member info of the code generator test method definition.</summary>
         public const string TestMemberMethodInfoKey = "MethodMemberInfo";
-        
-        
     }
 }

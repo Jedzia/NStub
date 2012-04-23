@@ -202,13 +202,15 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
 
             // typeMember.Var("expected", true).StaticClass(context.TestObjectType.Name).Invoke(context.TestKey).With("12:03:05").Commit();
+            // Todo: if the above(constructor parameter fetching) was successfull generate the missing Parameters from methodinfo and assign it correct.
             typeMember.AddBlankLine();
             typeMember.Var("expected", true).Assign().With("Dreck").Commit();
 
             // typeMember.Var("expected", false).StaticClass("DateTime").Invoke("Now").Commit(); 
 
             // typeMember.Statements.Add(expectedAsign);
-            typeMember.StaticClass(context.TestObjectType.Name).Invoke(context.TestKey)
+            // Todo: check for void return type.
+            typeMember.StaticClass(context.TestObjectType.Name).Invoke(context.MemberInfo.Name)
                 .WithReference(parameterNames.ToArray()).AssignLocal("actual", true);
             typeMember.StaticClass("Assert").Invoke("AreEqual").WithReference("expected").WithReference("actual").Commit();
             return true;
