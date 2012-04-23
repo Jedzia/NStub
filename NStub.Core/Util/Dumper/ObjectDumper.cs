@@ -36,10 +36,12 @@ namespace NStub.Core.Util.Dumper
         /// </summary>
         /// <param name="depth">The iteration level.</param>
         /// <param name="writer">The output text writer.</param>
-        internal ObjectDumper(int depth, TextWriter writer)
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        internal ObjectDumper(int depth, int maxcount, TextWriter writer)
         {
             this.depth = depth;
             this.writer = writer;
+            this.maxCount = maxcount;
         }
 
         /// <summary>
@@ -49,6 +51,17 @@ namespace NStub.Core.Util.Dumper
         private ObjectDumper(int depth)
         {
             this.depth = depth;
+        }
+
+        /// <summary>
+        /// Prevents a default instance of the <see cref="ObjectDumper"/> class from being created.
+        /// </summary>
+        /// <param name="depth">The iteration level.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        private ObjectDumper(int depth, int maxcount)
+        {
+            this.depth = depth;
+            this.maxCount = maxcount;
         }
 
         #endregion
@@ -86,7 +99,7 @@ namespace NStub.Core.Util.Dumper
         /// <param name="depth">The iteration level.</param>
         public static void Write(object element, int depth)
         {
-            Write(element, depth, Console.Out);
+            Write(element, depth, int.MaxValue, Console.Out);
         }
 
         /// <summary>
@@ -94,10 +107,22 @@ namespace NStub.Core.Util.Dumper
         /// </summary>
         /// <param name="element">The element.</param>
         /// <param name="depth">The iteration level.</param>
-        /// <param name="log">The output logger.</param>
-        public static void Write(object element, int depth, TextWriter log)
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        public static void Write(object element, int depth, int maxcount)
         {
-            ObjectDumper dumper = new ObjectDumper(depth);
+            Write(element, depth, maxcount, Console.Out);
+        }
+
+        /// <summary>
+        /// Writes the specified element.
+        /// </summary>
+        /// <param name="element">The element.</param>
+        /// <param name="depth">The iteration level.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        /// <param name="log">The output logger.</param>
+        public static void Write(object element, int depth, int maxcount, TextWriter log)
+        {
+            ObjectDumper dumper = new ObjectDumper(depth, maxcount);
             dumper.writer = log;
             dumper.Write("[" + element.GetType().Name + "]");
             dumper.WriteObject(null, element);
@@ -108,11 +133,36 @@ namespace NStub.Core.Util.Dumper
             this.WriteObject(string.Empty, element);
         }
 
+        private int maxCounter = 0;
+        private readonly int maxCount = int.MaxValue;
+        private bool maxCounterReachedPrinted;
         internal void WriteObject(string prefix, object element)
         {
             // WriteIndent();
             // Write(prefix);
             // WriteLine();
+            if (this.level >= this.depth)
+            {
+                return;
+            }
+
+            if (this.maxCounter > this.maxCount)
+            {
+                if (!maxCounterReachedPrinted)
+                {
+                    maxCounterReachedPrinted = true;
+                    this.WriteLine();
+                    this.Write("maximum Dump Count of [" + maxCount + "] reached...");
+                }
+                return;
+            }
+            maxCounter++;
+            /*if (element.GetType().FullName == "System.RuntimeType")
+            {
+                // this.Write("-System.RuntimeType-");
+                // this.level++;
+                return;
+            }*/
 
             if (element == null || element is ValueType || element is string)
             {
@@ -181,7 +231,44 @@ namespace NStub.Core.Util.Dumper
                             Type t = f != null ? f.FieldType : p.PropertyType;
                             if (t.IsValueType || t == typeof(string))
                             {
-                                this.WriteValue(f != null ? f.GetValue(element) : p.GetValue(element, null));
+                                try
+                                {
+                                    if (f != null)
+                                    {
+                                        //if (f.FieldType == typeof(GenericParameterAttributes))
+                                        {
+                                        //    this.Write(f.Name + " is Generic. ");
+                                        }
+                                        //else
+                                        {
+                                            this.WriteValue(f.GetValue(element));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        //if ((p.GetType() == typeof(GenericParameterAttributes)))
+                                        //if (p.PropertyType == typeof(GenericParameterAttributes))
+                                        if (p.ToString().Contains("Generic"))
+                                        {
+                                            //this.Write(p.Name + " is Generic. ");
+                                        }
+                                        else
+                                        {
+                                            this.WriteValue(p.GetValue(element, null));
+                                        }
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    //this.WriteLine();
+                                    //this.Write(ex.Message);
+                                    //if (ex.InnerException != null)
+                                     //   this.Write(ex.InnerException.Message);
+                                    //this.WriteLine();
+                                    throw;
+                                    //return;
+                                }
+
                             }
                             else
                             {

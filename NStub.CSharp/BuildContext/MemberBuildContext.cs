@@ -14,6 +14,7 @@ namespace NStub.CSharp.BuildContext
     using System.CodeDom;
     using System.Reflection;
     using NStub.CSharp.ObjectGeneration;
+    using NStub.Core;
 
     /// <summary>
     /// Implementation of a data class used to create new unit tests.
@@ -57,7 +58,7 @@ namespace NStub.CSharp.BuildContext
         protected override MethodInfo GetTestMethodInfo(CodeTypeMember typeMember)
         {
             // Get the RuntimeMethodInfo of the current test method.
-            return (MethodInfo)typeMember.UserData["MethodMemberInfo"];
+            return (MethodInfo)typeMember.UserData[NStubConstants.TestMemberMethodInfoKey];
         }
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace NStub.CSharp.BuildContext
         protected override Type GetTestObjectClassType(CodeTypeDeclaration testClassDeclaration)
         {
             // Get the RuntimeType of the test class.
-            return (Type)TestClassDeclaration.UserData["TestObjectClassType"];
+            return (Type)TestClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey];
         }
     }
 }

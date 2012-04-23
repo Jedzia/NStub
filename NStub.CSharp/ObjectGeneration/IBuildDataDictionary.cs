@@ -25,6 +25,16 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         IReadOnlyDictionary<string, IBuilderData> General { get; }
 
+        /// <summary>
+        /// Gets the number of <see cref="IBuilderData"/> entries across all categories.
+        /// </summary>
+        int EntryCount { get; }
+
+        /// <summary>
+        /// Gets the number of <see cref="IBuilderData"/> entries in the <see cref="General"/> category.
+        /// </summary>
+        int Count { get; }
+
         #endregion
 
         /// <summary>
@@ -64,6 +74,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         /// <returns>A read only dictionary of data.</returns>
         IBuildDataReadOnlyDictionary Data();
+
+        /// <summary>
+        /// Resets the dirty flag ( Save this instance not implemented ).
+        /// </summary>
+        void Save();
 
         /*/// <summary>
         /// Returns an enumerator that iterates through the category collection.

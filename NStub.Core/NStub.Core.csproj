@@ -49,6 +49,7 @@
     <Compile Include="BuildSystem.cs" />
     <Compile Include="CodeGeneratorParameters.cs" />
     <Compile Include="CodeGeneratorParametersBase.cs" />
+    <Compile Include="NStubConstants.cs" />
     <Compile Include="Util\Dumper\Extensions.cs" />
     <Compile Include="Util\Dumper\HeadingPresenter.cs" />
     <Compile Include="Util\Dumper\ObjectDumper.cs" />

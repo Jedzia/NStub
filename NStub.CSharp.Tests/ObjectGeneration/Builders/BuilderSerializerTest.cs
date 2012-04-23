@@ -73,15 +73,29 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
 
         }
 
-        [Test(), Ignore]
-        public void DeserializeAllSetupDataMinimal()
+        [Test()]
+        public void DeserializeAllSetupDataMinimalDefaultMethodEraser()
         {
             var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
 
+            Expect.Call(handler.Type).Return(typeof(EmptyBuildParameters));
+            mocks.ReplayAll();
+            var result = testObject.DeserializeAllSetupData(xml, properties, new[] { handler });
+            Assert.AreElementsEqual(new[] { new EmptyBuildParameters() }, result);
+            Assert.IsEmpty(properties.General.Keys);
+            mocks.VerifyAll();
+        }
+
+        [Test()]
+        public void DeserializeAllSetupDataMinimalDefaultMethodEraserNotPresentHandlerParameterType()
+        {
+            var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
+
+            // In case no matching handler is found, EmptyBuildParameters has to be instantiated and returned.
             Expect.Call(handler.Type).Return(typeof(string));
             mocks.ReplayAll();
             var result = testObject.DeserializeAllSetupData(xml, properties, new[] { handler });
-            Assert.AreElementsSame(new[] { new EmptyBuildParameters() }, result);
+            Assert.AreElementsEqual(new[] { new EmptyBuildParameters() }, result);
             mocks.VerifyAll();
         }
 
@@ -106,6 +120,11 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
             //Assert.AreElementsEqual(new[] { expected }, result,
               //  (x, y) => x.Enabled == y.Enabled && x.GetType() == y.GetType());
             Assert.AreElementsEqual(new[] { expected }, result);
+
+            Assert.AreEqual(1, properties.EntryCount);
+
+            // ensure there is a global entry for the PropertyBuilder containing an EmptyBuildParameters instance.
+            Assert.Contains(properties.General, new KeyValuePair<string, IBuilderData>(expectedBuilderType.FullName, expected));
 
             mocks.VerifyAll();
         }
@@ -145,9 +164,10 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
             mocks.VerifyAll();
         }
 
-        [Test(), Ignore]
-        public void DeserializeAllSetupDataWithWrongHandlerParameterDataType()
+        [Test()]
+        public void DeserializeAllSetupDataWithWrongXmlType()
         {
+            // Todo: Implement type checking
             // <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser><EmptyBuildParameters>
             var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
 
@@ -179,9 +199,16 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
         [Test()]
         public void DetermineIMemberBuilderFromXmlFragmentTest()
         {
-            // TODO: Implement unit test for DetermineIMemberBuilderFromXmlFragment
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            // <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser><EmptyBuildParameters>
+            var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
+            // Todo: hier weiter
+            Expect.Call(handler.Type).Return(typeof(DefaultMethodEraser)).Repeat.Any();
+            Expect.Call(handler.IsMultiBuilder).Return(false).Repeat.Any();
+            Expect.Call(handler.ParameterDataType).Return(typeof(string)).Repeat.Any();
+            mocks.ReplayAll();
+            var result = testObject.DetermineIMemberBuilderFromXmlFragment(xml, new[] { handler });
+            Assert.AreSame(handler, result);
+            mocks.VerifyAll();
         }
         
         [Test()]

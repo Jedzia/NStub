@@ -106,7 +106,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             string testObjectName)
         {
             // Todo: only the Type is necs, the CodeTypeDeclaration is to much knowledge.
-            var testObjectClassType = (Type)testClassDeclaration.UserData["TestObjectClassType"];
+            var testObjectClassType = (Type)testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey];
 
             Type[] parameters = { /*typeof(int)*/ };
 

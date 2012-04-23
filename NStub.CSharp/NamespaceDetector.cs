@@ -47,7 +47,7 @@ namespace NStub.CSharp
             Guard.NotNull(() => typeDeclarations, typeDeclarations);
             this.typeDeclarations = typeDeclarations;
 
-// storedDeclarations = typeDeclarations.OfType<CodeTypeDeclaration>().ToList();
+            // storedDeclarations = typeDeclarations.OfType<CodeTypeDeclaration>().ToList();
             this.storedDeclarations = typeDeclarations.OfType<CodeTypeDeclaration>().ToArray();
 
             IEnumerable<string> distinctNamespaces;
@@ -75,11 +75,11 @@ namespace NStub.CSharp
                 return this.typeDeclarations;
             }
 
-/*
-            set
-            {
-                this.typeDeclarations = value;
-            }*/
+            /*
+                        set
+                        {
+                            this.typeDeclarations = value;
+                        }*/
         }
 
         #endregion
@@ -112,7 +112,11 @@ namespace NStub.CSharp
 
             var combined = codeNs;
             var splitter = codeNs.Split(new[] { this.ShortestNamespace }, StringSplitOptions.RemoveEmptyEntries);
-            if (splitter.Length == 1)
+            if (splitter.Length == 0)
+            {
+                combined = testNamespacePart;
+            }
+            else if (splitter.Length == 1)
             {
                 combined = testNamespacePart + splitter[0];
             }
@@ -196,7 +200,7 @@ namespace NStub.CSharp
         public IEnumerable<CodeNamespaceImport> PrepareNamespaceImports(IEnumerable<string> imports)
         {
             var result = new List<CodeNamespaceImport>();
-            foreach(var ns in imports)
+            foreach (var ns in imports)
             {
                 var corectedns = this.PrepareNamespace(ns);
                 result.Add(new CodeNamespaceImport(corectedns));
@@ -215,7 +219,7 @@ namespace NStub.CSharp
             IEnumerable<CodeTypeDeclaration> typeDeclarations, out IEnumerable<string> distinctNamespaces)
         {
             var typeNamespace = new List<string>();
-            foreach(CodeTypeDeclaration typedecl in typeDeclarations)
+            foreach (CodeTypeDeclaration typedecl in typeDeclarations)
             {
                 var typeName = typedecl.Name;
                 var indexcodeNs = typeName.LastIndexOf('.');
@@ -246,7 +250,7 @@ namespace NStub.CSharp
             }
 
             string result = ns;
-            foreach(var ctdecl in this.namespaces)
+            foreach (var ctdecl in this.namespaces)
             {
                 var splitter = ctdecl.Split(new[] { this.ShortestNamespace }, StringSplitOptions.RemoveEmptyEntries);
                 if (splitter.Length == 1)

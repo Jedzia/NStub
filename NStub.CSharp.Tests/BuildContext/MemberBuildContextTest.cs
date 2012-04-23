@@ -18,6 +18,7 @@ namespace NStub.CSharp.Tests.BuildContext
     using NStub.CSharp.ObjectGeneration;
     using NStub.CSharp.Tests.Stubs;
     using Rhino.Mocks;
+    using NStub.Core;
 
     public class MemberBuildContextTest
     {
@@ -294,7 +295,7 @@ namespace NStub.CSharp.Tests.BuildContext
             Assert.IsNull(actual);
 
             var expected = typeof(InfoApe);
-            this.testClassDeclaration.UserData["TestObjectClassType"] = expected;
+            this.testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] = expected;
             actual = this.testObject.TestObjectType;
             Assert.AreEqual(expected, actual);
 
@@ -320,7 +321,7 @@ namespace NStub.CSharp.Tests.BuildContext
             this.typeMember = new CodeTypeMember();
 
             // MethodInfo methodInfo = this.GetType().GetMethod("SetUp");
-            // typeMember.UserData["MethodMemberInfo"] = methodInfo;
+            // typeMember.UserData[NStubConstants.TestMemberMethodInfoKey] = methodInfo;
             this.buildData = new BuildDataDictionary();
             this.mocks = new MockRepository();
             this.setUpTearDownContext = this.mocks.StrictMock<ISetupAndTearDownContext>();
@@ -348,7 +349,7 @@ namespace NStub.CSharp.Tests.BuildContext
         private static MethodInfo SetUserData(CodeObject codeTypeMember, string methodSignature)
         {
             MethodInfo methodInfo = typeof(InfoApe).GetMethod(methodSignature);
-            codeTypeMember.UserData["MethodMemberInfo"] = methodInfo;
+            codeTypeMember.UserData[NStubConstants.TestMemberMethodInfoKey] = methodInfo;
             return methodInfo;
         }
     }

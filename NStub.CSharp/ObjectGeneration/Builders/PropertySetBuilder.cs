@@ -59,13 +59,21 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
             // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
-            var propertyData = context.GetBuilderData("Property");
+            var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, context.TestClassDeclaration.Name);
+            var propertyData = context.GetBuilderData(storageCategory);
 
             // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             // var testObjectName = context.TestObjectName;
             const string TestObjectName = "testObject";
             this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, TestObjectName, propertyName);
+
+            if (context.TestClassDeclaration.Name == "CodeGeneratorParametersBaseTest")
+            {
+                if (propertyName.Contains("PropertyOutputDirectoryNormalBehavior"))
+                {
+                }
+            }
             return true;
         }
 
@@ -98,6 +106,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
 
             if (getAccessor == null)
+            {
+                // create the actual and expected var's here.
+                // actualRef
+                // expectedRef
+            }
+
+            if (setAccessor.Name.Contains("set_OutputDirectory"))
             {
                 // create the actual and expected var's here.
                 // actualRef

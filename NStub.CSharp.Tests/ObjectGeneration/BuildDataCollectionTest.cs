@@ -5,28 +5,32 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using global::MbUnit.Framework;
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
+    using NStub.CSharp.ObjectGeneration.Builders;
 
-    public partial class BuildDataCollectionTest
+    [TestFixture()]
+    public partial class BuildDataDictionaryTest
     {
-        
+
+        private EmptyMultiBuildParameters item1;
+        private EmptyMultiBuildParameters item2;
+        private EmptyMultiBuildParameters item3;
         private BuildDataDictionary testObject;
-        
-        public BuildDataCollectionTest()
-        {
-        }
-        
+
         [SetUp()]
         public void SetUp()
         {
             this.testObject = new BuildDataDictionary();
+            this.item1 = new EmptyMultiBuildParameters() { Enabled = true };
+            this.item2 = new EmptyMultiBuildParameters() { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            this.item3 = new EmptyMultiBuildParameters() { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
         }
-        
+
         [TearDown()]
         public void TearDown()
         {
             this.testObject = null;
         }
-        
+
         [Test()]
         public void ConstructTest()
         {
@@ -37,7 +41,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var lookup = testObject["General"];
             Assert.IsNotNull(lookup);
         }
-        
+
         [Test()]
         public void PropertyCountNormalBehavior()
         {
@@ -45,8 +49,116 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var expected = 1;
             var actual = testObject.Count;
             Assert.AreEqual(expected, actual);
+
+            AddDefaultTestItems();
+            expected = 3;
+            actual = testObject.Count;
+            Assert.AreEqual(expected, actual);
         }
-        
+
+        public void AddDefaultTestItems()
+        {
+            testObject.AddDataItem("Moo", "FirstOne", item1);
+            testObject.AddDataItem("InGeneral", item1);
+            testObject.AddDataItem("NotInGeneral", "X-Key", item2);
+            testObject.AddDataItem("General", "ReallyCool", item3);
+        }
+
+        [Test()]
+        public void PropertyEntryCountNormalBehavior()
+        {
+            // Test read access of 'EntryCount' Property.
+            var expected = 0;
+            var actual = testObject.EntryCount;
+            Assert.AreEqual(expected, actual);
+
+            testObject.AddDataItem("Moo", "Key", item1);
+            expected = 1;
+            Assert.AreEqual(expected, testObject.EntryCount);
+
+            testObject.AddDataItem("YesInGeneral", item2);
+            expected = 2;
+            Assert.AreEqual(expected, testObject.EntryCount);
+
+            testObject.AddDataItem("NotInGeneral", "My-Key", item3);
+            expected = 3;
+            Assert.AreEqual(expected, testObject.EntryCount);
+
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+            expected = 7;
+            Assert.AreEqual(expected, testObject.EntryCount);
+        }
+
+        [Test()]
+        public void PropertyGeneralNormalBehavior()
+        {
+            // Test read access of 'General' Property.
+            var expected = testObject["General"].Keys;
+            var actual = testObject.General.Keys;
+            var expectedV = testObject["General"].Values;
+            var actualV = testObject.General.Values;
+            Assert.AreElementsSame(expected, actual);
+            Assert.AreElementsSame(expectedV, actualV);
+
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            Assert.AreEqual(2, testObject.General.Count);
+            expected = testObject["General"].Keys;
+            actual = testObject.General.Keys;
+            expectedV = testObject["General"].Values;
+            actualV = testObject.General.Values;
+            Assert.AreElementsSame(expected, actual);
+            Assert.AreElementsSame(expectedV, actualV);
+        }
+
+        [Test()]
+        public void PropertyIsDirtyNormalBehavior()
+        {
+            // Test read access of 'IsDirty' Property.
+            var expected = false;
+            var actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            testObject.AddDataItem("Moo", "Key", item1);
+            expected = true;
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            this.testObject = new BuildDataDictionary();
+            testObject.AddDataItem("YesInGeneral", item2);
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            this.testObject = new BuildDataDictionary();
+            testObject.AddDataItem("NotInGeneral", "My-Key", item3);
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            testObject.Save();
+            expected = false;
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            // replacing the existing from above should not affect the dirty flag.
+            testObject.AddDataItem("NotInGeneral", "My-Key", item3, true);
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+            testObject.AddDataItem("NotInGeneral", "My-OtherKey", item3, true);
+            expected = true;
+            actual = testObject.IsDirty;
+            Assert.AreEqual(expected, actual);
+
+        }
+
         [Test()]
         public void AddDataItemTest()
         {
@@ -80,6 +192,31 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test()]
+        public void AddMoreDataItems()
+        {
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            var expected = item1;
+            var actual = testObject["Moo"]["FirstOne"];
+            Assert.AreEqual(expected, actual);
+
+            actual = testObject.General["InGeneral"];
+            Assert.AreEqual(expected, actual);
+
+            expected = item2;
+            actual = testObject["NotInGeneral"]["X-Key"];
+            Assert.AreEqual(expected, actual);
+
+            expected = item3;
+            actual = testObject["General"]["ReallyCool"];
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test()]
         public void AddDataItemTheSameShouldThrow()
         {
             var expected1 = MockRepository.GenerateStrictMock<IBuilderData>();
@@ -99,12 +236,100 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.IsNotNull(lookup);
             var actual = lookup["TheKey"];
             Assert.AreEqual(expected, actual);
+
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            expected = item1;
+            actual = testObject["Moo"]["FirstOne"];
+            Assert.AreSame(expected, actual);
+
+            actual = testObject["General"]["InGeneral"];
+            Assert.AreSame(expected, actual);
+
+            expected = item2;
+            actual = testObject["NotInGeneral"]["X-Key"];
+            Assert.AreSame(expected, actual);
+            
+            expected = item3;
+            actual = testObject["General"]["ReallyCool"];
+            Assert.AreSame(expected, actual);
         }
-        
+
+        [Test()]
+        public void PropertyItemIndexerThrows()
+        {
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            IBuilderData expected = null;
+            IBuilderData actual = null;
+            Assert.Throws<KeyNotFoundException>(() => actual = testObject["Moo"]["XXX-Tripple-XXX"]);
+            Assert.AreEqual(expected, actual);
+
+            Assert.Throws<KeyNotFoundException>(() => actual = testObject["General"]["XXInGeneralXX"]);
+            Assert.AreEqual(expected, actual);
+
+            Assert.Throws<NullReferenceException>(() => actual = testObject["XXXGeneral"]["X-Key"]);
+            Assert.AreEqual(expected, actual);
+
+            Assert.Throws<KeyNotFoundException>(() => actual = testObject.General["What.The..."]);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test()]
+        public void PropertyItemIndexerGivesNullCategoryWithoutToThrow()
+        {
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            var actual = testObject["XXXGeneralXXX"];
+            Assert.IsNull(actual);
+        }
+
         [Test()]
         public void GetEnumeratorTest()
         {
-            Assert.IsNotNull(testObject.GetEnumerator());
+            // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3
+            // [1+G2] item1 = { Enabled = true };
+            // [   3] item2 = { Id = new Guid("2764B5BE-6E56-4694-B1A1-5C105420CB7F") };
+            // [  G4] item3 = { Enabled = true, Id = new Guid("0AE4E28A-9B78-43bf-ABD2-9F7CB5F3833B") };
+            AddDefaultTestItems();
+
+            // *** Class iterator ***
+            var actual = testObject.GetEnumerator();
+            Assert.IsNotNull(actual);
+            Assert.IsInstanceOfType<IEnumerator<IBuilderData>>(actual);
+            Assert.AreEqual(null, actual.Current);
+            
+            // move to the first item.
+            Assert.IsTrue(actual.MoveNext());
+            Assert.AreEqual(item1, actual.Current);
+            // one forward to the last group 'General' should be item3.
+            Assert.IsTrue(actual.MoveNext());
+            Assert.AreEqual(item3, actual.Current);
+            // one forward, nothing left.
+            Assert.IsFalse(actual.MoveNext());
+            Assert.AreEqual(null, actual.Current);
+
+
+            // *** General iterator ***
+            Assert.IsNotNull(testObject.General.GetEnumerator());
+            Assert.IsInstanceOfType<IEnumerator<KeyValuePair<string, IBuilderData>>>(testObject.General.GetEnumerator());
+
+            Assert.IsNotNull(testObject.Data().GetEnumerator());
+            Assert.IsInstanceOfType<IEnumerator<KeyValuePair<string, IReadOnlyDictionary<string, IBuilderData>>>>(
+                testObject.Data().GetEnumerator());
+
         }
 
         [Test()]
@@ -139,7 +364,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.IsNotEmpty(actual);
             Assert.AreEqual(expected, actual["TheKey"]);
         }
-        
+
         [Test()]
         public void TryGetValueFromGeneral()
         {

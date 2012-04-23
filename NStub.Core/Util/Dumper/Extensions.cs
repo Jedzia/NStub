@@ -26,7 +26,7 @@
         /// </returns>
         public static T Dump<T>(this T o)
         {
-            return o.Dump<T>(null, null);
+            return o.Dump<T>(null, null, int.MaxValue);
         }
 
         /// <summary>
@@ -40,7 +40,22 @@
         /// </returns>
         public static T Dump<T>(this T o, int maximumDepth)
         {
-            return o.Dump<T>(null, new int?(maximumDepth));
+            return o.Dump<T>(null, new int?(maximumDepth), int.MaxValue);
+        }
+
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
+        public static T Dump<T>(this T o, int maximumDepth, int maxcount)
+        {
+            return o.Dump<T>(null, new int?(maximumDepth), maxcount);
         }
 
         /// <summary>
@@ -54,7 +69,22 @@
         /// </returns>
         public static T Dump<T>(this T o, string description)
         {
-            return o.Dump<T>(description, null);
+            return o.Dump<T>(description, null, int.MaxValue);
+        }
+
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
+        public static T Dump<T>(this T o, string description, int? maximumDepth)
+        {
+            return o.Dump<T>(description, maximumDepth, int.MaxValue);
         }
 
         /// <summary>
@@ -64,10 +94,11 @@
         /// <param name="o">The object to dump.</param>
         /// <param name="description">The description text.</param>
         /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
         /// <returns>
         /// The untouched object for fluent usage of <c>Dump</c>.
         /// </returns>
-        public static T Dump<T>(this T o, string description, int? maximumDepth)
+        public static T Dump<T>(this T o, string description, int? maximumDepth, int maxcount)
         {
             if (maximumDepth < 0)
             {
@@ -110,7 +141,7 @@
                 }*/
             }
             //XhtmlWriter currentResultsWriter = Server.CurrentResultsWriter;
-            var currentResultsWriter = new ObjectDumper(maximumDepth.GetValueOrDefault(), lambdaFormatter);
+            var currentResultsWriter = new ObjectDumper(maximumDepth.GetValueOrDefault(), maxcount, lambdaFormatter);
             bool flag = o is Type;
             if (flag)
             {

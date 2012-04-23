@@ -97,7 +97,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
             // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
-            var propertyData = context.GetBuilderData("Property");
+            var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, context.TestClassDeclaration.Name);
+            var propertyData = context.GetBuilderData(storageCategory);
 
             //var userData = context.BuildData.General[this.GetType().FullName] as PropertyBuilderUserParameters;
             var userData = context.GetBuilderData<BuildParametersOfPropertyBuilder>(this);
@@ -163,7 +164,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var typeMemberName = originalName; // typeMember.Name;
             var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
 
-            // var methodMemberInfo = typeMember.UserData["MethodMemberInfo"];
+            // var methodMemberInfo = typeMember.UserData[NStubConstants.TestMemberMethodInfoKey];
             // typeMember.Name = "Property" + propertyName + "NormalBehavior";
             var result = "Property" + propertyName;
 

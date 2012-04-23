@@ -15,8 +15,13 @@ namespace NStub.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AssemblyFetcher"/> class.
         /// </summary>
+        /// <param name="assemblyName">Description text of the root assembly node.</param>
+        /// <param name="inputAssemblies">The list of input assemblies.</param>
         public AssemblyFetcher(string assemblyName, IEnumerable<string> inputAssemblies)
         {
+            Guard.NotNullOrEmpty(() => assemblyName, assemblyName);
+            Guard.NotNull(() => inputAssemblies, inputAssemblies);
+
             _assemblyGraphTreeView = new TestNode() { Text = assemblyName };
             _inputAssemblyOpenFileDialog = inputAssemblies.ToList();
             _referencedAssemblies = new List<AssemblyName>();

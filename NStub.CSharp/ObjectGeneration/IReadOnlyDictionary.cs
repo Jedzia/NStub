@@ -11,16 +11,17 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System.Collections.Generic;
-
+    using System.Collections;
+    
     /// <summary>
     /// Represents a generic collection of key/value pairs with read only values.
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>
-    public interface IReadOnlyDictionary<TKey, TValue>
+    public interface IReadOnlyDictionary<TKey, TValue> : /*ICollection,*/ IEnumerable, IEnumerable<KeyValuePair<TKey, TValue>>
     {
         #region Properties
-
+        
         /// <summary>
         /// Gets the count.
         /// </summary>

@@ -13,6 +13,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Lookup of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
@@ -59,13 +60,24 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets the number of data items.
+        /// Gets the number of <see cref="IBuilderData"/> entries in the <see cref="General"/> category.
         /// </summary>
         public int Count
         {
             get
             {
                 return this.data.Count;
+            }
+        }
+
+        /// <summary>
+        /// Gets the number of <see cref="IBuilderData"/> entries across all categories.
+        /// </summary>
+        public int EntryCount
+        {
+            get
+            {
+                return this.data.Select(e => e.Value.Count).Aggregate((e, a) => a + e);
             }
         }
 
@@ -229,6 +241,11 @@ namespace NStub.CSharp.ObjectGeneration
 
             // var ro = new ReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>>(rlist);
             return xxxx;
+        }
+
+        public void Save()
+        {
+            this.isDirty = false;
         }
 
         /*/// <summary>

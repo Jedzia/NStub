@@ -59,7 +59,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             // var propertyName = typeMemberName.Replace("get_", string.Empty).Replace("set_", string.Empty);
             // BaseCSharpCodeGenerator.ReplaceTestInTestName(typeMember, "XX_Norm_XX");
-            var propertyData = context.GetBuilderData("Property");
+            var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, context.TestClassDeclaration.Name);
+            var propertyData = context.GetBuilderData(storageCategory);
 
             // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!

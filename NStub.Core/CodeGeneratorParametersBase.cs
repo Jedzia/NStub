@@ -29,7 +29,7 @@ namespace NStub.Core
         /// <param name="outputDirectory">The output directory.</param>
         protected CodeGeneratorParametersBase(string outputDirectory)
         {
-            Guard.NotNull(() => outputDirectory, outputDirectory);
+            Guard.NotNullOrEmpty(() => outputDirectory, outputDirectory);
             this.outputDirectory = outputDirectory;
         }
 

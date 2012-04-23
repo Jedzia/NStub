@@ -644,7 +644,7 @@ namespace NStub.CSharp
                                 }*/
 
                 // set the test method name to the context key that is the normalized test name.
-                context.TypeMember.Name = context.TestKey;
+                //context.TypeMember.Name = context.TestKey;
 
                 if (!(typeMember is CodeConstructor))
                 {
@@ -699,7 +699,7 @@ namespace NStub.CSharp
             BuildDataDictionary buildData)
         {
             var setUpMethod = this.CreateCustomCodeMemberMethodWithSameNameAsAttribute("SetUp");
-            var testObjectType = testClassDeclaration.UserData["TestObjectClassType"] as Type;
+            var testObjectType = testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] as Type;
 
             var creator = this.ComposeTestSetupMethod(
                 buildData, setUpMethod, testObjectMemberField, testObjectName, testObjectType);
@@ -808,16 +808,33 @@ namespace NStub.CSharp
                     composedTestName = this.ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
                 }
 
-                memberBuildContext.TestKey = composedTestName;
+                typeMember.Name = composedTestName;
+
+                //memberBuildContext.TestKey = composedTestName;
+                memberBuildContext.TestKey = CodeNamespace.Name + "." + this.CurrentTestClassDeclaration.Name + "." + composedTestName;
 
                 // Setting the memberinfo for properties in the category 'Property' with the composedTestName as key.
                 // Todo: hmmm, this was all about that IBuildData and property get/set detection ... and how to find out
                 // a way to store properties .... So IBuildData is code generator internal and IMemberBuilderParameters is
                 // for user setup. well. look into the usefullness of this. ... later
+                
+                // var storageCategory = "Property" + "." + this.CurrentTestClassDeclaration.Name;
+                //var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, memberBuildContext.TestClassDeclaration.Name);
+                var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, memberBuildContext.TestClassDeclaration.Name);
+                //var propertyDataKey = composedTestName;
+                var propertyDataKey = memberBuildContext.TestKey;
+
                 if (memberBuildContext.IsProperty)
                 {
+                    if (memberBuildContext.TestClassDeclaration.Name == "CodeGeneratorParametersBaseTest")
+                    {
+                        if (composedTestName.Contains("PropertyOutputDirectory"))
+                        {
+                        }
+                    }
+
                     IBuilderData propertyDataItem;
-                    var found = propertyData.TryGetValue("Property", composedTestName, out propertyDataItem);
+                    var found = propertyData.TryGetValue(storageCategory, propertyDataKey, out propertyDataItem);
                     if (found)
                     {
                         propertyDataItem.SetData(memberBuildContext.MemberInfo);
@@ -830,7 +847,7 @@ namespace NStub.CSharp
                     {
                         var propdata = new PropertyBuilderData();
                         propdata.SetData(memberBuildContext.MemberInfo);
-                        propertyData.AddDataItem("Property", composedTestName, propdata);
+                        propertyData.AddDataItem(storageCategory, propertyDataKey, propdata);
                     }
                 }
             }

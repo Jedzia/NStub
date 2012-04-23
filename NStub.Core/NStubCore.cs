@@ -1,6 +1,6 @@
 using System;
 using System.CodeDom;
-using System.IO;
+//using System.IO;
 
 namespace NStub.Core
 {
@@ -16,9 +16,10 @@ namespace NStub.Core
 	{
 		#region Fields (Private)
 
-		private ICodeGenerator _codeGenerator;
-		private CodeNamespace _codeNamespace = null;
-		private string _outputDirectory = null;
+        private readonly IBuildSystem sbs;
+        private ICodeGenerator _codeGenerator;
+        private CodeNamespace _codeNamespace = null;
+        private string _outputDirectory = null;
 		
 		#endregion Fields (Private)
 
@@ -42,12 +43,16 @@ namespace NStub.Core
 		/// empty string.</exception>
 		/// <exception cref="System.IO.DirectoryNotFoundException">outputDirectory
 		/// is not a valid directory.</exception>
-		public NStubCore(CodeNamespace codeNamespace, string outputDirectory,
+        /// <param name="sbs">The system wide build system.</param>
+        public NStubCore(IBuildSystem buildSystem, CodeNamespace codeNamespace, string outputDirectory,
 			ICodeGenerator codeGenerator)
 		{
 			#region Validation
 
-			// Null arguments will not be accepted
+            Guard.NotNull(() => buildSystem, buildSystem);
+            this.sbs = buildSystem;
+            
+            // Null arguments will not be accepted
 			if (codeNamespace == null)
 			{
 				throw new ArgumentNullException("codeNamespace",
@@ -70,9 +75,9 @@ namespace NStub.Core
 					"outputDirectory");
 			}
 			// Ensure the output directory is valid
-			if (!(Directory.Exists(outputDirectory)))
+			if (!(buildSystem.DirectoryExists(outputDirectory)))
 			{
-				throw new DirectoryNotFoundException(Exceptions.DirectoryCannotBeFound);
+				throw new System.IO.DirectoryNotFoundException(Exceptions.DirectoryCannotBeFound);
 			}
 
 			#endregion Validation

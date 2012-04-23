@@ -104,11 +104,11 @@ namespace NStub.Core
             }
 
             // Create a new directory for each assembly
-            foreach(var mainnode in mainNodes)
+            foreach(var assemblyNode in mainNodes)
             {
                 string outputDirectory = outputFolder +
                                          this.sbs.DirectorySeparatorChar +
-                                         this.sbs.GetFileNameWithoutExtension(mainnode.Text) +
+                                         this.sbs.GetFileNameWithoutExtension(assemblyNode.Text) +
                                          ".Tests";
                 this.sbs.CreateDirectory(outputDirectory);
 
@@ -123,9 +123,9 @@ namespace NStub.Core
 
                 // Generate the new test namespace
                 // At the assembly level
-                foreach(var rootsubnode in mainnode.Nodes)
+                foreach(var moduleNode in assemblyNode.Nodes)
                 {
-                    if (!rootsubnode.Checked)
+                    if (!moduleNode.Checked)
                     {
                         // continue;
                     }
@@ -134,15 +134,15 @@ namespace NStub.Core
                     var codeNamespace = new CodeNamespace();
 
                     // At the type level
-                    foreach(var rootsubsubnode in rootsubnode.Nodes)
+                    foreach(var classNode in moduleNode.Nodes)
                     {
                         // TODO: This namespace isn't being set correctly.  
                         // Also one namespace per run probably won't work, we may 
                         // need to break this up more.
                         codeNamespace.Name =
-                            Utility.GetNamespaceFromFullyQualifiedTypeName(rootsubsubnode.Text);
+                            Utility.GetNamespaceFromFullyQualifiedTypeName(classNode.Text);
 
-                        if (!rootsubsubnode.Checked)
+                        if (!classNode.Checked)
                         {
                             continue;
                         }
@@ -150,31 +150,31 @@ namespace NStub.Core
                         Thread.Sleep(1);
                         if (this.logger != null)
                         {
-                            this.logger("Building '" + rootsubsubnode.Text + "'");
+                            this.logger("Building '" + classNode.Text + "'");
                         }
 
                         // Create the class
-                        var testClass = new CodeTypeDeclaration(rootsubsubnode.Text);
+                        var testClass = new CodeTypeDeclaration(classNode.Text);
                         codeNamespace.Types.Add(testClass);
-                        var testObjectClassType = rootsubsubnode.ClrType;
-                        testClass.UserData.Add("TestObjectClassType", testObjectClassType);
+                        var testObjectClassType = classNode.ClrType;
+                        testClass.UserData.Add(NStubConstants.UserDataClassTypeKey, testObjectClassType);
 
                         // At the method level
                         // Create a test method for each method in this type
-                        foreach(var rootsubsubsubnode in rootsubsubnode.Nodes)
+                        foreach(var classmemberNode in classNode.Nodes)
                         {
                             try
                             {
-                                if (rootsubsubsubnode.Checked)
+                                if (classmemberNode.Checked)
                                 {
                                     try
                                     {
                                         // Retrieve the MethodInfo object from this TreeNode's tag
                                         // var memberInfo = (MethodInfo)rootsubsubsubnode.Tag;
-                                        var memberInfo = rootsubsubsubnode.MethodInfo;
+                                        var memberInfo = classmemberNode.MethodInfo;
                                         CodeMemberMethod codeMemberMethod =
-                                            this.CreateMethod(rootsubsubsubnode.Text, memberInfo);
-                                        codeMemberMethod.UserData.Add("MethodMemberInfo", memberInfo);
+                                            this.CreateMethod(classmemberNode.Text, memberInfo);
+                                        codeMemberMethod.UserData.Add(NStubConstants.TestMemberMethodInfoKey, memberInfo);
                                         testClass.Members.Add(codeMemberMethod);
                                     }
                                     catch (Exception ex)
@@ -300,7 +300,7 @@ namespace NStub.Core
             var codeGenerator = this.OnCreateCodeGenerator(codeNamespace, configuration, buildSystem);
 
             // codeNamespace.Dump(3);
-            var nstub = new NStubCore(codeNamespace, outputDirectory, codeGenerator);
+            var nstub = new NStubCore(buildSystem, codeNamespace, outputDirectory, codeGenerator);
             nstub.GenerateCode();
             
             // Add all of our classes to the project

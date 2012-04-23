@@ -1,11 +1,50 @@
 using System;
 using System.CodeDom;
-using System.IO;
+//using System.IO;
 using global::MbUnit.Framework;
 using Rhino.Mocks;
 
 namespace NStub.Core.Tests
 {
+
+    internal class FakeBuildSystem : IBuildSystem
+    {
+        #region IBuildSystem Members
+
+        public char DirectorySeparatorChar
+        {
+            get { return System.IO.Path.DirectorySeparatorChar; }
+        }
+
+        public bool DirectoryExists(string directory)
+        {
+            return true;
+        }
+
+        public System.IO.TextWriter GetTextWriter(string path, bool append)
+        {
+            var ms = new System.IO.MemoryStream();
+            return new System.IO.StreamWriter(ms);
+        }
+
+        #endregion
+
+        #region IBuildSystem Members
+
+
+        public string GetFileNameWithoutExtension(string path)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(path);
+        }
+
+        public System.IO.DirectoryInfo CreateDirectory(string path)
+        {
+            return new System.IO.DirectoryInfo(@"C:\Tmp");
+        }
+
+        #endregion
+    }
+
 	/// <summary>
 	/// This class exercises all major methods of NStubCore.  Mock objects are
 	/// used where possible to enhance granularity.
@@ -32,7 +71,7 @@ namespace NStub.Core.Tests
 		[FixtureSetUp]
 		public void TestFixtureSetUp()
 		{
-			_outputDirectory = Path.GetTempPath();
+			_outputDirectory = System.IO.Path.GetTempPath();
 		} 
 
 		#endregion TestFixtureSetUp (Public)
@@ -45,10 +84,10 @@ namespace NStub.Core.Tests
 		[FixtureTearDown]
 		public void TestFixtureTearDown()
 		{
-			if (Directory.Exists(_outputDirectory))
+			/*if (Directory.Exists(_outputDirectory))
 			{
 				Directory.Delete(_outputDirectory, true);
-			}
+			}*/
 		}
 
 		#region SetUp (Public)
@@ -67,7 +106,7 @@ namespace NStub.Core.Tests
 			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
 
 			_nStubCore =
-				new NStubCore(codeNamespace, _outputDirectory, _mockCodeGenerator);
+				new NStubCore(new FakeBuildSystem(), codeNamespace, _outputDirectory, _mockCodeGenerator);
 		} 
 
 		#endregion SetUp (Public)
