@@ -72,7 +72,7 @@ namespace NStub.Gui.Components
         /// <value>
         /// The  logging callback.
         /// </value>
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), DefaultValue(null)]
         public ILoggable Logger { get; set; }
 
         /// <summary>

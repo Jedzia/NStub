@@ -56,7 +56,8 @@ namespace NStub.Gui
             this.InitializeComponent();
             this.settings.Settings = Settings.Default;
             this.cbGenerators.DataBindings.Add(new System.Windows.Forms.Binding("SelectedIndex", global::NStub.Gui.Properties.Settings.Default, "SelectedGenerator", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            bpc.Logger = this;
+            this.bpc.Logger = this;
+            this.settings.Logger = this;
 
             //buildData = new BuildDataDictionary();
             bpc.BuildProperties.AddDataItem("FromMainForm", new EmptyBuildParameters());

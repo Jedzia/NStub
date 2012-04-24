@@ -119,8 +119,8 @@ namespace NStub.Gui
                 if (typeof(IMultiBuilder).IsAssignableFrom(builderType))
                 {
                     var listViewItem = this.lviewBuilderTypes.Items.Add(builderType.Name);
-
-                    // AddMultiParameterToBox(builderType, 
+                    var descr = this.memberfactory.GetBuilderDescription(builderType);
+                    var subItem = listViewItem.SubItems.Add(descr);
                     listViewItem.Tag = builderType;
                 }
                 else

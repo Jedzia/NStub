@@ -34,12 +34,13 @@
             this.tbConfig = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chklbParameters = new System.Windows.Forms.CheckedListBox();
-            this.lviewBuilderTypes = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.lviewBuilderTypes = new System.Windows.Forms.ListView();
+            this.clmBuilderType = new System.Windows.Forms.ColumnHeader();
+            this.clmDescription = new System.Windows.Forms.ColumnHeader();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.btnAdd = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
+            this.btnAdd = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -108,24 +109,6 @@
             this.chklbParameters.SelectedIndexChanged += new System.EventHandler(this.ChkLbParametersSelectedIndexChanged);
             this.chklbParameters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ChkLbParametersItemCheck);
             // 
-            // lviewBuilderTypes
-            // 
-            this.lviewBuilderTypes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.lviewBuilderTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lviewBuilderTypes.Location = new System.Drawing.Point(3, 16);
-            this.lviewBuilderTypes.Name = "lviewBuilderTypes";
-            this.lviewBuilderTypes.Size = new System.Drawing.Size(314, 103);
-            this.lviewBuilderTypes.TabIndex = 1;
-            this.lviewBuilderTypes.UseCompatibleStateImageBehavior = false;
-            this.lviewBuilderTypes.View = System.Windows.Forms.View.Details;
-            this.lviewBuilderTypes.SelectedIndexChanged += new System.EventHandler(this.ListViewBuilderTypesSelectedIndexChanged);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 163;
-            // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.lviewBuilderTypes);
@@ -138,6 +121,30 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "groupBox2";
             // 
+            // lviewBuilderTypes
+            // 
+            this.lviewBuilderTypes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.clmBuilderType,
+            this.clmDescription});
+            this.lviewBuilderTypes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lviewBuilderTypes.Location = new System.Drawing.Point(3, 16);
+            this.lviewBuilderTypes.Name = "lviewBuilderTypes";
+            this.lviewBuilderTypes.Size = new System.Drawing.Size(314, 103);
+            this.lviewBuilderTypes.TabIndex = 1;
+            this.lviewBuilderTypes.UseCompatibleStateImageBehavior = false;
+            this.lviewBuilderTypes.View = System.Windows.Forms.View.Details;
+            this.lviewBuilderTypes.SelectedIndexChanged += new System.EventHandler(this.ListViewBuilderTypesSelectedIndexChanged);
+            // 
+            // clmBuilderType
+            // 
+            this.clmBuilderType.Text = "Builder Type";
+            this.clmBuilderType.Width = 163;
+            // 
+            // clmDescription
+            // 
+            this.clmDescription.Text = "Description";
+            this.clmDescription.Width = 140;
+            // 
             // panel3
             // 
             this.panel3.Controls.Add(this.btnRemove);
@@ -148,16 +155,6 @@
             this.panel3.Size = new System.Drawing.Size(314, 55);
             this.panel3.TabIndex = 0;
             // 
-            // btnAdd
-            // 
-            this.btnAdd.Location = new System.Drawing.Point(256, 16);
-            this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(55, 34);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "Add";
-            this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.BtnAddClick);
-            // 
             // btnRemove
             // 
             this.btnRemove.Location = new System.Drawing.Point(195, 16);
@@ -167,6 +164,16 @@
             this.btnRemove.Text = "Remove";
             this.btnRemove.UseVisualStyleBackColor = true;
             this.btnRemove.Click += new System.EventHandler(this.BtnRemoveClick);
+            // 
+            // btnAdd
+            // 
+            this.btnAdd.Location = new System.Drawing.Point(256, 16);
+            this.btnAdd.Name = "btnAdd";
+            this.btnAdd.Size = new System.Drawing.Size(55, 34);
+            this.btnAdd.TabIndex = 0;
+            this.btnAdd.Text = "Add";
+            this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.BtnAddClick);
             // 
             // GeneratorConfig
             // 
@@ -196,10 +203,11 @@
         private System.Windows.Forms.PropertyGrid propGrid;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.ListView lviewBuilderTypes;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader clmBuilderType;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnAdd;
+        private System.Windows.Forms.ColumnHeader clmDescription;
     }
 }

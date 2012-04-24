@@ -2,7 +2,7 @@ namespace NStub.Gui
 {
     using NStub.Gui.Components;
 
-    partial class MainForm
+    partial class MainForm : ILoggable
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -50,8 +50,8 @@ namespace NStub.Gui
             this.cbGenerators = new System.Windows.Forms.ComboBox();
             this.logtimer = new System.Windows.Forms.Timer(this.components);
             this.bnConfigGenerator = new System.Windows.Forms.Button();
-            this.bpc = new BuildPropertyComponent(this.components);
-            this.settings = new SettingsHelperComponent(this.components);
+            this.bpc = new NStub.Gui.Components.BuildPropertyComponent(this.components);
+            this.settings = new NStub.Gui.Components.SettingsHelperComponent(this.components);
             this.panel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -208,6 +208,8 @@ namespace NStub.Gui
             // 
             // cbGenerators
             // 
+            this.cbGenerators.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.cbGenerators.FormattingEnabled = true;
             this.cbGenerators.Location = new System.Drawing.Point(102, 57);
             this.cbGenerators.Name = "cbGenerators";
@@ -230,14 +232,9 @@ namespace NStub.Gui
             this.bnConfigGenerator.UseVisualStyleBackColor = true;
             this.bnConfigGenerator.Click += new System.EventHandler(this.bnConfigGenerator_Click);
             // 
-            // bpc
-            // 
-            this.bpc.Logger = this;
-            // 
             // settings
             // 
             this.settings.MainForm = this;
-            this.settings.Logger = this;
             // 
             // MainForm
             // 

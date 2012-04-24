@@ -143,6 +143,7 @@ namespace NStub.Gui.Util
         /// <value>
         /// The logger of this instance.
         /// </value>
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), DefaultValue(null)]
         public ILoggable Logger { get; set; }
 
         /// <summary>
