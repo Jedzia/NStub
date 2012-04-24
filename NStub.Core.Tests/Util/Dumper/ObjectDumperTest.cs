@@ -220,7 +220,7 @@ namespace NStub.Core.Tests.Util.Dumper
             }
         }
 
-        public class ValTwo 
+        public class ValTwo
         {
             public ValueType MyValue;
 
@@ -232,7 +232,7 @@ namespace NStub.Core.Tests.Util.Dumper
                 MyValue = new ValOne(x);
             }
         }
- 
+
         [Test()]
         public void WriteValueTypes()
         {
@@ -247,7 +247,29 @@ namespace NStub.Core.Tests.Util.Dumper
             ObjectDumper.Write(new ValEnum(), 2);
 
             ObjectDumper.Write(new ValOne(12345), 2);
-            
+
+
+            //Assert.Contains(myConsoleOut.ToString(), "Name=Write");
+
+            //ObjectDumper.Write(new MyDeep(), 2);
+        }
+
+        [Test()]
+        public void WriteBitArray()
+        {
+
+            Server.Default.LambdaFormatter = this.myConsoleOut;
+
+            var ba = new BitArray(8);
+            ba.Set(3, true);
+            ba.Set(5, true);
+
+            var element = new object[] { ba, new { My=234, TH=ba, EN=MyEnum.ValueTwo } }.AsEnumerable();
+            Assert.AreSame(element, element.Dump(5));
+            //Assert.AreEqual("[BitArray]\r\nFalse\r\nFalse\r\nFalse\r\nTrue\r\nFalse\r\nTrue\r\nFalse\r\nFalse\r\n", myConsoleOut.ToString());
+            Assert.Contains(myConsoleOut.ToString(), "False\r\n  False\r\n  False\r\n  True\r\n  False\r\n  True\r\n  False\r\n  False");
+            //Assert.Contains(myConsoleOut.ToString(), "System.Char[]");
+
 
             //Assert.Contains(myConsoleOut.ToString(), "Name=Write");
 
@@ -388,8 +410,40 @@ namespace NStub.Core.Tests.Util.Dumper
 
             //var expected = "[String]" + myConsoleOut.NewLine + element.ToString() + myConsoleOut.NewLine;
             //myConsoleOut.GetStringBuilder().Length = 0;
-            Assert.AreSame(constExpr, constExpr.Dump(2));
+            Assert.AreSame(constExpr, constExpr.Dump("Hello Dump", 2));
             Assert.Contains(constExpr.ToString(), constExpr.ToString());
+            Assert.Contains(myConsoleOut.ToString(), "NodeType=Constant");
+        }
+        public static void ThrowIt()
+        {
+            throw new ApplicationException("Boo");
+        }
+
+        [Test()]
+        public void ExtensionDumpExpressionThrows()
+        {
+            Server.Default.LambdaFormatter = this.myConsoleOut;
+
+            int n = 0;
+            Expression<Func<bool>> returnValue;
+            returnValue = () => 5 == (9 / n);
+
+            Assert.AreSame(returnValue, returnValue.Dump("Hello Dump", 2));
+            Assert.Contains(returnValue.ToString(), returnValue.ToString());
+            Assert.Contains(myConsoleOut.ToString(), "Dump ExpressionToken Visit \r\nSystem.InvalidOperationException");
+            Assert.Contains(myConsoleOut.ToString(), "at NStub.Core.Util.Dumper.ExpressionToken.Visit");
+            Assert.Contains(myConsoleOut.ToString(), "NodeType=Constant");
+
+            //var expected = "[String]" + myConsoleOut.NewLine + element.ToString() + myConsoleOut.NewLine;
+            //myConsoleOut.GetStringBuilder().Length = 0;
+
+            ConstantExpression constExpr = Expression.Constant(
+                //Expression.Call(typeof(ObjectDumperTest), "ThrowIt", null, null)
+                Expression.Lambda(returnValue)
+                );
+            Assert.AreSame(constExpr, constExpr.Dump("Hello Dump", 2));
+            Assert.Contains(constExpr.ToString(), constExpr.ToString());
+            //Assert.Contains(returnValue.ToString(), "asdasd");
             Assert.Contains(myConsoleOut.ToString(), "NodeType=Constant");
         }
 
