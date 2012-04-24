@@ -51,7 +51,7 @@ namespace NStub.CSharp.ObjectGeneration
             this.handler = handler;
             this.parameterDataType = parameterDataType;
 
-            this.description = CheckForAttributes(parameterDataType);
+            this.description = CheckForAttributes(type, parameterDataType);
         }
 
         #endregion
@@ -144,11 +144,18 @@ namespace NStub.CSharp.ObjectGeneration
             return memberBuilder;
         }
 
-        private static string CheckForAttributes(Type parameterDataType)
+        private static string CheckForAttributes(Type builderType, Type parameterDataType)
         {
             var descriptionAttrs =
                 (DescriptionAttribute[])parameterDataType.GetCustomAttributes(typeof(DescriptionAttribute), false);
-            return descriptionAttrs.Select(e => e.Description).FirstOrDefault();
+            var paraDescr = descriptionAttrs.Select(e => e.Description).FirstOrDefault();
+
+            descriptionAttrs =
+                (DescriptionAttribute[])builderType.GetCustomAttributes(typeof(DescriptionAttribute), false);
+            var builderDescr = descriptionAttrs.Select(e => e.Description).FirstOrDefault();
+            string line = "--------------------------------------------------------------------------------------------" + Environment.NewLine;
+            var descr = "[Builder]: " + builderDescr + Environment.NewLine + line + "[Parameters]: " + paraDescr + Environment.NewLine + line;
+            return descr;
         }
     }
 }

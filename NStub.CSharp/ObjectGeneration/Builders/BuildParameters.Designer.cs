@@ -46,12 +46,15 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
         private int moepField;
-        
-    public string MethodSuffix {get; set;}
 
-    public bool UseDings {get; set;}
+        [Category("Property")]
+        public string MethodSuffix { get; set; }
 
-    public int Moep {get; set;}
+        [Category("Property")]
+        public bool UseDings { get; set; }
+
+        [Category("Property")]
+        public int Moep { get; set; }
 
     }
 }

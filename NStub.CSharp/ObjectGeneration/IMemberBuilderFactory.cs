@@ -82,6 +82,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
         IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties);
+        
+        string GetBuilderDescription(Type builderType);
 
         IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties);
 

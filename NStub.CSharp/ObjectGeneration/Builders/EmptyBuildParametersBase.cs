@@ -30,7 +30,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <value>
         ///   <c>true</c> if enabled; otherwise, <c>false</c>.
         /// </value>
-        [Description("Determines whether this builder part is ON or OFF.")]
+        [Description("Determines whether this builder part is ON or OFF."), Category("General")]
         public bool Enabled { get; set; }
 
         /// <summary>

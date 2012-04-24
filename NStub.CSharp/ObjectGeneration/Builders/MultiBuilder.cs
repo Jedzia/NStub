@@ -14,6 +14,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     using System.CodeDom;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
+using System.ComponentModel;
 
     /// <summary>
     /// Base class for a test method processing class.
@@ -60,6 +61,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         protected abstract override bool BuildMember(IMemberBuildContext context);
     }
 
+    [Description("Renaming component for use in the Build-Step.\r\nUse with caution, because it's hot hot hot!")]
     public class RenamingBuilder : MultiBuilder, IMemberBuilder
     {
         /// <summary>

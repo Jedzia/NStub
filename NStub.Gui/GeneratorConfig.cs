@@ -124,6 +124,7 @@ namespace NStub.Gui
         {
             var chkItemIndex = this.chklbParameters.Items.Add(builderType);
             this.chklbParameters.SetItemChecked(chkItemIndex, para.Enabled);
+            //this.chklbParameters.Items[chkItemIndex]
         }
 
         private void AddMultiParameterToBox2(MultiLookup multi)
@@ -183,15 +184,14 @@ namespace NStub.Gui
             if (this.SelectedType != null)
             {
                 this.propGrid.SelectedObject = this.memberfactory.GetParameters(this.SelectedType, this.properties);
-                if (this.SelectedType != null)
-                {
-                    this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
-                }
+                this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedType) + Environment.NewLine;
+                this.tbConfig.Text += this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             }
             else if (this.SelectedMulti != null)
             {
                 this.propGrid.SelectedObject = this.SelectedMulti.Parameters;
-                this.tbConfig.Text = this.memberfactory.SerializeSetupData(
+                this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedMulti.BuilderType) + Environment.NewLine;
+                this.tbConfig.Text += this.memberfactory.SerializeSetupData(
                     this.SelectedMulti.Parameters.Id,
                     this.SelectedMulti.BuilderType,
                     this.properties);

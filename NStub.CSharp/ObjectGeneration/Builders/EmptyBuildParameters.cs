@@ -18,10 +18,12 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// <summary>
     /// Provides an implementation of the <see cref="IMemberBuildParameters"/> user data, that has an empty set of data.
     /// </summary>
+    [Description("Default static parameter set.")]
     public class EmptyBuildParameters : EmptyBuildParametersBase<EmptyBuildParameters>, IMemberBuildParameters
     {
     }
 
+    [Description("Default MultiBuilder parameter set.")]
     public class EmptyMultiBuildParameters : EmptyBuildParametersBase<EmptyMultiBuildParameters>, IMultiBuildParameters
     {
         private Guid id;

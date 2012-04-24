@@ -16,7 +16,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
     /// <summary>
     /// Represents user provided data for the <see cref="PropertyBuilder"/> class.
     /// </summary>
-    [Description("Whuut a fuckin attribute!")]
+    [Description("Whuut a fuckin attribute!"), Category("Property")]
     public partial class BuildParametersOfPropertyBuilder
     {
         // : EntityBase<PropertyBuilderParametersSetup> {
