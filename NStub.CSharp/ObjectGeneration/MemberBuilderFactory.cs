@@ -12,29 +12,11 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration.Builders;
-
-    public class MultiLookup
-    {
-        //public IReadOnlyDictionary<string, IBuilderData> Lookup;
-        public Type BuilderType;
-        public IMultiBuildParameters Parameters;
-        /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
-        /// </returns>
-        public override string ToString()
-        {
-            // TODO: write your implementation of ToString() here
-            return BuilderType.ToString() + " {" + Parameters.Id.ToString() + "}";
-        }
-        //public Guid Key;
-    }
 
     /// <summary>
     /// Provides builders for test method generation. 
@@ -125,48 +107,6 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets the name of the builders.
-        /// </summary>
-        //public virtual IEnumerable<IReadOnlyDictionary<string, IBuilderData>> MultiParameters(IBuildDataDictionary properties)
-        public virtual IEnumerable<MultiLookup> MultiParameters(IBuildDataDictionary properties)
-        {
-            var multis = this.buildHandlers.Where(e => e.Value.IsMultiBuilder);
-
-
-            var multiparamsxx = multis
-                .SelectMany((e) =>
-                {
-                    //var le = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
-                    //    .Keys.Select(x => x);
-                    var lox = ((BuilderSerializer)serializer)
-                        .GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties);
-                    IEnumerable<IBuilderData> lo = new List<IBuilderData>();
-                    if (lox != null)
-                    {
-                        lo = lox.Values.Select(x => x);
-                    }
-                    return lo;
-                }, (a, v) => new MultiLookup() { BuilderType = a.Key, Parameters = (IMultiBuildParameters)v });
-
-
-
-            /*var multiparams = multis
-                .Select((e) => 
-                {
-                    var lo = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
-                        .Values.Select(x=>x);
-                    // var mlookup = new MultiLookup() { BuilderType = e.Key, Lookup = lo, Key = ((IMultiBuildParameters)e.Value).Id };
-                    var mlookup = new MultiLookup() { BuilderType = e.Key, 
-                        Parameters = ((IMultiBuildParameters)lo),
-                        //Key = ((IMultiBuildParameters)e.Value).Id 
-                    };
-                    return mlookup;
-                });*/
-            //var result = this.buildHandlers.Values.Select(e => e.Type);
-            return multiparamsxx;
-        }
-
-        /// <summary>
         /// Gets the factory service of this instance.
         /// </summary>
         public abstract IMemberBuilderFactory Factory { get; }
@@ -233,18 +173,20 @@ namespace NStub.CSharp.ObjectGeneration
                 if (useUserActivation)
                 {
                     Guard.NotNull(() => context.BuildData, context.BuildData);
-                    //if (buildHandler.IsMultiBuilder)
-                    //{
-                    //    continue;
-                    //}
-                    //else
-                    //{
+
+                    // if (buildHandler.IsMultiBuilder)
+                    // {
+                    // continue;
+                    // }
+                    // else
+                    // {
                     var parameter = this.GetParameters(buildHandler.Type, context.BuildData);
                     if (!parameter.Enabled)
                     {
                         continue;
                     }
-                    //}
+
+                    // }
                 }
 
                 var memberBuilder = buildHandler.CreateInstance(context);
@@ -266,13 +208,50 @@ namespace NStub.CSharp.ObjectGeneration
                         continue;
                     }
 
-                    var multiBuilder = multiHandler.CreateInstance(context);
-                    ((IMultiBuilder)multiBuilder).Parameters = multi.Parameters;
+                    var multiBuilder = (IMultiBuilder)multiHandler.CreateInstance(context);
+                    if (multiBuilder is MultiBuilder)
+                    {
+                        ((MultiBuilder)multiBuilder).Parameters = multi.Parameters;
+                    }
+
                     yield return multiBuilder;
                 }
-                //var mbpara = GetMultiParameter(Guid.Empty, seltype, properties);
-            }
 
+                // var mbpara = GetMultiParameter(Guid.Empty, seltype, properties);
+            }
+        }
+
+        /// <summary>
+        /// Gets the description for the specified builder type.
+        /// </summary>
+        /// <param name="builderType">Type of the builder.</param>
+        /// <returns>
+        /// A text with the description of the builder and builder parameters, specified by
+        /// <see cref="DescriptionAttribute"/>'s.
+        /// </returns>
+        public string GetBuilderDescription(Type builderType)
+        {
+            Guard.NotNull(() => builderType, builderType);
+            var handler = this.buildHandlers[builderType];
+            return handler.Description;
+        }
+
+        /// <summary>
+        /// Get the parameters for the specified multi builder type, possibly creating it, if there
+        /// is not yet one in the build data collection.
+        /// </summary>
+        /// <param name="key">The unique identifier for the set of parameter data.</param>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
+        public IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties)
+        {
+            Guard.NotNull(() => properties, properties);
+            var paraType = this.buildHandlers[builderType].ParameterDataType;
+            return ((BuilderSerializer)this.serializer).GetMultiParameter(key, builderType, paraType, properties);
         }
 
         /// <summary>
@@ -291,30 +270,6 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => properties, properties);
             var paraType = this.buildHandlers[builderType].ParameterDataType;
             return this.serializer.GetParameters(builderType, paraType, properties);
-        }
-
-        public string GetBuilderDescription(Type builderType)
-        {
-            Guard.NotNull(() => builderType, builderType);
-            var handler = this.buildHandlers[builderType];
-            return handler.Description;
-        }
-
-        /// <summary>
-        /// Get the parameters for the specified builder type, possibly creating it, if there
-        /// is not yet one in the build data collection.
-        /// </summary>
-        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
-        /// <param name="properties">The global properties storage.</param>
-        /// <returns>
-        /// A new instance of a matching parameter data set for the specified builder.
-        /// </returns>
-        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
-        public IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties)
-        {
-            Guard.NotNull(() => properties, properties);
-            var paraType = this.buildHandlers[builderType].ParameterDataType;
-            return ((BuilderSerializer)this.serializer).GetMultiParameter(key, builderType, paraType, properties);
         }
 
         /*/// <summary>
@@ -349,6 +304,51 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
+        /// Gets the user defined data for <see cref="IMultiBuilder"/> builder types from the specified build data storage.
+        /// </summary>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>A lookup collection with the defined parameters.</returns>
+        public virtual IEnumerable<MultiLookup> MultiParameters(IBuildDataDictionary properties)
+        {
+            // public virtual IEnumerable<IReadOnlyDictionary<string, IBuilderData>> MultiParameters(IBuildDataDictionary properties)
+            var multis = this.buildHandlers.Where(e => e.Value.IsMultiBuilder);
+
+            var multiparamsxx = multis
+                .SelectMany(
+                    e =>
+                    {
+                        // var le = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
+                        // .Keys.Select(x => x);
+                        var lox = ((BuilderSerializer)this.serializer)
+                            .GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties);
+                        IEnumerable<IBuilderData> lo = new List<IBuilderData>();
+                        if (lox != null)
+                        {
+                            lo = lox.Values.Select(x => x);
+                        }
+
+                        return lo;
+                    },
+                    (a, v) => new MultiLookup { BuilderType = a.Key, Parameters = (IMultiBuildParameters)v });
+
+            /*var multiparams = multis
+                .Select((e) => 
+                {
+                    var lo = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
+                        .Values.Select(x=>x);
+                    // var mlookup = new MultiLookup() { BuilderType = e.Key, Lookup = lo, Key = ((IMultiBuildParameters)e.Value).Id };
+                    var mlookup = new MultiLookup() { BuilderType = e.Key, 
+                        Parameters = ((IMultiBuildParameters)lo),
+                        //Key = ((IMultiBuildParameters)e.Value).Id 
+                    };
+                    return mlookup;
+                });*/
+
+            // var result = this.buildHandlers.Values.Select(e => e.Type);
+            return multiparamsxx;
+        }
+
+        /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
         /// </summary>
         /// <param name="properties">The properties storage which stores the <see cref="IMemberBuildParameters"/> data to serialize.</param>
@@ -378,6 +378,15 @@ namespace NStub.CSharp.ObjectGeneration
             return this.serializer.SerializeParametersForBuilderType(builderType, setupPara);
         }
 
+        /// <summary>
+        /// Gets the xml data representation of multiple registered <see cref="IMultiBuilder"/>s parameters by key.
+        /// </summary>
+        /// <param name="key">The unique id of the multi parameter item.</param>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The properties storage which stores the <see cref="IMultiBuildParameters"/> data to serialize.</param>
+        /// <returns>
+        /// The serialized data of the specified <paramref name="builderType"/>.
+        /// </returns>
         public string SerializeSetupData(Guid key, Type builderType, BuildDataDictionary properties)
         {
             var setupPara = this.GetMultiParameter(key, builderType, properties);

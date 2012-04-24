@@ -22,13 +22,13 @@ namespace NStub.Gui.Util
     public static class ThreadingExtensions
     {
         /// <summary>
-        /// Invokes a method on a control if required. With null and dispose check.
+        /// Invokes a method on a control if required. With <c>null</c> and dispose check.
         /// </summary>
         /// <param name="control">The source control.</param>
         /// <param name="methodcall">The method to call.</param>
-        /// <remarks><para>Simple helper extension method to marshall to correct
+        /// <remarks><para>Simple helper extension method to marshal to correct
         /// thread if its required.</para>
-        /// This also checks the control for null and disposed.</remarks>
+        /// This also checks the control for <c>null</c> and disposed.</remarks>
         public static void InvokeIfRequired(this Control control, Action methodcall)
         {
             // Check for a valid control and if its not disposed
@@ -51,11 +51,11 @@ namespace NStub.Gui.Util
         }
 
         /// <summary>
-        /// Invokes a method on a control if required. With no null and dispose check.
+        /// Invokes a method on a control if required. With no <c>null</c> and dispose check.
         /// </summary>
         /// <param name="control">The source control.</param>
         /// <param name="methodcall">The method to call.</param>
-        /// <remarks><para>Simple helper extension method to marshall to correct
+        /// <remarks><para>Simple helper extension method to marshal to correct
         /// thread if its required.</para>
         /// </remarks>
         public static void IvReq(this Control control, Action methodcall)

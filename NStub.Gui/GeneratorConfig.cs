@@ -54,7 +54,18 @@ namespace NStub.Gui
         #region Properties
 
         /// <summary>
-        /// Gets the type of the selected <see cref="IMemberBuilder"/>.
+        /// Gets the selected <see cref="IMultiBuilder"/> or <c>null</c> when none is selected.
+        /// </summary>
+        protected MultiLookup SelectedMulti
+        {
+            get
+            {
+                return (MultiLookup)this.chklbParameters.SelectedItem;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the selected <see cref="IMemberBuilder"/> or <c>null</c> when none is selected.
         /// </summary>
         /// <value>
         /// The type of the selected <see cref="IMemberBuilder"/>.
@@ -67,48 +78,57 @@ namespace NStub.Gui
             }
         }
 
-        protected MultiLookup SelectedMulti
-        {
-            get
-            {
-                return this.chklbParameters.SelectedItem as MultiLookup;
-            }
-        }
-
         #endregion
 
-        /*private static BuilderParameter TestXmlSeria()
+        /// <summary>
+        /// Adds the multi parameter to the configured builders checked list box.
+        /// </summary>
+        /// <param name="multi">The <see cref="IMultiBuilder"/> parameter lookup object.</param>
+        private void AddMultiParameterToBox(MultiLookup multi)
         {
-            var pb = new BuilderParameter();
+            // var chkItemIndex = this.chklbParameters.Items.Add(para);
+            var chkItemIndex = this.chklbParameters.Items.Add(multi);
+            this.chklbParameters.SetItemChecked(chkItemIndex, multi.Parameters.Enabled);
+        }
 
-            var pbps = new BuilderParameterPropertyBuilder { MethodSuffix = "OlderDepp", Moep = 42, UseDings = false };
-            pb.Items.Add(pbps);
+        /// <summary>
+        /// Adds the static builder parameter to the configured builders checked list box.
+        /// </summary>
+        /// <param name="builderType">The Type of the <see cref="IMemberBuilder"/> to add.</param>
+        /// <param name="para">The parameter associated with the specified <paramref name="builderType"/>.</param>
+        private void AddParameterToBox(Type builderType, IMemberBuildParameters para)
+        {
+            var chkItemIndex = this.chklbParameters.Items.Add(builderType);
+            this.chklbParameters.SetItemChecked(chkItemIndex, para.Enabled);
+        }
 
-            pbps = new BuilderParameterPropertyBuilder { MethodSuffix = "OtherParameter", UseDings = true };
-            pb.Items.Add(pbps);
-            return pb;
-        }*/
+        /// <summary>
+        /// Is attached to the <see cref="Form.Load"/> event and initializes this instance for startup.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void GeneratorConfigLoad(object sender, EventArgs e)
         {
             foreach (var builderType in this.memberfactory.BuilderTypes)
             {
                 if (typeof(IMultiBuilder).IsAssignableFrom(builderType))
                 {
-                    var lviewItem = this.lbBuilderTypes.Items.Add(builderType.Name);
-                    //AddMultiParameterToBox(builderType, 
-                    lviewItem.Tag = builderType;
+                    var listViewItem = this.lviewBuilderTypes.Items.Add(builderType.Name);
+
+                    // AddMultiParameterToBox(builderType, 
+                    listViewItem.Tag = builderType;
                 }
                 else
                 {
                     var para = this.memberfactory.GetParameters(builderType, this.properties);
-                    AddParameterToBox(builderType, para);
+                    this.AddParameterToBox(builderType, para);
                 }
             }
 
-            var multis = ((MemberBuilderFactory)this.memberfactory).MultiParameters(properties);
+            var multis = ((MemberBuilderFactory)this.memberfactory).MultiParameters(this.properties);
             foreach (var multi in multis)
             {
-                AddMultiParameterToBox2(multi);
+                this.AddMultiParameterToBox(multi);
 
                 /*foreach (var item in multi.Lookup)
                 {
@@ -117,21 +137,6 @@ namespace NStub.Gui
                     AddMultiParameterToBox(multi.BuilderType, multipara);
                 }*/
             }
-
-        }
-
-        private void AddParameterToBox(Type builderType, IMemberBuildParameters para)
-        {
-            var chkItemIndex = this.chklbParameters.Items.Add(builderType);
-            this.chklbParameters.SetItemChecked(chkItemIndex, para.Enabled);
-            //this.chklbParameters.Items[chkItemIndex]
-        }
-
-        private void AddMultiParameterToBox2(MultiLookup multi)
-        {
-            //var chkItemIndex = this.chklbParameters.Items.Add(para);
-            var chkItemIndex = this.chklbParameters.Items.Add(multi);
-            this.chklbParameters.SetItemChecked(chkItemIndex, multi.Parameters.Enabled);
         }
 
         /*private void AddMultiParameterToBox(Type builderType, IMultiBuildParameters para)
@@ -142,14 +147,15 @@ namespace NStub.Gui
         }*/
 
         // todo bessere benamsung ... blickt ja keine sau mehr durch
-        private void LvParametersItemCheck(object sender, ItemCheckEventArgs e)
-        {
-            var current = e.CurrentValue;
-            if (this.SelectedType == null)
-            {
-                return;
-            }
 
+        /// <summary>
+        /// Handles the <see cref="CheckedListBox.ItemCheck"/> event of the configured builders checked list box.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.ItemCheckEventArgs"/> instance containing the event data.</param>
+        private void ChkLbParametersItemCheck(object sender, ItemCheckEventArgs e)
+        {
+            // var current = e.CurrentValue;
             var newValue = e.CurrentValue != CheckState.Checked;
 
             if (this.SelectedType != null)
@@ -159,15 +165,13 @@ namespace NStub.Gui
                 if (item.Enabled != newValue)
                 {
                     item.Enabled = newValue;
-                    if (this.SelectedType != null)
-                    {
-                        this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
-                    }
+                    this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
                 }
             }
-            else if (this.SelectedMulti != null)
+            else
             {
-                var item = SelectedMulti.Parameters;
+                // if (this.SelectedMulti != null)
+                var item = this.SelectedMulti.Parameters;
                 if (item.Enabled != newValue)
                 {
                     item.Enabled = newValue;
@@ -179,7 +183,12 @@ namespace NStub.Gui
             }
         }
 
-        private void LvParametersSelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handles the <see cref="CheckedListBox.SelectedIndexChanged"/> event of the configured builders checked list box.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void ChkLbParametersSelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.SelectedType != null)
             {
@@ -187,10 +196,12 @@ namespace NStub.Gui
                 this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedType) + Environment.NewLine;
                 this.tbConfig.Text += this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             }
-            else if (this.SelectedMulti != null)
+            else
             {
+                // if (this.SelectedMulti != null)
                 this.propGrid.SelectedObject = this.SelectedMulti.Parameters;
-                this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedMulti.BuilderType) + Environment.NewLine;
+                this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedMulti.BuilderType) +
+                                     Environment.NewLine;
                 this.tbConfig.Text += this.memberfactory.SerializeSetupData(
                     this.SelectedMulti.Parameters.Id,
                     this.SelectedMulti.BuilderType,
@@ -198,14 +209,20 @@ namespace NStub.Gui
             }
         }
 
+        /// <summary>
+        /// Handles the <see cref="PropertyGrid.PropertyValueChanged"/> event.
+        /// </summary>
+        /// <param name="s">The event sender.</param>
+        /// <param name="e">The <see cref="System.Windows.Forms.PropertyValueChangedEventArgs"/> instance containing the event data.</param>
         private void PropGridPropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
             if (this.SelectedType != null)
             {
                 this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             }
-            else if (this.SelectedMulti != null)
+            else
             {
+                // if (this.SelectedMulti != null)
                 this.tbConfig.Text = this.memberfactory.SerializeSetupData(
                     this.SelectedMulti.Parameters.Id,
                     this.SelectedMulti.BuilderType,
@@ -213,32 +230,43 @@ namespace NStub.Gui
             }
         }
 
-
-        private void lbBuilderTypes_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Handles a click on the add multi builder button.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BtnAddClick(object sender, EventArgs e)
         {
-
-        }
-
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            if (this.lbBuilderTypes.SelectedItems.Count < 1)
+            if (this.lviewBuilderTypes.SelectedItems.Count < 1)
             {
                 return;
             }
 
-            var selected = this.lbBuilderTypes.SelectedItems[0];
+            var selected = this.lviewBuilderTypes.SelectedItems[0];
             var seltype = (Type)selected.Tag;
-            var mbf = memberfactory as MemberBuilderFactory;
-            var mbpara = mbf.GetMultiParameter(Guid.Empty, seltype, properties);
+            var mbpara = this.memberfactory.GetMultiParameter(Guid.Empty, seltype, this.properties);
             if (mbpara != null)
             {
-                AddMultiParameterToBox2(new MultiLookup() { BuilderType = seltype, Parameters = mbpara });
+                this.AddMultiParameterToBox(new MultiLookup { BuilderType = seltype, Parameters = mbpara });
             }
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Handles a click on the remove multi builder button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void BtnRemoveClick(object sender, EventArgs e)
         {
+        }
 
+        /// <summary>
+        /// Handles the <see cref="ListView.SelectedIndexChanged"/> event of the available multi builders list view.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void ListViewBuilderTypesSelectedIndexChanged(object sender, EventArgs e)
+        {
         }
     }
 }

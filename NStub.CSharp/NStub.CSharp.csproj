@@ -85,6 +85,8 @@
     <Compile Include="ObjectGeneration\BuilderConstants.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
     <Compile Include="ObjectGeneration\Builders\BuilderSerializer.cs" />
+    <Compile Include="ObjectGeneration\Builders\EmptyMultiBuildParameters.cs" />
+    <Compile Include="ObjectGeneration\Builders\EmptyMultiBuildParametersBase.cs" />
     <Compile Include="ObjectGeneration\Builders\MultiBuildParameters.Designer.cs">
       <DependentUpon>MultiBuildParameters.xsd</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -95,6 +97,7 @@
     <Compile Include="ObjectGeneration\Builders\EmptyBuildParametersBase.cs" />
     <Compile Include="ObjectGeneration\Builders\IBuilderSerializer.cs" />
     <Compile Include="ObjectGeneration\Builders\MultiBuilder.cs" />
+    <Compile Include="ObjectGeneration\Builders\RenamingBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\XMLSchema1.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -141,7 +144,9 @@
     <Compile Include="ObjectGeneration\IBuildHandler.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilder.cs" />
     <Compile Include="ObjectGeneration\IMemberBuildResult.cs" />
+    <Compile Include="ObjectGeneration\IMemberPreBuildResult.cs" />
     <Compile Include="ObjectGeneration\IMultiBuilder.cs" />
+    <Compile Include="ObjectGeneration\IMultiBuildParameters.cs" />
     <Compile Include="ObjectGeneration\IReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />
@@ -149,6 +154,7 @@
     <Compile Include="ObjectGeneration\Builders\MethodBuilder.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttribute.cs" />
     <Compile Include="ObjectGeneration\MemberBuildResult.cs" />
+    <Compile Include="ObjectGeneration\MultiLookup.cs" />
     <Compile Include="ObjectGeneration\ParameterInfoCollection.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertyBuilderData.cs" />

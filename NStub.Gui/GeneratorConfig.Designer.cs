@@ -34,7 +34,7 @@
             this.tbConfig = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.chklbParameters = new System.Windows.Forms.CheckedListBox();
-            this.lbBuilderTypes = new System.Windows.Forms.ListView();
+            this.lviewBuilderTypes = new System.Windows.Forms.ListView();
             this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -105,21 +105,21 @@
             this.chklbParameters.Name = "chklbParameters";
             this.chklbParameters.Size = new System.Drawing.Size(446, 169);
             this.chklbParameters.TabIndex = 0;
-            this.chklbParameters.SelectedIndexChanged += new System.EventHandler(this.LvParametersSelectedIndexChanged);
-            this.chklbParameters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.LvParametersItemCheck);
+            this.chklbParameters.SelectedIndexChanged += new System.EventHandler(this.ChkLbParametersSelectedIndexChanged);
+            this.chklbParameters.ItemCheck += new System.Windows.Forms.ItemCheckEventHandler(this.ChkLbParametersItemCheck);
             // 
-            // lbBuilderTypes
+            // lviewBuilderTypes
             // 
-            this.lbBuilderTypes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.lviewBuilderTypes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
-            this.lbBuilderTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lbBuilderTypes.Location = new System.Drawing.Point(3, 16);
-            this.lbBuilderTypes.Name = "lbBuilderTypes";
-            this.lbBuilderTypes.Size = new System.Drawing.Size(314, 103);
-            this.lbBuilderTypes.TabIndex = 1;
-            this.lbBuilderTypes.UseCompatibleStateImageBehavior = false;
-            this.lbBuilderTypes.View = System.Windows.Forms.View.Details;
-            this.lbBuilderTypes.SelectedIndexChanged += new System.EventHandler(this.lbBuilderTypes_SelectedIndexChanged);
+            this.lviewBuilderTypes.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lviewBuilderTypes.Location = new System.Drawing.Point(3, 16);
+            this.lviewBuilderTypes.Name = "lviewBuilderTypes";
+            this.lviewBuilderTypes.Size = new System.Drawing.Size(314, 103);
+            this.lviewBuilderTypes.TabIndex = 1;
+            this.lviewBuilderTypes.UseCompatibleStateImageBehavior = false;
+            this.lviewBuilderTypes.View = System.Windows.Forms.View.Details;
+            this.lviewBuilderTypes.SelectedIndexChanged += new System.EventHandler(this.ListViewBuilderTypesSelectedIndexChanged);
             // 
             // columnHeader1
             // 
@@ -128,7 +128,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.lbBuilderTypes);
+            this.groupBox2.Controls.Add(this.lviewBuilderTypes);
             this.groupBox2.Controls.Add(this.panel3);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Left;
             this.groupBox2.Location = new System.Drawing.Point(3, 16);
@@ -156,7 +156,7 @@
             this.btnAdd.TabIndex = 0;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.btnAdd.Click += new System.EventHandler(this.BtnAddClick);
             // 
             // btnRemove
             // 
@@ -166,7 +166,7 @@
             this.btnRemove.TabIndex = 0;
             this.btnRemove.Text = "Remove";
             this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            this.btnRemove.Click += new System.EventHandler(this.BtnRemoveClick);
             // 
             // GeneratorConfig
             // 
@@ -195,7 +195,7 @@
         private System.Windows.Forms.TextBox tbConfig;
         private System.Windows.Forms.PropertyGrid propGrid;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.ListView lbBuilderTypes;
+        private System.Windows.Forms.ListView lviewBuilderTypes;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Panel panel3;

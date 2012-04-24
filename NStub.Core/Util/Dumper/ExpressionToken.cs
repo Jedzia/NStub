@@ -220,46 +220,4 @@ namespace NStub.Core.Util.Dumper
             sb.Append(expr.ToString());
         }
     }*/
-
-    internal class LeafExpressionToken : ExpressionToken
-    {
-        // Fields
-        public readonly string Text;
-
-        // Methods
-        public LeafExpressionToken(string text)
-        {
-            this.Text = text;
-        }
-
-        public override void Write(StringBuilder sb, int indent)
-        {
-            sb.Append(this.Text);
-        }
-
-        // Properties
-        public override int Length
-        {
-            get
-            {
-                return this.Text.Length;
-            }
-        }
-
-        public override bool MultiLine
-        {
-            get
-            {
-                return false;
-            }
-            set
-            {
-            }
-        }
-    }
-
- 
-
- 
-
 }

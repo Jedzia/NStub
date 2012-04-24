@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IMemberBuildResult.cs" company="EvePanix">
+// <copyright file="EmptyMultiBuildParameters.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,18 +8,15 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.CodeDom;
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.CSharp.ObjectGeneration.Builders
 {
+    using System.ComponentModel;
+
     /// <summary>
-    /// Provides feedback in the build phase of test object generation.
+    /// Provides a implementation of the <see cref="IMultiBuildParameters"/> user data, that has an empty set of data.
     /// </summary>
-    public interface IMemberBuildResult : IMemberPreBuildResult
+    [Description("Default MultiBuilder parameter set.")]
+    public class EmptyMultiBuildParameters : EmptyMultiBuildParametersBase<EmptyMultiBuildParameters>
     {
-        /// <summary>
-        /// Gets the class methods to add to the test class under Build-Phase.
-        /// </summary>
-        ICollection<CodeMemberMethod> ClassMethodsToAdd { get; }
     }
 }

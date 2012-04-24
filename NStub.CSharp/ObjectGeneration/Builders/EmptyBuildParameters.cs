@@ -10,31 +10,13 @@
 
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
-    using System;
-    using System.Xml;
-    using System.Xml.Serialization;
     using System.ComponentModel;
 
     /// <summary>
     /// Provides an implementation of the <see cref="IMemberBuildParameters"/> user data, that has an empty set of data.
     /// </summary>
     [Description("Default static parameter set.")]
-    public class EmptyBuildParameters : EmptyBuildParametersBase<EmptyBuildParameters>, IMemberBuildParameters
+    public class EmptyBuildParameters : EmptyBuildParametersBase<EmptyBuildParameters>
     {
     }
-
-    [Description("Default MultiBuilder parameter set.")]
-    public class EmptyMultiBuildParameters : EmptyMultiBuildParametersBase<EmptyMultiBuildParameters>, IMultiBuildParameters
-    {
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:EmptyMultiBuildParameters"/> class.
-        /// </summary>
-        public EmptyMultiBuildParameters()
-        {
-            
-        }
-
-    }
-
 }

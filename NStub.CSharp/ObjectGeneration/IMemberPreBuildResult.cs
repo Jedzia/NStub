@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IMultiBuilder.cs" company="EvePanix">
+// <copyright file="IMemberPreBuildResult.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -10,27 +10,20 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
-    using System;
-
     /// <summary>
-    /// Implements a test method generator for type members.
+    /// Provides feedback in the pre build phase of test object generation.
     /// </summary>
-    public interface IMultiBuilder : IMemberBuilder
+    public interface IMemberPreBuildResult
     {
         #region Properties
 
         /// <summary>
-        /// Gets the identification number of this instance.
-        /// </summary>
-        Guid Id { get; }
-
-        /// <summary>
-        /// Gets the parameters associated with this builder.
+        /// Gets or sets a value indicating whether to exclude the member from the test generation.
         /// </summary>
         /// <value>
-        /// The user defined parameters of the builder.
+        /// <c>true</c> if excluding the member from the test generation; otherwise, <c>false</c>.
         /// </value>
-        IMultiBuildParameters Parameters { get; }
+        bool ExcludeMember { get; set; }
 
         #endregion
     }

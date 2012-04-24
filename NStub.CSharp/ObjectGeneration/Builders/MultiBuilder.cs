@@ -11,13 +11,10 @@
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
-    using System.CodeDom;
     using NStub.CSharp.BuildContext;
-    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
-using System.ComponentModel;
 
     /// <summary>
-    /// Base class for a test method processing class.
+    /// Base class for a test method processing class that can have multiple instantiations and user defined parameters.
     /// </summary>
     public abstract class MultiBuilder : MemberBuilder, IMultiBuilder
     {
@@ -36,6 +33,12 @@ using System.ComponentModel;
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the parameters associated with this builder.
+        /// </summary>
+        /// <value>
+        /// The user defined parameters of the builder.
+        /// </value>
         public IMultiBuildParameters Parameters { get; set; }
 
         /// <summary>
@@ -56,45 +59,8 @@ using System.ComponentModel;
         /// </summary>
         /// <param name="context">The build context of the test method member.</param>
         /// <returns>
-        ///   <c>true</c> on success.
+        /// <c>true</c> on success.
         /// </returns>
         protected abstract override bool BuildMember(IMemberBuildContext context);
-    }
-
-    [Description("Renaming component for use in the Build-Step.\r\nUse with caution, because it's hot hot hot!")]
-    public class RenamingBuilder : MultiBuilder, IMemberBuilder
-    {
-        /// <summary>
-        /// Determines whether this instance can handle a specified build context.
-        /// </summary>
-        /// <param name="context">The build context of the test method member.</param>
-        /// <returns>
-        /// <c>true</c> if this instance can handle the specified context; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool CanHandleContext(IMemberBuildContext context)
-        {
-            return true;
-            return !context.IsConstructor && !context.IsProperty && !context.IsEvent && context.MemberInfo != null &&
-                   !context.MemberInfo.IsStatic;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RenamingBuilder"/> class.
-        /// </summary>
-        /// <param name="context">The build context of the test method member.</param>
-        public RenamingBuilder(IMemberSetupContext context)
-            : base(context)
-        {
-        }
-
-        protected override bool BuildMember(IMemberBuildContext context)
-        {
-            var typeMember = context.TypeMember as CodeMemberMethod;
-            typeMember.AddComment("From RenamingBuilder {" + Parameters.Id.ToString() +"}");
-            typeMember.AddBlankLine();
-
-            //context.GetBuilderData
-            return true;
-        }
     }
 }

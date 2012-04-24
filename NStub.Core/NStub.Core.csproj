@@ -53,6 +53,7 @@
     <Compile Include="Util\Dumper\ExpressionToken.cs" />
     <Compile Include="Util\Dumper\Extensions.cs" />
     <Compile Include="Util\Dumper\HeadingPresenter.cs" />
+    <Compile Include="Util\Dumper\LeafExpressionToken.cs" />
     <Compile Include="Util\Dumper\ObjectDumper.cs" />
     <Compile Include="Util\Dumper\Server.cs" />
     <Compile Include="Util\Dumper\TextWrittenEventArgs.cs" />

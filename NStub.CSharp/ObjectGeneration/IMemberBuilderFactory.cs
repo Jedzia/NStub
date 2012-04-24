@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using NStub.CSharp.BuildContext;
 
     /// <summary>
@@ -19,16 +20,6 @@ namespace NStub.CSharp.ObjectGeneration
     /// </summary>
     public interface IMemberBuilderFactory
     {
-        /*/// <summary>
-        /// Gets the event builder.
-        /// </summary>
-        EventBuilder EventBuilder { get; }
-
-        /// <summary>
-        /// Gets the method builder.
-        /// </summary>
-        MethodBuilder MethodBuilder { get; }
-        */
         #region Properties
 
         /// <summary>
@@ -72,7 +63,28 @@ namespace NStub.CSharp.ObjectGeneration
         IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context, bool useUserActivation);
 
         /// <summary>
-        /// Get the parameters for the specified builder type, possibly creating it, if there
+        /// Gets the description for the specified builder type.
+        /// </summary>
+        /// <param name="builderType">Type of the builder.</param>
+        /// <returns>A text with the description of the builder and builder parameters, specified by 
+        /// <see cref="DescriptionAttribute"/>'s.</returns>
+        string GetBuilderDescription(Type builderType);
+
+        /// <summary>
+        /// Get the parameters for the specified multi builder type, possibly creating it, if there
+        /// is not yet one in the build data collection.
+        /// </summary>
+        /// <param name="key">The unique identifier for the set of parameter data.</param>
+        /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
+        /// <param name="properties">The global properties storage.</param>
+        /// <returns>
+        /// A new instance of a matching parameter data set for the specified builder.
+        /// </returns>
+        /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
+        IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties);
+
+        /// <summary>
+        /// Get the parameters for the specified static builder type, possibly creating it, if there
         /// is not yet one in the build data collection.
         /// </summary>
         /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
@@ -82,10 +94,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         /// <exception cref="KeyNotFoundException">The given <paramref name="builderType"/> was not present in the lookup.</exception>
         IMemberBuildParameters GetParameters(Type builderType, IBuildDataDictionary properties);
-        
-        string GetBuilderDescription(Type builderType);
-
-        IMultiBuildParameters GetMultiParameter(Guid key, Type builderType, IBuildDataDictionary properties);
 
         /// <summary>
         /// Gets the xml data representation of all registered <see cref="IMemberBuilder"/>s parameters.
@@ -116,7 +124,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// The serialized data of the specified <paramref name="builderType"/>.
         /// </returns>
         string SerializeSetupData(Guid key, Type builderType, BuildDataDictionary properties);
-        
+
         /// <summary>
         /// Set the parameters in the properties storage from a specified xml representation of the data.
         /// </summary>

@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IMemberBuilderParameters.cs" company="EvePanix">
+// <copyright file="IMemberBuildParameters.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -8,18 +8,8 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
 namespace NStub.CSharp.ObjectGeneration
 {
-
-    public interface IMultiBuildParameters : IMemberBuildParameters
-    {
-        /// <summary>
-        /// Gets the identification of the Builder.
-        /// </summary>
-        Guid Id { get; set; }
-    }
-
     /// <summary>
     /// Stores information about user provided parameters of a test method for an <see cref="IMemberBuilder"/>.
     /// </summary>
@@ -28,7 +18,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
-        /// Gets or sets a value indicating whether this <see cref="IMemberBuilderParameters"/> is enabled.
+        /// Gets or sets a value indicating whether this <see cref="IMemberBuildParameters"/> is enabled.
         /// </summary>
         /// <value>
         /// <c>true</c> if enabled; otherwise, <c>false</c>.
@@ -42,12 +32,12 @@ namespace NStub.CSharp.ObjectGeneration
 
         #endregion
 
-        /// <summary>
-        /// Deserializes the specified XML to the current instance.
-        /// </summary>
-        /// <param name="xml">The XML text, representing the data.</param>
+        // /// <summary>
+        // /// Deserializes the specified XML to the current instance.
+        // /// </summary>
+        // /// <param name="xml">The XML text, representing the data.</param>
         // void Deserialize(string xml);
-
+        
         /// <summary>
         /// Serializes this instance to a XML string.
         /// </summary>

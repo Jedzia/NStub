@@ -1,8 +1,11 @@
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SettingsHelper.cs" company="EvePanix">
-//   Copyright (c) Jedzia 2009, EvePanix. All rights reserved.
+//   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
+// <author>Jedzia</author>
+// <email>jed69@gmx.de</email>
+// <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace NStub.Gui.Util
@@ -25,8 +28,10 @@ namespace NStub.Gui.Util
     /// </remarks>
     public class SettingsHelper : IDisposable
     {
+        #region Fields
+
         /// <summary>
-        /// Backing field for the GoInstall property.
+        /// Backing field for the <see cref="GoInstall"/> property.
         /// </summary>
         private string goinstall = "GoInstall";
 
@@ -41,9 +46,13 @@ namespace NStub.Gui.Util
         private ApplicationSettingsBase settings;
 
         /// <summary>
-        /// Backing field for the ShouldSaveChanges property.
+        /// Backing field for the <see cref="ShouldSaveChanges"/> property.
         /// </summary>
         private bool shouldSaveChanges;
+
+        #endregion
+
+        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SettingsHelper"/> class.
@@ -71,10 +80,18 @@ namespace NStub.Gui.Util
             this.shouldSaveChanges = true;
         }
 
+        #endregion
+
+        #region Events
+
         /// <summary>
         /// Represents the method that handles the <see cref="E:System.ComponentModel.IComponent.Disposed"></see> event of a component.
         /// </summary>
         public event EventHandler Disposed;
+
+        #endregion
+
+        #region Properties
 
         /// <summary>
         /// Gets or sets a string identifying the default setting parameter 
@@ -82,20 +99,27 @@ namespace NStub.Gui.Util
         /// </summary>
         /// <value>The name of the setting ( has to be a boolean value ) used for updating.</value>
         /// <remarks>
-        /// Your "GoInstall" setting has to be boolean and by default set to false. This
+        /// Your "GoInstall" setting has to be boolean and by default set to <c>false</c>. This
         /// enables the application to detect this state, that occurs only when new
         /// settings are generated from the framework by default. So, when a new version setting
-        /// is loaded, the SettingsHelper calls the upgrade method and updates
+        /// is loaded, the <see cref="SettingsHelper"/> calls the upgrade method and updates
         ///  the settings from the old version.
         /// </remarks>
-        [Category("Settings"), DefaultValue("GoInstall"), 
-         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), 
-         EditorBrowsable(EditorBrowsableState.Always), 
+        [Category("Settings"), DefaultValue("GoInstall"),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
+         EditorBrowsable(EditorBrowsableState.Always),
          Description("A string identifying the default setting parameter.")]
         public string GoInstall
         {
-            get { return this.goinstall; }
-            set { this.goinstall = value; }
+            get
+            {
+                return this.goinstall;
+            }
+
+            set
+            {
+                this.goinstall = value;
+            }
         }
 
         /// <summary>
@@ -107,36 +131,63 @@ namespace NStub.Gui.Util
         [Browsable(false), DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public bool IsDisposed
         {
-            get { return this.isdisposed; }
+            get
+            {
+                return this.isdisposed;
+            }
         }
 
         /// <summary>
-        /// Gets or sets the application settings defaultclass.
+        /// Gets or sets the logger.
+        /// </summary>
+        /// <value>
+        /// The logger of this instance.
+        /// </value>
+        public ILoggable Logger { get; set; }
+
+        /// <summary>
+        /// Gets or sets the application settings default class.
         /// </summary>
         /// <value>The settings.</value>
-        [Category("Settings"), DefaultValue(null), 
-         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), 
+        [Category("Settings"), DefaultValue(null),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
          EditorBrowsable(EditorBrowsableState.Always), Description("The application settings defaultclass.")]
         public ApplicationSettingsBase Settings
         {
-            get { return this.settings; }
-            set { this.settings = value; }
+            get
+            {
+                return this.settings;
+            }
+
+            set
+            {
+                this.settings = value;
+            }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether every settingsproperty change [should save changes].
+        /// Gets or sets a value indicating whether every settings property change [should save changes].
         /// </summary>
         /// <value>
         /// <c>true</c> if [every change should save settings]; otherwise, <c>false</c>.
         /// </value>
-        [Category("Settings"), DefaultValue(true), 
-         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible), 
+        [Category("Settings"), DefaultValue(true),
+         DesignerSerializationVisibility(DesignerSerializationVisibility.Visible),
          EditorBrowsable(EditorBrowsableState.Always), Description("true if every change should save settings")]
         public bool ShouldSaveChanges
         {
-            get { return this.shouldSaveChanges; }
-            set { this.shouldSaveChanges = value; }
+            get
+            {
+                return this.shouldSaveChanges;
+            }
+
+            set
+            {
+                this.shouldSaveChanges = value;
+            }
         }
+
+        #endregion
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -183,10 +234,13 @@ namespace NStub.Gui.Util
             }
             catch (Exception ex)
             {
-                // GlobalLogger.Log(2, "SettingsHelper", "LoadUpgradeSettings", ex);
+                if (this.Logger != null)
+                {
+                    this.Logger.Log(string.Format("{0},{1}: {2}", "SettingsHelper", "LoadUpgradeSettings", ex));
+                }
             }
 
-            this.settings.PropertyChanged += this.Settings_PropertyChanged;
+            this.settings.PropertyChanged += this.SettingsPropertyChanged;
         }
 
         /// <summary>
@@ -198,7 +252,7 @@ namespace NStub.Gui.Util
         /// <param name="e">
         /// The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.
         /// </param>
-        private void Settings_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        private void SettingsPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (this.shouldSaveChanges && (this.settings != null))
             {
