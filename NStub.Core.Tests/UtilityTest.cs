@@ -1,4 +1,5 @@
 using global::MbUnit.Framework;
+using System;
 
 namespace NStub.Core.Tests
 {
@@ -28,6 +29,9 @@ namespace NStub.Core.Tests
 		{
 			Assert.AreEqual(_unqualifiedTypeName,
 				Utility.GetUnqualifiedTypeName(_qualifiedTypeName));
+
+            Assert.Throws<ArgumentNullException>(() => Utility.GetUnqualifiedTypeName(null));
+            Assert.Throws<ArgumentException>(() => Utility.GetUnqualifiedTypeName(string.Empty));
 		}
 
 		/// <summary>
@@ -40,7 +44,10 @@ namespace NStub.Core.Tests
 		{
 			Assert.AreEqual(_namespace,
 				Utility.GetNamespaceFromFullyQualifiedTypeName(_qualifiedTypeName));
-		}
+
+            Assert.Throws<ArgumentNullException>(() => Utility.GetNamespaceFromFullyQualifiedTypeName(null));
+            Assert.Throws<ArgumentException>(() => Utility.GetNamespaceFromFullyQualifiedTypeName(string.Empty));
+        }
 
 		/// <summary>
 		/// Tests the Utility.ScrubPathOfIllegalCharacters(string) method by
@@ -68,7 +75,10 @@ namespace NStub.Core.Tests
 				Utility.ScrubPathOfIllegalCharacters(@"+Plus+"));
 			Assert.AreEqual("_Minus_",
 				Utility.ScrubPathOfIllegalCharacters(@"-Minus-"));
-		}
+
+            Assert.Throws<ArgumentNullException>(() => Utility.ScrubPathOfIllegalCharacters(null));
+            Assert.Throws<ArgumentException>(() => Utility.ScrubPathOfIllegalCharacters(string.Empty));
+        }
 
 		#endregion Tests (Public)
 	}

@@ -9,6 +9,8 @@ namespace NStub.Core.Tests.Util.Dumper
     using System.Globalization;
     using System.Collections;
     using System.Linq.Expressions;
+    using System.Data.Objects;
+    using Rhino.Mocks;
 
 
     [TestFixture()]
@@ -414,6 +416,39 @@ namespace NStub.Core.Tests.Util.Dumper
             Assert.Contains(constExpr.ToString(), constExpr.ToString());
             Assert.Contains(myConsoleOut.ToString(), "NodeType=Constant");
         }
+
+        public class MyContext : ObjectContext
+        {
+            public MyContext()
+                :base("No Connection")
+            {
+            }
+        }
+
+        public class MyProduct 
+        {
+            public string Name { get; set; }
+        }
+
+        [Test()]
+        public void ExtensionDumpDataExpression()
+        {
+            Server.Default.LambdaFormatter = this.myConsoleOut;
+
+            //var objQuery = new ObjectQuery<MyProduct>("Name", new MyContext());
+            //var objQuery = MockRepository.GenerateStub<ObjectQuery<MyProduct>>();
+
+            ConstantExpression constExpr = Expression.Constant(
+                Expression.Constant(42)
+                );
+
+            //var expected = "[String]" + myConsoleOut.NewLine + element.ToString() + myConsoleOut.NewLine;
+            //myConsoleOut.GetStringBuilder().Length = 0;
+            //Assert.AreSame(objQuery, objQuery.Dump("Hello ObjectQuery", 2));
+            //Assert.Contains(objQuery.ToString(), objQuery.ToString());
+            //Assert.Contains(myConsoleOut.ToString(), "NodeType=Constant");
+        }
+
         public static void ThrowIt()
         {
             throw new ApplicationException("Boo");

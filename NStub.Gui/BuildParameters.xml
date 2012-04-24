@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<BuildParameters>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+    <BuildParametersOfPropertyBuilder>
+      <Enabled>true</Enabled>
+      <MethodSuffix>CoolManDepp</MethodSuffix>
+      <UseDings>false</UseDings>
+      <Moep>5</Moep>
+    </BuildParametersOfPropertyBuilder>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertyGetBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertyGetBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.PropertySetBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.PropertySetBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.EventBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.EventBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.ConstructorBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.ConstructorBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.StaticMethodBuilder>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.StaticMethodBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>
+    <EmptyBuildParameters>
+      <Enabled>true</Enabled>
+    </EmptyBuildParameters>
+  </NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <MultiBuildParametersOfRenamingBuilder Id="1b00cd02-372b-4706-8cc1-83aa610fbf7c">
+      <Enabled>true</Enabled>
+      <FindWhat>Cool</FindWhat>
+      <ReplaceWith>CoolMan</ReplaceWith>
+      <MatchCase>false</MatchCase>
+    </MultiBuildParametersOfRenamingBuilder>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+  <NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+    <MultiBuildParametersOfRenamingBuilder Id="496fb645-7882-4ee7-a9ac-560e60f85709">
+      <Enabled>false</Enabled>
+      <FindWhat>Elise</FindWhat>
+      <ReplaceWith>Candall</ReplaceWith>
+      <MatchCase>true</MatchCase>
+    </MultiBuildParametersOfRenamingBuilder>
+  </NStub.CSharp.ObjectGeneration.Builders.RenamingBuilder>
+</BuildParameters>

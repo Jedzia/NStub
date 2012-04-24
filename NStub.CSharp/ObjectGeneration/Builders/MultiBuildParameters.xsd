@@ -12,9 +12,9 @@
                 <xs:element name="OfRenamingBuilder">
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="MethodSuffix" type="xs:string" minOccurs="0"/>
-                            <xs:element name="UseDings" type="xs:boolean"/>
-                            <xs:element name="Moep" type="xs:int"/>
+                            <xs:element name="FindWhat" type="xs:string" minOccurs="0"/>
+                            <xs:element name="ReplaceWith" type="xs:string" minOccurs="0"/>
+                            <xs:element name="MatchCase" type="xs:boolean"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

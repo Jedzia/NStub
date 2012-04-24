@@ -9,6 +9,8 @@ namespace NStub.Core.Tests
 
     internal class FakeBuildSystem : IBuildSystem
     {
+        public bool FakeDirectoryExists = true;
+
         #region IBuildSystem Members
 
         public char DirectorySeparatorChar
@@ -18,7 +20,7 @@ namespace NStub.Core.Tests
 
         public bool DirectoryExists(string directory)
         {
-            return true;
+            return FakeDirectoryExists;
         }
 
         public System.IO.TextWriter GetTextWriter(string path, bool append)
@@ -101,7 +103,7 @@ namespace NStub.Core.Tests
 		public void SetUp()
 		{
 			MockRepository mockRepository = new MockRepository();
-			_mockCodeGenerator = mockRepository.CreateMock<ICodeGenerator>();
+            _mockCodeGenerator = mockRepository.Stub<ICodeGenerator>();
 
 			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
 
@@ -112,6 +114,22 @@ namespace NStub.Core.Tests
 		#endregion SetUp (Public)
 
 		#region Tests (Public)
+
+        [Test()]
+        public void ConstructWithParametersBuildSystemCodeNamespaceOutputDirectoryCodeGeneratorTest()
+        {
+            var codeNamespace = new System.CodeDom.CodeNamespace();
+            var outputDirectory = "Value of outputDirectory";
+            var testObject = new NStubCore(new FakeBuildSystem(), codeNamespace, outputDirectory, _mockCodeGenerator);
+
+            Assert.Throws<ArgumentNullException>(() => new NStubCore(null, codeNamespace, outputDirectory, _mockCodeGenerator));
+            Assert.Throws<ArgumentNullException>(() => new NStubCore(new FakeBuildSystem(), null, outputDirectory, _mockCodeGenerator));
+            Assert.Throws<ArgumentNullException>(() => new NStubCore(new FakeBuildSystem(), codeNamespace, null, _mockCodeGenerator));
+            Assert.Throws<ArgumentException>(() => new NStubCore(new FakeBuildSystem(), codeNamespace, string.Empty, _mockCodeGenerator));
+            Assert.Throws<ArgumentNullException>(() => new NStubCore(new FakeBuildSystem(), codeNamespace, outputDirectory, null));
+            Assert.Throws<System.IO.DirectoryNotFoundException>(() => 
+                new NStubCore(new FakeBuildSystem() { FakeDirectoryExists = false }, codeNamespace, outputDirectory, _mockCodeGenerator));
+        }
 
 		/// <summary>
 		/// This test ensures that a properly initialized instance of NStubCore can successfully
@@ -139,7 +157,13 @@ namespace NStub.Core.Tests
 		public void CodeNamespaceTest()
 		{
 			Assert.AreEqual(_sampleNamespace, _nStubCore.CodeNamespace.Name);
-		}
+
+            // Test write access of 'CodeGenerator' Property.
+            var expected = new CodeNamespace(_sampleNamespace); ;
+            _nStubCore.CodeNamespace = expected;
+            var actual = _nStubCore.CodeNamespace;
+            Assert.AreSame(expected, actual);
+        }
 
 		/// <summary>
 		/// This test ensures that the code generator set on NStubCore's constructor
@@ -149,7 +173,15 @@ namespace NStub.Core.Tests
 		public void CodeGeneratorTest()
 		{
 			Assert.AreEqual(_mockCodeGenerator, _nStubCore.CodeGenerator);
-		}
+
+            // Test write access of 'CodeGenerator' Property.
+            MockRepository mockRepository = new MockRepository();
+            _mockCodeGenerator = mockRepository.Stub<ICodeGenerator>();
+            var expected = _mockCodeGenerator;
+            _nStubCore.CodeGenerator = _mockCodeGenerator;
+            var actual = _nStubCore.CodeGenerator;
+            Assert.AreEqual(expected, actual);
+        }
 
 		/// <summary>
 		/// This test ensures that the output directory set on NStubCore's constructor
@@ -158,7 +190,17 @@ namespace NStub.Core.Tests
 		[Test]
 		public void OutputDirectoryTest()
 		{
-			Assert.AreEqual(_outputDirectory, _nStubCore.OutputDirectory);
+            // Test read access of 'OutputDirectory' Property.
+            var expected = _outputDirectory;
+            var actual = _nStubCore.OutputDirectory;
+            Assert.AreEqual(expected, actual);
+
+            // Test write access of 'OutputDirectory' Property.
+            expected = "Insert setter object here";
+            _nStubCore.OutputDirectory = expected;
+            actual = _nStubCore.OutputDirectory;
+            Assert.AreEqual(expected, actual);
+
 		} 
 
 		#endregion Tests (Public)

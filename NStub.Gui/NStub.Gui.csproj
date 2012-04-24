@@ -127,6 +127,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Resources\NStub.ico" />
+    <Content Include="BuildParameters.xml" />
     <Content Include="Resources\VSObject_Assembly.bmp" />
     <Content Include="Resources\VSObject_Class.bmp" />
     <Content Include="Resources\VSObject_Method.bmp" />

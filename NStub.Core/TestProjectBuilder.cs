@@ -43,9 +43,9 @@ namespace NStub.Core
         /// generators per test class <see cref="CodeNamespace"/>.</param>
         /// <param name="logger">The logging method.</param>
         public TestProjectBuilder(
-            IBuildSystem sbs, 
-            IProjectGenerator projectGenerator, 
-            Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback, 
+            IBuildSystem sbs,
+            IProjectGenerator projectGenerator,
+            Func<IBuildSystem, ICodeGeneratorParameters, CodeNamespace, ICodeGenerator> createGeneratorCallback,
             Action<string> logger)
         {
             Guard.NotNull(() => sbs, sbs);
@@ -84,10 +84,10 @@ namespace NStub.Core
         /// <param name="mainNodes">The main nodes.</param>
         /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
         public void GenerateTests(
-            string outputFolder, 
-            Type generatorType, 
-            string inputAssemblyPath, 
-            IList<TestNode> mainNodes, 
+            string outputFolder,
+            Type generatorType,
+            string inputAssemblyPath,
+            IList<TestNode> mainNodes,
             IList<AssemblyName> referencedAssemblies)
         {
             // string outputFolder = this._outputDirectoryTextBox.Text;
@@ -104,7 +104,7 @@ namespace NStub.Core
             }
 
             // Create a new directory for each assembly
-            foreach(var assemblyNode in mainNodes)
+            foreach (var assemblyNode in mainNodes)
             {
                 string outputDirectory = outputFolder +
                                          this.sbs.DirectorySeparatorChar +
@@ -116,14 +116,14 @@ namespace NStub.Core
 
                 // Add our referenced assemblies to the project generator so we
                 // can build the resulting project
-                foreach(AssemblyName assemblyName in referencedAssemblies)
+                foreach (AssemblyName assemblyName in referencedAssemblies)
                 {
                     this.csharpProjectGenerator.ReferencedAssemblies.Add(assemblyName);
                 }
 
                 // Generate the new test namespace
                 // At the assembly level
-                foreach(var moduleNode in assemblyNode.Nodes)
+                foreach (var moduleNode in assemblyNode.Nodes)
                 {
                     if (!moduleNode.Checked)
                     {
@@ -134,7 +134,7 @@ namespace NStub.Core
                     var codeNamespace = new CodeNamespace();
 
                     // At the type level
-                    foreach(var classNode in moduleNode.Nodes)
+                    foreach (var classNode in moduleNode.Nodes)
                     {
                         // TODO: This namespace isn't being set correctly.  
                         // Also one namespace per run probably won't work, we may 
@@ -161,42 +161,31 @@ namespace NStub.Core
 
                         // At the method level
                         // Create a test method for each method in this type
-                        foreach(var classmemberNode in classNode.Nodes)
+                        foreach (var classmemberNode in classNode.Nodes)
                         {
+                            if (!classmemberNode.Checked)
+                            {
+                                continue;
+                            }
+
                             try
                             {
-                                if (classmemberNode.Checked)
-                                {
-                                    try
-                                    {
-                                        // Retrieve the MethodInfo object from this TreeNode's tag
-                                        // var memberInfo = (MethodInfo)rootsubsubsubnode.Tag;
-                                        var memberInfo = classmemberNode.MethodInfo;
-                                        CodeMemberMethod codeMemberMethod =
-                                            this.CreateMethod(classmemberNode.Text, memberInfo);
-                                        codeMemberMethod.UserData.Add(NStubConstants.TestMemberMethodInfoKey, memberInfo);
-                                        testClass.Members.Add(codeMemberMethod);
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        // MessageBox.Show(ex.Message + Environment.NewLine + ex.ToString());
-                                        if (this.logger != null)
-                                        {
-                                            this.logger(
-                                                ex.Message + Environment.NewLine + ex + Environment.NewLine);
-                                        }
-                                    }
-                                }
+                                // Retrieve the MethodInfo object from this TreeNode's tag
+                                // var memberInfo = (MethodInfo)rootsubsubsubnode.Tag;
+                                var memberInfo = classmemberNode.MethodInfo;
+                                CodeMemberMethod codeMemberMethod =
+                                    this.CreateMethod(classmemberNode.Text, memberInfo);
+                                codeMemberMethod.UserData.Add(NStubConstants.TestMemberMethodInfoKey, memberInfo);
+                                testClass.Members.Add(codeMemberMethod);
                             }
                             catch (Exception ex)
                             {
+                                // MessageBox.Show(ex.Message + Environment.NewLine + ex.ToString());
                                 if (this.logger != null)
                                 {
                                     this.logger(
                                         ex.Message + Environment.NewLine + ex + Environment.NewLine);
                                 }
-
-                                return;
                             }
                         }
                     }
@@ -207,7 +196,7 @@ namespace NStub.Core
                 // Now write the project file and add all of the test files to it
                 this.csharpProjectGenerator.GenerateProjectFile();
             }
-            
+
             if (this.logger != null)
             {
                 this.logger("-----------------------------------------------------------------------------");
@@ -245,8 +234,8 @@ namespace NStub.Core
             // Create the method
             var codeMemberMethod = new CodeMemberMethod
                                        {
-                                           Attributes = (MemberAttributes)methodInfo.Attributes, 
-                                           Name = methodName, 
+                                           Attributes = (MemberAttributes)methodInfo.Attributes,
+                                           Name = methodName,
                                            ReturnType = new CodeTypeReference(methodInfo.ReturnType)
                                        };
 
@@ -254,11 +243,11 @@ namespace NStub.Core
 
             // Setup and add the parameters
             ParameterInfo[] methodParameters = methodInfo.GetParameters();
-            foreach(ParameterInfo parameter in methodParameters)
+            foreach (ParameterInfo parameter in methodParameters)
             {
                 codeMemberMethod.Parameters.Add(
                     new CodeParameterDeclarationExpression(
-                        parameter.ParameterType, 
+                        parameter.ParameterType,
                         parameter.Name));
             }
 
@@ -302,9 +291,9 @@ namespace NStub.Core
             // codeNamespace.Dump(3);
             var nstub = new NStubCore(buildSystem, codeNamespace, outputDirectory, codeGenerator);
             nstub.GenerateCode();
-            
+
             // Add all of our classes to the project
-            foreach(CodeTypeDeclaration codeType in nstub.CodeNamespace.Types)
+            foreach (CodeTypeDeclaration codeType in nstub.CodeNamespace.Types)
             {
                 string fileName = codeType.Name;
                 fileName = fileName.Remove(0, fileName.LastIndexOf(".") + 1);

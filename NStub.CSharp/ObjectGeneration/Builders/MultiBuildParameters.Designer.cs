@@ -33,8 +33,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     
     public partial class MultiBuildParametersOfRenamingBuilder : EmptyMultiBuildParametersBase<MultiBuildParametersOfRenamingBuilder> {
         
-        public string MethodSuffix { get; set; }
-        public bool UseDings { get; set; }
-        public int Moep { get; set; }
+        public string FindWhat { get; set; }
+        public string ReplaceWith { get; set; }
+        public bool MatchCase { get; set; }
     }
 }

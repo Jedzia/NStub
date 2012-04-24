@@ -58,7 +58,8 @@ namespace NStub.Core
 				throw new ArgumentNullException("codeNamespace",
 					Exceptions.ParameterCannotBeNull);
 			}
-			if (outputDirectory == null)
+            //Guard.NotNullOrEmpty(() => outputDirectory, outputDirectory);
+            if (outputDirectory == null)
 			{
 				throw new ArgumentNullException("outputDirectory",
 					Exceptions.ParameterCannotBeNull);
