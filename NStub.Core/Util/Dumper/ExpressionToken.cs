@@ -92,13 +92,13 @@ namespace NStub.Core.Util.Dumper
         }
     }
     else*/
-            if (((exp.Value != null) && exp.Type.IsGenericType) && 
+            /*if (((exp.Value != null) && exp.Type.IsGenericType) && 
                ((exp.Type.FullName.StartsWith("System.Data.Objects.ObjectQuery`1", StringComparison.Ordinal)
                || exp.Type.FullName.StartsWith("System.Data.Objects.ObjectSet`1", StringComparison.Ordinal))
                || exp.Type.FullName.StartsWith("System.Data.Services.Client.DataServiceQuery`1")))
     {
         return new LeafExpressionToken(exp.Type.GetGenericArguments()[0].Name);
-    }
+    }*/
     return new LeafExpressionToken((exp.Value == null) ? "null" : ((exp.Value is string) ? 
         ('"' + ((string) exp.Value) + '"') : exp.Value.ToString()));
 }
