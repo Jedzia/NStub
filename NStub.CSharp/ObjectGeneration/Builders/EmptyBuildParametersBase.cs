@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System.ComponentModel;
     using System.Xml.Serialization;
+    using System;
 
     /// <summary>
     /// Base class for implementations of the <see cref="IMemberBuildParameters"/> user data with a Enabled property, serialization
@@ -130,4 +131,126 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             return this.Enabled.GetHashCode();
         }
     }
+
+    /// <summary>
+    /// Base class for implementations of the <see cref="IMultiBuildParameters"/> user data with a Enabled property, a GUID
+    /// identifier, serialization and deserialization capability.
+    /// </summary>
+    /// <typeparam name="T">Parameter data class</typeparam>
+    public class EmptyMultiBuildParametersBase<T> : EmptyBuildParametersBase<T>, IMultiBuildParameters
+        where T : IMultiBuildParameters
+    {
+        // : EntityBase<PropertyBuilderParametersSetup> {
+
+        private Guid id;
+
+        /// <summary>
+        /// Gets the identification of the Builder.
+        /// </summary>
+        //[XmlAttribute( AttributeName="Depp", DataType="Guid")]
+        [System.Xml.Serialization.XmlAttributeAttribute()]
+        [Browsable(false)]
+        public Guid Id //{ get; set; }
+        {
+            get
+            {
+                if (id == null)
+                {
+                    id = Guid.NewGuid();
+                }
+                return this.id;
+            }
+
+            set
+            {
+                id = value;
+            }
+        }
+
+        /*/// <summary>
+        /// Gets or sets a value indicating whether this <see cref="IMemberBuildParameters"/> is enabled.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if enabled; otherwise, <c>false</c>.
+        /// </value>
+        [Description("Determines whether this builder part is ON or OFF."), Category("General")]
+        public bool Enabled { get; set; }
+
+        /// <summary>
+        /// Gets the sample XML.
+        /// </summary>
+        [XmlIgnore]
+        [Browsable(false)]
+        public virtual string SampleXml
+        {
+            get
+            {
+                return "<Test>This is sample data</Test>";
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Gets the data of this instance.
+        /// </summary>
+        /// <returns>
+        /// The stored data.
+        /// </returns>
+        public virtual object GetData()
+        {
+            return this;
+        }
+
+        /// <summary>
+        /// Determines whether this instance holds data for the specified builder type.
+        /// </summary>
+        /// <param name="builder">The requesting builder.</param>
+        /// <returns>
+        ///   <c>true</c> if this instance holds data for the specified builder type; otherwise, <c>false</c>.
+        /// </returns>
+        public virtual bool HasDataForType(IMemberBuilder builder)
+        {
+            return false;
+        }
+
+
+        /// <summary>
+        /// Sets the data via the specified method info.
+        /// </summary>
+        /// <param name="data">The data to store.</param>
+        public virtual void SetData(object data)
+        {
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <returns>
+        /// <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        /// </returns>
+        public override bool Equals(object obj)
+        {
+            if (obj is EmptyBuildParameters)
+            {
+                var other = (EmptyBuildParameters)obj;
+                return this.Enabled.Equals(other.Enabled);
+            }
+
+            return base.Equals(obj);
+        }
+
+        /// <summary>
+        /// Returns a hash code for this instance.
+        /// </summary>
+        /// <returns>
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// </returns>
+        public override int GetHashCode()
+        {
+            return this.Enabled.GetHashCode();
+        }*/
+    }
+
 }

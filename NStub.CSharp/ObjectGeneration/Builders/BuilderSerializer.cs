@@ -342,18 +342,39 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                     "' is mapping to a invalid parameter of '" + handler.ParameterDataType.FullName + "' type. " +
                 "Parameter types have to implement the '" + typeof(IBuilderData).FullName + "' interface.");
             }
-            // null check paraType
-            var xxxx = paraType.BaseType.GetGenericTypeDefinition();
+            object paraInstance = null;
+            if (handler.IsMultiBuilder)
+            {
+                // null check paraType
+                var xxx = paraType.BaseType.GetGenericTypeDefinition();
+                var xxxx = xxx.BaseType.GetGenericTypeDefinition();
 
-            // null check xxxx
-            var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
+                // null check xxxx
+                var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
 
-            // Todo: This strange thingy ... very good checking and logging! :)
-            // null check serializer2
-            object paraInstance = serializer2
-                .MakeGenericType(paraType)
-                .GetMethod("Deserialize", new[] { typeof(string) })
-                .Invoke(null, new object[] { firstChild.InnerXml });
+                // Todo: This strange thingy ... very good checking and logging! :)
+                // null check serializer2
+                paraInstance = serializer2
+                    .MakeGenericType(paraType)
+                    .GetMethod("Deserialize", new[] { typeof(string) })
+                    .Invoke(null, new object[] { firstChild.InnerXml });
+            }
+            else
+            {
+
+                // null check paraType
+                var xxxx = paraType.BaseType.GetGenericTypeDefinition();
+
+                // null check xxxx
+                var serializer2 = xxxx.BaseType.GetGenericTypeDefinition();
+
+                // Todo: This strange thingy ... very good checking and logging! :)
+                // null check serializer2
+                paraInstance = serializer2
+                    .MakeGenericType(paraType)
+                    .GetMethod("Deserialize", new[] { typeof(string) })
+                    .Invoke(null, new object[] { firstChild.InnerXml });
+            }
 
             var setupPara = (IMemberBuildParameters)paraInstance;
             try

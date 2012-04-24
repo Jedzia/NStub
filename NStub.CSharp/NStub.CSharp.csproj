@@ -85,6 +85,11 @@
     <Compile Include="ObjectGeneration\BuilderConstants.cs" />
     <Compile Include="ObjectGeneration\BuilderData.cs" />
     <Compile Include="ObjectGeneration\Builders\BuilderSerializer.cs" />
+    <Compile Include="ObjectGeneration\Builders\MultiBuildParameters.Designer.cs">
+      <DependentUpon>MultiBuildParameters.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="ObjectGeneration\Builders\DefaultMethodEraser.cs" />
     <Compile Include="ObjectGeneration\Builders\EmptyBuildParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\EmptyBuildParametersBase.cs" />
@@ -179,6 +184,10 @@
       </SubType>
       <Generator>Xsd2CodeCustomTool</Generator>
       <LastGenOutput>BuildParameters.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="ObjectGeneration\Builders\MultiBuildParameters.xsd">
+      <Generator>Xsd2CodeCustomTool</Generator>
+      <LastGenOutput>MultiBuildParameters.Designer.cs</LastGenOutput>
     </None>
     <None Include="ObjectGeneration\Builders\XMLSchema1.xsd">
       <Generator>Xsd2CodeCustomTool</Generator>

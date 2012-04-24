@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" 
+           elementFormDefault="qualified" attributeFormDefault="qualified" id="MultiBuildParameters">
+    <xs:annotation>
+        <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+    </xs:appinfo>
+    </xs:annotation>
+    <xs:element name="MultiBuildParameters">
+        <xs:complexType>
+            <xs:choice minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="OfRenamingBuilder">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="MethodSuffix" type="xs:string" minOccurs="0"/>
+                            <xs:element name="UseDings" type="xs:boolean"/>
+                            <xs:element name="Moep" type="xs:int"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
