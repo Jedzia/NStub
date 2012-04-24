@@ -60,7 +60,12 @@ namespace NStub.Gui
         {
             get
             {
-                return (MultiLookup)this.chklbParameters.SelectedItem;
+                /*if (this.chklbParameters.SelectedItem == null)
+                {
+                    return null;
+                }*/
+                //return (MultiLookup)this.chklbParameters.SelectedItem;
+                return this.chklbParameters.SelectedItem as MultiLookup;
             }
         }
 
@@ -168,7 +173,7 @@ namespace NStub.Gui
                     this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
                 }
             }
-            else
+            else if (this.SelectedMulti != null)
             {
                 // if (this.SelectedMulti != null)
                 var item = this.SelectedMulti.Parameters;
@@ -196,7 +201,7 @@ namespace NStub.Gui
                 this.tbConfig.Text = this.memberfactory.GetBuilderDescription(this.SelectedType) + Environment.NewLine;
                 this.tbConfig.Text += this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             }
-            else
+            else if (this.SelectedMulti != null)
             {
                 // if (this.SelectedMulti != null)
                 this.propGrid.SelectedObject = this.SelectedMulti.Parameters;
@@ -220,7 +225,7 @@ namespace NStub.Gui
             {
                 this.tbConfig.Text = this.memberfactory.SerializeSetupData(this.SelectedType, this.properties);
             }
-            else
+            else if (this.SelectedMulti != null)
             {
                 // if (this.SelectedMulti != null)
                 this.tbConfig.Text = this.memberfactory.SerializeSetupData(

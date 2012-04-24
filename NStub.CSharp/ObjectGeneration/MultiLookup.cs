@@ -16,7 +16,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// Result storage class for <see cref="IMultiBuilder"/> type to <see cref="IMultiBuildParameters"/>
     /// relations.
     /// </summary>
-    public struct MultiLookup
+    public class MultiLookup
     {
         #region Fields
 

@@ -232,11 +232,12 @@ namespace NStub.Gui
             // 
             // bpc
             // 
-            this.bpc.Logger = null;
+            this.bpc.Logger = this;
             // 
             // settings
             // 
             this.settings.MainForm = this;
+            this.settings.Logger = this;
             // 
             // MainForm
             // 
