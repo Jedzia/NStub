@@ -26,7 +26,7 @@
         /// </returns>
         public static T Dump<T>(this T o)
         {
-            return o.Dump<T>(null, null, int.MaxValue);
+            return o.Dump<T>(null, null, 0, int.MaxValue);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@
         /// </returns>
         public static T Dump<T>(this T o, int maximumDepth)
         {
-            return o.Dump<T>(null, new int?(maximumDepth), int.MaxValue);
+            return o.Dump<T>(null, null, maximumDepth, int.MaxValue);
         }
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// </returns>
         public static T Dump<T>(this T o, int maximumDepth, int maxcount)
         {
-            return o.Dump<T>(null, new int?(maximumDepth), maxcount);
+            return o.Dump<T>(null, null, maximumDepth, maxcount);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@
         /// </returns>
         public static T Dump<T>(this T o, string description)
         {
-            return o.Dump<T>(description, null, int.MaxValue);
+            return o.Dump<T>(null, description, 0, int.MaxValue);
         }
 
         /// <summary>
@@ -82,9 +82,9 @@
         /// <returns>
         /// The untouched object for fluent usage of <c>Dump</c>.
         /// </returns>
-        public static T Dump<T>(this T o, string description, int? maximumDepth)
+        public static T Dump<T>(this T o, string description, int maximumDepth)
         {
-            return o.Dump<T>(description, maximumDepth, int.MaxValue);
+            return o.Dump<T>(null, description, maximumDepth, int.MaxValue);
         }
 
         /// <summary>
@@ -92,22 +92,51 @@
         /// </summary>
         /// <typeparam name="T">Type of the object</typeparam>
         /// <param name="o">The object to dump.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="maximumDepth">The maximum dump regression depth.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        /// <returns>
+        /// The untouched object for fluent usage of <c>Dump</c>.
+        /// </returns>
+        public static T Dump<T>(this T o, string description, int maximumDepth, int maxcount)
+        {
+            return o.Dump<T>(null, description, maximumDepth, maxcount);
+        }
+
+        /// <summary>
+        /// Dumps the specified object.
+        /// </summary>
+        /// <typeparam name="T">Type of the object</typeparam>
+        /// <param name="o">The object to dump.</param>
+        /// <param name="prefix">The prefix to print on the left side.</param>
         /// <param name="description">The description text.</param>
         /// <param name="maximumDepth">The maximum dump regression depth.</param>
         /// <param name="maxcount">The maximum count of dumps.</param>
         /// <returns>
         /// The untouched object for fluent usage of <c>Dump</c>.
         /// </returns>
-        public static T Dump<T>(this T o, string description, int? maximumDepth, int maxcount)
+        public static T Dump<T>(this T o, string prefix, string description, int maximumDepth, int maxcount)
         {
+
             if (maximumDepth < 0)
             {
-                maximumDepth = null;
+                maximumDepth = 0;
             }
             if (maximumDepth > 20)
             {
                 maximumDepth = 20;
             }
+
+            if (!string.IsNullOrEmpty(description))
+            {
+                maximumDepth++;
+            }
+
+            if (maxcount < 0)
+            {
+                maxcount = 0;
+            }
+
             Expression expr = null;
             //TextWriter lambdaFormatter = new StringWriter();
             TextWriter lambdaFormatter = Server.Default.LambdaFormatter;
@@ -119,29 +148,30 @@
                 }
                 else if (o is Expression)
                 {
-                    //expr = (Expression) o;
-                    throw new NotImplementedException("Dump: o is Expression");
+                    expr = /*(Expression)*/ o as Expression;
+                    //expr = (Expression) (object)o;
+                    // throw new NotImplementedException("Dump: o is Expression");
                 }
             }
             string content = "";
             if (expr != null)
             {
-                throw new NotImplementedException("Dump: o is Expression");
-                /*try
+                //throw new NotImplementedException("Dump: o is Expression");
+                try
                 {
-                    //ExpressionToken token = ExpressionToken.Visit(expr);
-                    //if (token != null)
+                    ExpressionToken token = ExpressionToken.Visit(expr);
+                    if (token != null)
                     {
-                        //   content = token.ToString();
+                       content = token.ToString();
                     }
                 }
                 catch (Exception exception)
                 {
-                    //Log.Write(exception, "Dump ExpressionToken Visit");
-                }*/
+                    Server.Default.LambdaFormatter.Write("Dump ExpressionToken Visit \r\n" + exception.ToString());
+                }
             }
             //XhtmlWriter currentResultsWriter = Server.CurrentResultsWriter;
-            var currentResultsWriter = new ObjectDumper(maximumDepth.GetValueOrDefault(), maxcount, lambdaFormatter);
+            var currentResultsWriter = new ObjectDumper(maximumDepth, maxcount, lambdaFormatter);
             bool flag = o is Type;
             if (flag)
             {

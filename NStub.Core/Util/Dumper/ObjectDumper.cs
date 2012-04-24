@@ -39,10 +39,25 @@ namespace NStub.Core.Util.Dumper
         /// <param name="maxcount">The maximum count of dumps.</param>
         internal ObjectDumper(int depth, int maxcount, TextWriter writer)
         {
+            if (depth < 0)
+            {
+                depth = 0;
+            }
+            if (depth > 20)
+            {
+                depth = 20;
+            }
+
+            if (maxcount < 0)
+            {
+                maxcount = 0;
+            }
+
             this.depth = depth;
             this.writer = writer;
             this.maxCount = maxcount;
         }
+
 
         /*/// <summary>
         /// Prevents a default instance of the <see cref="ObjectDumper"/> class from being created.
@@ -60,6 +75,19 @@ namespace NStub.Core.Util.Dumper
         /// <param name="maxcount">The maximum count of dumps.</param>
         private ObjectDumper(int depth, int maxcount)
         {
+            if (depth < 0)
+            {
+                depth = 0;
+            }
+            if (depth > 20)
+            {
+                depth = 20;
+            }
+
+            if (maxcount < 0)
+            {
+                maxcount = 0;
+            }
             this.depth = depth;
             this.maxCount = maxcount;
         }
@@ -75,10 +103,10 @@ namespace NStub.Core.Util.Dumper
                 return this.writer;
             }
 
-            set
+            /*set
             {
                 this.writer = value;
-            }
+            }*/
         }
 
         #endregion
@@ -113,7 +141,7 @@ namespace NStub.Core.Util.Dumper
             Write(element, depth, maxcount, Console.Out);
         }
 
-        /// <summary>
+                /// <summary>
         /// Writes the specified element.
         /// </summary>
         /// <param name="element">The element.</param>
@@ -122,18 +150,38 @@ namespace NStub.Core.Util.Dumper
         /// <param name="log">The output logger.</param>
         public static void Write(object element, int depth, int maxcount, TextWriter log)
         {
+            Write(null, element, depth, maxcount, log);
+        }
+
+        /// <summary>
+        /// Writes the specified element.
+        /// </summary>
+        /// <param name="prefix">The prefix to print.</param>
+        /// <param name="element">The element to dump.</param>
+        /// <param name="depth">The iteration level.</param>
+        /// <param name="maxcount">The maximum count of dumps.</param>
+        /// <param name="log">The output logger.</param>
+        public static void Write(string prefix, object element, int depth, int maxcount, TextWriter log)
+        {
             ObjectDumper dumper = new ObjectDumper(depth, maxcount);
             dumper.writer = log;
+            // string prefix = null;
             if (element != null)
             {
-                dumper.Write("[" + element.GetType().Name + "]");
+                dumper.Write("[" + element.GetType().Name + "]" + log.NewLine);
+                //prefix = "[" + element.GetType().Name + "]";
             }
-            dumper.WriteObject(null, element);
+            dumper.WriteObject(prefix, element);
         }
 
         internal void WriteObject(object element)
         {
-            this.WriteObject(string.Empty, element);
+            string prefix = null;
+            if (element != null)
+            {
+                this.Write("[" + element.GetType().Name + "]" + this.Writer.NewLine);
+            }
+            this.WriteObject(prefix, element);
         }
 
         private int maxCounter = 0;
@@ -144,10 +192,10 @@ namespace NStub.Core.Util.Dumper
             // WriteIndent();
             // Write(prefix);
             // WriteLine();
-            if (this.level >= this.depth)
+            /*if (this.level > this.depth)
             {
                 return;
-            }
+            }*/
 
             if (this.maxCounter > this.maxCount)
             {
@@ -253,7 +301,9 @@ namespace NStub.Core.Util.Dumper
                                     //if (p.PropertyType == typeof(GenericParameterAttributes))
                                     if (p.ToString().Contains("Generic"))
                                     {
+                                        // Todo: investigate this ... exception and better type resolution.
                                         //this.Write(p.Name + " is Generic. ");
+                                        this.Write("!" + p.ToString() + "!");
                                     }
                                     else
                                     {
@@ -303,7 +353,29 @@ namespace NStub.Core.Util.Dumper
                                 Type t = f != null ? f.FieldType : p.PropertyType;
                                 if (!(t.IsValueType || t == typeof(string)))
                                 {
-                                    object value = f != null ? f.GetValue(element) : p.GetValue(element, null);
+                                    //object value = f != null ? f.GetValue(element) : p.GetValue(element, null);
+                                    object value = null;
+                                    if (f == null)
+                                    {
+                                        if (p.ToString().Contains("DeclaringMethod"))
+                                        {
+                                            // Todo: investigate this ... exception and better type resolution.
+                                            this.Write("!" + p.ToString() + "!");
+                                        }
+                                        else
+                                        {
+                                           
+                                            // var e1 = p.PropertyType.IsGenericParameter;
+                                            // var e2 = p.ReflectedType.IsGenericParameter;
+                                            // var e3 = p.DeclaringType.IsGenericParameter;
+                                            value = p.GetValue(element, null);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        value = f.GetValue(element);
+                                    }
+
                                     if (value != null)
                                     {
                                         this.level++;

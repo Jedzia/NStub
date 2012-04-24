@@ -11,7 +11,10 @@
 namespace NStub.Gui
 {
     using System.CodeDom;
+    using System.Linq;
     using NStub.Core.Util.Dumper;
+    using System.Linq.Expressions;
+    using System;
 
     /// <summary>
     /// Test class for the object dumper. DeleteME
@@ -24,6 +27,18 @@ namespace NStub.Gui
         /// <returns>the dumped object </returns>
         public string Test()
         {
+
+            //var element = "My String".ToCharArray().AsQueryable();
+            var element = "My String".ToCharArray().Select(e => new { e, Depp = (uint)e }).AsQueryable();
+            element.Dump(2);
+
+            /*ConstantExpression blockExpr = Expression.Constant(
+               
+                Expression.Constant(42)
+            );
+
+            blockExpr.Dump(2);*/
+
             // TestXmlSeria();
             var testObject = new CodeTypeDeclaration("DeclClass");
             var method = new CodeMemberMethod { Name = "MyMethod" };
