@@ -31,7 +31,7 @@ namespace NStub.CSharp.ObjectGeneration
         public override string ToString()
         {
             // TODO: write your implementation of ToString() here
-            return BuilderType.ToString() + " {" +Parameters.Id.ToString() + "}";
+            return BuilderType.ToString() + " {" + Parameters.Id.ToString() + "}";
         }
         //public Guid Key;
     }
@@ -138,8 +138,13 @@ namespace NStub.CSharp.ObjectGeneration
                 {
                     //var le = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
                     //    .Keys.Select(x => x);
-                    var lo = ((BuilderSerializer)serializer).GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties)
-                        .Values.Select(x => x);
+                    var lox = ((BuilderSerializer)serializer)
+                        .GetMultiParameters(e.Value.Type, e.Value.ParameterDataType, properties);
+                    IEnumerable<IBuilderData> lo = new List<IBuilderData>();
+                    if (lox != null)
+                    {
+                        lo = lox.Values.Select(x => x);
+                    }
                     return lo;
                 }, (a, v) => new MultiLookup() { BuilderType = a.Key, Parameters = (IMultiBuildParameters)v });
 
@@ -217,7 +222,7 @@ namespace NStub.CSharp.ObjectGeneration
         public IEnumerable<IMemberBuilder> GetBuilder(IMemberBuildContext context, bool useUserActivation)
         {
             // Todo: maybe cache em.
-            foreach (var buildHandler in this.buildHandlers.Values)
+            foreach (var buildHandler in this.buildHandlers.Values.Where(e => !e.IsMultiBuilder))
             {
                 var canHandleContext = buildHandler.CanHandle(context);
                 if (!canHandleContext)
@@ -228,11 +233,18 @@ namespace NStub.CSharp.ObjectGeneration
                 if (useUserActivation)
                 {
                     Guard.NotNull(() => context.BuildData, context.BuildData);
+                    //if (buildHandler.IsMultiBuilder)
+                    //{
+                    //    continue;
+                    //}
+                    //else
+                    //{
                     var parameter = this.GetParameters(buildHandler.Type, context.BuildData);
                     if (!parameter.Enabled)
                     {
                         continue;
                     }
+                    //}
                 }
 
                 var memberBuilder = buildHandler.CreateInstance(context);
@@ -241,6 +253,26 @@ namespace NStub.CSharp.ObjectGeneration
                     yield return memberBuilder;
                 }
             }
+
+            var multis = this.MultiParameters(context.BuildData);
+            foreach (var multi in multis)
+            {
+                if (multi.Parameters.Enabled)
+                {
+                    var multiHandler = this.buildHandlers[multi.BuilderType];
+                    var canHandleContext = multiHandler.CanHandle(context);
+                    if (!canHandleContext)
+                    {
+                        continue;
+                    }
+
+                    var multiBuilder = multiHandler.CreateInstance(context);
+                    ((IMultiBuilder)multiBuilder).Parameters = multi.Parameters;
+                    yield return multiBuilder;
+                }
+                //var mbpara = GetMultiParameter(Guid.Empty, seltype, properties);
+            }
+
         }
 
         /// <summary>

@@ -15,7 +15,7 @@ namespace NStub.CSharp.BuildContext
     /// <summary>
     /// Represents the data used to create new unit tests.
     /// </summary>
-    public interface IMemberBuildContext : IMemberSetupContext
+    public interface IMemberBuildContext : IMemberSetupContext 
     {
         #region Properties
 
@@ -34,6 +34,11 @@ namespace NStub.CSharp.BuildContext
         /// The key associated with the test.
         /// </value>
         string TestKey { get; }
+
+        /// <summary>
+        /// Gets the build result.
+        /// </summary>
+        IMemberBuildResult BuildResult { get; }
 
         #endregion
 

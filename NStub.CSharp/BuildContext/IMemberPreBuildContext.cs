@@ -22,7 +22,7 @@ namespace NStub.CSharp.BuildContext
         /// <summary>
         /// Gets the build result.
         /// </summary>
-        IMemberBuildResult BuildResult { get; }
+        IMemberPreBuildResult PreBuildResult { get; }
 
         #endregion
     }

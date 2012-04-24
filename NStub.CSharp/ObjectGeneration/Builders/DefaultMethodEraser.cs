@@ -70,7 +70,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         {
             if (TestsToRemove.Any(e => e == context.MemberInfo.Name))
             {
-                context.BuildResult.ExcludeMember = true;
+                context.PreBuildResult.ExcludeMember = true;
             }
         }
     }

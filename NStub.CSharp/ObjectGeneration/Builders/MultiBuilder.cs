@@ -11,7 +11,9 @@
 namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System;
+    using System.CodeDom;
     using NStub.CSharp.BuildContext;
+    using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
 
     /// <summary>
     /// Base class for a test method processing class.
@@ -33,6 +35,8 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         #region Properties
 
+        public IMultiBuildParameters Parameters { get; set; }
+
         /// <summary>
         /// Gets the identification of the Builder.
         /// </summary>
@@ -40,7 +44,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         {
             get
             {
-                return Guid.NewGuid();
+                return Parameters.Id;
             }
         }
 
@@ -83,6 +87,11 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
         protected override bool BuildMember(IMemberBuildContext context)
         {
+            var typeMember = context.TypeMember as CodeMemberMethod;
+            typeMember.AddComment("From RenamingBuilder {" + Parameters.Id.ToString() +"}");
+            typeMember.AddBlankLine();
+
+            //context.GetBuilderData
             return true;
         }
     }

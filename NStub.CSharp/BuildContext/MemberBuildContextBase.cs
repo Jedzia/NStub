@@ -57,6 +57,7 @@ namespace NStub.CSharp.BuildContext
             this.BuildData = buildData;
             this.SetUpTearDownContext = setUpTearDownContext;
 
+            this.PreBuildResult = new MemberBuildResult();
             this.BuildResult = new MemberBuildResult();
         }
 
@@ -189,6 +190,11 @@ namespace NStub.CSharp.BuildContext
 
         /// <summary>
         /// Gets the build result feedback object in the pre-build phase of test object generation.
+        /// </summary>
+        public IMemberPreBuildResult PreBuildResult { get; private set; }
+
+        /// <summary>
+        /// Gets the build result feedback object in the build phase of test object generation.
         /// </summary>
         public IMemberBuildResult BuildResult { get; private set; }
 

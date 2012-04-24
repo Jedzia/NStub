@@ -185,6 +185,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             CodeMethodComposer.CreateTestStubForMethod(cm);
             createExpr = this.BuildTestObject(context.TestObjectType.Name, testObjectName, cm);
             context.TestClassDeclaration.Members.Add(cm);
+            context.BuildResult.ClassMethodsToAdd.Add(cm);
             return cm;
         }
     }

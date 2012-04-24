@@ -8,6 +8,8 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.CodeDom;
 namespace NStub.CSharp.ObjectGeneration
 {
     /// <summary>
@@ -18,6 +20,14 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="T:MemberBuildResult"/> class.
+        /// </summary>
+        public MemberBuildResult()
+        {
+            ClassMethodsToAdd = new List<CodeMemberMethod>();
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether to exclude the member from the test generation.
         /// </summary>
         /// <value>
@@ -25,6 +35,17 @@ namespace NStub.CSharp.ObjectGeneration
         /// </value>
         public bool ExcludeMember { get; set; }
 
+        /// <summary>
+        /// Gets the class methods to add to the test class under Build-Phase.
+        /// </summary>
+        public ICollection<CodeMemberMethod> ClassMethodsToAdd { get; private set; }
+
         #endregion
+
+        public virtual void Reset()
+        {
+            ExcludeMember = false;
+            ClassMethodsToAdd.Clear();
+        }
     }
 }

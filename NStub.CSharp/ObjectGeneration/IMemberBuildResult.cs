@@ -8,12 +8,14 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Collections.Generic;
+using System.CodeDom;
 namespace NStub.CSharp.ObjectGeneration
 {
     /// <summary>
     /// Provides feedback in the pre build phase of test object generation.
     /// </summary>
-    public interface IMemberBuildResult
+    public interface IMemberPreBuildResult
     {
         #region Properties
 
@@ -25,6 +27,18 @@ namespace NStub.CSharp.ObjectGeneration
         /// </value>
         bool ExcludeMember { get; set; }
 
+
         #endregion
+    }
+
+    /// <summary>
+    /// Provides feedback in the build phase of test object generation.
+    /// </summary>
+    public interface IMemberBuildResult : IMemberPreBuildResult
+    {
+        /// <summary>
+        /// Gets the class methods to add to the test class under Build-Phase.
+        /// </summary>
+        ICollection<CodeMemberMethod> ClassMethodsToAdd { get; }
     }
 }

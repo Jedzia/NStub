@@ -24,6 +24,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// </summary>
         Guid Id { get; }
 
+        IMultiBuildParameters Parameters { get; set; }
+
         #endregion
     }
 }

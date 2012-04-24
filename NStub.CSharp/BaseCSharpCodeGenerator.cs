@@ -344,15 +344,47 @@ namespace NStub.CSharp
                     initialMembers,
                     this.BuildProperties);
 
+                var addedCodeMethods = new List<CodeMemberMethod>();
                 // Run test generation main routine.
                 foreach (CodeTypeMember typeMember in initialMembers)
                 {
+                    if (typeMember is CodeMemberMethod)
+                    {
+                        if (!(typeMember is CodeConstructor))
+                        {
+                            this.CreateStubForCodeMemberMethod(typeMember as CodeMemberMethod);
+                        }
+                    }
+
                     /*var memberBuildContext = new MemberBuildContext(
                         codeNamespace, testClassDeclaration, typeMember, null, null);*/
                     var memberBuildContext = contextLookup[typeMember];
                     this.GenerateCodeTypeMember(memberBuildContext);
+                    addedCodeMethods.AddRange(memberBuildContext.BuildResult.ClassMethodsToAdd);
+                    if (memberBuildContext.BuildResult is MemberBuildResult)
+                    {
+                        ((MemberBuildResult)memberBuildContext.BuildResult).Reset();
+                    }
                 }
 
+                // process the added CodeTypeMember's
+                foreach (var addTypeMember in addedCodeMethods)
+                {
+                    var addMemberBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, addTypeMember, this.BuildProperties, setTearContext);
+                    this.GenerateCodeTypeMember(addMemberBuildContext);
+                }
+
+                {
+                    var addSetUpBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, setTearContext.SetUpMethod, this.BuildProperties, setTearContext);
+                    this.GenerateCodeTypeMember(addSetUpBuildContext);
+                }
+                {
+                    var addTearDownBuildContext = new MemberBuildContext(
+                        codeNamespace, testClassDeclaration, setTearContext.TearDownMethod, this.BuildProperties, setTearContext);
+                    this.GenerateCodeTypeMember(addTearDownBuildContext);
+                }
                 /*{
                  * no need for this, the ctor is handled above
                     // Process the constructor.
@@ -443,7 +475,7 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
         /// <param name="context">The build context of the test method member.</param>
-        protected virtual void ComputeCodeMember(IMemberBuilder memberBuilder, IMemberBuildContext context)
+        protected virtual void MemberBuilderRunBuild(IMemberBuilder memberBuilder, IMemberBuildContext context)
         {
             memberBuilder.Build(context);
         }
@@ -455,7 +487,7 @@ namespace NStub.CSharp
         /// <param name="context">The build context of the test method member.</param>
         /// <param name="originalName">Initial name of the test method name.</param>
         /// <returns>The calculated test method name.</returns>
-        protected virtual string ComputeTestName(
+        protected virtual string MemberBuilderGetTestname(
             IMemberBuilder memberBuilder, IMemberBuildContext context, string originalName)
         {
             var testName = memberBuilder.GetTestName(context, originalName);
@@ -467,7 +499,7 @@ namespace NStub.CSharp
         /// </summary>
         /// <param name="memberBuilder">The member builder used for the <paramref name="context"/>.</param>
         /// <param name="context">The build context of the test method member.</param>
-        protected virtual void ComputePreBuildStep(
+        protected virtual void MemberBuilderRunPreBuildStep(
             IMemberBuilder memberBuilder, IMemberPreBuildContext context)
         {
             memberBuilder.RunPreBuild(context);
@@ -620,7 +652,7 @@ namespace NStub.CSharp
         /// Processes the code type members of the compilation unit.
         /// </summary>
         /// <param name="context">The build context for the test to create.</param>
-        private void GenerateCodeTypeMember(IMemberBuildContext context)
+        private void GenerateCodeTypeMember(MemberBuildContext context/*, bool runOnlyMultiBuilders*/)
         {
             var typeMember = context.TypeMember;
 
@@ -646,14 +678,13 @@ namespace NStub.CSharp
                 // set the test method name to the context key that is the normalized test name.
                 //context.TypeMember.Name = context.TestKey;
 
-                if (!(typeMember is CodeConstructor))
-                {
-                    this.CreateStubForCodeMemberMethod(typeMember as CodeMemberMethod);
-                }
-
                 foreach (var memberBuilder in builders)
                 {
-                    this.ComputeCodeMember(memberBuilder, context);
+                    this.MemberBuilderRunBuild(memberBuilder, context);
+                    if (context.BuildResult.ClassMethodsToAdd.Count > 0)
+                    {
+
+                    }
                 }
 
                 if (!(typeMember is CodeConstructor))
@@ -751,8 +782,8 @@ namespace NStub.CSharp
                 var composedTestName = memberBuildContext.TypeMember.Name;
                 foreach (var memberBuilder in builders)
                 {
-                    this.ComputePreBuildStep(memberBuilder, memberBuildContext);
-                    var buildResult = memberBuildContext.BuildResult;
+                    this.MemberBuilderRunPreBuildStep(memberBuilder, memberBuildContext);
+                    var buildResult = memberBuildContext.PreBuildResult;
                     if (buildResult.ExcludeMember)
                     {
                         // bool isExcluded;
@@ -805,7 +836,7 @@ namespace NStub.CSharp
                 var composedTestName = memberBuildContext.TypeMember.Name;
                 foreach (var memberBuilder in builders)
                 {
-                    composedTestName = this.ComputeTestName(memberBuilder, memberBuildContext, composedTestName);
+                    composedTestName = this.MemberBuilderGetTestname(memberBuilder, memberBuildContext, composedTestName);
                 }
 
                 typeMember.Name = composedTestName;
