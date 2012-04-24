@@ -329,7 +329,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             return setupPara;
         }
 
-        private static IMemberBuildParameters SetSingleNode(IBuildDataDictionary properties, IBuildHandler handler, 
+        private IMemberBuildParameters SetSingleNode(IBuildDataDictionary properties, IBuildHandler handler, 
             XmlNode firstChild)
         {
             Guard.NotNull(() => properties, properties);
@@ -345,6 +345,14 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             object paraInstance = null;
             if (handler.IsMultiBuilder)
             {
+                if (!typeof(IMultiBuildParameters).IsAssignableFrom(paraType))
+                {
+                    throw new ArgumentOutOfRangeException("handler",
+                        "Requesting a parameter type of '" + firstChild.Name +
+                        "' (via Xml) for the '" + handler.ParameterDataType.FullName + "' handler assigned type. " +
+                    "Parameter types have to implement the '" + typeof(IMultiBuildParameters).FullName + "' interface.");
+                }
+
                 // null check paraType
                 var xxx = paraType.BaseType.GetGenericTypeDefinition();
                 var xxxx = xxx.BaseType.GetGenericTypeDefinition();
@@ -361,6 +369,25 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
             else
             {
+
+                if (!typeof(IMemberBuildParameters).IsAssignableFrom(paraType))
+                {
+                    throw new ArgumentOutOfRangeException("handler",
+                        "Requesting a parameter type for '" + firstChild.Name +
+                        "' (via Xml) for the '" + paraType.FullName + "' handler assigned type. " +
+                    "Parameter types have to implement the '" + typeof(IMemberBuildParameters).FullName + "' interface.");
+                }
+
+                // Todo: really need this stuff here? should this be done in the handler construction?
+                // for example: checking if a multibuilder has IMultiBuildParameters and a
+                // normal builder has IMemberBuildParameters.
+                var xmlParaType = firstChild.FirstChild.Name;
+                if (xmlParaType != paraType.Name)
+                {
+                    throw new ArgumentOutOfRangeException("firstChild",
+                        "Requesting a parameter type of '" + xmlParaType + "' (via Xml). " +
+                    "Parameter types for the '" + handler.Type.FullName + "' builder have to be of the '" + paraType.FullName + "' kind.");
+                }
 
                 // null check paraType
                 var xxxx = paraType.BaseType.GetGenericTypeDefinition();

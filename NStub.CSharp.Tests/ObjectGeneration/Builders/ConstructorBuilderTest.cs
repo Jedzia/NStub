@@ -173,9 +173,11 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             Expect.Call(stcontext.TestObjectCreator).Return(tobuilder);
 
             Expect.Call(this.context.SetUpTearDownContext).Return(stcontext);//.Repeat.Any();
-            Expect.Call(this.context.TestObjectType).Return(typeof(int)).Repeat.Any();
+            Expect.Call(this.context.TestObjectType).Return(typeof(int)).Repeat.AtLeastOnce();
             var ctdecl = new CodeTypeDeclaration("TheTestClass");
-            Expect.Call(this.context.TestClassDeclaration).Return(ctdecl).Repeat.Any();
+            Expect.Call(this.context.TestClassDeclaration).Return(ctdecl).Repeat.AtLeastOnce();
+            var buildResult = new MemberBuildResult();
+            Expect.Call(this.context.BuildResult).Return(buildResult).Repeat.AtLeastOnce();
 
             Expect.Call(delegate { tobuilder.AssignExtra(ctdecl, method, null, assCol1); })
                 //.Constraints(Is.Equal(ctdecl), Is.Equal(method), Is.Anything(), Is.Equal(assCol1)
@@ -205,6 +207,12 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             var expected = true;
             var actual = testObject.Build(this.context);
             Assert.AreEqual(expected, actual);
+            
+            // there should be two methods (constructor testers) added.
+            Assert.Count(2, buildResult.ClassMethodsToAdd);
+            var bresList = buildResult.ClassMethodsToAdd.ToList();
+            Assert.IsInstanceOfType<CustomConstructorCodeMemberMethod>(bresList[0]);
+            Assert.IsInstanceOfType<CustomConstructorCodeMemberMethod>(bresList[1]);
 
             mocks.VerifyAll();
         }

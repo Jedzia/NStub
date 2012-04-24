@@ -192,6 +192,49 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test()]
+        public void AddDataItemWithReplace()
+        {
+            // add to general category.
+            var expected1 = MockRepository.GenerateStrictMock<IBuilderData>();
+            testObject.AddDataItem("TheKey", expected1, false);
+            Assert.AreEqual(1, testObject.Count);
+            var actual1 = testObject["General"]["TheKey"];
+            Assert.AreEqual(expected1, actual1);
+
+            // add to a explicitely specified category.
+            var expected2 = MockRepository.GenerateStrictMock<IBuilderData>();
+            testObject.AddDataItem("OtherCategory", "TheKey", expected2, false);
+            Assert.AreEqual(2, testObject.Count);
+            var actual2 = testObject["OtherCategory"]["TheKey"];
+            Assert.AreEqual(expected2, actual2);
+            Assert.AreNotSame(actual1, actual2);
+
+            // add to general category, but with different key. count should not differ, as it counts the categories.
+            var expected3 = MockRepository.GenerateStrictMock<IBuilderData>();
+            testObject.AddDataItem("TheOtherKey", expected3, false);
+            var actual3 = testObject["General"]["TheOtherKey"];
+            Assert.AreEqual(2, testObject.Count);
+            Assert.AreEqual(expected3, actual3);
+            Assert.AreNotSame(actual1, actual3);
+            Assert.AreNotSame(actual2, actual3);
+
+            Assert.Throws<ArgumentException>(()=> testObject.AddDataItem("TheOtherKey", expected3, false));
+            Assert.AreEqual(2, testObject.Count);
+
+            testObject.AddDataItem("TheOtherKey", expected3, true);
+            var actual4 = testObject["General"]["TheOtherKey"];
+            Assert.AreEqual(2, testObject.Count);
+            Assert.AreEqual(expected3, actual4);
+            Assert.AreSame(actual3, actual4);
+            Assert.AreNotSame(actual1, actual4);
+            Assert.AreNotSame(actual2, actual4);
+
+            expected1.VerifyAllExpectations();
+            expected2.VerifyAllExpectations();
+            expected3.VerifyAllExpectations();
+        }
+
+        [Test()]
         public void AddMoreDataItems()
         {
             // Moo.FirstOne -> item1; General.InGeneral -> item1; NotInGeneral.X-Key -> item2; General.ReallyCool -> item3

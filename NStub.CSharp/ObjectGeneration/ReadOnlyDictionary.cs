@@ -14,7 +14,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
 
     /// <summary>
-    /// Implementation of a generic collection of key/value pairs with read only values.
+    /// Implementation of a generic collection of key/value pairs with read only values. Todo: Move this to NStub.Core
     /// </summary>
     /// <typeparam name="TKey">The type of keys in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of values in the dictionary.</typeparam>

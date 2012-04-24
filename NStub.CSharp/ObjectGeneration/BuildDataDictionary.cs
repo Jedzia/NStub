@@ -274,7 +274,7 @@ namespace NStub.CSharp.ObjectGeneration
         // {
         // }
 
-        /// <summary>
+        /*/// <summary>
         /// DeleteME only for devel.
         /// </summary>
         /// <returns>DeleteME only for devel</returns>
@@ -291,9 +291,9 @@ namespace NStub.CSharp.ObjectGeneration
 
             // IEnumerable<KeyValuePair<string, ICollection<KeyValuePair<string, IBuilderData>>>> aaaaa = this.data;
 
-            // var moese =                this.data["adf"];
+            // var xxxx =                this.data["adf"];
             return this.data;
-        }
+        }*/
 
         // public IReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>> Moep()
 

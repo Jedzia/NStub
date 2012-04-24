@@ -72,6 +72,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             // "var userData = context.GetBuilderData<BuildParametersOfPropertyBuilder>(this);"
             Expect.Call(buildcontext.GetBuilderData<BuildParametersOfPropertyBuilder>(testObject)).Return(null);
             Expect.Call(buildcontext.GetBuilderData("Property")).Return(propData).Repeat.Any();
+            var testClass = new CodeTypeDeclaration("TheClass");
+            Expect.Call(buildcontext.TestClassDeclaration).Return(testClass).Repeat.Any();
             //Expect.Call(buildcontext.IsProperty).Return(true);
             mocks.ReplayAll();
 

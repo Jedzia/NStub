@@ -120,6 +120,31 @@ namespace NStub.CSharp.Tests.BuildContext
         }
 
         [Test]
+        public void GetBuilderDataGeneric()
+        {
+            var builder = this.mocks.StrictMock<IMemberBuilder>();
+            var expected = this.mocks.StrictMock<IBuilderData>();
+            this.mocks.ReplayAll();
+
+            // no data in buildData at all.
+            this.testObject.TestKey = "TheKey";
+            var actual = this.testObject.GetBuilderData<IBuilderData>(builder);
+            Assert.IsNull(actual);
+
+            // add item with key "builder Type.FullName" to category of 'General' and request it through GetBuilderData<T>.
+            this.buildData.AddDataItem(builder.GetType().FullName, expected);
+            actual = this.testObject.GetBuilderData<IBuilderData>(builder);
+            Assert.AreEqual(expected, actual);
+
+            // request with a key that is not in buildData.
+            this.testObject.TestKey = "OtherKey";
+            actual = this.testObject.GetBuilderData("CAT");
+            Assert.IsNull(actual);
+
+            this.mocks.VerifyAll();
+        }
+
+        [Test]
         public void GetBuilderDataTestThrowsWithOutTestKeySet()
         {
             this.mocks.ReplayAll();

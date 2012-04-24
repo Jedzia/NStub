@@ -24,12 +24,28 @@ namespace NStub.CSharp.Tests.Data
 
         public static string BuildParametersMinimalDefaultMethodEraserXml()
         {
-            var xml = @"<?xml version=""1.0"" encoding=""utf-16""?>" + Environment.NewLine +
+            var xml = 
+@"<?xml version=""1.0"" encoding=""utf-16""?>" + Environment.NewLine +
 @"<BuildParameters>" + Environment.NewLine +
 @"  <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>" + Environment.NewLine +
 @"    <EmptyBuildParameters>" + Environment.NewLine +
 @"      <Enabled>true</Enabled>" + Environment.NewLine +
 @"    </EmptyBuildParameters>" + Environment.NewLine +
+@"  </NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>" + Environment.NewLine +
+@"</BuildParameters>" + Environment.NewLine +
+@"";
+            return xml;
+        }
+
+        public static string BuildParametersWrongMultiMinimalDefaultMethodEraserXml()
+        {
+            var xml =
+@"<?xml version=""1.0"" encoding=""utf-16""?>" + Environment.NewLine +
+@"<BuildParameters>" + Environment.NewLine +
+@"  <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>" + Environment.NewLine +
+@"    <EmptyMultiBuildParameters Id=""f24371d7-db32-4fd2-b97b-19c2c0d73be5"">" + Environment.NewLine +
+@"      <Enabled>true</Enabled>" + Environment.NewLine +
+@"    </EmptyMultiBuildParameters>" + Environment.NewLine +
 @"  </NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser>" + Environment.NewLine +
 @"</BuildParameters>" + Environment.NewLine +
 @"";

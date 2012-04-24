@@ -9,6 +9,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
     using Rhino.Mocks;
     using NStub.CSharp.Tests.Data;
     using NStub.Core.Util.Dumper;
+    using System.Xml;
 
     [TestFixture]
     public partial class BuilderSerializerTest
@@ -165,19 +166,28 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
         }
 
         [Test()]
-        public void DeserializeAllSetupDataWithWrongXmlType()
+        public void DeserializeAllSetupDataWithWrongXmlTypeThrows()
         {
-            // Todo: Implement type checking
-            // <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser><EmptyBuildParameters>
             var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
 
             Expect.Call(handler.Type).Return(typeof(DefaultMethodEraser)).Repeat.Any();
             Expect.Call(handler.IsMultiBuilder).Return(false).Repeat.Any();
-            //Expect.Call(handler.ParameterDataType).Return(typeof(string)).Repeat.Any();
             Expect.Call(handler.ParameterDataType).Return(typeof(EmptyMultiBuildParameters)).Repeat.Any();
             mocks.ReplayAll();
-            var result = testObject.DeserializeAllSetupData(xml, properties, new[] { handler });
-            Assert.AreElementsSame(new[] { new EmptyBuildParameters() }, result);
+            Assert.Throws<ArgumentOutOfRangeException>(()=> testObject.DeserializeAllSetupData(xml, properties, new[] { handler }));
+            mocks.VerifyAll();
+        }
+
+        [Test()]
+        public void DeserializeAllSetupDataWithWrongXmlMultiTypeThrows()
+        {
+            var xml = TestDataProvider.BuildParametersWrongMultiMinimalDefaultMethodEraserXml();
+
+            Expect.Call(handler.Type).Return(typeof(DefaultMethodEraser)).Repeat.Any();
+            Expect.Call(handler.IsMultiBuilder).Return(true).Repeat.Any();
+            Expect.Call(handler.ParameterDataType).Return(typeof(EmptyBuildParameters)).Repeat.Any();
+            mocks.ReplayAll();
+            Assert.Throws<ArgumentOutOfRangeException>(() => testObject.DeserializeAllSetupData(xml, properties, new[] { handler }));
             mocks.VerifyAll();
         }
 
@@ -200,7 +210,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
         public void DetermineIMemberBuilderFromXmlFragmentTest()
         {
             // <NStub.CSharp.ObjectGeneration.Builders.DefaultMethodEraser><EmptyBuildParameters>
-            var xml = TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml();
+            var fragment = GetBuildParametersFragment(TestDataProvider.BuildParametersMinimalDefaultMethodEraserXml());
+            var xml = fragment.InnerXml;
             // Todo: hier weiter
             Expect.Call(handler.Type).Return(typeof(DefaultMethodEraser)).Repeat.Any();
             Expect.Call(handler.IsMultiBuilder).Return(false).Repeat.Any();
@@ -209,6 +220,14 @@ namespace NStub.CSharp.Tests.ObjectGeneration.Builders
             var result = testObject.DetermineIMemberBuilderFromXmlFragment(xml, new[] { handler });
             Assert.AreSame(handler, result);
             mocks.VerifyAll();
+        }
+
+        public static XmlElement GetBuildParametersFragment(string xmlDocumentContent)
+        {
+            var xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlDocumentContent);
+            var fragment = xmlDoc[BuilderConstants.BuildParametersXmlId];
+            return fragment;
         }
         
         [Test()]
