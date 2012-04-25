@@ -116,6 +116,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             for (int i = 0; i < createExpr.Parameters.Count; i++)
             {
+                var moo = createExpr.Parameters[i];
                 var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", codeMemberMethod);
 
                 // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
@@ -125,22 +126,26 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                 // assign well known constructor arguments
                 objcreator.AssignOnly(context.TestClassDeclaration, codeMemberMethod, subcreator, assignmentInfos);
 
-                /*var cref = (CodeFieldReferenceExpression)subcreator.Parameters[i];
+                var cref = (CodeFieldReferenceExpression)subcreator.Parameters[i];
                 var paraName = cref.FieldName;
                 var inf = assignmentInfos[paraName];
                 var paraType = inf.MemberField.Type.BaseType;
-                // for each assert statement null a parameter of the constructor.
+
+                CodeExpression paraAssert = new CodePrimitiveExpression(null);
                 var expectedException = typeof(ArgumentNullException);
                 if (paraType == typeof(string).FullName)
                 {
                     expectedException = typeof(ArgumentException);
-                }*/
+                    //paraAssert = new CodePrimitiveExpression("");
+                    paraAssert = new CodeSnippetExpression("string.Empty");
+                }
 
+                // for each assert statement null a parameter of the constructor.
                 if (subcreator.Parameters.Count > i)
                 {
-                    subcreator.Parameters[i] = new CodePrimitiveExpression(null);
+                    subcreator.Parameters[i] = paraAssert;
                 }
-                var ancreate = BuildLambdaThrowAssertion(typeof(ArgumentNullException), codeMemberMethod, subcreator);
+                var ancreate = BuildLambdaThrowAssertion(expectedException, codeMemberMethod, subcreator);
             }
         }
 
@@ -177,16 +182,14 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         {
 
             // Todo: test for having "using System;" namespace import and then use Name or Fullname of the exception.
-            
-            // Build 'Assert.Throws<ArgumentNullException>(123);'
-            var binder = codeMemberMethod.StaticClass("Assert").Invoke("Throws", expectedExceptionType.Name).With(creator);
-            binder.Commit();
 
-            // wrap the Assert.Throws<T>( ... ) into a lambda = (() => Assert.Throws<T>( ... )).
-            var lambdaExpression = WrapIntoLambdaExpression(binder.Expression);
+            // wrap the new OuT(a,b,c, ...) into a lambda = (() => new OuT(a,b,c, ...)).
+            var lambdaExpression = WrapIntoLambdaExpression(creator);
 
-            binder.Invoker.Parameters.Clear();
-            binder.Invoker.Parameters.Add(lambdaExpression);
+            // Build 'Assert.Throws<ArgumentNullException>( () => new OuT(...) );'
+            codeMemberMethod.StaticClass("Assert").Invoke("Throws", expectedExceptionType.Name)
+                .With(lambdaExpression).Commit();
+
             return lambdaExpression;
         }
 
