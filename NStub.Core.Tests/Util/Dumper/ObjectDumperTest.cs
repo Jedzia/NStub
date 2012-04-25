@@ -11,6 +11,7 @@ namespace NStub.Core.Tests.Util.Dumper
     using System.Linq.Expressions;
     using System.Data.Objects;
     using Rhino.Mocks;
+    using System.Reflection;
 
 
     [TestFixture()]
@@ -209,22 +210,104 @@ namespace NStub.Core.Tests.Util.Dumper
         {
             public ValueType TheValue;
             public IEnumerable<MyEnum> TheEnum;
+            public IEnumerable OtherIeEnum;
 
             public ValOne(int x)
             {
                 TheValue = x;
                 TheEnum = new[] { MyEnum.ValueOne, MyEnum.ValueTwo };
+                OtherIeEnum = new[] { MyEnum.ValueOne, MyEnum.ValueTwo };
             }
 
-            public IEnumerator GetEnumerator()
+            /*public IEnumerator GetEnumerator()
             {
                 return new NumerableOne.NumeratorOne();
+            }*/
+
+            #region IEnumerable Members
+
+            IEnumerator IEnumerable.GetEnumerator()
+            {
+                return new NumerableOne.NumeratorOne();
+                //return new NonValOne().GetEnumerator();
+            }
+
+            #endregion
+        }
+
+        public class XXX
+        {
+        }
+
+        public interface FakeIEnumerator : IEnumerator
+        {
+
+        }
+
+
+
+        public class FakerIE : FakeIEnumerator
+        {
+            int count = 0;
+            /// <summary>
+            /// Initializes a new instance of the <see cref="T:FakerIE"/> class.
+            /// </summary>
+            public FakerIE()
+            {
+                //list = new List<XXX>() { new XXX(), new XXX(), new XXX() };
+               // num = list.GetEnumerator();
+            }
+
+            //List<XXX> list = new List<XXX>() { new XXX(), new XXX(), new XXX() };
+            //IEnumerator num;
+            public object Current
+            {
+                get 
+                { 
+                    return "Fake" + count;
+                }
+            }
+
+            /*public unsafe void* VeryUnsafe
+            {
+                get
+                {
+                    //var rotu = "asdj";
+                    //Pointer d = Pointer.Box(;
+                    void* p = (void*)1234;
+                    return p;
+                }
+            }*/
+
+            public bool MoveNext()
+            {
+                count++;
+                return count < 4;
+            }
+
+            public void Reset()
+            {
+                count = 0;
+            }
+
+        }
+        
+        public class NonValOne : IEnumerable
+        {
+            List<XXX> list = new List<XXX>() { new XXX(), new XXX(), new XXX() };
+            FakerIE fe = new FakerIE();
+            
+            public IEnumerator GetEnumerator()
+            {
+                return fe;
+                //return list.GetEnumerator();
             }
         }
 
         public class ValTwo
         {
             public ValueType MyValue;
+            public IEnumerable MyIe;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="T:ValTwo"/> class.
@@ -232,23 +315,33 @@ namespace NStub.Core.Tests.Util.Dumper
             public ValTwo(int x)
             {
                 MyValue = new ValOne(x);
+                //MyIe = (IEnumerable)new[] { 666, 777, 888 };
+                MyIe = new NonValOne();
+                //MyIe =  new ValOne(x);
             }
         }
 
         [Test()]
         public void WriteValueTypes()
         {
-            ObjectDumper.Write(new ValTwo(12345), 2);
+            // Assert.IsTrue(new NonValOne().GetEnumerator() is ValueType);
+            ObjectDumper.Write(new ValTwo(12345), 5);
 
             var val1 = MyEnum.ValueTwo;
-            ObjectDumper.Write(val1, 2);
+            ObjectDumper.Write(val1, 3);
 
-            var valIe = new object[] { MyEnum.ValueTwo, MyEnum.ValueOne };
-            ObjectDumper.Write(valIe, 2);
+            IEnumerable valIe = new object[] { MyEnum.ValueTwo, MyEnum.ValueOne };
+            ObjectDumper.Write(valIe, 3);
 
-            ObjectDumper.Write(new ValEnum(), 2);
+            ObjectDumper.Write(new ValEnum(), 3);
 
-            ObjectDumper.Write(new ValOne(12345), 2);
+            ObjectDumper.Write(new ValOne(12345), 3);
+            var subObj = new[] {new NonValOne().GetEnumerator(),new NonValOne().GetEnumerator(),new NonValOne().GetEnumerator() };
+            //ObjectDumper.Write((IEnumerable)subObj, 3);
+            ObjectDumper.Write(new { Rama = new NonValOne().GetEnumerator() }, 3);
+            Gallio.Framework.TestLog.DebugTrace.Write(this.myConsoleOut.ToString());
+
+            //ObjectDumper.Write(new NonValOne(), 3);
 
 
             //Assert.Contains(myConsoleOut.ToString(), "Name=Write");
@@ -266,7 +359,7 @@ namespace NStub.Core.Tests.Util.Dumper
             ba.Set(3, true);
             ba.Set(5, true);
 
-            var element = new object[] { ba, new { My=234, TH=ba, EN=MyEnum.ValueTwo } }.AsEnumerable();
+            var element = new object[] { ba, new { My = 234, TH = ba, EN = MyEnum.ValueTwo } }.AsEnumerable();
             Assert.AreSame(element, element.Dump(5));
             //Assert.AreEqual("[BitArray]\r\nFalse\r\nFalse\r\nFalse\r\nTrue\r\nFalse\r\nTrue\r\nFalse\r\nFalse\r\n", myConsoleOut.ToString());
             Assert.Contains(myConsoleOut.ToString(), "False\r\n  False\r\n  False\r\n  True\r\n  False\r\n  True\r\n  False\r\n  False");
@@ -362,7 +455,7 @@ namespace NStub.Core.Tests.Util.Dumper
         }
 
         [Test()]
-        public void WriteWithIQueriable()
+        public void WriteWithIQueryable()
         {
             var elements = new object[] { "A", 22.4d, "C", 6, new DateTime(2012, 4, 23) }.AsQueryable();
             var expected = "[EnumerableQuery`1]\r\nA\r\n22,4\r\nC\r\n6\r\n23.04.2012\r\n";
@@ -420,12 +513,12 @@ namespace NStub.Core.Tests.Util.Dumper
         public class MyContext : ObjectContext
         {
             public MyContext()
-                :base("No Connection")
+                : base("No Connection")
             {
             }
         }
 
-        public class MyProduct 
+        public class MyProduct
         {
             public string Name { get; set; }
         }

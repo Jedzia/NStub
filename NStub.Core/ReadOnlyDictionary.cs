@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.Core
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -35,6 +35,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="dictionary">The dictionary with to wrap.</param>
         public ReadOnlyDictionary(IDictionary<TKey, TValue> dictionary)
         {
+            Guard.NotNull(() => dictionary, dictionary);
             this.dictionary = dictionary;
         }
 

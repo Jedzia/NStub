@@ -10,6 +10,8 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using NStub.Core;
+
     /// <summary>
     /// Provides read only access to <see cref="IBuilderData"/> organized as a categorized dictionary lookup with read only access.
     /// </summary>

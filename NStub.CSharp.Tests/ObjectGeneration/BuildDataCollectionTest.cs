@@ -6,6 +6,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
     using NStub.CSharp.ObjectGeneration.Builders;
+    using NStub.Core;
 
     [TestFixture()]
     public partial class BuildDataDictionaryTest

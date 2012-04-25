@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System.Collections.Generic;
+    using NStub.Core;
 
     /// <summary>
     /// Wraps build properties of the <see cref="BuildDataDictionary"/> as read only values.

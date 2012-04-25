@@ -147,7 +147,6 @@
     <Compile Include="ObjectGeneration\IMemberPreBuildResult.cs" />
     <Compile Include="ObjectGeneration\IMultiBuilder.cs" />
     <Compile Include="ObjectGeneration\IMultiBuildParameters.cs" />
-    <Compile Include="ObjectGeneration\IReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilderFactory.cs" />
     <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\MemberBuilder.cs" />
@@ -161,7 +160,6 @@
     <Compile Include="ObjectGeneration\Builders\PropertyGetBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertySetBuilder.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderFactory.cs" />
-    <Compile Include="ObjectGeneration\ReadOnlyDictionary.cs" />
     <Compile Include="ObjectGeneration\TestObjectBuilder.cs" />
     <Compile Include="ParameterDescriptionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

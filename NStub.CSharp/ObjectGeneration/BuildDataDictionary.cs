@@ -14,6 +14,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using NStub.Core;
 
     /// <summary>
     /// Lookup of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.

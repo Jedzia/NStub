@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.Collections.Generic;
+    using NStub.Core;
 
     /// <summary>
     /// Bundles a list of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.

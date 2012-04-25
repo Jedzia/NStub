@@ -74,6 +74,7 @@
     <Compile Include="NStubConstantsTest.cs" />
     <Compile Include="NStubCoreTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadOnlyDictionaryTest.cs" />
     <Compile Include="StandardBuildSystemTest.cs" />
     <Compile Include="Stubs\Guarded.cs" />
     <Compile Include="Stubs\InfoApe.cs" />

@@ -437,13 +437,14 @@ namespace NStub.Core.Util.Dumper
             {
                 this.Write(o.ToString());
             }
-            else if (o is IEnumerable)
+            /*else if (o is IEnumerable)
             {
                 this.Write("...");
-            }
+            }*/
             else
             {
                 this.Write("{ }");
+                throw new InvalidCastException("WriteValue NOT FOUND");
             }
         }
     }

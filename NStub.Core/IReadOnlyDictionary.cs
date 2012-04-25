@@ -8,7 +8,7 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace NStub.CSharp.ObjectGeneration
+namespace NStub.Core
 {
     using System.Collections.Generic;
     using System.Collections;
