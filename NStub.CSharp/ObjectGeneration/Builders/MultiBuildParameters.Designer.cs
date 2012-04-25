@@ -16,6 +16,9 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     using System.Collections.Generic;
     
     
+    /// <summary>
+    /// Set of user defined build parameters for reusable code builder components.
+    /// </summary>
     public partial class MultiBuildParameters : EmptyMultiBuildParametersBase<MultiBuildParameters> {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -31,10 +34,22 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         }
     }
     
+    /// <summary>
+    /// Parameter data for the RenamingBuilder text renaming component.
+    /// </summary>
     public partial class MultiBuildParametersOfRenamingBuilder : EmptyMultiBuildParametersBase<MultiBuildParametersOfRenamingBuilder> {
         
+        /// <summary>
+        /// The search text to match.
+        /// </summary>
         public string FindWhat { get; set; }
+        /// <summary>
+        /// The replacement text.
+        /// </summary>
         public string ReplaceWith { get; set; }
+        /// <summary>
+        /// If true, the text is searched case sensitive; otherwise a non case sensitive search is done.
+        /// </summary>
         public bool MatchCase { get; set; }
     }
 }

@@ -16,6 +16,9 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     using System.Collections.Generic;
     
     
+    /// <summary>
+    /// Set of static build parameters.
+    /// </summary>
     public partial class BuildParameters : EmptyBuildParametersBase<BuildParameters> {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -31,12 +34,24 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         }
     }
     
+    /// <summary>
+    /// Parameter data for the PropertyBuilder component.
+    /// </summary>
     public partial class BuildParametersOfPropertyBuilder : EmptyBuildParametersBase<BuildParametersOfPropertyBuilder> {
-
+        
+        /// <summary>
+        /// Default ending of test class methods, e.g. 'Test'.
+        /// </summary>
         [Category("Property")]
         public string MethodSuffix { get; set; }
+        /// <summary>
+        /// Just a hoax for testing.
+        /// </summary>
         [Category("Property")]
         public bool UseDings { get; set; }
+        /// <summary>
+        /// What is green and when you sit on it, the frog is dead???
+        /// </summary>
         [Category("Property")]
         public int Moep { get; set; }
     }

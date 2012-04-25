@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" 
-           xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" 
-           elementFormDefault="qualified" attributeFormDefault="qualified" id="MultiBuildParameters">
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by Venom (ICO) -->
+<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" elementFormDefault="qualified" attributeFormDefault="qualified" id="MultiBuildParameters">
     <xs:annotation>
         <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
     </xs:appinfo>
     </xs:annotation>
     <xs:element name="MultiBuildParameters">
+        <xs:annotation>
+            <xs:documentation>Set of user defined build parameters for reusable code builder components.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="OfRenamingBuilder">
+                    <xs:annotation>
+                        <xs:documentation>Parameter data for the RenamingBuilder text renaming component.</xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="FindWhat" type="xs:string" minOccurs="0"/>
-                            <xs:element name="ReplaceWith" type="xs:string" minOccurs="0"/>
-                            <xs:element name="MatchCase" type="xs:boolean"/>
+                            <xs:element name="FindWhat" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>The search text to match.</xs:documentation>
+                                    <xs:appinfo source="Category">Property</xs:appinfo>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="ReplaceWith" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>The replacement text.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="MatchCase" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>If true, the text is searched case sensitive; otherwise a non case sensitive search is done.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

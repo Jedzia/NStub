@@ -1,20 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" 
-           xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" 
-           elementFormDefault="qualified" attributeFormDefault="qualified" id="BuildParameters">
+<!-- edited with XMLSpy v2011 rel. 2 (http://www.altova.com) by Venom (ICO) -->
+<xs:schema xmlns:mstns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns="http://tempuri.org/PropertyBuilderParameters.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://tempuri.org/PropertyBuilderParameters.xsd" elementFormDefault="qualified" attributeFormDefault="qualified" id="BuildParameters">
     <xs:annotation>
         <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
     </xs:appinfo>
     </xs:annotation>
     <xs:element name="BuildParameters">
+        <xs:annotation>
+            <xs:documentation>Set of static build parameters.</xs:documentation>
+        </xs:annotation>
         <xs:complexType>
             <xs:choice minOccurs="0" maxOccurs="unbounded">
                 <xs:element name="OfPropertyBuilder">
+                    <xs:annotation>
+                        <xs:documentation>Parameter data for the PropertyBuilder component.</xs:documentation>
+                    </xs:annotation>
                     <xs:complexType>
                         <xs:sequence>
-                            <xs:element name="MethodSuffix" type="xs:string" minOccurs="0"/>
-                            <xs:element name="UseDings" type="xs:boolean"/>
-                            <xs:element name="Moep" type="xs:int"/>
+                            <xs:annotation>
+                                <xs:documentation>List of available IMemberBuilder data sets.</xs:documentation>
+                            </xs:annotation>
+                            <xs:element name="MethodSuffix" type="xs:string" minOccurs="0">
+                                <xs:annotation>
+                                    <xs:documentation>Default ending of test class methods, e.g. 'Test'.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="UseDings" type="xs:boolean">
+                                <xs:annotation>
+                                    <xs:documentation>Just a hoax for testing.</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
+                            <xs:element name="Moep" type="xs:int">
+                                <xs:annotation>
+                                    <xs:documentation>What is green and when you sit on it, the frog is dead???</xs:documentation>
+                                </xs:annotation>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
