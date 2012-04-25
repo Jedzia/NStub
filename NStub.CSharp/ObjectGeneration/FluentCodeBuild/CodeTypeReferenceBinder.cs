@@ -288,6 +288,27 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
         }
 
         /// <summary>
+        /// Add a specified expression as parameter to the method invocation.
+        /// </summary>
+        /// <param name="value">The code expression to add.</param>
+        /// <returns>
+        /// A fluent interface to build up reference types.
+        /// </returns>
+        /// <exception cref="CodeTypeReferenceException">Cannot add parameter to a method that is not defined.Use Invoke(...) to specify the method.</exception>
+        public CodeTypeReferenceBinder With(CodeExpression expression)
+        {
+            if (this.invoker == null)
+            {
+                const string Msg = "Cannot add parameter to a method that is not defined." +
+                                   "Use Invoke(...) to specify the method.";
+                throw new CodeTypeReferenceException(this, Msg);
+            }
+
+            this.invoker.Parameters.Add(expression);
+            return this;
+        }
+
+        /// <summary>
         /// Add a parameter with a reference to a local variable of the specified name to the method invocation.
         /// </summary>
         /// <param name="variableName">The name of the referenced local variable.</param>

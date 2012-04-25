@@ -83,23 +83,32 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                     }
 
                     var methodName = BuildNameFromCtorParameters(usedCtor);
+                    
+                    // Create a new instance of the used constructor.
                     CodeObjectCreateExpression createExpr;
                     var cm = this.CreateConstructorTest(context, methodName, "testObject", out createExpr);
-
                     objcreator.AssignExtra(context.TestClassDeclaration, cm, createExpr, item);
 
                     // create null parameter assertions.
                     cm.AddBlankLine();
                     for (int i = 0; i < createExpr.Parameters.Count; i++)
                     {
-                        var subcreator = BuildNullTest(context.TestObjectType.Name, "loc" + i, cm);
+                        var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", cm);
+                        
+                        // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
+                        // We only need the CreateExpression of it, so remove it from the statements of the Constructor test method.
+                        cm.Statements.RemoveAt(cm.Statements.Count - 1);
+
+                        // assign well known constructor arguments
                         objcreator.AssignOnly(context.TestClassDeclaration, cm, subcreator, item);
 
+                        var parameterType = assignMents.ToList()[i];
+                        // for each assert statement null a parameter of the constructor.
                         if (subcreator.Parameters.Count > i)
                         {
                             subcreator.Parameters[i] = new CodePrimitiveExpression(null);
                         }
-                        var ancreate = BuildTestVariable(context.TestObjectType.Name, "VAR", cm, subcreator);
+                        var ancreate = BuildLambdaThrowAssertion(typeof(ArgumentNullException), cm, subcreator);
                     }
                 }
             }
@@ -117,158 +126,43 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         protected CodeObjectCreateExpression BuildTestObject(
             string testObjectName, string testFieldName, CodeMemberMethod codeMemberMethod)
         {
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
-                //new CodePrimitiveExpression("expected")
-                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
-                , new CodeVariableReferenceExpression("actual"));*/
+            // create a constructor invocation. this.testobject = new <Object Under Test>( );
             var fieldRef1 =
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testFieldName);
-
             var testObjectMemberFieldCreate = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
+            var assignment = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
+            codeMemberMethod.Statements.Add(assignment);
 
-            // var TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
-            var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-
-            // this.assignments = this.AddParametersToConstructor();
-            codeMemberMethod.Statements.Add(as1);
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-            // AddAssignStatement(as1);
             return testObjectMemberFieldCreate;
         }
 
         /// <summary>
-        /// Builds the test object.
+        /// Builds a lambda throw assertion arround a specified <see cref="CodeObjectCreateExpression"/>.
         /// </summary>
-        /// <param name="testObjectName">Name of the test object.</param>
-        /// <param name="testFieldName">Name of the test field.</param>
+        /// <param name="expectedExceptionType">For <b>Assert.Throw</b>: Expected type of the exception.</param>
         /// <param name="codeMemberMethod">The code member method.</param>
-        /// <returns>A <see cref="CodeObjectCreateExpression"/> that is ready to form the test object.</returns>
-        protected CodeObjectCreateExpression BuildNullTest(
-            string testObjectName, string testVariablename, CodeMemberMethod codeMemberMethod)
+        /// <param name="creator">The constructor creating expression.</param>
+        /// <returns>
+        /// A a reference to the lambda expression statement creator.
+        /// </returns>
+        protected CodeExpression BuildLambdaThrowAssertion(Type expectedExceptionType, CodeMemberMethod codeMemberMethod, CodeObjectCreateExpression creator)
         {
-
-            var result = BuildTestObject(testObjectName, testVariablename + "ASSIGN", codeMemberMethod);
-            codeMemberMethod.Statements.RemoveAt(codeMemberMethod.Statements.Count - 1);
-            //BuildTestVariable(testObjectName, testVariablename + "VAR", codeMemberMethod, result);
-
-            //var testObjectMemberFieldCreate = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
-
-            /*var binder = codeMemberMethod.Var(testVariablename, true).StaticClass("Assert").Invoke("Throws")
-                .With(1234)
-                ;*/
-            //binder.Expression = testObjectMemberFieldCreate;
-            //var assignment = binder.Expression;
-            //binder.Commit();
-
-            //var fieldRef1 =
-            //    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testFieldName);
-
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-    new CodeTypeReferenceExpression("Assert"),
-    "AreEqual",
-                //new CodePrimitiveExpression("expected")
-    new CodeFieldReferenceExpression(fieldRef1, "bla")
-    , new CodeVariableReferenceExpression("actual"));*/
-
-
-            // var TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
-            //var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-
-            // this.assignments = this.AddParametersToConstructor();
-            //codeMemberMethod.Statements.Add(as1);
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-            // AddAssignStatement(as1);
-            //return testObjectMemberFieldCreate;
-            return result;
-        }
-
-        /// <summary>
-        /// Builds the test object.
-        /// </summary>
-        /// <param name="testObjectName">Name of the test object.</param>
-        /// <param name="testFieldName">Name of the test field.</param>
-        /// <param name="codeMemberMethod">The code member method.</param>
-        /// <returns>A <see cref="CodeObjectCreateExpression"/> that is ready to form the test object.</returns>
-        protected CodeObjectCreateExpression BuildTestVariable(
-            string testObjectName, string testVariablename, CodeMemberMethod codeMemberMethod, CodeObjectCreateExpression creator)
-        {
-
-            //var testObjectMemberFieldCreate = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
-            CodeObjectCreateExpression testObjectMemberFieldCreate = null;
-
-            //var snippet = "Assert.Throws<ArgumentNullException>(() => new CSharpCodeGenerator(null, codeNamespace, testBuilders, configuration));";
-            //var sn = new CodeSnippetStatement(snippet);
-            //Assert.Throws<ArgumentNullException>(() => new CSharpCodeGenerator(null, codeNamespace, testBuilders, configuration));
 
             // Todo: test for having "using System;" namespace import and then use Name or Fullname of the exception.
-            var xxx = codeMemberMethod.StaticClass("Assert").Invoke("Throws", typeof(ArgumentNullException).Name).With(123);
-            xxx.Expression = creator;
-            xxx.Commit();
-            //var cdcr = GetAnonymousXXX(new CodeAssignStatement(creator, new CodePrimitiveExpression("Fuck")));
-            var cdcr = GetLambdaExpression(creator);
+            
+            // Build 'Assert.Throws<ArgumentNullException>(123);'
+            var binder = codeMemberMethod.StaticClass("Assert").Invoke("Throws", expectedExceptionType.Name).With(creator);
+            binder.Commit();
 
-            //codeMemberMethod.Statements.Add(xxx.Invoker);
-            var abc = xxx.Invoker.Parameters;
-            abc.Clear();
-            //abc.Add(creator);
-            abc.Add(cdcr);
+            // wrap the Assert.Throws<T>( ... ) into a lambda = (() => Assert.Throws<T>( ... )).
+            var lambdaExpression = WrapIntoLambdaExpression(binder.Expression);
 
-            return testObjectMemberFieldCreate;
-
-            var locbinder = codeMemberMethod.Var(testVariablename, true);
-            //var locbinder = codeMemberMethod.Var(testVariablename, true);
-
-            //var refbinder = locbinder.StaticClass("Assert")
-            //  .Invoke("Throws")
-            //.With(1234)
-            //;
-
-            var refbinder = locbinder.StaticClass("Assert")
-                .AssignLocal("Depp", false)
-                //.Invoke("Throws")
-                //.With(1234)
-                ;
-            //var abc = refbinder.Invoker.Parameters;
-            //binder.Expression = testObjectMemberFieldCreate;
-            //var assignment = binder.Expression;
-            refbinder.Assign("ANC");
-
-            //var cdcr = new CodeDelegateInvokeExpression(new CodePrimitiveExpression("=>"), creator);
-            //var cdcr = GetAnonymousDelegateExpression(creator);
-
-            //abc.Clear();
-            //abc.Add(creator);
-            //abc.Add(cdcr);
-            //abc.TargetObject.
-            //var fieldRef1 =
-            //    new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), testFieldName);
-
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-    new CodeTypeReferenceExpression("Assert"),
-    "AreEqual",
-                //new CodePrimitiveExpression("expected")
-    new CodeFieldReferenceExpression(fieldRef1, "bla")
-    , new CodeVariableReferenceExpression("actual"));*/
-
-
-            // var TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
-            //var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-
-            // this.assignments = this.AddParametersToConstructor();
-            //codeMemberMethod.Statements.Add(as1);
-
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-            // AddAssignStatement(as1);
-            return testObjectMemberFieldCreate;
+            binder.Invoker.Parameters.Clear();
+            binder.Invoker.Parameters.Add(lambdaExpression);
+            return lambdaExpression;
         }
-        private CodeExpression GetAnonymousDelegateExpression(CodeStatement statementToWrap)
+
+        private CodeExpression WrapIntoAnonymousDelegateExpression(CodeStatement statementToWrap)
         {
             CodeExpression delegateExpression;
             CSharpCodeProvider csc = new CSharpCodeProvider();
@@ -279,7 +173,12 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             return delegateExpression;
         }
 
-        private CodeExpression GetLambdaExpression(CodeStatement statementToWrap)
+        /// <summary>
+        /// Wraps the specified statement into a lambda expression. 'statement' -> '() => statement'. 
+        /// </summary>
+        /// <param name="statementToWrap">The statement to wrap.</param>
+        /// <returns>The code expression with the wrapped <paramref name="statementToWrap"/> statement.</returns>
+        private CodeExpression WrapIntoLambdaExpression(CodeStatement statementToWrap)
         {
             CodeExpression delegateExpression;
             CSharpCodeProvider csc = new CSharpCodeProvider();
@@ -289,7 +188,12 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             return delegateExpression;
         }
 
-        private CodeExpression GetLambdaExpression(CodeExpression expressionToWrap)
+        /// <summary>
+        /// Wraps the specified code expression into a lambda expression. 'expression' -> '() => expression'. 
+        /// </summary>
+        /// <param name="statementToWrap">The statement to wrap.</param>
+        /// <returns>The code expression with the wrapped <paramref name="expressionToWrap"/> code expression.</returns>
+        private CodeExpression WrapIntoLambdaExpression(CodeExpression expressionToWrap)
         {
             CodeExpression delegateExpression;
             CSharpCodeProvider csc = new CSharpCodeProvider();
@@ -298,6 +202,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             delegateExpression = new CodeSnippetExpression("() => " + sw.ToString() + "");
             return delegateExpression;
         }
+
         /// <summary>
         /// Determines the name of the test method.
         /// </summary>
