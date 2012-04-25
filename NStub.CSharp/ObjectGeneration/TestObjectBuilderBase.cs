@@ -18,7 +18,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// <summary>
     /// Base class for a <see cref="ITestObjectBuilder"/> test-class member field generator.
     /// </summary>
-    public abstract class TestObjectBuilderBase : ITestObjectBuilder
+    public abstract class TestObjectComposerBase : ITestObjectComposer
     {
         // Todo: this assignments field should be refactered into a protected property and null checks for each usage should be added.
         // hint: this.assignments = this.AddParametersToConstructor(); in BuildTestObject() creates it.
@@ -38,7 +38,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectMemberField">The member field creation expression for the object under test.</param>
         /// <param name="testObjectName">The name of the test object.</param>
         /// <param name="testObjectType">Type of the test object.</param>
-        protected TestObjectBuilderBase(
+        protected TestObjectComposerBase(
             BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,

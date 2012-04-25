@@ -95,7 +95,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
         {
             var assignments = new[] { new AssignmentInfoCollection() };
 
-            var tobuilder = this.mocks.StrictMock<ITestObjectBuilder>();
+            var tobuilder = this.mocks.StrictMock<ITestObjectComposer>();
             Expect.Call(tobuilder.Assignments).Return(assignments);
 
             var stcontext = this.mocks.StrictMock<ISetupAndTearDownCreationContext>();
@@ -120,7 +120,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             assignments[0].AddAssignment(ctorAssignment);
             //assignments[0].UsedConstructor = 
 
-            var tobuilder = this.mocks.StrictMock<ITestObjectBuilder>();
+            var tobuilder = this.mocks.StrictMock<ITestObjectComposer>();
             Expect.Call(tobuilder.Assignments).Return(assignments);
 
             var stcontext = this.mocks.StrictMock<ISetupAndTearDownCreationContext>();
@@ -139,7 +139,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
         public void BuildWithAssignmentUsedConstructorIsNullShouldThrow()
         {
             var assignments = new[] { new AssignmentInfoCollection(), new AssignmentInfoCollection() };
-            var tobuilder = this.mocks.StrictMock<ITestObjectBuilder>();
+            var tobuilder = this.mocks.StrictMock<ITestObjectComposer>();
             Expect.Call(tobuilder.Assignments).Return(assignments);
 
             var stcontext = this.mocks.StrictMock<ISetupAndTearDownCreationContext>();
@@ -166,7 +166,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             assignments[0].UsedConstructor = helpctors[0];
             assignments[1].UsedConstructor = helpctors[0];
 
-            var tobuilder = this.mocks.StrictMock<ITestObjectBuilder>();
+            var tobuilder = this.mocks.StrictMock<ITestObjectComposer>();
             Expect.Call(tobuilder.Assignments).Return(assignments);
 
             var stcontext = this.mocks.StrictMock<ISetupAndTearDownCreationContext>();

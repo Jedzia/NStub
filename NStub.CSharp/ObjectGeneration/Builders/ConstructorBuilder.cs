@@ -107,7 +107,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <param name="codeMemberMethod">The code member method definition of the current test method.</param>
         private void CreateNullParameterAssertions(
             IMemberBuildContext context, 
-            ITestObjectBuilder objcreator, 
+            ITestObjectComposer objcreator, 
             AssignmentInfoCollection assignmentInfos, 
             CodeObjectCreateExpression createExpr,
             CodeMemberMethod codeMemberMethod)
@@ -134,7 +134,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
         }
 
-        private void CreateAssertThrowWithExceptionType(IMemberBuildContext context, ITestObjectBuilder objcreator, AssignmentInfoCollection assignmentInfos, CodeMemberMethod codeMemberMethod, int i, CodeExpression paraAssert, Type expectedException)
+        private void CreateAssertThrowWithExceptionType(IMemberBuildContext context, ITestObjectComposer objcreator, AssignmentInfoCollection assignmentInfos, CodeMemberMethod codeMemberMethod, int i, CodeExpression paraAssert, Type expectedException)
         {
             var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", codeMemberMethod);
 

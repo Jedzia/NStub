@@ -123,7 +123,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                     throw new NotImplementedException("The context of the builder does not supply a valid ISetupAndTearDownCreationContext.");
                 }
 
-                var creator = co.TestObjectCreator as TestObjectBuilder;
+                var creator = co.TestObjectCreator as TestObjectComposer;
                 ConstructorAssignment ctorAssignment;
                 if (creator == null)
                 {

@@ -16,7 +16,7 @@ namespace NStub.CSharp.Tests.BuildContext
         CodeTypeDeclaration testClassDeclaration;
         CodeMemberMethod setUpMethod;
         CodeMemberMethod tearDownMethod;
-        ITestObjectBuilder creator;
+        ITestObjectComposer creator;
 
         public SetupAndTearDownContextBaseTest()
         {
@@ -32,7 +32,7 @@ namespace NStub.CSharp.Tests.BuildContext
             testClassDeclaration = new CodeTypeDeclaration();
             setUpMethod = new CodeMemberMethod();
             tearDownMethod = new CodeMemberMethod();
-            creator = this.mocks.StrictMock<ITestObjectBuilder>();
+            creator = this.mocks.StrictMock<ITestObjectComposer>();
 
             this.testObject = this.mocks.StrictMock<SetupAndTearDownContextBase>(buildData, codeNamespace,
                 testClassDeclaration, setUpMethod, tearDownMethod, creator);

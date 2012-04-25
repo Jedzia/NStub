@@ -155,6 +155,23 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test()]
+        public void InvokeWithParams()
+        {
+            var result = testObject.Invoke("MethodName", "System.DateTime", "System.String");
+            Assert.AreSame(testObject, result);
+            Assert.IsEmpty(method.Statements);
+        }
+
+        [Test()]
+        public void InvokeGeneric()
+        {
+            var result = testObject.Invoke<DateTime>("MethodName");
+            Assert.AreSame(testObject, result);
+            Assert.IsEmpty(method.Statements);
+            // Todo: this and the above ... check the resulting statements.
+        }
+
+        [Test()]
         public void WithWithoutPreceedingInvokeShouldThrow()
         {
             Assert.Throws<CodeTypeReferenceException>(() => testObject.With("Thisone"));
@@ -174,6 +191,22 @@ namespace NStub.CSharp.Tests.ObjectGeneration
                 .Select(e=>e.Value)
                 .Where(e=>e.Equals(expected)));
         }
+
+        [Test()]
+        public void WithExpressionTest()
+        {
+            var cte = new CodePrimitiveExpression(99);
+            var expected = 99;
+            var result = testObject.Invoke("MethodName").With(cte);
+            Assert.AreSame(testObject, result);
+            Assert.IsEmpty(method.Statements);
+            Assert.AreEqual(1, testObject.Invoker.Parameters.Count);
+            Assert.IsNotEmpty(testObject.Invoker
+                .Parameters.Cast<CodePrimitiveExpression>()
+                .Select(e => e.Value)
+                .Where(e => e.Equals(expected)));
+        }
+
 
         [Test()]
         public void WithReferenceWithoutInvokeShouldThrow()

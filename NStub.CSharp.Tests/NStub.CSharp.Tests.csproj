@@ -95,6 +95,9 @@
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceExceptionTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMemberFieldTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethodTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\StaticClassGenericTest.cs" />
+    <Compile Include="ObjectGeneration\FluentCodeBuild\StaticClassTest.cs" />
+    <Compile Include="ObjectGeneration\MemberBuildResultTest.cs" />
     <Compile Include="ParameterDescriptionAttributeTest.cs" />
     <Compile Include="Stubs\ConstructorBuilderHelpType.cs" />
     <Compile Include="Stubs\InfoApe.cs" />

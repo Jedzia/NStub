@@ -11,7 +11,7 @@ namespace NStub.CSharp.Tests.BuildContext
         
         private System.CodeDom.CodeNamespace codeNamespace;
         
-        private NStub.CSharp.ObjectGeneration.ITestObjectBuilder creator;
+        private NStub.CSharp.ObjectGeneration.ITestObjectComposer creator;
         
         private MockRepository mocks;
         
@@ -36,7 +36,7 @@ namespace NStub.CSharp.Tests.BuildContext
             this.setUpMethod = new System.CodeDom.CodeMemberMethod();
             this.tearDownMethod = new System.CodeDom.CodeMemberMethod();
             this.mocks = new MockRepository();
-            this.creator = this.mocks.StrictMock<NStub.CSharp.ObjectGeneration.ITestObjectBuilder>();
+            this.creator = this.mocks.StrictMock<NStub.CSharp.ObjectGeneration.ITestObjectComposer>();
             this.testObject = new SetupAndTearDownContext(this.buildData, this.codeNamespace, this.testClassDeclaration, this.setUpMethod, this.tearDownMethod, this.creator);
         }
         

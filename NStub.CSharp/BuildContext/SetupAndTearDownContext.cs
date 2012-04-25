@@ -35,7 +35,7 @@ namespace NStub.CSharp.BuildContext
             CodeTypeDeclaration testClassDeclaration, 
             CodeMemberMethod setUpMethod, 
             CodeMemberMethod tearDownMethod, 
-            ITestObjectBuilder creator)
+            ITestObjectComposer creator)
             : base(
                 buildData, 
                 codeNamespace, 

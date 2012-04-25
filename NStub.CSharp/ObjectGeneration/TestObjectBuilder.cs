@@ -21,7 +21,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// Used to create new test member fields with the matching initialization for them.
     /// </summary>
     [Serializable]
-    internal class TestObjectBuilder : TestObjectBuilderBase, IEquatable<TestObjectBuilder>
+    internal class TestObjectComposer : TestObjectComposerBase, IEquatable<TestObjectComposer>
     {
         /*/// <summary>
         /// Initializes a new instance of the <see cref="TestObjectCreator"/> class.
@@ -37,7 +37,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="testObjectMemberField">The TestObjectMemberField</param>
         /// <param name="testObjectName">The TestObjectName</param>
         /// <param name="testObjectType">Type of the test object.</param>
-        internal TestObjectBuilder(
+        internal TestObjectComposer(
             BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
@@ -305,7 +305,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <exception cref="T:System.NullReferenceException">The <paramref name="obj"/> parameter is <c>null</c>.</exception>
         public override bool Equals(object obj)
         {
-            var other = obj as TestObjectBuilder;
+            var other = obj as TestObjectComposer;
             return other != null && this.Equals(other);
         }
 
@@ -316,7 +316,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <returns>
         /// <c>true</c> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <c>false</c>.
         /// </returns>
-        public bool Equals(TestObjectBuilder other)
+        public bool Equals(TestObjectComposer other)
         {
             if (ReferenceEquals(null, other))
             {

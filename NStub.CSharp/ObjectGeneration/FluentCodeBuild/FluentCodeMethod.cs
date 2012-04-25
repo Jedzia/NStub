@@ -169,7 +169,7 @@ using System.Linq.Expressions;
     /// <summary>
     /// Provides Fluent code construction for static classes.
     /// </summary>
-    public class StaticClass
+    public static class StaticClass
     {
         /// <summary>
         /// Create a reference to a static class Like '<c>System.String</c>' or '<c>DateTime</c>'.
@@ -207,7 +207,7 @@ using System.Linq.Expressions;
     /// Provides Fluent code construction for static classes.
     /// </summary>
     /// <typeparam name="T">Type of the static class to access.</typeparam>
-    public class StaticClass<T>
+    public static class StaticClass<T>
     {
         /// <summary>
         /// Creates a reference to the value of the specified property.

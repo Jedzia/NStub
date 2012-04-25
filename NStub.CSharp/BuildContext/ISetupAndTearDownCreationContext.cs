@@ -31,7 +31,7 @@ namespace NStub.CSharp.BuildContext
         /// Contains the test object member field initialization expression ( this.testObject = new Foo( ... ) )
         /// of the test SetUp method.
         /// </remarks>
-        ITestObjectBuilder TestObjectCreator { get; }
+        ITestObjectComposer TestObjectCreator { get; }
 
         #endregion
     }

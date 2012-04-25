@@ -404,7 +404,7 @@ namespace NStub.CSharp
                 }*/
                 RemoveDuplicatedMembers(testClassDeclaration);
                 SortMembers(testClassDeclaration);
-                this.WriteClassFile(testClassDeclaration.Name, codeNamespace);
+                this.WriteClassFile(cts.FixForWriteFile(testClassDeclaration.Name), codeNamespace);
             }
         }
 
@@ -420,14 +420,14 @@ namespace NStub.CSharp
         /// A test object creator for the object under test.
         /// Is <c>null</c>, when none is created.
         /// </returns>
-        protected virtual ITestObjectBuilder ComposeTestSetupMethod(
+        protected virtual ITestObjectComposer ComposeTestSetupMethod(
             BuildDataDictionary buildData,
             CodeMemberMethod setUpMethod,
             CodeMemberField testObjectMemberField,
             string testObjectName,
             Type testObjectType)
         {
-            ITestObjectBuilder objectBuilder = new TestObjectBuilder(
+            ITestObjectComposer objectBuilder = new TestObjectComposer(
                 buildData, setUpMethod, testObjectMemberField, testObjectName, testObjectType);
 
             // var testObjectConstructor = cr.BuildTestObject();

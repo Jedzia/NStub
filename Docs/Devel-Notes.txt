@@ -1,10 +1,7 @@
-Themes and Skins
+Nomenclature
 ==================
 
-There is currently no documented way of defining a new theme. All
-you can do is add features to the built-in themes. 
-So, if the terminology "Theme" is used in the program or documentation,
-in fact, a skin is meaned.
+OuT		: Object under Test.
 
 
 WPG DataTemplate's

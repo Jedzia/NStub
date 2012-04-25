@@ -2,3 +2,5 @@
 
 build/  Make NDoc3 choosable.
 ----------------------------------------------------------------------------------------------------------------
+
+Option for disabling these nasty TestObjectBuilder___c__DisplayClass0Test.cs, etc. generation.

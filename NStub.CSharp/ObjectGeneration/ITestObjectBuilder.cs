@@ -17,7 +17,7 @@ namespace NStub.CSharp.ObjectGeneration
     /// <summary>
     /// Has the capability of creating new test objects.
     /// </summary>
-    public interface ITestObjectBuilder
+    public interface ITestObjectComposer
     {
         #region Properties
 

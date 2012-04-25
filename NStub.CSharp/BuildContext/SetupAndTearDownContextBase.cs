@@ -36,7 +36,7 @@ namespace NStub.CSharp.BuildContext
             CodeTypeDeclaration testClassDeclaration,
             CodeMemberMethod setUpMethod, 
             CodeMemberMethod tearDownMethod, 
-            ITestObjectBuilder creator)
+            ITestObjectComposer creator)
         {
             Guard.NotNull(() => buildData, buildData);
             Guard.NotNull(() => codeNamespace, codeNamespace);
@@ -86,7 +86,7 @@ namespace NStub.CSharp.BuildContext
         /// Gets the test object member field initialization expression ( this.testObject = new Foo( ... ) )
         /// of the test SetUp method.
         /// </summary>
-        public ITestObjectBuilder TestObjectCreator { get; private set; }
+        public ITestObjectComposer TestObjectCreator { get; private set; }
 
         #endregion
     }

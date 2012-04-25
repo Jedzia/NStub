@@ -55,7 +55,7 @@ namespace NStub.CSharp
         /// <returns>A <see cref="CodeNamespace"/> initialized with the specified namespace and namespace imports.</returns>
         /// <exception cref="InvalidOperationException"><see cref="CodeTypeSetup.SetUpCodeNamespace"/>(...) was called the second time.</exception>
         public CodeNamespace SetUpCodeNamespace(
-            string rootNamespace, 
+            string rootNamespace,
             IEnumerable<string> namespaceImports)
         {
             if (this.setUpCodeNamespaceCalled)
@@ -81,11 +81,14 @@ namespace NStub.CSharp
             this.setUpCodeNamespaceCalled = true;
             return codeNamespace;
         }
+        private string genericPart;
+
+        private bool currentIsGeneric;
 
         /// <summary>
-        /// Gets the name of the test for the object under test associated with this instance.
+        /// Adjusts the test class declaration name and provides the name for the OuT (object under test).
         /// </summary>
-        /// <returns>The name of the test class.</returns>
+        /// <returns>The name for the OuT (object under test)</returns>
         /// <exception cref="InvalidOperationException"><see cref="CodeTypeSetup.SetUpTestname"/>(...) was called the second time.</exception>
         public string SetUpTestname()
         {
@@ -93,19 +96,51 @@ namespace NStub.CSharp
             {
                 throw new InvalidOperationException("CodeTypeSetup.SetUpTestname() was called the second time.");
             }
+            genericPart = string.Empty;
+            currentIsGeneric = false;
 
-            // Clean the type name
-            this.testClassDeclaration.Name =
-                Utility.ScrubPathOfIllegalCharacters(this.testClassDeclaration.Name);
+            // Adjust OuT with generic types parameters. 
+            var testObjectType = testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] as Type;
+            var baseObjectFullname = this.testClassDeclaration.Name;
+            if (testObjectType.IsGenericType)
+            {
+                var genIndexLast = this.testClassDeclaration.Name.LastIndexOf('`');
+                baseObjectFullname = this.testClassDeclaration.Name.Substring(0, genIndexLast);
+                //var newName = newNameFirst + "Generic";
+                var newName = baseObjectFullname + "Generic";// +"<string>";
+                genericPart = "<string>";
+                currentIsGeneric = true;
+                this.testClassDeclaration.Name = newName;
+            }
+
+            // expand the test class namespace by ".Test"
             this.testClassDeclaration.Name =
                 this.namespaceDetector.InsertAfterShortestNamespace(this.testClassDeclaration, ".Tests");
 
-            var testObjectName = Utility.GetUnqualifiedTypeName(this.testClassDeclaration.Name);
+            // Add "Test" to the test classes name.
+            this.testClassDeclaration.Name = Utility.GetUnqualifiedTypeName(this.testClassDeclaration.Name) + "Test";
 
-            // Add "Test" to the name.
-            this.testClassDeclaration.Name = testObjectName + "Test";
+
+            var objectUnderTestName = Utility.GetUnqualifiedTypeName(baseObjectFullname);
+            if (testObjectType.IsGenericType)
+            {
+                objectUnderTestName = objectUnderTestName + genericPart;
+            }
+               
             this.setUpTestnameCalled = true;
-            return testObjectName;
+            return objectUnderTestName;
+        }
+
+        public string FixForWriteFile(string name)
+        {
+            var testFilename = Utility.ScrubPathOfIllegalCharacters(name);
+            if (currentIsGeneric)
+            {
+                // testFilename += "Generic";
+            }
+            // var testFilename = this.testClassDeclaration.Name;
+            // return testFilename = testFilename.Replace("<string>", "Generic");
+            return testFilename;
         }
     }
 }
