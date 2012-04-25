@@ -49,7 +49,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         public void PropertyIsCompleteNormalBehavior()
         {
             // Test read access of 'IsComplete' Property.
-            var expected = false;
+            var expected = true;
             var actual = testObject.IsComplete;
             Assert.AreEqual(expected, actual);
         }

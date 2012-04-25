@@ -74,9 +74,9 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var assignMents = objcreator.Assignments;
             if (assignMents != null && assignMents.Count() > 1)
             {
-                foreach (var item in assignMents)
+                foreach (var assignmentInfos in assignMents)
                 {
-                    var usedCtor = item.UsedConstructor;
+                    var usedCtor = assignmentInfos.UsedConstructor;
                     if (usedCtor == null)
                     {
                         throw new InvalidOperationException("ConstructorBuilder was called with an AssignmentInfoCollection.UsedConstructor that was null.");
@@ -86,34 +86,62 @@ namespace NStub.CSharp.ObjectGeneration.Builders
                     
                     // Create a new instance of the used constructor.
                     CodeObjectCreateExpression createExpr;
-                    var cm = this.CreateConstructorTest(context, methodName, "testObject", out createExpr);
-                    objcreator.AssignExtra(context.TestClassDeclaration, cm, createExpr, item);
+                    var codeMemberMethod = this.CreateConstructorTest(context, methodName, "testObject", out createExpr);
+                    objcreator.AssignExtra(context.TestClassDeclaration, codeMemberMethod, createExpr, assignmentInfos);
 
-                    // create null parameter assertions.
-                    cm.AddBlankLine();
-                    for (int i = 0; i < createExpr.Parameters.Count; i++)
-                    {
-                        var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", cm);
-                        
-                        // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
-                        // We only need the CreateExpression of it, so remove it from the statements of the Constructor test method.
-                        cm.Statements.RemoveAt(cm.Statements.Count - 1);
-
-                        // assign well known constructor arguments
-                        objcreator.AssignOnly(context.TestClassDeclaration, cm, subcreator, item);
-
-                        var parameterType = assignMents.ToList()[i];
-                        // for each assert statement null a parameter of the constructor.
-                        if (subcreator.Parameters.Count > i)
-                        {
-                            subcreator.Parameters[i] = new CodePrimitiveExpression(null);
-                        }
-                        var ancreate = BuildLambdaThrowAssertion(typeof(ArgumentNullException), cm, subcreator);
-                    }
+                    // create the null parameter checks for the current constructor.
+                    CreateNullParameterAssertions(context, objcreator, assignmentInfos, createExpr, codeMemberMethod);
                 }
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Builds a lambda throw assertion arround a CodeObjectCreateExpression.
+        /// </summary>
+        /// <param name="context">The context.</param>
+        /// <param name="objcreator">The constructor of the objcreator.</param>
+        /// <param name="assignmentInfos">The assignment information about common known parameters(OuT specific).</param>
+        /// <param name="createExpr">The constructor create expression of the object under tst.</param>
+        /// <param name="codeMemberMethod">The code member method definition of the current test method.</param>
+        private void CreateNullParameterAssertions(
+            IMemberBuildContext context, 
+            ITestObjectBuilder objcreator, 
+            AssignmentInfoCollection assignmentInfos, 
+            CodeObjectCreateExpression createExpr,
+            CodeMemberMethod codeMemberMethod)
+        {
+            codeMemberMethod.AddBlankLine();
+
+            for (int i = 0; i < createExpr.Parameters.Count; i++)
+            {
+                var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", codeMemberMethod);
+
+                // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
+                // We only need the CreateExpression of it, so remove it from the statements of the Constructor test method.
+                codeMemberMethod.Statements.RemoveAt(codeMemberMethod.Statements.Count - 1);
+
+                // assign well known constructor arguments
+                objcreator.AssignOnly(context.TestClassDeclaration, codeMemberMethod, subcreator, assignmentInfos);
+
+                /*var cref = (CodeFieldReferenceExpression)subcreator.Parameters[i];
+                var paraName = cref.FieldName;
+                var inf = assignmentInfos[paraName];
+                var paraType = inf.MemberField.Type.BaseType;
+                // for each assert statement null a parameter of the constructor.
+                var expectedException = typeof(ArgumentNullException);
+                if (paraType == typeof(string).FullName)
+                {
+                    expectedException = typeof(ArgumentException);
+                }*/
+
+                if (subcreator.Parameters.Count > i)
+                {
+                    subcreator.Parameters[i] = new CodePrimitiveExpression(null);
+                }
+                var ancreate = BuildLambdaThrowAssertion(typeof(ArgumentNullException), codeMemberMethod, subcreator);
+            }
         }
 
         /// <summary>

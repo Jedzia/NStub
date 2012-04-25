@@ -42,7 +42,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         public void PropertyCountNormalBehavior()
         {
             // Test read access of 'Count' Property.
-            var expected = 0;
+            var expected = 1;
             var actual = testObject.Count;
             Assert.AreEqual(expected, actual);
             Assert.Inconclusive("Verify the correctness of this test method.");

@@ -53,7 +53,8 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets a value indicating whether the information of this instance is complete.
+        /// Gets a value indicating whether the information of this instance is complete. 
+        /// For this generic type, this means, that a data object is present.
         /// </summary>
         /// <value>
         /// <c>true</c> if this instance is complete; otherwise, <c>false</c>.
@@ -62,7 +63,7 @@ namespace NStub.CSharp.ObjectGeneration
         {
             get
             {
-                return true;
+                return data != null;
             }
         }
 
@@ -80,7 +81,7 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Determines whether this instance holds data for the specified builder type.
+        /// Determines whether this instance holds data for the specified builder type. Is always true. (see. Todo below)
         /// </summary>
         /// <param name="builder">The requesting builder.</param>
         /// <returns>
