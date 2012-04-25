@@ -5,6 +5,7 @@ using System.Text;
 
 namespace NStub.CSharp.Tests.Stubs
 {
+    [ParameterDescription("Bla")]
     public class InfoApe
     {
         public void PublicVoidMethodVoid()

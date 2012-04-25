@@ -16,9 +16,11 @@ namespace NStub.CSharp.Tests
             get { return System.IO.Path.DirectorySeparatorChar; }
         }
 
+        public bool FakeDirectoryExists = true;
+
         public bool DirectoryExists(string directory)
         {
-            return true;
+            return FakeDirectoryExists;
         }
 
         public System.IO.TextWriter GetTextWriter(string path, bool append)
@@ -120,6 +122,21 @@ namespace NStub.CSharp.Tests
 		#endregion SetUp (Public)
 
 		#region Tests (Public)
+
+        [Test]
+        public void Construct()
+        {
+            var buildSystem = new FakeBuildSystem();
+
+            Assert.Throws<ArgumentNullException>(() => new CSharpProjectGenerator(null, _projectName, _outputDirectory));
+            Assert.Throws<ArgumentNullException>(() => new CSharpProjectGenerator(buildSystem, null, _outputDirectory));
+            Assert.Throws<ArgumentException>(() => new CSharpProjectGenerator(buildSystem, string.Empty, _outputDirectory));
+            Assert.Throws<ArgumentNullException>(() => new CSharpProjectGenerator(buildSystem, _projectName, null));
+            Assert.Throws<ArgumentException>(() => new CSharpProjectGenerator(buildSystem, _projectName, string.Empty));
+
+            buildSystem = new FakeBuildSystem() { FakeDirectoryExists = false };
+            Assert.Throws<ApplicationException>(() => new CSharpProjectGenerator(buildSystem, _projectName, _outputDirectory));
+        }
 
 		/// <summary>
 		/// Ensures that the ClassFiles property is set correctly on our

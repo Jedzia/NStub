@@ -49,7 +49,7 @@ namespace NStub.CSharp.Test
         }
 
         [Test()]
-        public void CombineWithShortestNamespaceTest()
+        public void InsertAfterShortestNamespaceTest()
         {
             //typeDeclarations.Add(new CodeTypeDeclaration("Jedzia.Loves.Testing.TheClassToTest"));
             var type = new CodeTypeDeclaration("Jedzia.Loves.Testing.TheClassToTest");
@@ -61,35 +61,28 @@ namespace NStub.CSharp.Test
         }
 
         [Test()]
-        public void EqualsTest()
+        public void GetDifferingTypeFullnameTest()
         {
-            // TODO: Implement unit test for Equals
+            var type = new CodeTypeDeclaration("Jedzia.Loves.Testing.SubNamespace.TheClassToTest");
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var expected = ".Tests.SubNamespace";
+            var actual = testObject.GetDifferingTypeFullname(type, ".Tests");
+            Assert.AreEqual(expected, actual);
         }
 
         [Test()]
-        public void GetHashCodeTest()
+        public void PrepareNamespaceImportsTest()
         {
-            // TODO: Implement unit test for GetHashCode
+            var imports = new[] { "System","System.Linq", "MbUnit.Framework" };
+            var expected = ".Tests.SubNamespace";
+            var actual = testObject.PrepareNamespaceImports(imports);
+            Assert.AreElementsEqual(imports, actual.Select(e => e.Namespace));
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-
-        [Test()]
-        public void GetTypeTest()
-        {
-            // TODO: Implement unit test for GetType
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-
-        [Test()]
-        public void ToStringTest()
-        {
-            // TODO: Implement unit test for ToString
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var expectedPrepared = new[] { "System", "System.Linq", "global::MbUnit.Framework" };
+            typeDeclarations.Add(new CodeTypeDeclaration("Jedzia.Loves.Testing.MbUnit.SubClass"));
+            this.testObject = new NamespaceDetector(this.typeDeclarations);
+            actual = testObject.PrepareNamespaceImports(imports);
+            Assert.AreElementsEqual(expectedPrepared, actual.Select(e => e.Namespace));
         }
     }
 }

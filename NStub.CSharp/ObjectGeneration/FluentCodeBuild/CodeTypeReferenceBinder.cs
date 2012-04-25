@@ -26,7 +26,7 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
         #region Fields
 
         private readonly CodeMemberMethod method;
-        private readonly CodeExpression reference;
+        private CodeExpression reference;
         private CodeMethodInvokeExpression invoker;
         private CodeLocalVariableBinder localVar;
 
@@ -59,6 +59,11 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
             get
             {
                 return this.reference;
+            }
+
+            set
+            {
+                this.reference = value;
             }
         }
 
@@ -150,16 +155,40 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
             if (createVariable)
             {
                 var localDecl = new CodeVariableDeclarationStatement("var", variableName, this.invoker);
+                this.Assignment = localDecl;
                 this.method.Statements.Add(localDecl);
             }
             else
             {
                 var localRef = new CodeVariableReferenceExpression(variableName);
                 var as1 = new CodeAssignStatement(localRef, this.invoker);
+                this.Assignment = as1;
                 this.method.Statements.Add(as1);
             }
 
             return this.method;
+        }
+
+        /// <summary>
+        /// The summary.
+        /// </summary>
+        private CodeStatement assignment;
+
+        /// <summary>
+        /// Gets or sets the summary.
+        /// </summary>
+        /// <value>The summary.</value>
+        public CodeStatement Assignment
+        {
+            get
+            {
+                return this.assignment;
+            }
+
+            set
+            {
+                this.assignment = value;
+            }
         }
 
         /// <summary>
@@ -195,6 +224,46 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
                                };
             return this;
         }
+
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodName">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public CodeTypeReferenceBinder Invoke<T>(string methodName)
+        {
+            this.invoker = new CodeMethodInvokeExpression
+            {
+                Method = new CodeMethodReferenceExpression(this.reference, methodName)
+            };
+            var generic = typeof(T);
+            this.invoker.Method.TypeArguments.Add(generic);
+            return this;
+        }
+
+        /// <summary>
+        /// Specify the name of the method to invoke.
+        /// </summary>
+        /// <param name="methodName">The name of the method.</param>
+        /// <returns>A fluent interface to build up reference types.</returns>
+        public CodeTypeReferenceBinder Invoke(string methodName, params string[] typearguments)
+        {
+            this.invoker = new CodeMethodInvokeExpression
+            {
+                Method = new CodeMethodReferenceExpression(this.reference, methodName)
+            };
+            
+            if (typearguments != null)
+            {
+                foreach (var type in typearguments)
+                {
+                    this.invoker.Method.TypeArguments.Add(type);
+                }
+            }
+            
+            return this;
+        }
+
 
         /// <summary>
         /// Add a primitive parameter to the method invocation.

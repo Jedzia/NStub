@@ -65,7 +65,10 @@
     <Compile Include="BuildContext\MemberBuildContextTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBaseTest.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextTest.cs" />
+    <Compile Include="CodeTypeSetupTest.cs" />
+    <Compile Include="CSharpTestProjectBuilderTest.cs" />
     <Compile Include="Data\TestDataProvider.cs" />
+    <Compile Include="ExceptionsTest.cs" />
     <Compile Include="FluentChecking\CompareResult.cs" />
     <Compile Include="FluentChecking\CompareResultTest.cs" />
     <Compile Include="FluentChecking\FluentCodeMethodChecking.cs" />
@@ -75,12 +78,15 @@
     <Compile Include="FluentChecking\FluentCodeStatementBinderTest.cs" />
     <Compile Include="FluentChecking\FluentCodeWrapper.cs" />
     <Compile Include="FluentChecking\Is.cs" />
+    <Compile Include="ImplicitVariableDeclarationStatementTest.cs" />
     <Compile Include="NamespaceDetectorTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
+    <Compile Include="ObjectGeneration\BuilderDataTest.cs" />
     <Compile Include="ObjectGeneration\Builders\BuilderSerializerTest.cs" />
     <Compile Include="ObjectGeneration\Builders\ConstructorBuilderTest.cs" />
     <Compile Include="ObjectGeneration\BuildHandlerTest.cs" />
+    <Compile Include="ObjectGeneration\ConstructorAssignmentCollectionTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceBinderTest.cs" />
     <Compile Include="ObjectGeneration\CodeMethodComposerTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeLocalVariableBinderTest.cs" />
@@ -89,6 +95,7 @@
     <Compile Include="ObjectGeneration\FluentCodeBuild\CodeFieldReferenceExceptionTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMemberFieldTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\FluentCodeMethodTest.cs" />
+    <Compile Include="ParameterDescriptionAttributeTest.cs" />
     <Compile Include="Stubs\ConstructorBuilderHelpType.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />

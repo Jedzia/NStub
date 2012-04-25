@@ -136,14 +136,76 @@ namespace NStub.CSharp.ObjectGeneration
                     }
 
                     // Add the member field to the test class.
-                    testClassDeclaration.Members.Add(assignment.MemberField);
+                        testClassDeclaration.Members.Add(assignment.MemberField);
 
-                    // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
-                    //  BuildData.AddDataItem(
-                    //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                        // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                        //  BuildData.AddDataItem(
+                        //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
-                    // Add a local variable for the constructor parameter.
-                    testMethod.Statements.Add(assignment.AssignStatement);
+                        // Add a local variable for the constructor parameter.
+                        testMethod.Statements.Add(assignment.AssignStatement);
+
+                    // Add the local variable to the constructor initializer in the object create expression 
+                    // (e.g. SetUp method, test object constructor) of the specified method.
+                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
+                }
+
+                // reorder the testObject initializer to the bottom of the SetUp method.
+                this.ReorderSetupStatement(testMethod, testObjectInitializerPosition);
+            }
+        }
+
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitly specified constructor
+        /// create expression to a specified method.
+        /// </summary>
+        /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <param name="testMethod">The test method, to add the assign-statements to.</param>
+        /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>
+        /// <param name="ctorAssignments">The list of constructor assignments that specify the parameter to add.</param>
+        public override void AssignOnly(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod testMethod,
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments)
+        {
+            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
+            Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
+
+            // Guard.NotNull(() => this.assignments, this.assignments);
+            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
+            {
+            }
+
+            if (this.HasParameterAssignments)
+            {
+                var testObjectInitializerPosition = testMethod.Statements.Count - 1;
+
+                var ctorparameters = ctorAssignments.UsedConstructor.GetParameters();
+                if (ctorparameters.Length > 1)
+                {
+                }
+
+                foreach (var para in ctorparameters)
+                {
+                    var assignment = ctorAssignments[para.Name];
+                    if (assignment == null)
+                    {
+                        continue;
+                    }
+
+                    // Add the member field to the test class.
+                    if (false)
+                    {
+                        testClassDeclaration.Members.Add(assignment.MemberField);
+
+                        // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                        //  BuildData.AddDataItem(
+                        //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+
+                        // Add a local variable for the constructor parameter.
+                        testMethod.Statements.Add(assignment.AssignStatement);
+                    }
 
                     // Add the local variable to the constructor initializer in the object create expression 
                     // (e.g. SetUp method, test object constructor) of the specified method.

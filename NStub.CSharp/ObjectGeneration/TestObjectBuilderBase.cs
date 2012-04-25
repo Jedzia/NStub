@@ -144,6 +144,12 @@ namespace NStub.CSharp.ObjectGeneration
             CodeObjectCreateExpression testObjectConstructor,
             AssignmentInfoCollection ctorAssignments);
 
+        public abstract void AssignOnly(   
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod testMethod,
+            CodeObjectCreateExpression testObjectConstructor,
+            AssignmentInfoCollection ctorAssignments);
+
         /// <summary>
         /// Assigns the parameters detected with <see cref="BuildTestObject"/> to the constructor create
         /// expression stored in <see cref="TestObjectMemberFieldCreateExpression"/>.

@@ -4,6 +4,7 @@ using System.CodeDom;
 using global::MbUnit.Framework;
 using NStub.Core;
 using NStub.CSharp.ObjectGeneration;
+using Rhino.Mocks;
 
 namespace NStub.CSharp.Tests
 {
@@ -61,11 +62,11 @@ namespace NStub.CSharp.Tests
 		[SetUp]
 		public void SetUp()
 		{
-			CodeNamespace codeNamespace = new CodeNamespace(_sampleNamespace);
+			var codeNamespace = new CodeNamespace(_sampleNamespace);
             var configuration = new CodeGeneratorParameters(_outputDirectory);
             // Todo: Mock this.
             var testBuilders = MemberBuilderFactory.Default;
-            var buildSystem = new StandardBuildSystem();
+            var buildSystem = new FakeBuildSystem();
 			_cSharpCodeGenerator =
                 new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration);
 		} 
@@ -73,6 +74,31 @@ namespace NStub.CSharp.Tests
 		#endregion SetUp (Public)
 
 		#region Tests (Public)
+
+        [Test]
+        public void Construct()
+        {
+            var buildSystem = new FakeBuildSystem();
+            var codeNamespace = new CodeNamespace(_sampleNamespace);
+            ICodeGeneratorParameters configuration = new CodeGeneratorParameters(_outputDirectory);
+            var testBuilders = MemberBuilderFactory.Default;
+
+            Assert.Throws<ArgumentNullException>(() => new CSharpCodeGenerator(null, codeNamespace, testBuilders, configuration));
+            Assert.Throws<ArgumentNullException>(() => new CSharpCodeGenerator(buildSystem, null, testBuilders, configuration));
+            new CSharpCodeGenerator(buildSystem, codeNamespace, null, configuration);
+            Assert.Throws<ArgumentException>(() => new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, null));
+
+
+            configuration = MockRepository.GenerateStub<ICodeGeneratorParameters>();
+            configuration.Expect((e)=> e.OutputDirectory).Return(null);
+            Assert.Throws<ArgumentNullException>(() => new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration));
+            configuration.Expect((e) => e.OutputDirectory).Return(string.Empty);
+            Assert.Throws<ArgumentException>(() => new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration));
+
+            configuration = new CodeGeneratorParameters(_outputDirectory);
+            buildSystem = new FakeBuildSystem() { FakeDirectoryExists = false };
+            Assert.Throws<ApplicationException>(() => new CSharpCodeGenerator(buildSystem, codeNamespace, testBuilders, configuration));
+        }
 
 		/// <summary>
 		/// Ensures that the CodeNamespace property has been properly set

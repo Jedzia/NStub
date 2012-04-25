@@ -10,17 +10,18 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using System;
     using NStub.Core;
 
     /// <summary>
     /// Stores information for an <see cref="IMemberBuilder"/>. 
     /// </summary>
     /// <typeparam name="T">The type of the stored data.</typeparam>
-    public class BuilderData<T> : IBuilderData
+    public class BuilderData<T> : /*Nullable<T>,*/ IBuilderData
     {
         #region Fields
 
-        private readonly T data;
+        private T data;
 
         #endregion
 
@@ -87,6 +88,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public bool HasDataForType(IMemberBuilder builder)
         {
+            // Todo: maybe request the builder for the use of this type of data.
             return true;
         }
 
@@ -96,6 +98,8 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="data">The data to store.</param>
         public void SetData(object data)
         {
+            Guard.CanBeAssignedTo<T>(() => data, data);
+            this.data = (T)data;
         }
     }
 }
