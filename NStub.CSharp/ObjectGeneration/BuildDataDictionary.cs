@@ -244,6 +244,9 @@ namespace NStub.CSharp.ObjectGeneration
             return xxxx;
         }
 
+        /// <summary>
+        /// Resets the dirty flag ( Save this instance not implemented ).
+        /// </summary>
         public void Save()
         {
             this.isDirty = false;

@@ -20,9 +20,9 @@ namespace NStub.CSharp.ObjectGeneration
     /// Global constants related to build data.
     /// </summary>
     public static class BuilderConstants
-    {
+    { 
         /// <summary>
-        /// Xml-Element identifier for the collection of <see cref="NStub.CSharp.ObjectGeneration.Builders.IMemberBuildParameters"/>.
+        /// Xml-Element identifier for the collection of <see cref="NStub.CSharp.ObjectGeneration.IMemberBuildParameters"/>.
         /// </summary>
         public const string BuildParametersXmlId = "BuildParameters";
 

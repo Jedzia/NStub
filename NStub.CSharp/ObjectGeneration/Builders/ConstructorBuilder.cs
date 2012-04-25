@@ -116,37 +116,47 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             for (int i = 0; i < createExpr.Parameters.Count; i++)
             {
-                var moo = createExpr.Parameters[i];
-                var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", codeMemberMethod);
-
-                // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
-                // We only need the CreateExpression of it, so remove it from the statements of the Constructor test method.
-                codeMemberMethod.Statements.RemoveAt(codeMemberMethod.Statements.Count - 1);
-
-                // assign well known constructor arguments
-                objcreator.AssignOnly(context.TestClassDeclaration, codeMemberMethod, subcreator, assignmentInfos);
-
-                var cref = (CodeFieldReferenceExpression)subcreator.Parameters[i];
+                var cref = (CodeFieldReferenceExpression)createExpr.Parameters[i];
                 var paraName = cref.FieldName;
                 var inf = assignmentInfos[paraName];
                 var paraType = inf.MemberField.Type.BaseType;
-
                 CodeExpression paraAssert = new CodePrimitiveExpression(null);
                 var expectedException = typeof(ArgumentNullException);
+                CreateAssertThrowWithExceptionType(context, objcreator, assignmentInfos, codeMemberMethod, i, paraAssert, expectedException);
                 if (paraType == typeof(string).FullName)
                 {
                     expectedException = typeof(ArgumentException);
-                    //paraAssert = new CodePrimitiveExpression("");
-                    paraAssert = new CodeSnippetExpression("string.Empty");
+                    //paraAssert = StaticClass<string>.Property("Empty");
+                    paraAssert = StaticClass.Property(() => string.Empty);
+                    CreateAssertThrowWithExceptionType(context, objcreator, assignmentInfos, codeMemberMethod, i, paraAssert, expectedException);
                 }
 
-                // for each assert statement null a parameter of the constructor.
-                if (subcreator.Parameters.Count > i)
-                {
-                    subcreator.Parameters[i] = paraAssert;
-                }
-                var ancreate = BuildLambdaThrowAssertion(expectedException, codeMemberMethod, subcreator);
             }
+        }
+
+        private void CreateAssertThrowWithExceptionType(IMemberBuildContext context, ITestObjectBuilder objcreator, AssignmentInfoCollection assignmentInfos, CodeMemberMethod codeMemberMethod, int i, CodeExpression paraAssert, Type expectedException)
+        {
+            var subcreator = BuildTestObject(context.TestObjectType.Name, "notneeded", codeMemberMethod);
+
+            // The upper method created a field assignment statement an initialized it with "= new <Object Under Test>()".
+            // We only need the CreateExpression of it, so remove it from the statements of the Constructor test method.
+            codeMemberMethod.Statements.RemoveAt(codeMemberMethod.Statements.Count - 1);
+
+            // assign well known constructor arguments
+            objcreator.AssignOnly(context.TestClassDeclaration, codeMemberMethod, subcreator, assignmentInfos);
+
+            //var cref = (CodeFieldReferenceExpression)subcreator.Parameters[i];
+            //var paraName = cref.FieldName;
+            //var inf = assignmentInfos[paraName];
+            //var paraType = inf.MemberField.Type.BaseType;
+
+
+            // for each assert statement null a parameter of the constructor.
+            if (subcreator.Parameters.Count > i)
+            {
+                subcreator.Parameters[i] = paraAssert;
+            }
+            var ancreate = BuildLambdaThrowAssertion(expectedException, codeMemberMethod, subcreator);
         }
 
         /// <summary>

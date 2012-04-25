@@ -139,6 +139,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// Get the parameters for the specified builder type, possibly creating it, if there
         /// is not yet one in the build data collection.
         /// </summary>
+        /// <param name="key">The unique identifier of the parameter data set.</param>
         /// <param name="builderType">Type of the builder to request a set of sample data for.</param>
         /// <param name="paraType">Type of the parameter class.</param>
         /// <param name="properties">The global properties storage.</param>
