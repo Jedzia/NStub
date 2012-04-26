@@ -658,8 +658,8 @@ namespace NStub.CSharp.ObjectGeneration
                             var collectionFieldName = paraInfo.Name;
                             var collectionField = BaseCSharpCodeGenerator.CreateMemberField(
                                 paraInfo.ParameterType.FullName, collectionFieldName);
-                            var collectionAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
-                                paraInfo.ParameterType, collectionFieldName);
+                            var collectionAssignment = CodeMethodComposer.CreateAndInitializeCollectionField(
+                                paraInfo.ParameterType, collectionFieldName, memberFieldName);
                             var collection = new ConstructorAssignment(collectionFieldName, collectionAssignment, collectionField);
                             collection.CreateAssignments.Add(assignment);
                             assignmentInfoCollection.AddAssignment(collection);

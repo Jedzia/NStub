@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using System;
+    using System.Linq;
     using System.CodeDom;
     using NStub.Core;
     using NStub.CSharp.ObjectGeneration.FluentCodeBuild;
@@ -55,6 +56,34 @@ namespace NStub.CSharp.ObjectGeneration
             }
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
             CodeExpression assignExpr = CreateExpressionByType(type, memberField);
+
+            return new CodeAssignStatement(fieldRef1, assignExpr);
+        }
+
+        /// <summary>
+        /// Creates a reference to a member field and initializes it with a new instance of the specified parameter type.
+        /// Sample values are used as the initializing expression.
+        /// </summary>
+        /// <param name="type">Defines the type of the new object.</param>
+        /// <param name="memberField">Name of the referenced member field.</param>
+        /// <returns>An assignment statement for the specified member field.</returns>
+        /// <remarks>With a custom Type, this method produces a statement with a initializer like: 
+        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.
+        /// or let myInt be of type int:
+        /// <code>this.myInt = 1234;</code>.
+        /// myType of type System.Type:
+        /// <code>this.myType = typeof(System.Object);</code>.
+        /// </remarks>
+        public static CodeAssignStatement CreateAndInitializeCollectionField(Type type, string memberCollectionField, params string[] collectionInitializers)
+        {
+            if (type == typeof(object))
+            {
+
+            }
+            var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberCollectionField);
+            //CodeExpression assignExpr = CreateExpressionByType(type, memberCollectionField);
+            var para = collectionInitializers.Aggregate((x, y) => x += "," + y); 
+            CodeExpression assignExpr = new CodeSnippetExpression("new[] { " + para + " }");
 
             return new CodeAssignStatement(fieldRef1, assignExpr);
         }

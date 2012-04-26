@@ -241,7 +241,26 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                 foreach (var mockObject in assignedMockObjects)
                 {
                     // Todo: maybe use the creator here to add all the stuff
-                    context.TestObjectCreator.TestObjectMemberFieldCreateExpression.Parameters.Add(mockObject.Left);
+                    var creatorParameters = context.TestObjectCreator.TestObjectMemberFieldCreateExpression.Parameters;
+                    
+                    // has the base generator already added a OuT ctor parameter?
+                    bool alreadyInParameterlist = false;
+                    var mockObjectFieldRef = mockObject.Left as CodeFieldReferenceExpression;
+                    if (mockObjectFieldRef != null)
+                    {
+                        foreach (CodeFieldReferenceExpression item in creatorParameters)
+                        {
+                            if (item.FieldName == mockObjectFieldRef.FieldName)
+                            {
+                                alreadyInParameterlist = true;
+                            }
+                        }
+                    }
+                    
+                    if (!alreadyInParameterlist)
+                    {
+                        creatorParameters.Add(mockObject.Left);
+                    }
                 }
 
                 string rhinoImport = typeof(MockRepository).Namespace;
