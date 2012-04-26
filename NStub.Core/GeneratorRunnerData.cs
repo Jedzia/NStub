@@ -12,12 +12,14 @@ namespace NStub.Core
 {
     using System.Collections.Generic;
     using System.Reflection;
-using System;
+    using System;
+
+    // Todo: IGeneratorRunnerData abstraction!
 
     /// <summary>
     /// Holds data for running a <see cref="TestProjectBuilder"/>.
     /// </summary>
-    public class GeneratorRunnerData
+    public sealed class GeneratorRunnerData
     {
         #region Constructors
 
@@ -29,7 +31,7 @@ using System;
         /// <param name="inputAssemblyPath">The input assembly path.</param>
         /// <param name="mainNodes">The main nodes.</param>
         /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
-        public GeneratorRunnerData(
+        internal GeneratorRunnerData(
             string outputFolder,
             Type generatorType,
             string inputAssemblyPath,
@@ -90,5 +92,24 @@ using System;
         public ICodeGeneratorSetup CodeGeneratorParameters { get; private set; }*/
 
         #endregion
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="GeneratorRunnerData"/> class.
+        /// </summary>
+        /// <param name="outputFolder">The output folder.</param>
+        /// <param name="generatorType">Type of the generator.</param>
+        /// <param name="inputAssemblyPath">The input assembly path.</param>
+        /// <param name="mainNodes">The main nodes.</param>
+        /// <param name="referencedAssemblies">The list of referenced assemblies.</param>
+        public static GeneratorRunnerData Create(
+            string outputFolder,
+            Type generatorType,
+            string inputAssemblyPath,
+            IList<TestNode> mainNodes,
+            IList<AssemblyName> referencedAssemblies)
+        {
+            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies);
+            return data;
+        }
     }
 }

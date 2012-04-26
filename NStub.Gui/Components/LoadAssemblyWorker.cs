@@ -93,7 +93,7 @@ namespace NStub.Gui.Components
         /// </summary>
         /// <param name="runnerData">The runner data.</param>
         public void RunWorkerAsync(
-            GeneratorRunnerData runnerData)
+            GeneratorRunnerData runnerData, ICodeGeneratorSetup codegeneratorSetup)
         {
             // Dumper();
             // GenerateTests();
@@ -107,8 +107,8 @@ namespace NStub.Gui.Components
             // IList<TreeNode> mainNodes = assemblyGraph.Nodes.Cast<TreeNode>().ToList();
             // var runnerData = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
-            // var parameters = new object[] { outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies };
-            bg.RunWorkerAsync(runnerData);
+            var parameters = new object[] { runnerData, codegeneratorSetup};
+            bg.RunWorkerAsync(parameters);
         }
 
         /// <summary>
@@ -180,7 +180,9 @@ namespace NStub.Gui.Components
         {
             try
             {
-                var parameters = (GeneratorRunnerData)e.Argument;
+                var parObj = (object[])e.Argument;
+                var parameters = (GeneratorRunnerData)parObj[0];
+                var codeGeneratorSetup = (ICodeGeneratorSetup)parObj[1];
                 var prjName = Path.GetFileNameWithoutExtension(parameters.InputAssemblyPath) + ".Tests";
                 var prj = new CSharpProjectGenerator(this.buildSystem, prjName, parameters.OutputFolder);
 
@@ -208,7 +210,7 @@ namespace NStub.Gui.Components
                         }, 
                     this.Log);
 
-                testProjectBuilder.CustomGeneratorParameters = this.CustomGeneratorParameters;
+                testProjectBuilder.CustomGeneratorParameters = codeGeneratorSetup;
                 testProjectBuilder.GenerateTests(parameters);
             }
             catch (Exception ex)
@@ -216,15 +218,5 @@ namespace NStub.Gui.Components
                 this.Log(ex.ToString());
             }
         }
-
-        /// <summary>
-        /// Gets or sets the user provided code generator parameters.
-        /// </summary>
-        public ICodeGeneratorSetup CustomGeneratorParameters
-        {
-            get;
-            set;
-        }
-
     }
 }

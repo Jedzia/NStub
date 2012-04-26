@@ -94,7 +94,7 @@ namespace NStub.CSharp.Tests
 
             var referencedAssemblies = typeof(CSharpTestProjectBuilderTest).Assembly.GetReferencedAssemblies();
             var para = new CodeGeneratorParameters(outputFolder);
-            var runnerData = new GeneratorRunnerData(
+            var runnerData = GeneratorRunnerData.Create(
                 outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies);
 
             Expect.Call(sbs.DirectorySeparatorChar).Return(directorySeparator).Repeat.Any();

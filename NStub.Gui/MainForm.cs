@@ -124,6 +124,12 @@ namespace NStub.Gui
 
             string outputFolder = this._outputDirectoryTextBox.Text;
 
+            var para = new CodeGeneratorParameters(outputFolder)
+            {
+                MethodGeneratorLevelOfDetail = MemberVisibility.Internal
+            };
+            // bg.CustomGeneratorParameters = para;
+
             /*var bg = new LoadAssemblyWorker(sbs, this.buildData, this)
             {
                BrowseInputAssemblyButton = this._browseInputAssemblyButton,
@@ -136,15 +142,11 @@ namespace NStub.Gui
             string inputAssemblyPath = this._inputAssemblyTextBox.Text;
             IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
-            var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+            //var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+            var data = GeneratorRunnerData.Create(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
 
-            var para = new CodeGeneratorParameters(outputFolder)
-            {
-                MethodGeneratorLevelOfDetail = MemberVisibility.Internal
-            };
-            bg.CustomGeneratorParameters = para;
 
-            bg.RunWorkerAsync(data);
+            bg.RunWorkerAsync(data, para);
         }
 
         private void Dumper()

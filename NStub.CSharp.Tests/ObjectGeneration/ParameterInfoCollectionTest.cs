@@ -6,6 +6,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using global::MbUnit.Framework;
     using NStub.CSharp.ObjectGeneration;
 using System.Reflection;
+    using System.Collections;
     
     
     [TestFixture()]
@@ -159,7 +160,7 @@ using System.Reflection;
         {
             Assert.IsNotNull(testObjectWithInterface.GetEnumerator());
             Assert.IsNotNull(((System.Collections.IEnumerable)testObjectWithInterface).GetEnumerator());
-            Assert.IsInstanceOfType<IEnumerator<AssignmentInfoCollection>>(testObjectWithInterface.GetEnumerator());
+            Assert.IsInstanceOfType<IEnumerator>(testObjectWithInterface.GetEnumerator());
         }
     }
 }
