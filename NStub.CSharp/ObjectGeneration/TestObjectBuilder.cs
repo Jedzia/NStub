@@ -269,8 +269,8 @@ namespace NStub.CSharp.ObjectGeneration
                                 assignCreateExpr.Parameters.Add(creationAssignment.AssignStatement.Left);
                             }
                             BuildData.AddDataItem(
-                                "Assignments." + testClassDeclaration.Name,
-                                assignment.MemberField.Name + "|" + creationAssignment.MemberField.Name,
+                                "CreateAssignments." + this.TestObjectType.FullName + "." +
+                                assignment.MemberField.Name, creationAssignment.MemberField.Name,
                                 new BuilderData<ConstructorAssignment>(creationAssignment));
                         }
                     }
@@ -629,7 +629,7 @@ namespace NStub.CSharp.ObjectGeneration
                         paraInfo.ParameterType.FullName, paraInfo.Name);
                     var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
                         paraInfo.ParameterType, paraInfo.Name);
-                    var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
+                    var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField, paraInfo.ParameterType);
                     assignmentInfoCollection.AddAssignment(assignment);
                 }
                 else
@@ -651,7 +651,7 @@ namespace NStub.CSharp.ObjectGeneration
                                 genArgs[0].FullName, memberFieldName);
                             var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
                                 genArgs[0], memberFieldName);
-                            var assignment = new ConstructorAssignment(memberFieldName, fieldAssignment, memberField);
+                            var assignment = new ConstructorAssignment(memberFieldName, fieldAssignment, memberField, genArgs[0]);
                             // assignmentInfoCollection.AddAssignment(assignment);
                             // AddAssignStatement(fieldAssignment);
 
@@ -660,7 +660,7 @@ namespace NStub.CSharp.ObjectGeneration
                                 paraInfo.ParameterType.FullName, collectionFieldName);
                             var collectionAssignment = CodeMethodComposer.CreateAndInitializeCollectionField(
                                 paraInfo.ParameterType, collectionFieldName, memberFieldName);
-                            var collection = new ConstructorAssignment(collectionFieldName, collectionAssignment, collectionField);
+                            var collection = new ConstructorAssignment(collectionFieldName, collectionAssignment, collectionField, paraInfo.ParameterType);
                             collection.CreateAssignments.Add(assignment);
                             assignmentInfoCollection.AddAssignment(collection);
                         }

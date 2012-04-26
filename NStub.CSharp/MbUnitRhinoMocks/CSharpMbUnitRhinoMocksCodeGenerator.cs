@@ -100,11 +100,14 @@ namespace NStub.CSharp.MbUnitRhinoMocks
         /// The list of assigned mock objects.
         /// </returns>
         protected virtual IEnumerable<CodeAssignStatement> ComposeTestSetupMockery(
-            CodeTypeDeclaration testClassDeclaration,
-            CodeMemberMethod setUpMethod,
+            ISetupAndTearDownCreationContext context,
             CodeMemberField testObjectMemberField,
             string testObjectName)
         {
+
+            CodeTypeDeclaration testClassDeclaration = context.TestClassDeclaration;
+            CodeMemberMethod setUpMethod = context.SetUpMethod;
+
             // Todo: only the Type is necs, the CodeTypeDeclaration is too much knowledge.
             var testObjectClassType = (Type)testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey];
 
@@ -158,7 +161,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                 var ctorParameters = constructor.GetParameters();
                 foreach (var para in ctorParameters)
                 {
-                    if (para.ParameterType.IsInterface && !para.ParameterType.IsGenericType)
+                    if (para.ParameterType.IsInterface /*&& !para.ParameterType.IsGenericType*/)
                     {
                         hasInterfaceInCtorParameters = true;
                         ctorParameterTypes.Add(para);
@@ -179,42 +182,55 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             var mockAssignments = new List<CodeAssignStatement>();
             foreach (var paraInfo in ctorParameterTypes)
             {
-                // reuse already present field.
-                CodeMemberField mockMemberField = testClassDeclaration.Members
-                    .OfType<CodeMemberField>()
-                    .Where(e => e.Name == paraInfo.Name).First();
-                var mockMemberFieldCreated = false;
-                if (mockMemberField == null)
+
+                if (paraInfo.ParameterType.IsGenericType)
                 {
-                    mockMemberField = AddTestMemberField(
-                        testClassDeclaration, paraInfo.ParameterType.FullName, paraInfo.Name);
-                    mockMemberFieldCreated = true;
+                    var genericTypeDefinition = paraInfo.ParameterType.GetGenericTypeDefinition();
+                    if (typeof(IEnumerable<>).IsAssignableFrom(genericTypeDefinition))
+                    {
+
+                        var creatorCategory = "CreateAssignments." + testObjectClassType.FullName + "." + paraInfo.Name;
+                        var cat = BuildProperties[creatorCategory];
+                        if (cat != null)
+                        {
+                            var prop = cat[paraInfo.Name + "Item"];
+                            if (prop != null)
+                            {
+                                var ctorassignment = prop.GetData() as ConstructorAssignment;
+                                if (testObjectClassType.Name == "DefaultMemberBuilderFactory")
+                                {
+                                }
+                                if (ctorassignment != null)
+                                {
+                                    CreateMocker(
+                                        testClassDeclaration,
+                                        setUpMethod,
+                                        testObjectName,
+                                        testObjectClassType,
+                                        mockRepositoryMemberField,
+                                        mockAssignments,
+                                        ctorassignment.MemberType,
+                                        paraInfo.Name + "Item");
+
+                                    // ctorassignment.AssignStatement.Right = mockAssignment.Left;
+                                    //ctorassignment.AssignStatement.Right = mockAssignment.Right;
+                                    //ctorassignment.AssignStatement.Right = new CodePrimitiveExpression("Fuck");
+                                }
+                            }
+                        }
+                        continue;
+                    }
                 }
 
-                var mockAssignment = this.AddMockObject(
-                    setUpMethod, mockRepositoryMemberField, testObjectName, paraInfo, paraInfo.Name);
-                if (mockMemberFieldCreated)
-                {
-                    setUpMethod.Statements.Add(mockAssignment);
-                }
-                else
-                {
-                    var creatorCategory = "Assignments." + testClassDeclaration.Name;
-                    var creatorKey = paraInfo.Name;
-                    var category = BuildProperties[creatorCategory];
-                    var prop = category[creatorKey];
-                    var ctorassignment = prop.GetData() as ConstructorAssignment;
-                    if (testObjectClassType.Name == "DefaultMemberBuilderFactory")
-                    {
-                    }
-                    if (ctorassignment != null)
-                    {
-                        // ctorassignment.AssignStatement.Right = mockAssignment.Left;
-                        ctorassignment.AssignStatement.Right = mockAssignment.Right;
-                        //ctorassignment.AssignStatement.Right = new CodePrimitiveExpression("Fuck");
-                    }
-                }
-                mockAssignments.Add(mockAssignment);
+                CreateMocker(
+                    testClassDeclaration,
+                    setUpMethod,
+                    testObjectName,
+                    testObjectClassType,
+                    mockRepositoryMemberField,
+                    mockAssignments,
+                    paraInfo.ParameterType,
+                    paraInfo.Name);
             }
 
             // reorder the testObject initializer to the bottom of the SetUp method.
@@ -223,6 +239,62 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             //setUpMethod.Statements.Add(removedTypedec);
 
             return mockAssignments;
+        }
+
+        private void CreateMocker(
+            CodeTypeDeclaration testClassDeclaration,
+            CodeMemberMethod setUpMethod,
+            string testObjectName,
+            Type testObjectClassType,
+            CodeMemberField mockRepositoryMemberField,
+            List<CodeAssignStatement> mockAssignments,
+            Type paraType, string paraName)
+        {
+            //var paraName = paraInfo.Name;
+            //var paraType = paraInfo.ParameterType;
+
+            // reuse already present field.
+            var mockMemberField = testClassDeclaration
+                  .Members.OfType<CodeMemberField>()
+                  .Where(e => e.Name == paraName)
+                  .FirstOrDefault();
+            var mockMemberFieldCreated = false;
+            if (mockMemberField == null)
+            {
+                mockMemberField = AddTestMemberField(
+                    testClassDeclaration, paraType.FullName, paraName);
+                mockMemberFieldCreated = true;
+            }
+
+            var mockAssignment = this.AddMockObject(
+                setUpMethod, mockRepositoryMemberField, testObjectName, paraType.FullName, paraName);
+            if (mockMemberFieldCreated)
+            {
+                setUpMethod.Statements.Add(mockAssignment);
+            }
+            else
+            {
+                var creatorCategory = "CreateAssignments." + testObjectClassType.FullName + "." + paraName;
+                var cat = BuildProperties[creatorCategory];
+                if (cat != null)
+                {
+                    var prop = cat[paraName + "Item"];
+                    if (prop != null)
+                    {
+                        var ctorassignment = prop.GetData() as ConstructorAssignment;
+                        if (testObjectClassType.Name == "DefaultMemberBuilderFactory")
+                        {
+                        }
+                        if (ctorassignment != null)
+                        {
+                            // ctorassignment.AssignStatement.Right = mockAssignment.Left;
+                            ctorassignment.AssignStatement.Right = mockAssignment.Right;
+                            //ctorassignment.AssignStatement.Right = new CodePrimitiveExpression("Fuck");
+                        }
+                    }
+                }
+            }
+            mockAssignments.Add(mockAssignment);
         }
 
         /// <summary>
@@ -235,14 +307,14 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             ISetupAndTearDownCreationContext context, string testObjectName, CodeMemberField testObjectMemberField)
         {
             var assignedMockObjects = this.ComposeTestSetupMockery(
-                context.TestClassDeclaration, context.SetUpMethod, testObjectMemberField, testObjectName);
+                context, testObjectMemberField, testObjectName);
             if (assignedMockObjects.Count() > 0)
             {
                 foreach (var mockObject in assignedMockObjects)
                 {
                     // Todo: maybe use the creator here to add all the stuff
                     var creatorParameters = context.TestObjectCreator.TestObjectMemberFieldCreateExpression.Parameters;
-                    
+
                     // has the base generator already added a OuT ctor parameter?
                     bool alreadyInParameterlist = false;
                     var mockObjectFieldRef = mockObject.Left as CodeFieldReferenceExpression;
@@ -256,7 +328,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                             }
                         }
                     }
-                    
+
                     if (!alreadyInParameterlist)
                     {
                         creatorParameters.Add(mockObject.Left);
@@ -272,10 +344,9 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             CodeMemberMethod setUpMethod,
             CodeMemberField mockRepositoryMemberField,
             string testObjectName,
-            ParameterInfo paraInfo,
+            string paraTypeFullName,
             string paraName)
         {
-            var paraType = paraInfo.ParameterType;
 
             var mockRef =
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), mockRepositoryMemberField.Name);
@@ -288,7 +359,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
 
             // Creates a code expression for a CodeExpressionStatement to contain.
             var invokeExpression = new CodeMethodInvokeExpression(mockRef, "StrictMock");
-            invokeExpression.Method.TypeArguments.Add(paraType.FullName);
+            invokeExpression.Method.TypeArguments.Add(paraTypeFullName);
 
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(invokeExpression);

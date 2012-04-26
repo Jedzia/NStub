@@ -30,9 +30,9 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         {
             // ToDo: Implement SetUp logic here 
             this.mocks = new MockRepository();
-            this.handlersItem = this.mocks.StrictMock<IBuildHandler>(); 
-            this.handlers = new [] {this.handlersItem };
             this.serializer = this.mocks.StrictMock<NStub.CSharp.ObjectGeneration.Builders.IBuilderSerializer>();
+            this.handlersItem = this.mocks.StrictMock<IBuildHandler>();
+            this.handlers = new[] { handlersItem };
             this.testObject = new DefaultMemberBuilderFactory(this.serializer, this.handlers);
 
             Assert.Inconclusive("Verify the correctness of this test method.");

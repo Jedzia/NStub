@@ -13,6 +13,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.CodeDom;
     using NStub.Core;
     using System.Collections.Generic;
+using System;
 
     /// <summary>
     /// Holds a mapping from parameter name to code creation expressions.
@@ -28,15 +29,17 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="assignStatement">The assign statement for the parameter.</param>
         /// <param name="memberField">The related member field of the parameter.</param>
         public ConstructorAssignment(
-            string parameterName, CodeAssignStatement assignStatement, CodeMemberField memberField)
+            string parameterName, CodeAssignStatement assignStatement, CodeMemberField memberField, Type type)
         {
             Guard.NotNullOrEmpty(() => parameterName, parameterName);
             Guard.NotNull(() => assignStatement, assignStatement);
             Guard.NotNull(() => memberField, memberField);
+            Guard.NotNull(() => type, type);
 
             this.ParameterName = parameterName;
             this.AssignStatement = assignStatement;
             this.MemberField = memberField;
+            this.MemberType = type;
         }
 
         #endregion
@@ -52,6 +55,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// Gets the related member field of the parameter.
         /// </summary>
         public CodeMemberField MemberField { get; private set; }
+        public Type MemberType { get; private set; }
 
         /// <summary>
         /// Gets the name of the parameter.

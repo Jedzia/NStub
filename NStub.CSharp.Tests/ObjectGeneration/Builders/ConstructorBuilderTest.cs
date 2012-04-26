@@ -116,7 +116,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             var assignments = new[] { new AssignmentInfoCollection()};
             var memberField = new CodeMemberField(typeof(int), "myField");
             var assignStatement = new CodeAssignStatement();
-            var ctorAssignment = new ConstructorAssignment("theParameter", assignStatement, memberField);
+            var ctorAssignment = new ConstructorAssignment("theParameter", assignStatement, memberField, typeof(string));
             assignments[0].AddAssignment(ctorAssignment);
             //assignments[0].UsedConstructor = 
 
@@ -160,7 +160,7 @@ namespace NStub.CSharp.ObjectGeneration.Tests.ObjectGeneration.Builders
             var assignments = new[] { assCol1, assCol2 };
             var memberField = new CodeMemberField(typeof(int), "myField");
             var assignStatement = new CodeAssignStatement();
-            var ctorAssignment = new ConstructorAssignment("theParameter", assignStatement, memberField);
+            var ctorAssignment = new ConstructorAssignment("theParameter", assignStatement, memberField, typeof(string));
             assignments[0].AddAssignment(ctorAssignment);
             var helpctors = typeof(ConstructorBuilderHelpType).GetConstructors();
             assignments[0].UsedConstructor = helpctors[0];
