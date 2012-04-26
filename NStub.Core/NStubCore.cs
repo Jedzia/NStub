@@ -25,25 +25,25 @@ namespace NStub.Core
 
 		#region Constructor (Public)
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NStubCore"/> class which
-		/// will generate the given <see cref="System.CodeDom.CodeNamespace"/>
-		/// to the given output directory using the given implementation 
-		/// of <see cref="NStub.Core.ICodeGenerator"/>.
-		/// </summary>
-		/// <param name="codeNamespace">The code namespace which contains the types
-		/// to be generated.</param>
-		/// <param name="outputDirectory">The directory where the resulting 
-		/// files will be output to.</param>
-		/// <param name="codeGenerator">The code generator which will perform the
-		/// generation.</param>
-		/// <exception cref="System.ArgumentNullException">codeNamespace, 
-		/// outputDirectory, or codeGenerator is null.</exception>
-		/// <exception cref="System.ArgumentException">outputDirectory is an
-		/// empty string.</exception>
-		/// <exception cref="System.IO.DirectoryNotFoundException">outputDirectory
-		/// is not a valid directory.</exception>
-        /// <param name="sbs">The system wide build system.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NStubCore"/> class which
+        /// will generate the given <see cref="System.CodeDom.CodeNamespace"/>
+        /// to the given output directory using the given implementation
+        /// of <see cref="NStub.Core.ICodeGenerator"/>.
+        /// </summary>
+        /// <param name="buildSystem">The build system.</param>
+        /// <param name="codeNamespace">The code namespace which contains the types
+        /// to be generated.</param>
+        /// <param name="outputDirectory">The directory where the resulting
+        /// files will be output to.</param>
+        /// <param name="codeGenerator">The code generator which will perform the
+        /// generation.</param>
+        /// <exception cref="System.ArgumentNullException">codeNamespace,
+        /// outputDirectory, or codeGenerator is null.</exception>
+        /// <exception cref="System.ArgumentException">outputDirectory is an
+        /// empty string.</exception>
+        /// <exception cref="System.IO.DirectoryNotFoundException">outputDirectory
+        /// is not a valid directory.</exception>
         public NStubCore(IBuildSystem buildSystem, CodeNamespace codeNamespace, string outputDirectory,
 			ICodeGenerator codeGenerator)
 		{

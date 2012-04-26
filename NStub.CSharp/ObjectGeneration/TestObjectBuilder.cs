@@ -30,7 +30,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TestObjectBuilder"/> class.
+        /// Initializes a new instance of the <see cref="TestObjectComposer"/> class.
         /// </summary>
         /// <param name="buildData">The build data dictionary.</param>
         /// <param name="setUpMethod">The SetUpMethod</param>
@@ -195,7 +195,7 @@ namespace NStub.CSharp.ObjectGeneration
                     }
 
                     // Add the member field to the test class.
-                    if (false)
+                    /*if (false)
                     {
                         testClassDeclaration.Members.Add(assignment.MemberField);
 
@@ -205,7 +205,7 @@ namespace NStub.CSharp.ObjectGeneration
 
                         // Add a local variable for the constructor parameter.
                         testMethod.Statements.Add(assignment.AssignStatement);
-                    }
+                    }*/
 
                     // Add the local variable to the constructor initializer in the object create expression 
                     // (e.g. SetUp method, test object constructor) of the specified method.
@@ -267,7 +267,7 @@ namespace NStub.CSharp.ObjectGeneration
 
         /// <summary>
         /// Creates a code generation expression for an object to test with a member field and initialization
-        /// in the constructor specified <see cref="TestObjectBuilderBase.SetUpMethod"/> method.
+        /// in the constructor specified <see cref="TestObjectComposerBase.SetUpMethod"/> method.
         /// </summary>
         /// <param name="visibility">The visibility level of the objects to parse. Default should be public.</param>
         /// <returns>

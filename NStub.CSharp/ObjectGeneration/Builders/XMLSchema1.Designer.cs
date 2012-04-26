@@ -12,8 +12,11 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
     using System.Xml.Schema;
     using System.ComponentModel;
     using System.Collections.Generic;
-    
-    
+
+
+    /// <summary>
+    /// 
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "2.0.50727.3053")]
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -24,11 +27,20 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         private List<DreckOfPropertyBuilder> itemsField;
         
         private string idField;
-        
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Dreck"/> class.
+        /// </summary>
         public Dreck() {
             this.itemsField = new List<DreckOfPropertyBuilder>();
         }
-        
+
+        /// <summary>
+        /// Gets or sets the items.
+        /// </summary>
+        /// <value>
+        /// The items.
+        /// </value>
         [System.Xml.Serialization.XmlElementAttribute("OfPropertyBuilder", Order=0)]
         public List<DreckOfPropertyBuilder> Items {
             get {
@@ -38,7 +50,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
                 this.itemsField = value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the id.
+        /// </summary>
+        /// <value>
+        /// The id.
+        /// </value>
         [System.Xml.Serialization.XmlAttributeAttribute()]
         public string Id {
             get {
@@ -49,7 +67,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
             }
         }
     }
-    
+
+    /// <summary>
+    /// 
+    /// </summary>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "2.0.50727.3053")]
     [System.SerializableAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
@@ -61,7 +82,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         private bool useDingsField;
         
         private int moepField;
-        
+
+        /// <summary>
+        /// Gets or sets the method suffix.
+        /// </summary>
+        /// <value>
+        /// The method suffix.
+        /// </value>
         [System.Xml.Serialization.XmlElementAttribute(Order=0)]
         public string MethodSuffix {
             get {
@@ -71,7 +98,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
                 this.methodSuffixField = value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [use dings].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [use dings]; otherwise, <c>false</c>.
+        /// </value>
         [System.Xml.Serialization.XmlElementAttribute(Order=1)]
         public bool UseDings {
             get {
@@ -81,7 +114,13 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
                 this.useDingsField = value;
             }
         }
-        
+
+        /// <summary>
+        /// Gets or sets the moep.
+        /// </summary>
+        /// <value>
+        /// The moep.
+        /// </value>
         [System.Xml.Serialization.XmlElementAttribute(Order=2)]
         public int Moep {
             get {

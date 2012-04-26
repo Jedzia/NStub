@@ -17,6 +17,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
     #region Base entity class
 
+    /// <summary>
+    /// Base class for Xml-Data serializing and deserializing parameter classes.
+    /// </summary>
+    /// <typeparam name="T">Type of the serialized data.</typeparam>
     public class BuildParametersBase<T>
     {
         #region Fields
@@ -67,12 +71,25 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
         }
 
+        /// <summary>
+        /// Deserializes the specified XML data.
+        /// </summary>
+        /// <param name="xml">The XML with the serialized data.</param>
+        /// <param name="obj">The deserialized instance.</param>
+        /// <returns><c>true</c> if the deserialization was sucessful.</returns>
         public static bool Deserialize(string xml, out T obj)
         {
             Exception exception = null;
             return Deserialize(xml, out obj, out exception);
         }
 
+        /// <summary>
+        /// Deserializes the specified XML data.
+        /// </summary>
+        /// <param name="xml">The XML with the serialized data.</param>
+        /// <returns>
+        ///   <c>true</c> if the deserialization was sucessful.
+        /// </returns>
         public static T Deserialize(string xml)
         {
             StringReader stringReader = null;
@@ -113,12 +130,27 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
         }
 
+        /// <summary>
+        /// Deserializes xml markup from file into an EntityBase object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <param name="obj">Output EntityBase object</param>
+        /// <returns>
+        /// true if this XmlSerializer can deserialize the object; otherwise, false
+        /// </returns>
         public static bool LoadFromFile(string fileName, out T obj)
         {
             Exception exception = null;
             return LoadFromFile(fileName, out obj, out exception);
         }
 
+        /// <summary>
+        /// Deserializes xml markup from file into an EntityBase object
+        /// </summary>
+        /// <param name="fileName">string xml file to load and deserialize</param>
+        /// <returns>
+        /// The deserialized Output EntityBase object.
+        /// </returns>
         public static T LoadFromFile(string fileName)
         {
             FileStream file = null;
@@ -167,6 +199,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             }
         }
 
+        /// <summary>
+        /// Serializes current EntityBase object into file
+        /// </summary>
+        /// <param name="fileName">full path of outupt xml file</param>
         public virtual void SaveToFile(string fileName)
         {
             StreamWriter streamWriter = null;

@@ -135,7 +135,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <summary>
         /// Sets the data via the specified method info.
         /// </summary>
-        /// <param name="methodInfo">The method info.</param>
+        /// <param name="data">The data to store.</param>
         public void SetData(object data)
         {
             Guard.CanBeAssignedTo<MethodInfo>(() => data, data);

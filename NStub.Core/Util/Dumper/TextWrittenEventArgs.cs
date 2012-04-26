@@ -13,7 +13,7 @@ namespace NStub.Core.Util.Dumper
     using System;
 
     /// <summary>
-    /// Provides data for the <see cref="XhtmlWriter.Event"/> event.
+    /// Provides data for the <see cref="XhtmlWriter.TextChanged"/> event.
     /// </summary>
     [Serializable]
     public class TextWrittenEventArgs : EventArgs

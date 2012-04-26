@@ -23,7 +23,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
         private List<MultiBuildParametersOfRenamingBuilder> itemsField;
-        
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
         public List<MultiBuildParametersOfRenamingBuilder> Items {
             get {
                 if ((this.itemsField == null)) {

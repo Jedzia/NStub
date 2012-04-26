@@ -82,7 +82,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <exception cref="NotImplementedException">The context of the builder does not supply a valid 
         /// <see cref="ISetupAndTearDownCreationContext"/>.</exception>
         /// <exception cref="NotImplementedException">The context of the builder does not supply a valid 
-        /// <see cref="TestObjectBuilder"/>.</exception>
+        /// <see cref="TestObjectComposer"/>.</exception>
         protected virtual void ComputeCodeMemberProperty(
             IMemberBuildContext context,
             CodeMemberMethod typeMember,

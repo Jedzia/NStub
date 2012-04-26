@@ -245,7 +245,10 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
         /// Specify the name of the method to invoke.
         /// </summary>
         /// <param name="methodName">The name of the method.</param>
-        /// <returns>A fluent interface to build up reference types.</returns>
+        /// <param name="typearguments">Specifies generic typearguments to add.</param>
+        /// <returns>
+        /// A fluent interface to build up reference types.
+        /// </returns>
         public CodeTypeReferenceBinder Invoke(string methodName, params string[] typearguments)
         {
             this.invoker = new CodeMethodInvokeExpression
@@ -290,7 +293,7 @@ namespace NStub.CSharp.ObjectGeneration.FluentCodeBuild
         /// <summary>
         /// Add a specified expression as parameter to the method invocation.
         /// </summary>
-        /// <param name="value">The code expression to add.</param>
+        /// <param name="expression">The code expression to add.</param>
         /// <returns>
         /// A fluent interface to build up reference types.
         /// </returns>

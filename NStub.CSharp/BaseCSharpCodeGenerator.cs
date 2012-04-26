@@ -157,6 +157,9 @@ namespace NStub.CSharp
         /// generator is currently working from.</value>
         public CodeNamespace CodeNamespace { get; set; }
 
+        /// <summary>
+        /// Gets the configuration of the code generator.
+        /// </summary>
         public ICodeGeneratorParameters Configuration { get; private set; }
 
         /// <summary>

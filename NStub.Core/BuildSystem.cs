@@ -31,7 +31,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="BuildSystem"/> class.
         /// </summary>
-        /// <param name="outputDirectory">The OutputDirectory.</param>
+        // /// <param name="outputDirectory">The OutputDirectory.</param>
         protected BuildSystem(/*string outputDirectory*/)
         {
             /*if (outputDirectory == null)

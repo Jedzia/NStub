@@ -15,10 +15,29 @@ namespace NStub.Core
     /// </summary>
     public enum TestNodeType
     {
-        Root, 
-        Assembly, 
-        Module, 
-        Class, 
+        /// <summary>
+        /// Top parent in the tree. All branches start here.
+        /// </summary>
+        Root,
+       
+        /// <summary>
+        /// The node identifies an assembly.
+        /// </summary>
+        Assembly,
+       
+        /// <summary>
+        /// The node identifies a module of an assembly.
+        /// </summary>
+        Module,
+       
+        /// <summary>
+        /// The node is associated with a class and provides a class type member info.
+        /// </summary>
+        Class,
+        
+        /// <summary>
+        /// The node is associated with a method and provides a class method member info.
+        /// </summary>
         Method
     }
 }

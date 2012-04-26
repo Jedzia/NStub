@@ -42,7 +42,7 @@ namespace NStub.Core
         #region Indexers
 
         /// <summary>
-        /// Gets the <see cref="TValue"/> with the specified key.
+        /// Gets the <typeparamref name="TValue"/> with the specified key.
         /// </summary>
         /// <param name="key">The key of the element to get or set.</param>
         TValue this[TKey key]
@@ -95,13 +95,13 @@ namespace NStub.Core
         /// </exception>
         void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex);
 
-        /// <summary>
+        /*/// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
         /// <returns>
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
         /// </returns>
-        IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();
+        IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator();*/ 
 
         /// <summary>
         /// Gets the value associated with the specified key.

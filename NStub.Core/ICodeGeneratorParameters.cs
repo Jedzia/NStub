@@ -4,14 +4,31 @@ using System;
 
 namespace NStub.Core
 {
+    /// <summary>
+    /// Type member visibility.
+    /// </summary>
     [Flags]
     public enum MemberVisibility
     {
+        /// <summary>
+        /// All public types.
+        /// </summary>
         Public = 1 << 0,
+        
+        /// <summary>
+        /// All internal types.
+        /// </summary>
         Internal = 1 << 1,
+        
+        /// <summary>
+        /// All private types.
+        /// </summary>
         Private = 1 << 2,
     }
 
+    /// <summary>
+    /// Represents the setup data for a <see cref="ICodeGenerator"/>.
+    /// </summary>
     public interface ICodeGeneratorSetup : /*ICodeGeneratorSetupBase,*/ ICloneable
     {
     /*}
@@ -26,6 +43,12 @@ namespace NStub.Core
         /// </value>
         bool UseSetupAndTearDown { get; set; }
 
+        /// <summary>
+        /// Gets or sets the method generators level of detail .
+        /// </summary>
+        /// <value>
+        /// The method generators level of detail.
+        /// </value>
         MemberVisibility MethodGeneratorLevelOfDetail { get; set; }
     }
 

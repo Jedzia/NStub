@@ -6,6 +6,9 @@ using System.Reflection;
 
 namespace NStub.Core
 {
+    /// <summary>
+    /// Load assemblies and build a reflection graph of the contained types.
+    /// </summary>
     public class AssemblyFetcher
     {
         private readonly TestNode _assemblyGraphTreeView;// = new TestNode() { Text = "Root" };
@@ -98,12 +101,13 @@ namespace NStub.Core
         }
 
         /// <summary>
-        /// Creates a <see cref="System.Windows.Forms.TreeNode">TreeNode</see> with the 
+        /// Creates a <see cref="TestNode">TreeNode</see> with the
         /// given text and image key.
         /// </summary>
         /// <param name="text">The text of the TreeNode.</param>
-        /// <param name="imageKey">The key corresponding to the TreeNode's image.</param>
-        /// <returns></returns>
+        /// <param name="testNodeType">Type of the test node.</param>
+        /// <param name="tag">The tag used as custom information storage.</param>
+        /// <returns>A new node of the provided data.</returns>
         private TestNode CreateTreeNode(string text, TestNodeType testNodeType, object tag)
         {
             TestNode treeNode = new TestNode(text, testNodeType, tag);

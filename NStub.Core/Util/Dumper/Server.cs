@@ -69,10 +69,14 @@ namespace NStub.Core.Util.Dumper
 
         #region Properties
 
+        /// <summary>
+        /// Switch the <see cref="LambdaFormatter"/> to <see cref="Console.Out"/>.
+        /// </summary>
         public static void ToConsoleOut()
         {
             Default.LambdaFormatter = Console.Out;
         }
+
         /// <summary>
         /// Gets the default server singleton instance.
         /// </summary>

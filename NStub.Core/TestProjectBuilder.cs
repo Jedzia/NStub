@@ -299,7 +299,7 @@ namespace NStub.Core
                 configuration = new CodeGeneratorParameters(calculatedOutputDirectory);
             }
             else
-            {
+            { 
                 configuration = new CodeGeneratorParameters(this.CustomGeneratorParameters, calculatedOutputDirectory);
             }
             

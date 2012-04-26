@@ -64,8 +64,14 @@ namespace NStub.Core
 
         #region ICodeGeneratorParameters Members
 
-        
 
+
+        /// <summary>
+        /// Gets or sets the method generators level of detail .
+        /// </summary>
+        /// <value>
+        /// The method generators level of detail.
+        /// </value>
         public MemberVisibility MethodGeneratorLevelOfDetail
         {
             get

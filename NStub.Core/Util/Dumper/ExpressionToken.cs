@@ -8,7 +8,10 @@ using System.Runtime.CompilerServices;
 
 namespace NStub.Core.Util.Dumper
 {
-    public abstract class ExpressionToken
+    /// <summary>
+    /// Representation of a Linq-Expression to assist in object dumping
+    /// </summary>
+    internal abstract class ExpressionToken
     {
         [MethodImpl(MethodImplOptions.NoInlining)]
         public static ExpressionToken Visit(Expression expr)
@@ -69,7 +72,7 @@ namespace NStub.Core.Util.Dumper
         }
 
         {*/
-    Func<PropertyInfo, bool> func = null;
+    //Func<PropertyInfo, bool> func = null;
     /*if (((exp.Value != null) && exp.Type.IsGenericType) && (exp.Type.GetGenericTypeDefinition() == typeof(Table<>)))
     {
         PropertyInfo property = exp.Value.GetType().GetProperty("Context");

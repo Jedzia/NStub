@@ -23,7 +23,10 @@ namespace NStub.CSharp.ObjectGeneration.Builders {
         
         [EditorBrowsable(EditorBrowsableState.Never)]
         private List<BuildParametersOfPropertyBuilder> itemsField;
-        
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
         public List<BuildParametersOfPropertyBuilder> Items {
             get {
                 if ((this.itemsField == null)) {

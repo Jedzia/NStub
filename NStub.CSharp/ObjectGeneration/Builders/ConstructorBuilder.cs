@@ -232,7 +232,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
         /// <summary>
         /// Wraps the specified code expression into a lambda expression. 'expression' -> '() => expression'. 
         /// </summary>
-        /// <param name="statementToWrap">The statement to wrap.</param>
+        /// <param name="expressionToWrap">The expression to wrap.</param>
         /// <returns>The code expression with the wrapped <paramref name="expressionToWrap"/> code expression.</returns>
         private CodeExpression WrapIntoLambdaExpression(CodeExpression expressionToWrap)
         {
