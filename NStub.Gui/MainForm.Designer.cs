@@ -111,7 +111,7 @@ namespace NStub.Gui
             this._goButton.TabIndex = 11;
             this._goButton.Text = "Go";
             this._goButton.UseVisualStyleBackColor = true;
-            this._goButton.Click += new System.EventHandler(this.btnGo_Click);
+            this._goButton.Click += new System.EventHandler(this.BtnGoClick);
             // 
             // _browseInputAssemblyButton
             // 

@@ -93,6 +93,7 @@ namespace NStub.CSharp.Tests
             var mainNodes = new[] { assemblyNode };
 
             var referencedAssemblies = typeof(CSharpTestProjectBuilderTest).Assembly.GetReferencedAssemblies();
+            var para = new CodeGeneratorParameters(outputFolder);
             var runnerData = new GeneratorRunnerData(
                 outputFolder, generatorType, inputAssemblyPath, mainNodes, referencedAssemblies);
 

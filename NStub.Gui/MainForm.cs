@@ -118,9 +118,11 @@ namespace NStub.Gui
         }
 
 
-        private void btnGo_Click(object sender, EventArgs e)
+        private void BtnGoClick(object sender, EventArgs e)
         {
             Dumper();
+
+            string outputFolder = this._outputDirectoryTextBox.Text;
 
             /*var bg = new LoadAssemblyWorker(sbs, this.buildData, this)
             {
@@ -130,12 +132,17 @@ namespace NStub.Gui
                 Logger = Log,
             };*/
 
-            string outputFolder = this._outputDirectoryTextBox.Text;
             Type generatorType = (Type)cbGenerators.SelectedItem;
             string inputAssemblyPath = this._inputAssemblyTextBox.Text;
             IList<TreeNode> mainNodes = this._assemblyGraphTreeView.Nodes.Cast<TreeNode>().ToList();
             IList<AssemblyName> referencedAssemblies = this._referencedAssemblies;
             var data = new GeneratorRunnerData(outputFolder, generatorType, inputAssemblyPath, mainNodes.MapToNodes(), referencedAssemblies);
+
+            var para = new CodeGeneratorParameters(outputFolder)
+            {
+                MethodGeneratorLevelOfDetail = MemberVisibility.Internal
+            };
+            bg.CustomGeneratorParameters = para;
 
             bg.RunWorkerAsync(data);
         }

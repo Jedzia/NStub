@@ -8,16 +8,18 @@
 // <date>$date$</date>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
 namespace NStub.Core
 {
     /// <summary>
     /// Abstract base class for the Configuration of an <see cref="ICodeGenerator"/>.
     /// </summary>
-    public abstract class CodeGeneratorParametersBase : ICodeGeneratorParameters
+    public abstract class CodeGeneratorParametersBase : ICodeGeneratorSetup, ICodeGeneratorParameters
     {
         #region Fields
 
         private readonly string outputDirectory;
+        private MemberVisibility methodGeneratorLevelOfDetail;
 
         #endregion
 
@@ -31,6 +33,8 @@ namespace NStub.Core
         {
             Guard.NotNullOrEmpty(() => outputDirectory, outputDirectory);
             this.outputDirectory = outputDirectory;
+
+            methodGeneratorLevelOfDetail = MemberVisibility.Public;
         }
 
         #endregion
@@ -55,6 +59,39 @@ namespace NStub.Core
         /// <c>true</c> if [use setup and tear down]; otherwise, <c>false</c>.
         /// </value>
         public bool UseSetupAndTearDown { get; set; }
+
+        #endregion
+
+        #region ICodeGeneratorParameters Members
+
+        
+
+        public MemberVisibility MethodGeneratorLevelOfDetail
+        {
+            get
+            {
+                return methodGeneratorLevelOfDetail;
+            }
+            set
+            {
+                methodGeneratorLevelOfDetail = value;
+            }
+        }
+
+        #endregion
+
+        #region ICloneable Members
+
+        /// <summary>
+        /// Creates a new object that is a copy of the current instance.
+        /// </summary>
+        /// <returns>
+        /// A new object that is a copy of this instance.
+        /// </returns>
+        public object Clone()
+        {
+            return this.MemberwiseClone();
+        }
 
         #endregion
     }

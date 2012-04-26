@@ -13,6 +13,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System;
     using System.CodeDom;
     using System.Collections.Generic;
+    using NStub.Core;
 
     /// <summary>
     /// Has the capability of creating new test objects.
@@ -114,9 +115,10 @@ namespace NStub.CSharp.ObjectGeneration
         /// Creates a code generation expression for an object to test with a member field and initialization
         /// in the previous specified <see cref="SetUpMethod"/> method.
         /// </summary>
+        /// <param name="visibility">The visibility level of the objects to parse. Default should be public.</param>
         /// <returns>
         /// The initialization expression of the object under test.
         /// </returns>
-        CodeObjectCreateExpression BuildTestObject();
+        CodeObjectCreateExpression BuildTestObject(MemberVisibility visibility);
     }
 }

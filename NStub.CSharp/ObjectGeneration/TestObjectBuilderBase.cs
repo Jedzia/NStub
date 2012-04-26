@@ -173,10 +173,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// Creates a code generation expression for an object to test with a member field and initialization
         /// in the previous specified <see cref="SetUpMethod"/> method.
         /// </summary>
+        /// <param name="visibility">The visibility level of the objects to parse. Default should be public.</param>
         /// <returns>
         /// The initialization expression of the object under test.
         /// </returns>
-        public abstract CodeObjectCreateExpression BuildTestObject();
+        public abstract CodeObjectCreateExpression BuildTestObject(MemberVisibility visibility);
 
         /// <summary>
         /// Add a assign statement to the test object initializer method.

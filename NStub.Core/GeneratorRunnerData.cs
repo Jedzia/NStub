@@ -84,6 +84,11 @@ using System;
         /// </summary>
         public IList<TestNode> RootNodes { get; private set; }
 
+        /*/// <summary>
+        /// Gets the code generator parameters.
+        /// </summary>
+        public ICodeGeneratorSetup CodeGeneratorParameters { get; private set; }*/
+
         #endregion
     }
 }

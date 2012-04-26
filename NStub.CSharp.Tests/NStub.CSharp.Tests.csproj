@@ -79,6 +79,7 @@
     <Compile Include="FluentChecking\FluentCodeWrapper.cs" />
     <Compile Include="FluentChecking\Is.cs" />
     <Compile Include="ImplicitVariableDeclarationStatementTest.cs" />
+    <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttributeTest.cs" />
     <Compile Include="NamespaceDetectorTest.cs" />
     <Compile Include="ObjectGeneration\AssignmentInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\BuildDataCollectionTest.cs" />
@@ -98,6 +99,8 @@
     <Compile Include="ObjectGeneration\FluentCodeBuild\StaticClassGenericTest.cs" />
     <Compile Include="ObjectGeneration\FluentCodeBuild\StaticClassTest.cs" />
     <Compile Include="ObjectGeneration\MemberBuildResultTest.cs" />
+    <Compile Include="ObjectGeneration\MultiLookupTest.cs" />
+    <Compile Include="ObjectGeneration\ParameterInfoCollectionTest.cs" />
     <Compile Include="ParameterDescriptionAttributeTest.cs" />
     <Compile Include="Stubs\ConstructorBuilderHelpType.cs" />
     <Compile Include="Stubs\InfoApe.cs" />

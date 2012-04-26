@@ -30,12 +30,10 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         [Test()]
         public void ConstructWithParametersPreferredConstructorTest()
         {
-            // TODO: Implement unit test for ConstructWithParametersPreferredConstructor
             this.preferredConstructor = new NStub.CSharp.ObjectGeneration.AssignmentInfoCollection();
             this.testObject = new ConstructorAssignmentCollection(this.preferredConstructor);
 
             Assert.Throws<ArgumentNullException>(() => new ConstructorAssignmentCollection(null));
-            Assert.Inconclusive("Verify the correctness of this test method.");
         }
         
         [Test()]
@@ -45,36 +43,50 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var expected = 1;
             var actual = testObject.Count;
             Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
         }
         
         [Test()]
         public void PropertyPreferredConstructorNormalBehavior()
         {
-            // TODO: Implement unit test for PropertyPreferredConstructor
-
             // Test read access of 'PreferredConstructor' Property.
-            var expected = new NStub.CSharp.ObjectGeneration.AssignmentInfoCollection();
+            var expected = this.preferredConstructor;
             var actual = testObject.PreferredConstructor;
-            Assert.AreEqual(expected, actual);
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.AreSame(expected, actual);
         }
         
         [Test()]
         public void AddConstructorAssignmentTest()
         {
-            // TODO: Implement unit test for AddConstructorAssignment
+            var expected = 1;
+            var actual = testObject.Count;
+            Assert.AreEqual(expected, actual);
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var asgn = new NStub.CSharp.ObjectGeneration.AssignmentInfoCollection();
+            testObject.AddConstructorAssignment(asgn);
+
+            expected = 2;
+            actual = testObject.Count;
+            Assert.AreEqual(expected, actual);
+
+            // add the same again.
+            testObject.AddConstructorAssignment(asgn);
+            expected = 3;
+            actual = testObject.Count;
+            Assert.AreEqual(expected, actual);
+
+            // add a range of assignments.
+            testObject.AddConstructorAssignment(new[] { asgn, asgn, asgn, asgn });
+            expected = 7;
+            actual = testObject.Count;
+            Assert.AreEqual(expected, actual);
         }
         
         [Test()]
         public void GetEnumeratorTest()
         {
-            // TODO: Implement unit test for GetEnumerator
-
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            Assert.IsNotNull(testObject.GetEnumerator());
+            Assert.IsNotNull(((System.Collections.IEnumerable)testObject).GetEnumerator());
+            Assert.IsInstanceOfType<IEnumerator<AssignmentInfoCollection>>(testObject.GetEnumerator());
         }
     }
 }

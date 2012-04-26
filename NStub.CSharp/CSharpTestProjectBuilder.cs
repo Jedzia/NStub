@@ -69,7 +69,7 @@ namespace NStub.CSharp
         /// An with the parameters initialized code generator.
         /// </returns>
         protected override ICodeGenerator OnCreateCodeGenerator(
-            CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
+            CodeNamespace codeNamespace, ICodeGeneratorParameters configuration, IBuildSystem buildSystem)
         {
             var codeGenerator = this.createGeneratorCallback(buildSystem, this.properties, configuration, codeNamespace);
             return codeGenerator;

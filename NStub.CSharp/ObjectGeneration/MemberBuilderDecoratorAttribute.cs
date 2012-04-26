@@ -38,7 +38,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// </remarks>
         public MemberBuilderDecoratorAttribute(Type decoratedType)
         {
-            Guard.CanBeAssigned(() => decoratedType, typeof(IMemberBuilder), decoratedType);
+            Guard.CanBeAssigned(() => decoratedType, decoratedType, typeof(IMemberBuilder));
             this.DecoratedType = decoratedType;
         }
 

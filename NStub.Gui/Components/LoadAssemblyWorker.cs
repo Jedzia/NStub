@@ -207,6 +207,8 @@ namespace NStub.Gui.Components
                             return codeGenerator;
                         }, 
                     this.Log);
+
+                testProjectBuilder.CustomGeneratorParameters = this.CustomGeneratorParameters;
                 testProjectBuilder.GenerateTests(parameters);
             }
             catch (Exception ex)
@@ -214,5 +216,15 @@ namespace NStub.Gui.Components
                 this.Log(ex.ToString());
             }
         }
+
+        /// <summary>
+        /// Gets or sets the user provided code generator parameters.
+        /// </summary>
+        public ICodeGeneratorSetup CustomGeneratorParameters
+        {
+            get;
+            set;
+        }
+
     }
 }

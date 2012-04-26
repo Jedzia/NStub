@@ -269,10 +269,11 @@ namespace NStub.CSharp.ObjectGeneration
         /// Creates a code generation expression for an object to test with a member field and initialization
         /// in the constructor specified <see cref="TestObjectBuilderBase.SetUpMethod"/> method.
         /// </summary>
+        /// <param name="visibility">The visibility level of the objects to parse. Default should be public.</param>
         /// <returns>
         /// The initialization expression of the object under test.
         /// </returns>
-        public override CodeObjectCreateExpression BuildTestObject()
+        public override CodeObjectCreateExpression BuildTestObject(MemberVisibility visibility)
         {
             /*var invokeExpression = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
@@ -286,7 +287,24 @@ namespace NStub.CSharp.ObjectGeneration
             var testObjectMemberFieldCreate = new CodeObjectCreateExpression(TestObjectName, new CodeExpression[] { });
             TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
             var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
-            CtorAssignments = this.AddParametersToConstructor();
+
+            var flags = BindingFlags.Instance;
+            switch (visibility)
+            {
+                case MemberVisibility.Public:
+                    flags |= BindingFlags.Public;
+                    break;
+                case MemberVisibility.Internal:
+                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
+                    break;
+                case MemberVisibility.Private:
+                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
+                    break;
+                default:
+                    break;
+            }
+
+            CtorAssignments = this.AddParametersToConstructor(flags);
 
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
@@ -442,12 +460,17 @@ namespace NStub.CSharp.ObjectGeneration
                 }
         */
 
+
         /// <summary>
         /// Add the parameter assignments to the specified constructor expression.
         /// </summary>
-        /// <returns>A structure with data about parameter initialization for the type of test object of this instance.</returns>
+        /// <param name="bindingAttr">A bitmask comprised of one or more System.Reflection.BindingFlags
+        /// that specify how the search is conducted.  -or- Zero, to return null.</param>
+        /// <returns>
+        /// A structure with data about parameter initialization for the type of test object of this instance.
+        /// </returns>
         /// <exception cref="InvalidOperationException">No preferred constructor found, but there should one.</exception>
-        private ConstructorAssignmentCollection AddParametersToConstructor()
+        private ConstructorAssignmentCollection AddParametersToConstructor(BindingFlags bindingAttr)
         {
             // Type[] parameters = { /*typeof(int)*/ };
 
@@ -475,8 +498,7 @@ namespace NStub.CSharp.ObjectGeneration
             // "The public constructor of MyClass that takes an integer as a parameter is:\n"; 
             // outputBlock.Text += ctor.ToString() + "\n";
             // }
-            var testObjectConstructors = TestObjectType.GetConstructors(
-                BindingFlags.Instance | BindingFlags.Public);
+            var testObjectConstructors = TestObjectType.GetConstructors(bindingAttr);
 
             // var ctorParameterTypes = new List<ParameterInfo>();
             if (testObjectConstructors.Length < 1)

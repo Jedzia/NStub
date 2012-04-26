@@ -65,8 +65,8 @@ namespace NStub.CSharp
             Guard.NotNull(() => buildSystem, buildSystem);
             this.buildSystem = buildSystem;
             Guard.NotNull(() => configuration, configuration);
+            this.Configuration = configuration;
 
-            // this.configuration = configuration;
             string outputDirectory = configuration.OutputDirectory;
 
             // Null arguments will not be accepted
@@ -156,6 +156,8 @@ namespace NStub.CSharp
         /// <value>The <see cref="System.CodeDom.CodeNamespace"/> object the 
         /// generator is currently working from.</value>
         public CodeNamespace CodeNamespace { get; set; }
+
+        public ICodeGeneratorParameters Configuration { get; private set; }
 
         /// <summary>
         /// Gets or sets the directory the new sources files will be output to.
@@ -430,9 +432,14 @@ namespace NStub.CSharp
             ITestObjectComposer objectBuilder = new TestObjectComposer(
                 buildData, setUpMethod, testObjectMemberField, testObjectName, testObjectType);
 
+            //if (testObjectType.Name.StartsWith("TestObjectComposer"))
+                if (testObjectType.Name == "TestObjectComposer")
+            {
+
+            }
             // var testObjectConstructor = cr.BuildTestObject();
             // cr.AssignParameters(this.CurrentTestClassDeclaration, cr.TestObjectMemberFieldCreateExpression);
-            objectBuilder.BuildTestObject();
+            objectBuilder.BuildTestObject(Configuration.MethodGeneratorLevelOfDetail);
             objectBuilder.AssignParameters(this.CurrentTestClassDeclaration);
 
             // return testObjectConstructor;

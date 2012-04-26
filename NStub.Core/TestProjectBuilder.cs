@@ -62,6 +62,15 @@ namespace NStub.Core
         #endregion
 
         /// <summary>
+        /// Gets or sets the user provided code generator parameters.
+        /// </summary>
+        public ICodeGeneratorSetup CustomGeneratorParameters
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Generates the tests.
         /// </summary>
         /// <param name="data">The data that is necessary for test building.</param>
@@ -106,11 +115,11 @@ namespace NStub.Core
             // Create a new directory for each assembly
             foreach (var assemblyNode in mainNodes)
             {
-                string outputDirectory = outputFolder +
+                string calculatedOutputDirectory = outputFolder +
                                          this.sbs.DirectorySeparatorChar +
                                          this.sbs.GetFileNameWithoutExtension(assemblyNode.Text) +
                                          ".Tests";
-                this.sbs.CreateDirectory(outputDirectory);
+                this.sbs.CreateDirectory(calculatedOutputDirectory);
 
                 // Create our project generator
 
@@ -190,7 +199,7 @@ namespace NStub.Core
                         }
                     }
 
-                    this.WriteTestFile(outputDirectory, codeNamespace);
+                    this.WriteTestFile(calculatedOutputDirectory, codeNamespace);
                 }
 
                 // Now write the project file and add all of the test files to it
@@ -223,7 +232,7 @@ namespace NStub.Core
         /// ]]></code></example>
         /// </remarks>
         protected virtual ICodeGenerator OnCreateCodeGenerator(
-            CodeNamespace codeNamespace, CodeGeneratorParameters configuration, IBuildSystem buildSystem)
+            CodeNamespace codeNamespace, ICodeGeneratorParameters configuration, IBuildSystem buildSystem)
         {
             var codeGenerator = this.createGeneratorCallback(buildSystem, configuration, codeNamespace);
             return codeGenerator;
@@ -261,8 +270,13 @@ namespace NStub.Core
                 }
         */
 
+        /// <summary>
+        /// Writes the test file.
+        /// </summary>
+        /// <param name="calculatedOutputDirectory">The calculated output directory.</param>
+        /// <param name="codeNamespace">The code namespace.</param>
         private void WriteTestFile(
-            string outputDirectory, CodeNamespace codeNamespace)
+            string calculatedOutputDirectory, CodeNamespace codeNamespace)
         {
             // Now write the test file 
             // NStubCore nStub =
@@ -278,7 +292,17 @@ namespace NStub.Core
             // new CSharpMbUnitRhinoMocksCodeGenerator(codeNamespace, outputDirectory));
 
             // var testBuilders = new TestBuilderFactory(new PropertyBuilder(), new EventBuilder(), new MethodBuilder());
-            var configuration = new CodeGeneratorParameters(outputDirectory);
+
+            ICodeGeneratorParameters configuration = null;
+            if (this.CustomGeneratorParameters == null)
+            {
+                configuration = new CodeGeneratorParameters(calculatedOutputDirectory);
+            }
+            else
+            {
+                configuration = new CodeGeneratorParameters(this.CustomGeneratorParameters, calculatedOutputDirectory);
+            }
+            
 
             // var testBuilders = new TestBuilderFactory();
             // var codeGenerator = (ICodeGenerator)Activator.CreateInstance(generatorType, new object[]
@@ -289,7 +313,7 @@ namespace NStub.Core
             var codeGenerator = this.OnCreateCodeGenerator(codeNamespace, configuration, buildSystem);
 
             // codeNamespace.Dump(3);
-            var nstub = new NStubCore(buildSystem, codeNamespace, outputDirectory, codeGenerator);
+            var nstub = new NStubCore(buildSystem, codeNamespace, calculatedOutputDirectory, codeGenerator);
             nstub.GenerateCode();
 
             // Add all of our classes to the project
