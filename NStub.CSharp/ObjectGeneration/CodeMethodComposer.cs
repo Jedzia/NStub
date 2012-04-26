@@ -54,6 +54,13 @@ namespace NStub.CSharp.ObjectGeneration
 
             }
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberField);
+            CodeExpression assignExpr = CreateExpressionByType(type, memberField);
+
+            return new CodeAssignStatement(fieldRef1, assignExpr);
+        }
+
+        public static CodeExpression CreateExpressionByType(Type type, string memberField)
+        {
             CodeExpression assignExpr;
             if (type.IsAssignableFrom(typeof(string)))
             {
@@ -76,8 +83,7 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 assignExpr = new CodeObjectCreateExpression(type.FullName, new CodeExpression[] { });
             }
-
-            return new CodeAssignStatement(fieldRef1, assignExpr);
+            return assignExpr;
         }
 
         /// <summary>

@@ -230,9 +230,6 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
 
             // Guard.NotNull(() => this.assignments, this.assignments);
-            if (testClassDeclaration.Name.StartsWith("Jedzia.SamCat.Model.Tasks.TaskComposer"))
-            {
-            }
 
             if (this.HasParameterAssignments)
             {
@@ -250,7 +247,34 @@ namespace NStub.CSharp.ObjectGeneration
                     // Add the member field to the test class.
                     testClassDeclaration.Members.Add(assignment.MemberField);
                     BuildData.AddDataItem(
-                        "Assignments." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                        "Assignments." + testClassDeclaration.Name, 
+                        assignment.MemberField.Name, 
+                        new BuilderData<ConstructorAssignment>(assignment));
+
+
+                    // if there a sub assignments to this parameter, add them
+                    if (assignment.HasCreationAssignments)
+                    {
+                        if (this.TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
+                        {
+                        }
+
+                        foreach (var creationAssignment in assignment.CreateAssignments)
+                        {
+                            testClassDeclaration.Members.Add(creationAssignment.MemberField);
+                            AddAssignStatement(creationAssignment.AssignStatement);
+                            var assignCreateExpr = assignment.AssignStatement.Right as CodeObjectCreateExpression;
+                            if (assignCreateExpr != null)
+                            {
+                                assignCreateExpr.Parameters.Add(creationAssignment.AssignStatement.Left);
+                            }
+                            BuildData.AddDataItem(
+                                "Assignments." + testClassDeclaration.Name,
+                                assignment.MemberField.Name + "|" + creationAssignment.MemberField.Name,
+                                new BuilderData<ConstructorAssignment>(creationAssignment));
+                        }
+                    }
+
 
                     // Add a local variable for the constructor parameter.
                     AddAssignStatement(assignment.AssignStatement);
@@ -258,6 +282,7 @@ namespace NStub.CSharp.ObjectGeneration
                     // Add the local variable to the constructor initializer in the object create expression 
                     // (e.g. SetUp method, test object constructor) of the specified method.
                     testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
+
                 }
 
                 // reorder the testObject initializer to the bottom of the SetUp method.
@@ -515,7 +540,11 @@ namespace NStub.CSharp.ObjectGeneration
             AssignmentInfoCollection mostAssignmentInfoCollection = null;
             foreach (var constructor in testObjectConstructors)
             {
-                var assignmentInfoCollection = this.BuildAssignmentInfoForConstructor(constructor);
+                if (constructor.IsPrivate)
+                {
+                    continue;
+                }
+                var assignmentInfoCollection = this.BuildAssignmentInfoForConstructor(bindingAttr, constructor);
                 int parameterAmount = constructor.GetParameters().Length;
                 if (parameterAmount > most)
                 {
@@ -546,7 +575,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="constructor">The constructor to build the parameter assignment info's for.</param>
         /// <returns>An <see cref="AssignmentInfoCollection"/> initialized with the data from the specified 
         /// <paramref name="constructor"/>.</returns>
-        private AssignmentInfoCollection BuildAssignmentInfoForConstructor(ConstructorInfo constructor)
+        private AssignmentInfoCollection BuildAssignmentInfoForConstructor(BindingFlags bindingAttr, ConstructorInfo constructor)
         {
             // var ctorParameterTypesInterface = new List<ParameterInfo>();
             // var ctorParameterTypesStd = new List<ParameterInfo>();
@@ -554,7 +583,7 @@ namespace NStub.CSharp.ObjectGeneration
             var ctorParameters = constructor.GetParameters();
             foreach (var para in ctorParameters)
             {
-                if (!para.ParameterType.IsGenericType)
+                // if (!para.ParameterType.IsGenericType)
                 {
                     ctorParameterTypes.AddParameterInfo(para);
 
@@ -586,14 +615,67 @@ namespace NStub.CSharp.ObjectGeneration
 
             // BuildAssignmentInfoForConstructor
             var assignmentInfoCollection = new AssignmentInfoCollection { UsedConstructor = constructor };
-            foreach (var paraInfo in ctorParameterTypes.StandardTypes)
+            var addTypesFrom = ctorParameterTypes.StandardTypes;
+            if ((bindingAttr & BindingFlags.NonPublic)  == BindingFlags.NonPublic)
             {
-                var memberField = BaseCSharpCodeGenerator.CreateMemberField(
-                    paraInfo.ParameterType.FullName, paraInfo.Name);
-                var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
-                    paraInfo.ParameterType, paraInfo.Name);
-                var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
-                assignmentInfoCollection.AddAssignment(assignment);
+                addTypesFrom = ctorParameterTypes;
+            }
+
+            foreach (var paraInfo in addTypesFrom)
+            {
+                if (!paraInfo.ParameterType.IsGenericType)
+                {
+                    var memberField = BaseCSharpCodeGenerator.CreateMemberField(
+                        paraInfo.ParameterType.FullName, paraInfo.Name);
+                    var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
+                        paraInfo.ParameterType, paraInfo.Name);
+                    var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField);
+                    assignmentInfoCollection.AddAssignment(assignment);
+                }
+                else
+                {
+                    var genericTypeDefinition = paraInfo.ParameterType.GetGenericTypeDefinition();
+
+                    if (this.TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
+                    {
+
+                    }
+
+                    if (typeof(IEnumerable<>).IsAssignableFrom(genericTypeDefinition))
+                    {
+                        var genArgs = paraInfo.ParameterType.GetGenericArguments();
+                        if (genArgs.Length == 1)
+                        {
+                            var memberFieldName = paraInfo.Name + "Item";
+                            var memberField = BaseCSharpCodeGenerator.CreateMemberField(
+                                genArgs[0].FullName, memberFieldName);
+                            var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
+                                genArgs[0], memberFieldName);
+                            var assignment = new ConstructorAssignment(memberFieldName, fieldAssignment, memberField);
+                            // assignmentInfoCollection.AddAssignment(assignment);
+                            // AddAssignStatement(fieldAssignment);
+
+                            var collectionFieldName = paraInfo.Name;
+                            var collectionField = BaseCSharpCodeGenerator.CreateMemberField(
+                                paraInfo.ParameterType.FullName, collectionFieldName);
+                            var collectionAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
+                                paraInfo.ParameterType, collectionFieldName);
+                            var collection = new ConstructorAssignment(collectionFieldName, collectionAssignment, collectionField);
+                            collection.CreateAssignments.Add(assignment);
+                            assignmentInfoCollection.AddAssignment(collection);
+                        }
+                    }
+
+                    if (typeof(System.Collections.IEnumerable).IsAssignableFrom(paraInfo.ParameterType))
+                    {
+
+                    }
+
+                    if (paraInfo.ParameterType.IsAssignableFrom(typeof(IEnumerable<>)))
+                    {
+                        
+                    }
+                }
             }
 
             return assignmentInfoCollection;

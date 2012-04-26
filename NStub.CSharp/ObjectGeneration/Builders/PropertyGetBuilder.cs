@@ -114,27 +114,34 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             var propName = propertyData.PropertyName;
 
-            CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
+            // devel: how to create a string initializer from possible constructor setups of the 'SetUp' method.
+            var co = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
+            if (co == null)
             {
-                // devel: how to create a string initializer from possible constructor setups of the 'SetUp' method.
-                var co = context.SetUpTearDownContext as ISetupAndTearDownCreationContext;
-                if (co == null)
-                {
-                    throw new NotImplementedException("The context of the builder does not supply a valid ISetupAndTearDownCreationContext.");
-                }
+                throw new NotImplementedException("The context of the builder does not supply a valid ISetupAndTearDownCreationContext.");
+            }
 
-                var creator = co.TestObjectCreator as TestObjectComposer;
-                ConstructorAssignment ctorAssignment;
-                if (creator == null)
-                {
-                    throw new NotImplementedException("The context of the builder does not supply a valid TestObjectBuilder.");
-                }
-                
-                var found = creator.TryFindConstructorAssignment(propName, out ctorAssignment, false);
-                if (found)
-                {
-                    ctorAssignmentRight = ctorAssignment.AssignStatement.Right;
-                }
+            // Todo: put these used methods into the interfaces of TestObjectComposer and maybe modify 
+            // ISetupAndTearDownContext that it provides the co.TestObjectCreator. ... or fix all this in the
+            // pre-build?!!
+            var creator = co.TestObjectCreator as TestObjectComposer;
+            if (creator == null)
+            {
+                throw new NotImplementedException("The context of the builder does not supply a valid TestObjectBuilder.");
+            }
+
+            ConstructorAssignment ctorAssignment;
+            var found = creator.TryFindConstructorAssignment(propName, out ctorAssignment, false);
+
+
+            CodeExpression ctorAssignmentRight = CodeMethodComposer.CreateExpressionByType(getAccessor.ReturnType, propertyData.PropertyName);
+            // CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
+            if (found)
+            {
+                // use the value of the ctor initializer.
+                //ctorAssignmentRight = ctorAssignment.AssignStatement.Right;
+                // use the field reference itself.
+                ctorAssignmentRight = ctorAssignment.AssignStatement.Left;
             }
 
             typeMember.Statements.Add(new CodeSnippetStatement(string.Empty));

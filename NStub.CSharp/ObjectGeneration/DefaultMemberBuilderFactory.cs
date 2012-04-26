@@ -11,6 +11,7 @@
 namespace NStub.CSharp.ObjectGeneration
 {
     using NStub.CSharp.ObjectGeneration.Builders;
+using System.Collections.Generic;
 
     /// <summary>
     /// Default implementation of a <see cref="IMemberBuilderFactory"/>.
@@ -18,6 +19,34 @@ namespace NStub.CSharp.ObjectGeneration
     internal class DefaultMemberBuilderFactory : MemberBuilderFactory
     {
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class. DeleteME
+        /// </summary>
+        /// <param name="serializer">The serializer.</param>
+        /// <param name="handlers">The handlers.</param>
+        private DefaultMemberBuilderFactory(IBuilderSerializer serializer, IEnumerable<IBuildHandler> handlers, string noWay)
+            : base(serializer)
+        {
+            foreach (var handler in handlers)
+            {
+                AddHandler(handler);
+            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class
+        /// for testing purposes.
+        /// </summary>
+        /// <param name="serializer">The build parameter serializer.</param>
+        internal DefaultMemberBuilderFactory(IBuilderSerializer serializer, IEnumerable<IBuildHandler> handlers)
+            : base(serializer)
+        {
+            foreach (var handler in handlers)
+            {
+                AddHandler(handler);
+            }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class.

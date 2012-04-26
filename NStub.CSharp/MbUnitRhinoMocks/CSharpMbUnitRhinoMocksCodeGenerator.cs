@@ -105,18 +105,33 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             CodeMemberField testObjectMemberField,
             string testObjectName)
         {
-            // Todo: only the Type is necs, the CodeTypeDeclaration is to much knowledge.
+            // Todo: only the Type is necs, the CodeTypeDeclaration is too much knowledge.
             var testObjectClassType = (Type)testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey];
 
             Type[] parameters = { /*typeof(int)*/ };
 
             // Get the constructor that takes an integer as a parameter.
-            var ctor = testObjectClassType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public,
-                Type.DefaultBinder,
-                parameters,
-                null);
 
+            var flags = BindingFlags.Instance;
+            var noPrivate = true;
+            switch (this.Configuration.MethodGeneratorLevelOfDetail)
+            {
+                case MemberVisibility.Public:
+                    flags |= BindingFlags.Public;
+                    break;
+                case MemberVisibility.Internal:
+                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
+                    break;
+                case MemberVisibility.Private:
+                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
+                    noPrivate = false;
+                    break;
+                default:
+                    break;
+            }
+
+
+            var ctor = testObjectClassType.GetConstructor(flags, Type.DefaultBinder, parameters, null);
             if (ctor == null)
             {
                 // outputBlock.Text += 
@@ -129,13 +144,17 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             // "The public constructor of MyClass that takes an integer as a parameter is:\n"; 
             // outputBlock.Text += ctor.ToString() + "\n";
             // }
-            var testObjectConstructors = testObjectClassType.GetConstructors(
-                BindingFlags.Instance | BindingFlags.Public);
+            var testObjectConstructors = testObjectClassType.GetConstructors(flags);
             bool hasInterfaceInCtorParameters = false;
             var ctorParameterTypes = new List<ParameterInfo>();
 
             foreach (var constructor in testObjectConstructors)
             {
+                if (noPrivate && constructor.IsPrivate)
+                {
+                    continue;
+                }
+
                 var ctorParameters = constructor.GetParameters();
                 foreach (var para in ctorParameters)
                 {
@@ -160,17 +179,48 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             var mockAssignments = new List<CodeAssignStatement>();
             foreach (var paraInfo in ctorParameterTypes)
             {
-                var mockMemberField = AddTestMemberField(
-                    testClassDeclaration, paraInfo.ParameterType.FullName, paraInfo.Name);
+                // reuse already present field.
+                CodeMemberField mockMemberField = testClassDeclaration.Members
+                    .OfType<CodeMemberField>()
+                    .Where(e => e.Name == paraInfo.Name).First();
+                var mockMemberFieldCreated = false;
+                if (mockMemberField == null)
+                {
+                    mockMemberField = AddTestMemberField(
+                        testClassDeclaration, paraInfo.ParameterType.FullName, paraInfo.Name);
+                    mockMemberFieldCreated = true;
+                }
+
                 var mockAssignment = this.AddMockObject(
                     setUpMethod, mockRepositoryMemberField, testObjectName, paraInfo, paraInfo.Name);
+                if (mockMemberFieldCreated)
+                {
+                    setUpMethod.Statements.Add(mockAssignment);
+                }
+                else
+                {
+                    var creatorCategory = "Assignments." + testClassDeclaration.Name;
+                    var creatorKey = paraInfo.Name;
+                    var category = BuildProperties[creatorCategory];
+                    var prop = category[creatorKey];
+                    var ctorassignment = prop.GetData() as ConstructorAssignment;
+                    if (testObjectClassType.Name == "DefaultMemberBuilderFactory")
+                    {
+                    }
+                    if (ctorassignment != null)
+                    {
+                        // ctorassignment.AssignStatement.Right = mockAssignment.Left;
+                        ctorassignment.AssignStatement.Right = mockAssignment.Right;
+                        //ctorassignment.AssignStatement.Right = new CodePrimitiveExpression("Fuck");
+                    }
+                }
                 mockAssignments.Add(mockAssignment);
             }
 
             // reorder the testObject initializer to the bottom of the SetUp method.
-            var removedTypedec = setUpMethod.Statements[testObjectInitializerPosition];
-            setUpMethod.Statements.RemoveAt(testObjectInitializerPosition);
-            setUpMethod.Statements.Add(removedTypedec);
+            //var removedTypedec = setUpMethod.Statements[testObjectInitializerPosition];
+            //setUpMethod.Statements.RemoveAt(testObjectInitializerPosition);
+            //setUpMethod.Statements.Add(removedTypedec);
 
             return mockAssignments;
         }
@@ -225,7 +275,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             // var expressionStatement = new CodeExpressionStatement(invokeExpression);
             // var objectCreate1 = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
             var as1 = new CodeAssignStatement(fieldRef1, invokeExpression);
-            setUpMethod.Statements.Add(as1);
+            // setUpMethod.Statements.Add(as1);
 
             // var testObject = TestMemberFieldLookup["testObject"];
             // setUpMethod.Statements.Add(as1);
@@ -255,9 +305,8 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             var objectCreate1 = new CodeObjectCreateExpression(typeof(MockRepository).Name, new CodeExpression[] { });
             var as1 = new CodeAssignStatement(fieldRef1, objectCreate1);
 
-            // Creates a statement using a code expression.
-            // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-            setUpMethod.Statements.Add(as1);
+            // Insert MockRepository initializer on the top after comment.
+            setUpMethod.Statements.Insert(1, as1);
             return mockMemberField;
         }
 

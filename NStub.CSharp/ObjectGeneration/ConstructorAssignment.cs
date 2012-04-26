@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System.CodeDom;
     using NStub.Core;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Holds a mapping from parameter name to code creation expressions.
@@ -59,6 +60,42 @@ namespace NStub.CSharp.ObjectGeneration
         /// The name of the parameter.
         /// </value>
         public string ParameterName { get; private set; }
+        
+        private ICollection<ConstructorAssignment> createAssignments;
+
+        /// <summary>
+        /// Gets the additional assignments used to create this constructor assignment.
+        /// </summary>
+        public ICollection<ConstructorAssignment> CreateAssignments
+        {
+            get
+            {
+                if (this.createAssignments == null)
+                {
+                    this.createAssignments = new List<ConstructorAssignment>();
+                }
+                return this.createAssignments;
+            }
+
+            /*set
+            {
+                this.createAssignments = value;
+            }*/
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance has creation assignments.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance has creation assignments; otherwise, <c>false</c>.
+        /// </value>
+        public bool HasCreationAssignments
+        {
+            get
+            {
+                return this.createAssignments != null && this.createAssignments.Count > 0;
+            }
+        }
 
         #endregion
     }

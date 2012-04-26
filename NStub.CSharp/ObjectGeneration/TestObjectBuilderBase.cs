@@ -163,6 +163,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// expression stored in <see cref="TestObjectMemberFieldCreateExpression"/>.
         /// </summary>
         /// <param name="testClassDeclaration">The test class declaration.</param>
+        /// <remarks>Simply means, to add the calculated fields to the specified <paramref name="testClassDeclaration"/>.</remarks>
         public void AssignParameters(CodeTypeDeclaration testClassDeclaration)
         {
             this.AssignParameters(testClassDeclaration, this.TestObjectMemberFieldCreateExpression);

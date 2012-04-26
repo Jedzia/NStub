@@ -262,7 +262,11 @@ namespace NStub.Gui
         /// </summary>
         private void LoadAssembly()
         {
-            var asf = new AssemblyFetcher(this._inputAssemblyOpenFileDialog.FileName, this._inputAssemblyOpenFileDialog.FileNames);
+            var asf = new AssemblyFetcher(
+                MemberVisibility.Internal, 
+                this._inputAssemblyOpenFileDialog.FileName,
+                this._inputAssemblyOpenFileDialog.FileNames);
+
             var resss = asf.LoadAssembly();
             this._assemblyGraphTreeView.Nodes.Clear();
             this._assemblyGraphTreeView.Nodes.Add(resss.Nodes[0].MapToTree());

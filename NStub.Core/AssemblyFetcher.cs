@@ -14,13 +14,15 @@ namespace NStub.Core
         private readonly TestNode _assemblyGraphTreeView;// = new TestNode() { Text = "Root" };
         private readonly List<AssemblyName> _referencedAssemblies;// = new List<AssemblyName>();
         private readonly List<string> _inputAssemblyOpenFileDialog;// = new List<string>();
+        private readonly MemberVisibility methodVisibility;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AssemblyFetcher"/> class.
         /// </summary>
+        /// <param name="methodVisibility">The method visibility to parse.</param>
         /// <param name="assemblyName">Description text of the root assembly node.</param>
         /// <param name="inputAssemblies">The list of input assemblies.</param>
-        public AssemblyFetcher(string assemblyName, IEnumerable<string> inputAssemblies)
+        public AssemblyFetcher(MemberVisibility methodVisibility, string assemblyName, IEnumerable<string> inputAssemblies)
         {
             Guard.NotNullOrEmpty(() => assemblyName, assemblyName);
             Guard.NotNull(() => inputAssemblies, inputAssemblies);
@@ -28,6 +30,7 @@ namespace NStub.Core
             _assemblyGraphTreeView = new TestNode() { Text = assemblyName };
             _inputAssemblyOpenFileDialog = inputAssemblies.ToList();
             _referencedAssemblies = new List<AssemblyName>();
+            this.methodVisibility = methodVisibility;
         }
         /// <summary>
         /// Reflects through the currently selected assembly and reflects the type tree

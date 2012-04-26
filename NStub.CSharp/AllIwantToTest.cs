@@ -12,6 +12,7 @@ namespace NStub.CSharp
 {
     using System;
     using NStub.CSharp.ObjectGeneration;
+    using System.Collections.Generic;
 
     /// <summary>
     /// For testing purposes. Todo: DeleteME after this project is done *g*
@@ -19,6 +20,13 @@ namespace NStub.CSharp
     public class AllIwantToTest
     {
         #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:AllIwantToTest"/> class.
+        /// </summary>
+        public AllIwantToTest(IEnumerable<string> myIe)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AllIwantToTest"/> class.

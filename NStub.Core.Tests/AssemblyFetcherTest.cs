@@ -15,7 +15,7 @@ namespace NStub.CoreNStub.Core
 
         private string assemblyName;
         private List<string> inputAssemblies;
-        
+        private MemberVisibility methodVisibility;
         private AssemblyFetcher testObject;
 
 
@@ -35,9 +35,10 @@ namespace NStub.CoreNStub.Core
                 typeof(Rhino.Mocks.MockRepository).Assembly,
             }.ToList();
 
+            this.methodVisibility = MemberVisibility.Public;
             this.assemblyName = typeof(AssemblyFetcherTest).Assembly.Location;
             this.inputAssemblies = assemblies.Select(e => e.Location).ToList();
-            this.testObject = new AssemblyFetcher(this.assemblyName, this.inputAssemblies);
+            this.testObject = new AssemblyFetcher(this.methodVisibility, this.assemblyName, this.inputAssemblies);
         }
         
         [TearDown()]
@@ -49,18 +50,18 @@ namespace NStub.CoreNStub.Core
         [Test()]
         public void ConstructWithParametersAssemblyNameInputAssembliesTest()
         {
-            this.testObject = new AssemblyFetcher("Some other root", this.inputAssemblies);
+            this.testObject = new AssemblyFetcher(this.methodVisibility, "Some other root", this.inputAssemblies);
 
-            Assert.Throws<ArgumentNullException>(() => new AssemblyFetcher(null, this.inputAssemblies));
-            Assert.Throws<ArgumentException>(() => new AssemblyFetcher(string.Empty, this.inputAssemblies));
-            Assert.Throws<ArgumentNullException>(() => new AssemblyFetcher(this.assemblyName, null));
+            Assert.Throws<ArgumentNullException>(() => new AssemblyFetcher(this.methodVisibility, null, this.inputAssemblies));
+            Assert.Throws<ArgumentException>(() => new AssemblyFetcher(this.methodVisibility, string.Empty, this.inputAssemblies));
+            Assert.Throws<ArgumentNullException>(() => new AssemblyFetcher(this.methodVisibility, this.assemblyName, null));
         }
 
         [Test()]
         public void LoadAssemblyWithDifferentDescription()
         {
             var expectedRootName = "Different Name";
-            this.testObject = new AssemblyFetcher(expectedRootName, this.inputAssemblies);
+            this.testObject = new AssemblyFetcher(this.methodVisibility, expectedRootName, this.inputAssemblies);
             var result = testObject.LoadAssembly();
             Assert.IsNotNull(result);
             Assert.IsNotEmpty(result.Nodes);
@@ -71,7 +72,7 @@ namespace NStub.CoreNStub.Core
         public void LoadAssemblyWithNullInInputAssembliesThrows()
         {
             this.inputAssemblies[1] = null;
-            this.testObject = new AssemblyFetcher("HelloTest", this.inputAssemblies);
+            this.testObject = new AssemblyFetcher(this.methodVisibility, "HelloTest", this.inputAssemblies);
             Assert.Throws<ArgumentNullException>(() => testObject.LoadAssembly());
         }
 
@@ -79,7 +80,7 @@ namespace NStub.CoreNStub.Core
         public void LoadAssemblyWithNonValidFilenameInInputAssembliesThrows()
         {
             this.inputAssemblies[1] = "A assembly that can't be a valid one.dll";
-            this.testObject = new AssemblyFetcher("HelloTest", this.inputAssemblies);
+            this.testObject = new AssemblyFetcher(this.methodVisibility, "HelloTest", this.inputAssemblies);
             Assert.Throws<ArgumentException>(() => testObject.LoadAssembly());
         }
 
