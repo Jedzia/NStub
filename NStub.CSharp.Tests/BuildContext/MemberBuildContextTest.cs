@@ -31,6 +31,7 @@ namespace NStub.CSharp.Tests.BuildContext
         private CodeTypeDeclaration testClassDeclaration;
         private MemberBuildContext testObject;
         private CodeTypeMember typeMember;
+        private const string TheKey = "TheKey";
 
         #endregion
 
@@ -42,40 +43,47 @@ namespace NStub.CSharp.Tests.BuildContext
                                             null, 
                                             this.testClassDeclaration, 
                                             this.typeMember, 
-                                            this.buildData, 
-                                            this.setUpTearDownContext));
+                                            this.buildData,
+                                            this.setUpTearDownContext, TheKey));
 
             Assert.Throws<ArgumentNullException>(
                 () => this.testObject = new MemberBuildContext(
                                             this.codeNamespace, 
                                             null, 
                                             this.typeMember, 
-                                            this.buildData, 
-                                            this.setUpTearDownContext));
+                                            this.buildData,
+                                            this.setUpTearDownContext, TheKey));
 
             Assert.Throws<ArgumentNullException>(
                 () => this.testObject = new MemberBuildContext(
                                             this.codeNamespace, 
                                             this.testClassDeclaration, 
                                             null, 
-                                            this.buildData, 
-                                            this.setUpTearDownContext));
+                                            this.buildData,
+                                            this.setUpTearDownContext, TheKey));
 
             Assert.Throws<ArgumentNullException>(
                 () => this.testObject = new MemberBuildContext(
                                             this.codeNamespace, 
                                             this.testClassDeclaration, 
                                             this.typeMember, 
-                                            null, 
-                                            this.setUpTearDownContext));
+                                            null,
+                                            this.setUpTearDownContext, TheKey));
 
             Assert.Throws<ArgumentNullException>(
                 () => this.testObject = new MemberBuildContext(
-                                            this.codeNamespace, 
-                                            this.testClassDeclaration, 
-                                            this.typeMember, 
-                                            this.buildData, 
-                                            null));
+                                            this.codeNamespace,
+                                            this.testClassDeclaration,
+                                            this.typeMember,
+                                            this.buildData,
+                                            null, TheKey));
+            Assert.Throws<ArgumentNullException>(
+                () => this.testObject = new MemberBuildContext(
+                                            this.codeNamespace,
+                                            this.testClassDeclaration,
+                                            this.typeMember,
+                                            this.buildData,
+                                            this.setUpTearDownContext, null));
         }
 
         [Test]
@@ -92,7 +100,7 @@ namespace NStub.CSharp.Tests.BuildContext
                 this.testClassDeclaration, 
                 this.typeMember, 
                 this.buildData, 
-                this.setUpTearDownContext);
+                this.setUpTearDownContext, TheKey);
         }
 
         [Test]
@@ -102,7 +110,7 @@ namespace NStub.CSharp.Tests.BuildContext
             this.mocks.ReplayAll();
 
             // no data in buildData at all.
-            this.testObject.TestKey = "TheKey";
+            // this.testObject.TestKey = "TheKey";
             var actual = this.testObject.GetBuilderData("CAT");
             Assert.IsNull(actual);
 
@@ -110,11 +118,6 @@ namespace NStub.CSharp.Tests.BuildContext
             this.buildData.AddDataItem("CAT", "TheKey", expected);
             actual = this.testObject.GetBuilderData("CAT");
             Assert.AreEqual(expected, actual);
-
-            // request with a key that is not in buildData.
-            this.testObject.TestKey = "OtherKey";
-            actual = this.testObject.GetBuilderData("CAT");
-            Assert.IsNull(actual);
 
             this.mocks.VerifyAll();
         }
@@ -127,7 +130,7 @@ namespace NStub.CSharp.Tests.BuildContext
             this.mocks.ReplayAll();
 
             // no data in buildData at all.
-            this.testObject.TestKey = "TheKey";
+            // this.testObject.TestKey = "TheKey";
             var actual = this.testObject.GetBuilderData<IBuilderData>(builder);
             Assert.IsNull(actual);
 
@@ -136,19 +139,6 @@ namespace NStub.CSharp.Tests.BuildContext
             actual = this.testObject.GetBuilderData<IBuilderData>(builder);
             Assert.AreEqual(expected, actual);
 
-            // request with a key that is not in buildData.
-            this.testObject.TestKey = "OtherKey";
-            actual = this.testObject.GetBuilderData("CAT");
-            Assert.IsNull(actual);
-
-            this.mocks.VerifyAll();
-        }
-
-        [Test]
-        public void GetBuilderDataTestThrowsWithOutTestKeySet()
-        {
-            this.mocks.ReplayAll();
-            Assert.Throws<InvalidOperationException>(() => this.testObject.GetBuilderData("CAT"));
             this.mocks.VerifyAll();
         }
 
@@ -190,7 +180,7 @@ namespace NStub.CSharp.Tests.BuildContext
                 this.testClassDeclaration, 
                 this.typeMember, 
                 this.buildData, 
-                this.setUpTearDownContext);
+                this.setUpTearDownContext, TheKey);
             this.mocks.ReplayAll();
             expected = true;
             actual = this.testObject.IsConstructor;
@@ -300,13 +290,7 @@ namespace NStub.CSharp.Tests.BuildContext
             // Test read access of 'TestKey' Property.
             this.mocks.ReplayAll();
             var actual = this.testObject.TestKey;
-            Assert.IsNull(actual);
-
-            // Test write access of 'TestKey' Property.
-            var expected = "My Test Key";
-            this.testObject.TestKey = expected;
-            actual = this.testObject.TestKey;
-            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(TheKey, actual);
 
             this.mocks.VerifyAll();
         }
@@ -355,7 +339,7 @@ namespace NStub.CSharp.Tests.BuildContext
                 this.testClassDeclaration, 
                 this.typeMember, 
                 this.buildData, 
-                this.setUpTearDownContext);
+                this.setUpTearDownContext, TheKey);
         }
 
         [TearDown]

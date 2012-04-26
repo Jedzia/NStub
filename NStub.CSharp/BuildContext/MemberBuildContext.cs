@@ -36,13 +36,15 @@ namespace NStub.CSharp.BuildContext
             CodeTypeDeclaration testClassDeclaration,
             CodeTypeMember typeMember,
             BuildDataDictionary buildData,
-            ISetupAndTearDownContext setUpTearDownContext)
+            ISetupAndTearDownContext setUpTearDownContext,
+            string baseKey)
             : base(
                 codeNamespace,
                 testClassDeclaration,
                 typeMember,
                 buildData,
-                setUpTearDownContext)
+                setUpTearDownContext,
+                baseKey)
         {
         }
 

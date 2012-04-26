@@ -43,13 +43,15 @@ namespace NStub.CSharp.BuildContext
             CodeTypeDeclaration testClassDeclaration,
             CodeTypeMember typeMember,
             BuildDataDictionary buildData,
-            ISetupAndTearDownContext setUpTearDownContext)
+            ISetupAndTearDownContext setUpTearDownContext,
+            string baseKey)
         {
             Guard.NotNull(() => codeNamespace, codeNamespace);
             Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
             Guard.NotNull(() => typeMember, typeMember);
             Guard.NotNull(() => buildData, buildData);
             Guard.NotNull(() => setUpTearDownContext, setUpTearDownContext);
+            Guard.NotNullOrEmpty(() => baseKey, baseKey);
 
             this.CodeNamespace = codeNamespace;
             this.TestClassDeclaration = testClassDeclaration;
@@ -59,7 +61,15 @@ namespace NStub.CSharp.BuildContext
 
             this.PreBuildResult = new MemberBuildResult();
             this.BuildResult = new MemberBuildResult();
+
+            //this.TestKey = GetTestKey(codeNamespace, testClassDeclaration, typeMember);
+            this.TestKey = baseKey + "." + typeMember.Name;
         }
+
+        /*private static string GetTestKey(CodeNamespace codeNamespace, CodeTypeDeclaration testClassDeclaration, CodeTypeMember typeMember)
+        {
+            return "";
+        }*/
 
         #endregion
 
@@ -164,12 +174,12 @@ namespace NStub.CSharp.BuildContext
         public CodeTypeDeclaration TestClassDeclaration { get; private set; }
 
         /// <summary>
-        /// Gets or sets the key associated with the test.
+        /// Gets the key associated with the test.
         /// </summary>
         /// <value>
         /// The key associated with the test.
         /// </value>
-        public string TestKey { get; set; }
+        public string TestKey { get; private set; }
 
         /// <summary>
         /// Gets type of the object under test.

@@ -43,8 +43,8 @@ namespace NStub.CSharp
             this.namespaceDetector = namespaceDetector;
             Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
             this.testClassDeclaration = testClassDeclaration;
+            //result = SetUp();
         }
-
         #endregion
 
         /// <summary>
@@ -92,6 +92,11 @@ namespace NStub.CSharp
         /// <exception cref="InvalidOperationException"><see cref="CodeTypeSetup.SetUpTestname"/>(...) was called the second time.</exception>
         public string SetUpTestname()
         {
+            //return result;
+            return SetUp();
+        }
+            private string SetUp()
+            {
             if (this.setUpTestnameCalled)
             {
                 throw new InvalidOperationException("CodeTypeSetup.SetUpTestname() was called the second time.");
@@ -102,6 +107,7 @@ namespace NStub.CSharp
             // Adjust OuT with generic types parameters. 
             var testObjectType = testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] as Type;
             var baseObjectFullname = this.testClassDeclaration.Name;
+            baseKey = baseObjectFullname;
             if (testObjectType.IsGenericType)
             {
                 var genIndexLast = this.testClassDeclaration.Name.LastIndexOf('`');
@@ -130,6 +136,14 @@ namespace NStub.CSharp
             this.setUpTestnameCalled = true;
             return objectUnderTestName;
         }
+
+            private string baseKey;
+
+            public string BaseKey
+            {
+                get { return baseKey; }
+               // set { baseKey = value; }
+            }
 
         public string FixForWriteFile(string name)
         {

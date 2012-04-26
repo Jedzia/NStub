@@ -202,6 +202,11 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                                 }
                                 if (ctorassignment != null)
                                 {
+                                    var data = BuildProperties
+                                        ["CreateAssignments." + testObjectClassType.FullName + "." + paraInfo.Name]
+                                        [paraInfo.Name + "Item"];
+
+                                    //continue;
                                     CreateMocker(
                                         testClassDeclaration,
                                         setUpMethod,
@@ -210,7 +215,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                                         mockRepositoryMemberField,
                                         mockAssignments,
                                         ctorassignment.MemberType,
-                                        paraInfo.Name + "Item");
+                                        paraInfo.Name, true );
 
                                     // ctorassignment.AssignStatement.Right = mockAssignment.Left;
                                     //ctorassignment.AssignStatement.Right = mockAssignment.Right;
@@ -230,7 +235,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                     mockRepositoryMemberField,
                     mockAssignments,
                     paraInfo.ParameterType,
-                    paraInfo.Name);
+                    paraInfo.Name, false);
             }
 
             // reorder the testObject initializer to the bottom of the SetUp method.
@@ -248,7 +253,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             Type testObjectClassType,
             CodeMemberField mockRepositoryMemberField,
             List<CodeAssignStatement> mockAssignments,
-            Type paraType, string paraName)
+            Type paraType, string paraName, bool dings)
         {
             //var paraName = paraInfo.Name;
             //var paraType = paraInfo.ParameterType;
@@ -275,10 +280,19 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             else
             {
                 var creatorCategory = "CreateAssignments." + testObjectClassType.FullName + "." + paraName;
+                if (dings)
+                {
+                    creatorCategory = "Assignments." + testObjectClassType.FullName;
+                }
                 var cat = BuildProperties[creatorCategory];
                 if (cat != null)
                 {
-                    var prop = cat[paraName + "Item"];
+                    var itemkey = paraName + "Item";
+                    if (dings)
+                    {
+                        itemkey = paraName;
+                    }
+                    var prop = cat[itemkey];
                     if (prop != null)
                     {
                         var ctorassignment = prop.GetData() as ConstructorAssignment;

@@ -247,7 +247,7 @@ namespace NStub.CSharp.ObjectGeneration
                     // Add the member field to the test class.
                     testClassDeclaration.Members.Add(assignment.MemberField);
                     BuildData.AddDataItem(
-                        "Assignments." + testClassDeclaration.Name, 
+                        "Assignments." + TestObjectType.FullName, 
                         assignment.MemberField.Name, 
                         new BuilderData<ConstructorAssignment>(assignment));
 

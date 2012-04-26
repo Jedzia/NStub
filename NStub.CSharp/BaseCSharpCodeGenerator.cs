@@ -301,6 +301,7 @@ namespace NStub.CSharp
 
                 var codeNamespace = cts.SetUpCodeNamespace(this.CodeNamespace.Name, this.RetrieveNamespaceImports());
                 var testObjectName = cts.SetUpTestname();
+                var baseKey = cts.BaseKey;
 
                 testClassDeclaration.IsPartial = true;
 
@@ -335,7 +336,8 @@ namespace NStub.CSharp
                     initialMembers,
                     this.BuildProperties,
                     setTearContext,
-                    out exludedMembers);
+                    out exludedMembers,
+                    baseKey);
 
                 foreach (var item in exludedMembers)
                 {
@@ -376,18 +378,18 @@ namespace NStub.CSharp
                 foreach (var addTypeMember in addedCodeMethods)
                 {
                     var addMemberBuildContext = new MemberBuildContext(
-                        codeNamespace, testClassDeclaration, addTypeMember, this.BuildProperties, setTearContext);
+                        codeNamespace, testClassDeclaration, addTypeMember, this.BuildProperties, setTearContext, baseKey);
                     this.GenerateCodeTypeMember(addMemberBuildContext);
                 }
 
                 {
                     var addSetUpBuildContext = new MemberBuildContext(
-                        codeNamespace, testClassDeclaration, setTearContext.SetUpMethod, this.BuildProperties, setTearContext);
+                        codeNamespace, testClassDeclaration, setTearContext.SetUpMethod, this.BuildProperties, setTearContext, baseKey);
                     this.GenerateCodeTypeMember(addSetUpBuildContext);
                 }
                 {
                     var addTearDownBuildContext = new MemberBuildContext(
-                        codeNamespace, testClassDeclaration, setTearContext.TearDownMethod, this.BuildProperties, setTearContext);
+                        codeNamespace, testClassDeclaration, setTearContext.TearDownMethod, this.BuildProperties, setTearContext, baseKey);
                     this.GenerateCodeTypeMember(addTearDownBuildContext);
                 }
                 /*{
@@ -774,7 +776,8 @@ namespace NStub.CSharp
             IEnumerable<CodeTypeMember> initialMembers,
             BuildDataDictionary propertyData,
             ISetupAndTearDownCreationContext setTearContext,
-            out List<CodeTypeMember> exludedMembers)
+            out List<CodeTypeMember> exludedMembers,
+            string baseKey)
         {
             var contextLookup = new Dictionary<CodeTypeMember, MemberBuildContext>();
             var exclusions = new Dictionary<CodeTypeMember, bool>();
@@ -784,7 +787,7 @@ namespace NStub.CSharp
             foreach (CodeTypeMember typeMember in initialMembers)
             {
                 var memberBuildContext = new MemberBuildContext(
-                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext);
+                    codeNamespace, testClassDeclaration, typeMember, propertyData, setTearContext, baseKey);
 
                 // pre-calculate the name of the test method. Todo: maybe this step can be skipped 
                 // if i put the stuff here into this.GenerateCodeTypeMember(...)
@@ -851,8 +854,8 @@ namespace NStub.CSharp
 
                 typeMember.Name = composedTestName;
 
-                //memberBuildContext.TestKey = composedTestName;
-                memberBuildContext.TestKey = CodeNamespace.Name + "." + this.CurrentTestClassDeclaration.Name + "." + composedTestName;
+                // memberBuildContext.TestKey = composedTestName;
+                // memberBuildContext.TestKey = CodeNamespace.Name + "." + this.CurrentTestClassDeclaration.Name + "." + composedTestName;
 
                 // Setting the memberinfo for properties in the category 'Property' with the composedTestName as key.
                 // Todo: hmmm, this was all about that IBuildData and property get/set detection ... and how to find out

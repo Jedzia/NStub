@@ -133,13 +133,6 @@ namespace NStub.CSharp.Tests.BuildContext
             mocks.ReplayAll();
             var actual = testObject.TestKey;
             Assert.IsNull(null, actual);
-
-            // Test write access of 'TestKey' Property.
-            var expected = "Insert setter object here";
-            testObject.TestKey = expected;
-            actual = testObject.TestKey;
-            Assert.AreEqual(expected, actual);
-            mocks.VerifyAll();
         }
         
         [Test()]
@@ -160,7 +153,6 @@ namespace NStub.CSharp.Tests.BuildContext
             // without a key ... throw!
             Assert.Throws<InvalidOperationException>(() => testObject.GetBuilderData("CAT"));
 
-            this.testObject.TestKey = "TheKey";
             var expected = this.builderData;
             var actual = testObject.GetBuilderData("CAT");
             Assert.AreEqual(expected, actual);
