@@ -49,7 +49,9 @@
     <Compile Include="BuildSystem.cs" />
     <Compile Include="CodeGeneratorParameters.cs" />
     <Compile Include="CodeGeneratorParametersBase.cs" />
+    <Compile Include="ICodeGeneratorSetup.cs" />
     <Compile Include="IReadOnlyDictionary.cs" />
+    <Compile Include="MemberVisibility.cs" />
     <Compile Include="NStubConstants.cs" />
     <Compile Include="ReadOnlyDictionary.cs" />
     <Compile Include="Util\Dumper\ExpressionToken.cs" />

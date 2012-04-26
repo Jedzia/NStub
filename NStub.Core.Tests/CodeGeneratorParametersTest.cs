@@ -1,12 +1,9 @@
-namespace NStub.CoreNStub.Core
+namespace NStub.Core.Tests
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using MbUnit.Framework;
     using NStub.Core;
-    
-    
+
     [TestFixture()]
     public partial class CodeGeneratorParametersTest
     {

@@ -6,8 +6,8 @@ namespace NStub.Core.Tests
     using MbUnit.Framework;
     using NStub.Core;
     using System.Reflection;
-    using NStub.CSharp.Tests.Stubs;
     using System.CodeDom;
+    using NStub.Core.Tests.Stubs;
 
 
     [TestFixture()]

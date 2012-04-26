@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NStub.CSharp.Tests.Stubs
+﻿namespace NStub.Core.Tests.Stubs
 {
+    using System;
+
     public class InfoApe
     {
         public void PublicVoidMethodVoid()

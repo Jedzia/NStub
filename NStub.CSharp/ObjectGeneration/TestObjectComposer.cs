@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestObjectBuilder.cs" company="EvePanix">
+// <copyright file="TestObjectComposer.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration
 {
     using System;
     using System.CodeDom;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Reflection;
     using System.Text;
@@ -136,14 +137,14 @@ namespace NStub.CSharp.ObjectGeneration
                     }
 
                     // Add the member field to the test class.
-                        testClassDeclaration.Members.Add(assignment.MemberField);
+                    testClassDeclaration.Members.Add(assignment.MemberField);
 
-                        // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
-                        //  BuildData.AddDataItem(
-                        //    "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                    // this.BuildData.AddDataItem("Setup", assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
+                    // BuildData.AddDataItem(
+                    // "Assignments.Extra." + testMethod.Name + "." + testClassDeclaration.Name, assignment.MemberField.Name, new BuilderData<CodeMemberField>(assignment.MemberField));
 
-                        // Add a local variable for the constructor parameter.
-                        testMethod.Statements.Add(assignment.AssignStatement);
+                    // Add a local variable for the constructor parameter.
+                    testMethod.Statements.Add(assignment.AssignStatement);
 
                     // Add the local variable to the constructor initializer in the object create expression 
                     // (e.g. SetUp method, test object constructor) of the specified method.
@@ -230,64 +231,64 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => testObjectConstructor, testObjectConstructor);
 
             // Guard.NotNull(() => this.assignments, this.assignments);
-
-            if (this.HasParameterAssignments)
+            if (!this.HasParameterAssignments)
             {
-                var testObjectInitializerPosition = SetUpMethod.Statements.Count - 1;
+                return;
+            }
 
-                var ctorparameters = CtorAssignments.PreferredConstructor.UsedConstructor.GetParameters();
-                foreach (var para in ctorparameters)
+            var testObjectInitializerPosition = SetUpMethod.Statements.Count - 1;
+
+            var ctorparameters = CtorAssignments.PreferredConstructor.UsedConstructor.GetParameters();
+            foreach (var para in ctorparameters)
+            {
+                var assignment = CtorAssignments.PreferredConstructor[para.Name];
+                if (assignment == null)
                 {
-                    var assignment = CtorAssignments.PreferredConstructor[para.Name];
-                    if (assignment == null)
-                    {
-                        continue;
-                    }
-
-                    // Add the member field to the test class.
-                    testClassDeclaration.Members.Add(assignment.MemberField);
-                    BuildData.AddDataItem(
-                        "Assignments." + TestObjectType.FullName, 
-                        assignment.MemberField.Name, 
-                        new BuilderData<ConstructorAssignment>(assignment));
-
-
-                    // if there a sub assignments to this parameter, add them
-                    if (assignment.HasCreationAssignments)
-                    {
-                        if (this.TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
-                        {
-                        }
-
-                        foreach (var creationAssignment in assignment.CreateAssignments)
-                        {
-                            testClassDeclaration.Members.Add(creationAssignment.MemberField);
-                            AddAssignStatement(creationAssignment.AssignStatement);
-                            var assignCreateExpr = assignment.AssignStatement.Right as CodeObjectCreateExpression;
-                            if (assignCreateExpr != null)
-                            {
-                                assignCreateExpr.Parameters.Add(creationAssignment.AssignStatement.Left);
-                            }
-                            BuildData.AddDataItem(
-                                "CreateAssignments." + this.TestObjectType.FullName + "." +
-                                assignment.MemberField.Name, creationAssignment.MemberField.Name,
-                                new BuilderData<ConstructorAssignment>(creationAssignment));
-                        }
-                    }
-
-
-                    // Add a local variable for the constructor parameter.
-                    AddAssignStatement(assignment.AssignStatement);
-
-                    // Add the local variable to the constructor initializer in the object create expression 
-                    // (e.g. SetUp method, test object constructor) of the specified method.
-                    testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
-
+                    continue;
                 }
 
-                // reorder the testObject initializer to the bottom of the SetUp method.
-                this.ReorderSetupStatement(SetUpMethod, testObjectInitializerPosition);
+                // Add the member field to the test class.
+                testClassDeclaration.Members.Add(assignment.MemberField);
+                BuildData.AddDataItem(
+                    "Assignments." + TestObjectType.FullName,
+                    assignment.MemberField.Name,
+                    new BuilderData<ConstructorAssignment>(assignment));
+
+                // if there a sub assignments to this parameter, add them
+                if (assignment.HasCreationAssignments)
+                {
+                    if (TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
+                    {
+                    }
+
+                    foreach (var creationAssignment in assignment.CreateAssignments)
+                    {
+                        testClassDeclaration.Members.Add(creationAssignment.MemberField);
+                        AddAssignStatement(creationAssignment.AssignStatement);
+                        var assignCreateExpr = assignment.AssignStatement.Right as CodeObjectCreateExpression;
+                        if (assignCreateExpr != null)
+                        {
+                            assignCreateExpr.Parameters.Add(creationAssignment.AssignStatement.Left);
+                        }
+
+                        BuildData.AddDataItem(
+                            "CreateAssignments." + TestObjectType.FullName + "." +
+                            assignment.MemberField.Name,
+                            creationAssignment.MemberField.Name,
+                            new BuilderData<ConstructorAssignment>(creationAssignment));
+                    }
+                }
+
+                // Add a local variable for the constructor parameter.
+                AddAssignStatement(assignment.AssignStatement);
+
+                // Add the local variable to the constructor initializer in the object create expression 
+                // (e.g. SetUp method, test object constructor) of the specified method.
+                testObjectConstructor.Parameters.Add(assignment.AssignStatement.Left);
             }
+
+            // reorder the testObject initializer to the bottom of the SetUp method.
+            this.ReorderSetupStatement(SetUpMethod, testObjectInitializerPosition);
         }
 
         /// <summary>
@@ -300,12 +301,6 @@ namespace NStub.CSharp.ObjectGeneration
         /// </returns>
         public override CodeObjectCreateExpression BuildTestObject(MemberVisibility visibility)
         {
-            /*var invokeExpression = new CodeMethodInvokeExpression(
-                new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
-                //new CodePrimitiveExpression("expected")
-                new CodeFieldReferenceExpression(testObjectMemberField, "bla")
-                , new CodeVariableReferenceExpression("actual"));*/
             var fieldRef1 =
                 new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), TestObjectMemberField.Name);
 
@@ -450,79 +445,17 @@ namespace NStub.CSharp.ObjectGeneration
             return false;
         }
 
-        /*
-                private CodeAssignStatement AddMockObject(
-                    CodeMemberMethod setUpMethod,
-                    CodeMemberField mockRepositoryMemberField,
-                    string testObjectName,
-                    ParameterInfo paraInfo,
-                    string paraName)
-                {
-                    var paraType = paraInfo.ParameterType;
-
-                    var mockRef =
-                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), mockRepositoryMemberField.Name);
-
-                    var fieldRef1 =
-                        new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), paraName);
-
-                    // Creates a statement using a code expression.
-                    // var expressionStatement = new CodeExpressionStatement(fieldRef1);
-
-                    // Creates a code expression for a CodeExpressionStatement to contain.
-                    var invokeExpression = new CodeMethodInvokeExpression(mockRef, "StrictMock");
-                    invokeExpression.Method.TypeArguments.Add(paraType.FullName);
-
-                    // Creates a statement using a code expression.
-                    // var expressionStatement = new CodeExpressionStatement(invokeExpression);
-                    // var objectCreate1 = new CodeObjectCreateExpression(testObjectName, new CodeExpression[] { });
-                    var as1 = new CodeAssignStatement(fieldRef1, invokeExpression);
-                    setUpMethod.Statements.Add(as1);
-
-                    // var testObject = TestMemberFieldLookup["testObject"];
-                    // setUpMethod.Statements.Add(as1);
-                    return as1;
-                }
-        */
-
-
         /// <summary>
         /// Add the parameter assignments to the specified constructor expression.
         /// </summary>
-        /// <param name="bindingAttr">A bitmask comprised of one or more System.Reflection.BindingFlags
-        /// that specify how the search is conducted.  -or- Zero, to return null.</param>
+        /// <param name="bindingAttr">A bit mask comprised of one or more <see cref="BindingFlags"/>
+        /// that specify how the search is conducted.  -or- Zero, to return <c>null</c>.</param>
         /// <returns>
         /// A structure with data about parameter initialization for the type of test object of this instance.
         /// </returns>
         /// <exception cref="InvalidOperationException">No preferred constructor found, but there should one.</exception>
         private ConstructorAssignmentCollection AddParametersToConstructor(BindingFlags bindingAttr)
         {
-            // Type[] parameters = { /*typeof(int)*/ };
-
-            /*// Get the constructor that takes an integer as a parameter.
-            var ctor = this.TestObjectType.GetConstructor(
-                BindingFlags.Instance | BindingFlags.Public,
-                Type.DefaultBinder,
-                parameters,
-                null);
-
-            if (ctor == null)
-            {
-                // outputBlock.Text += 
-                // "There is no public constructor of MyClass that takes an integer as a parameter.\n";
-            }
-            else
-            {
-                // there's only a default ctor, return.
-                return assignments;
-            }*/
-
-            // else
-            // {
-            // outputBlock.Text += 
-            // "The public constructor of MyClass that takes an integer as a parameter is:\n"; 
-            // outputBlock.Text += ctor.ToString() + "\n";
-            // }
             var testObjectConstructors = TestObjectType.GetConstructors(bindingAttr);
 
             // var ctorParameterTypes = new List<ParameterInfo>();
@@ -544,6 +477,7 @@ namespace NStub.CSharp.ObjectGeneration
                 {
                     continue;
                 }
+
                 var assignmentInfoCollection = this.BuildAssignmentInfoForConstructor(bindingAttr, constructor);
                 int parameterAmount = constructor.GetParameters().Length;
                 if (parameterAmount > most)
@@ -572,10 +506,15 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Builds a assignment info for the specified constructor.
         /// </summary>
+        /// <param name="bindingAttr">A bit mask comprised of one or more <see cref="BindingFlags"/>
+        /// that specify how the search is conducted.  -or- Zero, to return <c>null</c>.</param>
         /// <param name="constructor">The constructor to build the parameter assignment info's for.</param>
-        /// <returns>An <see cref="AssignmentInfoCollection"/> initialized with the data from the specified 
-        /// <paramref name="constructor"/>.</returns>
-        private AssignmentInfoCollection BuildAssignmentInfoForConstructor(BindingFlags bindingAttr, ConstructorInfo constructor)
+        /// <returns>
+        /// An <see cref="AssignmentInfoCollection"/> initialized with the data from the specified
+        /// <paramref name="constructor"/>.
+        /// </returns>
+        private AssignmentInfoCollection BuildAssignmentInfoForConstructor(
+            BindingFlags bindingAttr, ConstructorInfo constructor)
         {
             // var ctorParameterTypesInterface = new List<ParameterInfo>();
             // var ctorParameterTypesStd = new List<ParameterInfo>();
@@ -583,8 +522,8 @@ namespace NStub.CSharp.ObjectGeneration
             var ctorParameters = constructor.GetParameters();
             foreach (var para in ctorParameters)
             {
-                // if (!para.ParameterType.IsGenericType)
                 {
+                    // if (!para.ParameterType.IsGenericType)
                     ctorParameterTypes.AddParameterInfo(para);
 
                     /*if (para.ParameterType.IsInterface)
@@ -599,24 +538,10 @@ namespace NStub.CSharp.ObjectGeneration
                 }
             }
 
-            /*if (ctorParameterTypes.CountOfStandardTypes > 0)
-            {
-
-            }*/
-
-            /*if (!ctorParameterTypes.HasInterfaces)
-            {
-                //return new CodeAssignStatement[0];
-                return assignments;
-            }*/
-
-            // var mockRepositoryMemberField = this.AddMockRepository(
-            // testClassDeclaration, setUpMethod, testObjectName, null, "mocks");
-
             // BuildAssignmentInfoForConstructor
             var assignmentInfoCollection = new AssignmentInfoCollection { UsedConstructor = constructor };
             var addTypesFrom = ctorParameterTypes.StandardTypes;
-            if ((bindingAttr & BindingFlags.NonPublic)  == BindingFlags.NonPublic)
+            if ((bindingAttr & BindingFlags.NonPublic) == BindingFlags.NonPublic)
             {
                 addTypesFrom = ctorParameterTypes;
             }
@@ -625,20 +550,23 @@ namespace NStub.CSharp.ObjectGeneration
             {
                 if (!paraInfo.ParameterType.IsGenericType)
                 {
-                    var memberField = BaseCSharpCodeGenerator.CreateMemberField(
-                        paraInfo.ParameterType.FullName, paraInfo.Name);
+                    var memberField = CreateMemberField(paraInfo.ParameterType.FullName, paraInfo.Name);
+                    // var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
+                    //    paraInfo.ParameterType, paraInfo.Name);
+                    // var assignment = new ConstructorAssignment(
+                    //    paraInfo.Name, fieldAssignment, memberField, paraInfo.ParameterType);
                     var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
-                        paraInfo.ParameterType, paraInfo.Name);
-                    var assignment = new ConstructorAssignment(paraInfo.Name, fieldAssignment, memberField, paraInfo.ParameterType);
+                        paraInfo.ParameterType, memberField.Name);
+                    var assignment = new ConstructorAssignment(
+                        memberField.Name, fieldAssignment, memberField, paraInfo.ParameterType);
                     assignmentInfoCollection.AddAssignment(assignment);
                 }
                 else
                 {
                     var genericTypeDefinition = paraInfo.ParameterType.GetGenericTypeDefinition();
 
-                    if (this.TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
+                    if (TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
                     {
-
                     }
 
                     if (typeof(IEnumerable<>).IsAssignableFrom(genericTypeDefinition))
@@ -647,38 +575,55 @@ namespace NStub.CSharp.ObjectGeneration
                         if (genArgs.Length == 1)
                         {
                             var memberFieldName = paraInfo.Name + "Item";
-                            var memberField = BaseCSharpCodeGenerator.CreateMemberField(
-                                genArgs[0].FullName, memberFieldName);
+                            var memberField = CreateMemberField(genArgs[0].FullName, memberFieldName);
                             var fieldAssignment = CodeMethodComposer.CreateAndInitializeMemberField(
-                                genArgs[0], memberFieldName);
-                            var assignment = new ConstructorAssignment(memberFieldName, fieldAssignment, memberField, genArgs[0]);
+                                genArgs[0], memberField.Name);
+                            var assignment = new ConstructorAssignment(
+                                memberField.Name, fieldAssignment, memberField, genArgs[0]);
+
                             // assignmentInfoCollection.AddAssignment(assignment);
                             // AddAssignStatement(fieldAssignment);
-
                             var collectionFieldName = paraInfo.Name;
-                            var collectionField = BaseCSharpCodeGenerator.CreateMemberField(
-                                paraInfo.ParameterType.FullName, collectionFieldName);
+                            var collectionField = CreateMemberField(paraInfo.ParameterType.FullName, collectionFieldName);
                             var collectionAssignment = CodeMethodComposer.CreateAndInitializeCollectionField(
                                 paraInfo.ParameterType, collectionFieldName, memberFieldName);
-                            var collection = new ConstructorAssignment(collectionFieldName, collectionAssignment, collectionField, paraInfo.ParameterType);
+                            var collection = new ConstructorAssignment(
+                                collectionFieldName, collectionAssignment, collectionField, paraInfo.ParameterType);
                             collection.CreateAssignments.Add(assignment);
                             assignmentInfoCollection.AddAssignment(collection);
                         }
                     }
 
-                    if (typeof(System.Collections.IEnumerable).IsAssignableFrom(paraInfo.ParameterType))
+                    if (typeof(IEnumerable).IsAssignableFrom(paraInfo.ParameterType))
                     {
-
                     }
 
                     if (paraInfo.ParameterType.IsAssignableFrom(typeof(IEnumerable<>)))
                     {
-                        
                     }
                 }
             }
 
             return assignmentInfoCollection;
+        }
+
+        private Dictionary<string, string> memberfieldNames = new Dictionary<string, string>();
+
+        private CodeMemberField CreateMemberField(string memberFieldType, string memberFieldName)
+        {
+            var fixedName = memberFieldName;
+            if (false)
+            {
+                while (memberfieldNames.ContainsKey(fixedName))
+                {
+                    fixedName += "X";
+                }
+                memberfieldNames.Add(fixedName, memberFieldName);
+            }
+            
+            var codeMemberField = BaseCSharpCodeGenerator.CreateMemberField(
+                memberFieldType, fixedName);
+            return codeMemberField;
         }
 
         /// <summary>

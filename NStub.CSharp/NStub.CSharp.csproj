@@ -103,6 +103,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>XMLSchema1.xsd</DependentUpon>
     </Compile>
+    <Compile Include="ObjectGeneration\FluentCodeBuild\StaticClass.cs" />
     <Compile Include="ObjectGeneration\IMemberBuildParameters.cs" />
     <Compile Include="ObjectGeneration\Builders\BuildParameters.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -148,7 +149,7 @@
     <Compile Include="ObjectGeneration\IMultiBuilder.cs" />
     <Compile Include="ObjectGeneration\IMultiBuildParameters.cs" />
     <Compile Include="ObjectGeneration\IMemberBuilderFactory.cs" />
-    <Compile Include="ObjectGeneration\ITestObjectBuilder.cs" />
+    <Compile Include="ObjectGeneration\ITestObjectComposer.cs" />
     <Compile Include="ObjectGeneration\Builders\MemberBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\MethodBuilder.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttribute.cs" />
@@ -160,11 +161,11 @@
     <Compile Include="ObjectGeneration\Builders\PropertyGetBuilder.cs" />
     <Compile Include="ObjectGeneration\Builders\PropertySetBuilder.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderFactory.cs" />
-    <Compile Include="ObjectGeneration\TestObjectBuilder.cs" />
+    <Compile Include="ObjectGeneration\TestObjectComposer.cs" />
     <Compile Include="ParameterDescriptionAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContext.cs" />
-    <Compile Include="ObjectGeneration\TestObjectBuilderBase.cs" />
+    <Compile Include="ObjectGeneration\TestObjectComposerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Exceptions.resx">

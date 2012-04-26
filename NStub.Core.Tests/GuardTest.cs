@@ -1,4 +1,4 @@
-namespace NStub.Core.Tests
+﻿namespace NStub.Core.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +6,8 @@ namespace NStub.Core.Tests
     using MbUnit.Framework;
     using NStub.Core;
     using NStub.Core.Tests.Stubs;
-    using NStub.CSharp.Tests.Stubs;
-    
-    
+
+
     [TestFixture()]
     public partial class GuardTest
     {

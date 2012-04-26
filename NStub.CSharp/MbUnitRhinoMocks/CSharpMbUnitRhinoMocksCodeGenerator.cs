@@ -340,6 +340,9 @@ namespace NStub.CSharp.MbUnitRhinoMocks
             string paraName,
             ConstructorAssignment data)
         {
+            if(data != null && data.MemberFieldName != data.ParameterName)
+            {
+            }
             // reuse already present field assignments.
             var mockMemberField = testClassDeclaration
                 .Members.OfType<CodeMemberField>()
@@ -352,7 +355,7 @@ namespace NStub.CSharp.MbUnitRhinoMocks
                    testClassDeclaration, paraType.FullName, paraName);
                 mockMemberFieldCreated = true;
             }
-
+            
             var mockAssignment = this.AddMockObject(mockRepositoryMemberField, paraType.FullName, paraName);
             if (mockMemberFieldCreated)
             {

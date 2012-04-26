@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ITestObjectBuilder.cs" company="EvePanix">
+// <copyright file="ITestObjectComposer.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
@@ -82,6 +82,10 @@ namespace NStub.CSharp.ObjectGeneration
             CodeObjectCreateExpression testObjectConstructor,
             AssignmentInfoCollection ctorAssignments);
 
+        /// <summary>
+        /// Assigns the parameters detected with <see cref="BuildTestObject"/> to an explicitly specified constructor
+        /// create expression to a specified method without creating fields.
+        /// </summary>
         /// <param name="testClassDeclaration">The test class declaration.</param>
         /// <param name="testMethod">The test method, to add the assign-statements to.</param>
         /// <param name="testObjectConstructor">The object constructor to create the parameter initializers for.</param>

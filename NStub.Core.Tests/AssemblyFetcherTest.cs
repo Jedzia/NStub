@@ -1,4 +1,4 @@
-namespace NStub.CoreNStub.Core
+namespace NStub.Core.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -6,9 +6,7 @@ namespace NStub.CoreNStub.Core
     using MbUnit.Framework;
     using NStub.Core;
     using NStub.Core.Util.Dumper;
-    using System.Reflection;
-    
-    
+
     [TestFixture()]
     public partial class AssemblyFetcherTest
     {

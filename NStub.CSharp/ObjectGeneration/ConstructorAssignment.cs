@@ -10,16 +10,23 @@
 
 namespace NStub.CSharp.ObjectGeneration
 {
+    using System;
     using System.CodeDom;
-    using NStub.Core;
     using System.Collections.Generic;
-using System;
+    using NStub.Core;
 
     /// <summary>
     /// Holds a mapping from parameter name to code creation expressions.
     /// </summary>
     public class ConstructorAssignment
     {
+        #region Fields
+
+        private readonly CodeMemberField memberField;
+        private ICollection<ConstructorAssignment> createAssignments;
+
+        #endregion
+
         #region Constructors
 
         /// <summary>
@@ -28,6 +35,7 @@ using System;
         /// <param name="parameterName">Name of the parameter.</param>
         /// <param name="assignStatement">The assign statement for the parameter.</param>
         /// <param name="memberField">The related member field of the parameter.</param>
+        /// <param name="type">The type of the field.</param>
         public ConstructorAssignment(
             string parameterName, CodeAssignStatement assignStatement, CodeMemberField memberField, Type type)
         {
@@ -38,7 +46,7 @@ using System;
 
             this.ParameterName = parameterName;
             this.AssignStatement = assignStatement;
-            this.MemberField = memberField;
+            this.memberField = memberField;
             this.MemberType = type;
         }
 
@@ -52,39 +60,14 @@ using System;
         public CodeAssignStatement AssignStatement { get; private set; }
 
         /// <summary>
-        /// Gets the related member field of the parameter.
-        /// </summary>
-        public CodeMemberField MemberField { get; private set; }
-        public Type MemberType { get; private set; }
-
-        /// <summary>
-        /// Gets the name of the parameter.
-        /// </summary>
-        /// <value>
-        /// The name of the parameter.
-        /// </value>
-        public string ParameterName { get; private set; }
-        
-        private ICollection<ConstructorAssignment> createAssignments;
-
-        /// <summary>
         /// Gets the additional assignments used to create this constructor assignment.
         /// </summary>
         public ICollection<ConstructorAssignment> CreateAssignments
         {
             get
             {
-                if (this.createAssignments == null)
-                {
-                    this.createAssignments = new List<ConstructorAssignment>();
-                }
-                return this.createAssignments;
+                return this.createAssignments ?? (this.createAssignments = new List<ConstructorAssignment>());
             }
-
-            /*set
-            {
-                this.createAssignments = value;
-            }*/
         }
 
         /// <summary>
@@ -100,6 +83,52 @@ using System;
                 return this.createAssignments != null && this.createAssignments.Count > 0;
             }
         }
+
+        /// <summary>
+        /// Gets the related member field of the parameter.
+        /// </summary>
+        public CodeMemberField MemberField
+        {
+            get
+            {
+                return this.memberField;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the member.
+        /// </summary>
+        /// <returns>
+        /// The name of the member.
+        /// </returns>
+        public string MemberFieldName
+        {
+            get
+            {
+                return this.memberField.Name;
+            }
+
+            set
+            {
+                this.memberField.Name = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the member field.
+        /// </summary>
+        /// <value>
+        /// The type of the member field.
+        /// </value>
+        public Type MemberType { get; private set; }
+
+        /// <summary>
+        /// Gets the name of the parameter.
+        /// </summary>
+        /// <value>
+        /// The name of the parameter.
+        /// </value>
+        public string ParameterName { get; private set; }
 
         #endregion
     }

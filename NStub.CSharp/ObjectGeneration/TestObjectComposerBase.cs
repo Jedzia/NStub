@@ -1,5 +1,5 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestObjectBuilderBase.cs" company="EvePanix">
+// <copyright file="TestObjectComposerBase.cs" company="EvePanix">
 //   Copyright (c) Jedzia 2001-2012, EvePanix. All rights reserved.
 //   See the license notes shipped with this source and the GNU GPL.
 // </copyright>
