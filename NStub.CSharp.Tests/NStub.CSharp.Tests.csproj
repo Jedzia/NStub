@@ -104,6 +104,7 @@
     <Compile Include="ObjectGeneration\ParameterInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\TestObjectComposerTest.cs" />
     <Compile Include="ParameterDescriptionAttributeTest.cs" />
+    <Compile Include="Stubs\ComposeMe.cs" />
     <Compile Include="Stubs\ConstructorBuilderHelpType.cs" />
     <Compile Include="Stubs\InfoApe.cs" />
     <Compile Include="CSharpMbUnitCodeGeneratorTest.cs" />

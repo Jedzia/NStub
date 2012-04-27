@@ -17,8 +17,9 @@ namespace NStub.CSharp.ObjectGeneration
     /// <summary>
     /// A list of <see cref="ConstructorAssignment"/>'s which holds a reference to a <see cref="ConstructorInfo"/>
     /// that is preferably used in code generation.
-    /// to a assignment, that should be used.
     /// </summary>
+    /// <remarks>In other words, this is a list of parameter to constructor info mappings. One
+    /// list reflects a complete constructor call.</remarks>
     public class AssignmentInfoCollection : IEnumerable<ConstructorAssignment>
     {
         #region Fields

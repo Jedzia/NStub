@@ -482,9 +482,14 @@ namespace NStub.CSharp.ObjectGeneration
                 int parameterAmount = constructor.GetParameters().Length;
                 if (parameterAmount > most)
                 {
+                    if (mostAssignmentInfoCollection != null)
+                    {
+                        // here comes a new bigger one. put the old to the temp list.
+                        tempAssignments.Add(mostAssignmentInfoCollection);
+                    }
                     most = parameterAmount;
                     mostAssignmentInfoCollection = assignmentInfoCollection;
-                    tempAssignments.Add(assignmentInfoCollection);
+                    // tempAssignments.Add(assignmentInfoCollection);
                 }
                 else
                 {

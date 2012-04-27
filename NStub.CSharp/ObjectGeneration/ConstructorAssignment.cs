@@ -16,7 +16,8 @@ namespace NStub.CSharp.ObjectGeneration
     using NStub.Core;
 
     /// <summary>
-    /// Holds a mapping from parameter name to code creation expressions.
+    /// Holds a mapping from constructor parameter names to code creation expressions statements and
+    /// parameter data types.
     /// </summary>
     public class ConstructorAssignment
     {

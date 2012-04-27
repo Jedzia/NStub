@@ -48,7 +48,7 @@ namespace NStub.CSharp.ObjectGeneration
             Guard.NotNull(() => buildData, buildData);
             Guard.NotNull(() => setUpMethod, setUpMethod);
             Guard.NotNull(() => testObjectMemberField, testObjectMemberField);
-            Guard.NotNull(() => testObjectName, testObjectName);
+            Guard.NotNullOrEmpty(() => testObjectName, testObjectName);
             Guard.NotNull(() => testObjectType, testObjectType);
 
             this.BuildData = buildData;
@@ -63,7 +63,7 @@ namespace NStub.CSharp.ObjectGeneration
         #region Properties
 
         /// <summary>
-        /// Gets the assignments related to this instance.
+        /// Gets the assignments for each constructor of this OuT.
         /// </summary>
         public IEnumerable<AssignmentInfoCollection> Assignments
         {
