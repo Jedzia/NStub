@@ -136,12 +136,14 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             CodeExpression ctorAssignmentRight = CodeMethodComposer.CreateExpressionByType(getAccessor.ReturnType, propertyData.PropertyName);
             // CodeExpression ctorAssignmentRight = new CodePrimitiveExpression("Insert expected object here");
+            var assertionKind = "AreEqual";
             if (found)
             {
                 // use the value of the ctor initializer.
                 //ctorAssignmentRight = ctorAssignment.AssignStatement.Right;
                 // use the field reference itself.
                 ctorAssignmentRight = ctorAssignment.AssignStatement.Left;
+                assertionKind = "AreSame";
             }
 
             typeMember.Statements.Add(new CodeSnippetStatement(string.Empty));
@@ -160,7 +162,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 
             var assertExpr = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
+                assertionKind,
                 new CodeVariableReferenceExpression("expected"),
                 new CodeVariableReferenceExpression("actual"));
             typeMember.Statements.Add(assertExpr);
