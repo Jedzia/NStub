@@ -15,7 +15,7 @@ namespace NStub.Core
     /// <summary>
     /// Type member visibility.
     /// </summary>
-    [Flags]
+    // [Flags]
     public enum MemberVisibility
     {
         /// <summary>

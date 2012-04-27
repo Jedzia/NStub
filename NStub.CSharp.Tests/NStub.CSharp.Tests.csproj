@@ -79,6 +79,8 @@
     <Compile Include="FluentChecking\FluentCodeWrapper.cs" />
     <Compile Include="FluentChecking\Is.cs" />
     <Compile Include="ImplicitVariableDeclarationStatementTest.cs" />
+    <Compile Include="ObjectGeneration\TestObjectComposerHelpers.cs" />
+    <Compile Include="ObjectGeneration\TestObjectComposerAssignParameters.cs" />
     <Compile Include="ObjectGeneration\DefaultMemberBuilderFactoryTest.cs" />
     <Compile Include="ObjectGeneration\MemberBuilderDecoratorAttributeTest.cs" />
     <Compile Include="NamespaceDetectorTest.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="ObjectGeneration\MultiLookupTest.cs" />
     <Compile Include="ObjectGeneration\ParameterInfoCollectionTest.cs" />
     <Compile Include="ObjectGeneration\TestObjectComposerTest.cs" />
+    <Compile Include="ObjectGeneration\TestObjectComposerBuildTestObject.cs" />
     <Compile Include="ParameterDescriptionAttributeTest.cs" />
     <Compile Include="Stubs\ComposeMe.cs" />
     <Compile Include="Stubs\ConstructorBuilderHelpType.cs" />

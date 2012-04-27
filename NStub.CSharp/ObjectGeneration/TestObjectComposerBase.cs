@@ -14,6 +14,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.CodeDom;
     using System.Collections.Generic;
     using NStub.Core;
+    using System.Globalization;
 
     /// <summary>
     /// Base class for a <see cref="ITestObjectComposer"/> test-class member field generator.
@@ -166,6 +167,15 @@ namespace NStub.CSharp.ObjectGeneration
         /// <remarks>Simply means, to add the calculated fields to the specified <paramref name="testClassDeclaration"/>.</remarks>
         public void AssignParameters(CodeTypeDeclaration testClassDeclaration)
         {
+            Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
+            if (this.TestObjectMemberFieldCreateExpression == null)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, "The ITestObjectComposer is not proper initialized, because the " +
+                    "TestObjectMemberFieldCreateExpression isn't set to a valid expression. Try initializing the test object composer with " +
+                    "BuildTestObject( ... ) before calling AssignParameters(CodeTypeDeclaration testClassDeclaration)");
+                throw new InvalidOperationException(message);
+            }
+
             this.AssignParameters(testClassDeclaration, this.TestObjectMemberFieldCreateExpression);
         }
 

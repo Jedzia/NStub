@@ -8,8 +8,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
     using NStub.Core;
     using NStub.CSharp.Tests.Stubs;
     using System.CodeDom;
-    
-    
+
+
     [TestFixture()]
     public partial class TestObjectComposerTest
     {
@@ -19,23 +19,13 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         private System.CodeDom.CodeMemberField testObjectMemberField;
         private string testObjectName;
         private System.Type testObjectType;
-        
+
         [SetUp()]
         public void SetUp()
         {
             CreateTestObject(typeof(ComposeMeCtorVoid));
         }
 
-        private void CreateTestObject(Type objtype)
-        {
-            this.buildData = new BuildDataDictionary();
-            this.setUpMethod = new CodeMemberMethod() { Name="SetUp" };
-            this.testObjectMemberField = new CodeMemberField(objtype.FullName, "testObject");
-            this.testObjectName = objtype.Name;// "testObjectField";
-            this.testObjectType = objtype;
-            this.testObject = new TestObjectComposer(this.buildData, this.setUpMethod, this.testObjectMemberField, this.testObjectName, this.testObjectType);
-        }
-        
         [TearDown()]
         public void TearDown()
         {
@@ -48,7 +38,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             this.buildData = new NStub.CSharp.ObjectGeneration.BuildDataDictionary();
             this.setUpMethod = new System.CodeDom.CodeMemberMethod();
             this.testObjectMemberField = new System.CodeDom.CodeMemberField();
-            this.testObjectName = "Value of testObjectName";
+            this.testObjectName = "myTestObjectName";
             this.testObjectType = typeof(object);
             this.testObject = new TestObjectComposer(this.buildData, this.setUpMethod, this.testObjectMemberField, this.testObjectName, this.testObjectType);
 
@@ -59,7 +49,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.Throws<ArgumentException>(() => new TestObjectComposer(this.buildData, this.setUpMethod, this.testObjectMemberField, string.Empty, this.testObjectType));
             Assert.Throws<ArgumentNullException>(() => new TestObjectComposer(this.buildData, this.setUpMethod, this.testObjectMemberField, this.testObjectName, null));
         }
-        
+
         [Test()]
         public void PropertyHasParameterAssignmentsNormalBehavior()
         {
@@ -73,7 +63,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             actual = testObject.HasParameterAssignments;
             Assert.AreEqual(expected, actual);
         }
-        
+
         [Test()]
         public void PropertyIsCompletelyAssignedNormalBehavior()
         {
@@ -82,7 +72,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.IsCompletelyAssigned;
             Assert.AreEqual(expected, actual);
         }
-        
+
         [Test()]
         public void AssignExtraTest()
         {
@@ -90,7 +80,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
 
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
-        
+
         [Test()]
         public void AssignOnlyTest()
         {
@@ -98,94 +88,8 @@ namespace NStub.CSharp.Tests.ObjectGeneration
 
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
-        
-        [Test()]
-        public void AssignParametersTest()
-        {
-            // TODO: Implement unit test for AssignParameters
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-        
-        [Test()]
-        public void BuildTestObjectEmptyDefault()
-        {
-            testObject.BuildTestObject(MemberVisibility.Public);
-            var expected = true;
-            var actual = testObject.HasParameterAssignments;
-            Assert.AreEqual(expected, actual);
-
-            // all assignments.
-            var expAssignments = 1; // 1 assign lists, the std ctor
-            var actAssignments = testObject.Assignments;
-            Assert.Count(expAssignments, actAssignments);
-            var allCtors = testObject.Assignments.SelectMany((e) => e);
-            Assert.IsEmpty(allCtors); // that are empty
-
-            // constructor assignments.
-            var expCtorAssignments = 1; // 1 assign lists
-            var actCtorAssignments = testObject.CtorAssignments;
-            Assert.Count(expCtorAssignments, actCtorAssignments);
-            allCtors = actCtorAssignments.SelectMany((e) => e);
-            Assert.IsEmpty(allCtors); // that are empty
-            Assert.AreSame(testObject.CtorAssignments.PreferredConstructor, actCtorAssignments.First());
-
-            // CodeDom tree.
-            Assert.Count(1, testObject.SetUpMethod.Statements);
-            Assert.IsInstanceOfType<CodeAssignStatement>(testObject.SetUpMethod.Statements[0]);
-            var asignStm = (CodeAssignStatement)testObject.SetUpMethod.Statements[0];
-            Assert.AreEqual(this.testObjectMemberField.Name, ((CodeFieldReferenceExpression)asignStm.Left).FieldName);
-            Assert.AreEqual(this.testObjectType.Name, ((CodeObjectCreateExpression)asignStm.Right).CreateType.BaseType);
-        }
-
-        [Test()]
-        public void BuildTestObjectComposeMeTwoCtor()
-        {
-            CreateTestObject(typeof(ComposeMeCtorString));
-            testObject.BuildTestObject(MemberVisibility.Public);
-            var expected = true;
-            var actual = testObject.HasParameterAssignments;
-            Assert.AreEqual(expected, actual);
-
-            // all assignments.
-            var expAssignments = 1; // 1 assign lists
-            var actAssignments = testObject.Assignments;
-            Assert.Count(expAssignments, actAssignments);
-            var allCtorParameters = testObject.Assignments.SelectMany((e) => e);
-            Assert.Count(2, allCtorParameters);
-
-            // constructor assignments.
-            var expectedConstructors = 1; // 1 assign lists
-            var actualConstructors = testObject.CtorAssignments;
-            Assert.Count(expectedConstructors, actualConstructors);
-            allCtorParameters = actualConstructors.SelectMany((e) => e);
-            Assert.Count(2, allCtorParameters);
-            var preffered = testObject.CtorAssignments.PreferredConstructor;
-            Assert.AreSame(actualConstructors.First(), preffered); // first and only = the preffered
-            Assert.Count(2, preffered);
-            Assert.IsNotNull(preffered["para1"]);
-            Assert.IsNotNull(preffered["para2"]);
-
-            CheckCtorAsgn<string>(preffered, "para1", false);
-            CheckCtorAsgn<int>(preffered, "para2", false);
-
-            var first = preffered.First();
-
-
-            // public ComposeMeCtorString(string para1)
-            Assert.AreEqual(typeof(ComposeMeCtorString), this.testObjectType);
-
-            // CodeDom tree.
-            Assert.Count(1, testObject.SetUpMethod.Statements);
-            Assert.IsInstanceOfType<CodeAssignStatement>(testObject.SetUpMethod.Statements[0]);
-            var asignStm = (CodeAssignStatement)testObject.SetUpMethod.Statements[0];
-            Assert.AreEqual(this.testObjectMemberField.Name, ((CodeFieldReferenceExpression)asignStm.Left).FieldName);
-            Assert.AreEqual(this.testObjectType.Name, ((CodeObjectCreateExpression)asignStm.Right).CreateType.BaseType);
-
-
-        }
-
-        [Test()]
+         [Test()]
         public void AssignmentListsAreSameAtTheBase()
         {
             CreateTestObject(typeof(ComposeMeTwoCtor));
@@ -196,142 +100,17 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test()]
-        public void BuildTestObjectComposeMeCtorString()
-        {
-            CreateTestObject(typeof(ComposeMeTwoCtor));
-            testObject.BuildTestObject(MemberVisibility.Public);
-            var expected = true;
-            var actual = testObject.HasParameterAssignments;
-            Assert.AreEqual(expected, actual);
-
-            // all assignments.
-            var expAssignments = 2; // 2 constructors
-            var actAssignments = testObject.Assignments;
-            Assert.Count(expAssignments, actAssignments);
-            var allCtorParameters = testObject.Assignments.SelectMany((e) => e);
-            Assert.Count(3, allCtorParameters);
-
-            // constructor assignments.
-            var expectedConstructors = 2; // 2 constructors
-            var actualConstructors = testObject.CtorAssignments;
-            Assert.Count(expectedConstructors, actualConstructors);
-            allCtorParameters = actualConstructors.SelectMany((e) => e);
-            Assert.Count(3, allCtorParameters);
-            var preffered = testObject.CtorAssignments.PreferredConstructor;
-            Assert.AreSame(actualConstructors.First(), preffered); // first and only = the preffered
-            Assert.Count(2, preffered);
-            Assert.IsNotNull(preffered["para1"]);
-            Assert.IsNotNull(preffered["para2"]);
-
-            CheckCtorAsgn<string>(preffered, "para1", false);
-            CheckCtorAsgn<int>(preffered, "para2", false);
-
-            var first = preffered.First();
-
-            var assignments = testObject.Assignments.ToArray();
-            Assert.AreSame(assignments[0], preffered);
-            Assert.AreNotSame(assignments[1], preffered);
-            Assert.AreNotEqual(assignments[1], preffered);
-
-            Assert.Count(1, assignments[1]);
-            CheckCtorAsgn<bool>(assignments[1], "para1", false);
-
-            // public ComposeMeCtorString(string para1)
-            Assert.AreEqual(typeof(ComposeMeTwoCtor), this.testObjectType);
-
-            // CodeDom tree.
-            Assert.Count(1, testObject.SetUpMethod.Statements);
-            Assert.IsInstanceOfType<CodeAssignStatement>(testObject.SetUpMethod.Statements[0]);
-            var asignStm = (CodeAssignStatement)testObject.SetUpMethod.Statements[0];
-            Assert.AreEqual(this.testObjectMemberField.Name, ((CodeFieldReferenceExpression)asignStm.Left).FieldName);
-            Assert.AreEqual(this.testObjectType.Name, ((CodeObjectCreateExpression)asignStm.Right).CreateType.BaseType);
-
-
-        }
-
-        [Test()]
-        public void BuildTestObjectComposeMeThreeCtor()
-        {
-            CreateTestObject(typeof(ComposeMeThreeCtor));
-            testObject.BuildTestObject(MemberVisibility.Public);
-            var expected = true;
-            var actual = testObject.HasParameterAssignments;
-            Assert.AreEqual(expected, actual);
-
-            // all assignments.
-            var expAssignments = 3; // 2 constructors
-            var actAssignments = testObject.Assignments;
-            Assert.Count(expAssignments, actAssignments);
-            var allCtorParameters = testObject.Assignments.SelectMany((e) => e);
-            Assert.Count(3, allCtorParameters);
-
-            // constructor assignments.
-            var expectedConstructors = 3; // 2 constructors
-            var actualConstructors = testObject.CtorAssignments;
-            Assert.Count(expectedConstructors, actualConstructors);
-            allCtorParameters = actualConstructors.SelectMany((e) => e);
-            Assert.Count(3, allCtorParameters);
-            var preffered = testObject.CtorAssignments.PreferredConstructor;
-            Assert.AreSame(actualConstructors.First(), preffered); // first and only = the preffered
-            Assert.Count(2, preffered);
-            Assert.IsNotNull(preffered["para1"]);
-            Assert.IsNotNull(preffered["para2"]);
-
-            CheckCtorAsgn<string>(preffered, "para1", false);
-            CheckCtorAsgn<int>(preffered, "para2", false);
-
-            var first = preffered.First();
-
-            var assignments = testObject.Assignments.ToArray();
-            Assert.AreSame(assignments[0], preffered);
-            Assert.AreNotSame(assignments[1], preffered);
-            Assert.AreNotEqual(assignments[1], preffered);
-
-            Assert.Count(2, assignments[0]); // public ComposeMeThreeCtor(string para1, int para2)
-            Assert.Count(0, assignments[1]); // public ComposeMeThreeCtor()
-            Assert.Count(1, assignments[2]); // public ComposeMeThreeCtor(bool para1)
-
-            CheckCtorAsgn<string>(assignments[0], "para1", false);
-            CheckCtorAsgn<int>(assignments[0], "para2", false);
-            
-            CheckCtorAsgn<bool>(assignments[2], "para1", false);
-
-            // public ComposeMeCtorString(string para1)
-            Assert.AreEqual(typeof(ComposeMeThreeCtor), this.testObjectType);
-
-            // CodeDom tree.
-            Assert.Count(1, testObject.SetUpMethod.Statements);
-            Assert.IsInstanceOfType<CodeAssignStatement>(testObject.SetUpMethod.Statements[0]);
-            var asignStm = (CodeAssignStatement)testObject.SetUpMethod.Statements[0];
-            Assert.AreEqual(this.testObjectMemberField.Name, ((CodeFieldReferenceExpression)asignStm.Left).FieldName);
-            Assert.AreEqual(this.testObjectType.Name, ((CodeObjectCreateExpression)asignStm.Right).CreateType.BaseType);
-        }
-
-
-        private static void CheckCtorAsgn<T>(AssignmentInfoCollection preffered, string name, bool hasCreationAssignments)
-        {
-            Type memberType = typeof(T);
-            Assert.IsNotNull(preffered[name].AssignStatement);
-            Assert.IsNotNull(preffered[name].CreateAssignments);
-            Assert.AreEqual(hasCreationAssignments, preffered[name].HasCreationAssignments);
-            Assert.IsNotNull(preffered[name].MemberField);
-            Assert.AreEqual(name, preffered[name].MemberFieldName);
-            Assert.AreEqual(memberType, preffered[name].MemberType);
-            Assert.AreEqual(name, preffered[name].ParameterName);
-        }
-
-        [Test()]
         public void PropertyAssignmentsNormalBehavior()
         {
             // Test read access of 'Assignments' Property.
             var actual = testObject.Assignments;
             Assert.IsNull(actual);
-            
+
             testObject.BuildTestObject(MemberVisibility.Public);
             actual = testObject.Assignments;
             Assert.IsNotEmpty(actual);
         }
-        
+
         [Test()]
         public void PropertyBuildDataNormalBehavior()
         {
@@ -340,7 +119,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.BuildData;
             Assert.AreSame(expected, actual);
         }
-        
+
         [Test()]
         public void PropertyTestObjectMemberFieldCreateExpressionNormalBehavior()
         {
@@ -352,7 +131,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             actual = testObject.TestObjectMemberFieldCreateExpression;
             Assert.IsNotNull(actual);
         }
-        
+
         [Test()]
         public void PropertyTestObjectMemberFieldNormalBehavior()
         {
@@ -361,7 +140,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.TestObjectMemberField;
             Assert.AreSame(expected, actual);
         }
-        
+
         [Test()]
         public void PropertyTestObjectNameNormalBehavior()
         {
@@ -370,7 +149,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.TestObjectName;
             Assert.AreSame(expected, actual);
         }
-        
+
         [Test()]
         public void PropertyTestObjectTypeNormalBehavior()
         {
@@ -379,7 +158,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.TestObjectType;
             Assert.AreSame(expected, actual);
         }
-        
+
         [Test()]
         public void PropertySetUpMethodNormalBehavior()
         {
@@ -388,7 +167,7 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var actual = testObject.SetUpMethod;
             Assert.AreSame(expected, actual);
         }
-        
+
         [Test()]
         public void TryFindConstructorAssignmentTest()
         {

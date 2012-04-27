@@ -308,23 +308,7 @@ namespace NStub.CSharp.ObjectGeneration
             TestObjectMemberFieldCreateExpression = testObjectMemberFieldCreate;
             var as1 = new CodeAssignStatement(fieldRef1, testObjectMemberFieldCreate);
 
-            var flags = BindingFlags.Instance;
-            switch (visibility)
-            {
-                case MemberVisibility.Public:
-                    flags |= BindingFlags.Public;
-                    break;
-                case MemberVisibility.Internal:
-                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
-                    break;
-                case MemberVisibility.Private:
-                    flags |= BindingFlags.Public | BindingFlags.NonPublic;
-                    break;
-                default:
-                    break;
-            }
-
-            CtorAssignments = this.AddParametersToConstructor(flags);
+            CtorAssignments = this.AddParametersToConstructor(visibility);
 
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
@@ -448,14 +432,47 @@ namespace NStub.CSharp.ObjectGeneration
         /// <summary>
         /// Add the parameter assignments to the specified constructor expression.
         /// </summary>
-        /// <param name="bindingAttr">A bit mask comprised of one or more <see cref="BindingFlags"/>
-        /// that specify how the search is conducted.  -or- Zero, to return <c>null</c>.</param>
+        /// <param name="visibility">A bit mask comprised of one or more <see cref="BindingFlags"/>
+        /// that specify how the search of member types is conducted.  -or- Zero, to return <c>null</c>.</param>
         /// <returns>
         /// A structure with data about parameter initialization for the type of test object of this instance.
         /// </returns>
         /// <exception cref="InvalidOperationException">No preferred constructor found, but there should one.</exception>
-        private ConstructorAssignmentCollection AddParametersToConstructor(BindingFlags bindingAttr)
+        private ConstructorAssignmentCollection AddParametersToConstructor(MemberVisibility visibility)
         {
+
+            var bindingAttr = BindingFlags.Instance;
+            var noPrivate = true;
+            switch (visibility)
+            {
+                case MemberVisibility.Public:
+                    bindingAttr |= BindingFlags.Public;
+                    break;
+                case MemberVisibility.Internal:
+                    bindingAttr |= BindingFlags.Public | BindingFlags.NonPublic;
+                    break;
+                case MemberVisibility.Private:
+                    bindingAttr |= BindingFlags.Public | BindingFlags.NonPublic;
+                    noPrivate = false;
+                    break;
+                default:
+                    break;
+            }
+
+            /*if ((visibility & MemberVisibility.Public) == MemberVisibility.Public)
+            {
+                bindingAttr |= BindingFlags.Public;
+            }
+            if ((visibility & MemberVisibility.Internal) == MemberVisibility.Internal)
+            {
+                bindingAttr |= BindingFlags.NonPublic;
+            }
+            if ((visibility & MemberVisibility.Private) == MemberVisibility.Private)
+            {
+                bindingAttr |= BindingFlags.NonPublic;
+                noPrivate = false;
+            }*/
+
             var testObjectConstructors = TestObjectType.GetConstructors(bindingAttr);
 
             // var ctorParameterTypes = new List<ParameterInfo>();
@@ -473,7 +490,7 @@ namespace NStub.CSharp.ObjectGeneration
             AssignmentInfoCollection mostAssignmentInfoCollection = null;
             foreach (var constructor in testObjectConstructors)
             {
-                if (constructor.IsPrivate)
+                if (noPrivate && constructor.IsPrivate)
                 {
                     continue;
                 }

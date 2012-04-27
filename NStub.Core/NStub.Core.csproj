@@ -49,6 +49,7 @@
     <Compile Include="BuildSystem.cs" />
     <Compile Include="CodeGeneratorParameters.cs" />
     <Compile Include="CodeGeneratorParametersBase.cs" />
+    <Compile Include="GuardMessage.cs" />
     <Compile Include="ICodeGeneratorSetup.cs" />
     <Compile Include="IReadOnlyDictionary.cs" />
     <Compile Include="MemberVisibility.cs" />

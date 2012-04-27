@@ -17,20 +17,8 @@ namespace NStub.Core
     using System.Linq.Expressions;
     using System.Collections;
 
-    /// <summary>
-    /// Expression style argument checking.
-    /// </summary>
-    [DebuggerStepThrough]
     public static partial class Guard
     {
-        #region Fields
-
-        private const string ArgumentCannotBeEmpty = "Argument cannot be null or empty";
-        private const string CannotEqual = "Value cannot equal the default";
-        private const string TypeNotImplementInterface = "{0} does not implement {1}";
-        private const string TypeNotInheritFromType = "{0} does not inherite from {1}";
-
-        #endregion
 
         /// <summary>
         /// Determines whether this instance [can be assigned] with the specified reference.
@@ -39,9 +27,9 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="targetOfAssignment">Type of the target.</param>
         /// <exception cref="ArgumentException"><c>ArgumentException</c>.</exception>
-        public static void IsAssignableFrom<T>(Expression<Func<object>> reference, object targetOfAssignment)
+        public static void IsAssignableFrom<T>(Expression<Func<object>> reference, object targetOfAssignment, string message)
         {
-            CanBeAssigned(reference, typeof(T), targetOfAssignment.GetType());
+            CanBeAssigned(reference, typeof(T), targetOfAssignment.GetType(), message);
         }
 
         /// <summary>
@@ -51,9 +39,9 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="typeToAssign">The type to assign.</param>
         /// <exception cref="ArgumentException"><c>ArgumentException</c>.</exception>
-        public static void CanBeAssignedTo<T>(Expression<Func<object>> reference, object typeToAssign)
+        public static void CanBeAssignedTo<T>(Expression<Func<object>> reference, object typeToAssign, string message)
         {
-            CanBeAssigned(reference, typeToAssign.GetType(), typeof(T));
+            CanBeAssigned(reference, typeToAssign.GetType(), typeof(T), message);
         }
 
         /// <summary>
@@ -63,7 +51,7 @@ namespace NStub.Core
         /// <param name="typeToAssign">The type to assign.</param>
         /// <param name="targetType">Type of the target.</param>
         /// <exception cref="ArgumentException"><c>ArgumentException</c>.</exception>
-        public static void CanBeAssigned(Expression<Func<object>> reference, Type typeToAssign, Type targetType)
+        public static void CanBeAssigned(Expression<Func<object>> reference, Type typeToAssign, Type targetType, string message)
         {
             if (!targetType.IsAssignableFrom(typeToAssign))
             {
@@ -71,19 +59,19 @@ namespace NStub.Core
                 {
                     throw new ArgumentException(
                         string.Format(
-                            CultureInfo.CurrentCulture, 
-                            TypeNotImplementInterface, 
-                            typeToAssign, 
-                            targetType), 
+                            CultureInfo.CurrentCulture,
+                            TypeNotImplementInterface,
+                            typeToAssign,
+                            targetType) + " " + message,
                         GetParameterName(reference));
                 }
 
                 throw new ArgumentException(
                     string.Format(
-                        CultureInfo.CurrentCulture, 
-                        TypeNotInheritFromType, 
-                        typeToAssign, 
-                        targetType), 
+                        CultureInfo.CurrentCulture,
+                        TypeNotInheritFromType,
+                        typeToAssign,
+                        targetType) + " " + message,
                     GetParameterName(reference));
             }
         }
@@ -96,11 +84,11 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="value">The value.</param>
         /// <exception cref="ArgumentException">Value cannot equal the default</exception>
-        public static void NotDefault<T>(Expression<Func<T>> reference, T value)
+        public static void NotDefault<T>(Expression<Func<T>> reference, T value, string message)
         {
             if (value.Equals(default(T)))
             {
-                throw new ArgumentException(CannotEqual, GetParameterName(reference));
+                throw new ArgumentException(CannotEqual + " " + message, GetParameterName(reference));
             }
         }
 
@@ -112,11 +100,11 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="value">The value.</param>
         /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-        public static void NotNull<T>(Expression<Func<T>> reference, T value)
+        public static void NotNull<T>(Expression<Func<T>> reference, T value, string message)
         {
             if (value == null)
             {
-                throw new ArgumentNullException(GetParameterName(reference));
+                throw new ArgumentNullException(GetParameterName(reference), message);
             }
         }
 
@@ -128,12 +116,12 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="value">The value.</param>
         /// <exception cref="ArgumentException">Argument cannot be <c>null</c> or empty</exception>
-        public static void NotNullOrEmpty(Expression<Func<string>> reference, string value)
+        public static void NotNullOrEmpty(Expression<Func<string>> reference, string value, string message)
         {
-            NotNull(reference, value);
+            NotNull(reference, value, message);
             if (value.Length == 0)
             {
-                throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
+                throw new ArgumentException(ArgumentCannotBeEmpty + " " + message, GetParameterName(reference));
             }
         }
 
@@ -145,22 +133,22 @@ namespace NStub.Core
         /// <param name="reference">The reference.</param>
         /// <param name="values">The values.</param>
         /// <exception cref="ArgumentException">Argument list cannot be <c>null</c> or empty</exception>
-        public static void NotEmpty<T>(Expression<Func<T>> reference, IEnumerable values)
+        public static void NotEmpty<T>(Expression<Func<T>> reference, IEnumerable values, string message)
         {
             if (values == null)
             {
-                throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
+                throw new ArgumentException(ArgumentCannotBeEmpty + " " + message, GetParameterName(reference));
             }
-            
+
             int valueCount = 0;
             foreach (var item in values)
             {
                 valueCount++;
             }
-            
+
             if (valueCount == 0)
             {
-                throw new ArgumentException(ArgumentCannotBeEmpty, GetParameterName(reference));
+                throw new ArgumentException(ArgumentCannotBeEmpty + " " + message, GetParameterName(reference));
             }
         }
 
@@ -174,12 +162,12 @@ namespace NStub.Core
         /// <param name="from">The minimum allowed value for the argument.</param>
         /// <param name="to">The maximum allowed value for the argument.</param>
         /// <exception cref="ArgumentOutOfRangeException"><c></c> is out of range.</exception>
-        public static void NotOutOfRangeExclusive<T>(Expression<Func<T>> reference, T value, T from, T to)
+        public static void NotOutOfRangeExclusive<T>(Expression<Func<T>> reference, T value, T from, T to, string message)
             where T : IComparable
         {
             if (value != null && (value.CompareTo(from) <= 0 || value.CompareTo(to) >= 0))
             {
-                throw new ArgumentOutOfRangeException(GetParameterName(reference));
+                throw new ArgumentOutOfRangeException(GetParameterName(reference), message);
             }
         }
 
@@ -193,24 +181,13 @@ namespace NStub.Core
         /// <param name="from">The minimum allowed value for the argument.</param>
         /// <param name="to">The maximum allowed value for the argument.</param>
         /// <exception cref="ArgumentOutOfRangeException"><c></c> is out of range.</exception>
-        public static void NotOutOfRangeInclusive<T>(Expression<Func<T>> reference, T value, T from, T to)
+        public static void NotOutOfRangeInclusive<T>(Expression<Func<T>> reference, T value, T from, T to, string message)
             where T : IComparable
         {
             if (value != null && (value.CompareTo(from) < 0 || value.CompareTo(to) > 0))
             {
-                throw new ArgumentOutOfRangeException(GetParameterName(reference));
+                throw new ArgumentOutOfRangeException(GetParameterName(reference), message);
             }
-        }
-
-        /// <summary>
-        /// Gets the name of the parameter.
-        /// </summary>
-        /// <param name="reference">The reference to the parameter.</param>
-        /// <returns>The name of the parameter.</returns>
-        private static string GetParameterName(LambdaExpression reference)
-        {
-            var member = (MemberExpression)reference.Body;
-            return member.Member.Name;
         }
     }
 }

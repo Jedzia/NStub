@@ -4,8 +4,27 @@ Nomenclature
 OuT		: Object under Test.
 
 
-WPG DataTemplate's
-===================
+BuildDataDictionary Properties
+======================================
+
+Constructor parameter assignments                
+DataItem  BuilderData<ConstructorAssignment>
+    Category: "Assignments." + TestObjectType.FullName, Key: assignment.MemberField.Name
+Sub- or Collection assignments of the above type:
+DataItem  BuilderData<ConstructorAssignment>
+    Category: "CreateAssignments." + TestObjectType.FullName + "." + assignment.MemberField.Name
+    Key:      creationAssignment.MemberField.Name
+----------
+PropertyBuilder PropertyBuilderData is stored in the "Property" category by TestObjectType.FullName + 
+MemberField.Name as key. An example is "NStub.CSharp.ObjectGeneration.Builders.PropertyBuilder.get_SetupContext"
+for the PropertyBuilder class and the SetupContext property accessor. This is easy available via the 
+context.TestKey property.
+DataItem  PropertyBuilderData
+    Category: "Property"
+    Key:      TestObjectType.FullName + TestMember.Name
+----------
+
+
 
 Jedzia.SamCat.Tasks
 =======================
