@@ -38,6 +38,14 @@ namespace NStub.CSharp
         /// <summary>
         /// Initializes a new instance of the <see cref="T:AllIwantToTest"/> class.
         /// </summary>
+        public AllIwantToTest(List<string> myList)
+        {
+        }
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:AllIwantToTest"/> class.
+        /// </summary>
         public AllIwantToTest(bool myBool)
         {
         }

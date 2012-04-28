@@ -83,6 +83,18 @@ namespace NStub.CSharp.Tests.ObjectGeneration
         }
 
         [Test]
+        public void CreateAndInitializeCollectionFieldTest()
+        {
+            var memberfield = "theMember";
+            var actual = CodeMethodComposer.CreateAndInitializeCollectionField( memberfield, "init1", "init2");
+            Assert.IsInstanceOfType<CodeAssignStatement>(actual);
+
+            actual = CodeMethodComposer.CreateAndInitializeCollectionField(memberfield, "init1", "init2");
+            var assignment = (CodeSnippetExpression)actual.Right;
+            Assert.AreEqual("new[] { init1,init2 }", assignment.Value);
+        }
+
+        [Test]
         public void CreateTestStubForMethodTest()
         {
             var method = new CodeMemberMethod();
@@ -105,5 +117,23 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             var method = new CodeMemberMethod();
             Assert.Throws<ArgumentException>(() => CodeMethodComposer.CreateTestStubForMethod(method));
         }
+
+        [Test()]
+        public void CreateExpressionByTypeTest()
+        {
+            var memberField = "myFieldName";
+            
+            var type = typeof(string);
+            var actual = CodeMethodComposer.CreateExpressionByType(type, memberField);
+            Assert.IsInstanceOfType<CodePrimitiveExpression>(actual);
+            Assert.AreEqual("Value of myFieldName", ((CodePrimitiveExpression)actual).Value);
+
+            type = typeof(Type);
+            actual = CodeMethodComposer.CreateExpressionByType(type, memberField);
+            Assert.IsInstanceOfType<CodeTypeOfExpression>(actual);
+            Assert.AreEqual("System.Object", ((CodeTypeOfExpression)actual).Type.BaseType);
+
+        }
+
     }
 }

@@ -15,6 +15,7 @@ namespace NStub.CSharp
     using System.Collections.Generic;
     using System.Linq;
     using NStub.Core;
+    using System.Globalization;
 
     /// <summary>
     /// Setup Helper for <see cref="CodeTypeDeclaration"/>'s.
@@ -95,8 +96,9 @@ namespace NStub.CSharp
             //return result;
             return SetUp();
         }
-            private string SetUp()
-            {
+        
+        private string SetUp()
+        {
             if (this.setUpTestnameCalled)
             {
                 throw new InvalidOperationException("CodeTypeSetup.SetUpTestname() was called the second time.");
@@ -106,6 +108,14 @@ namespace NStub.CSharp
 
             // Adjust OuT with generic types parameters. 
             var testObjectType = testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] as Type;
+            if (testObjectType == null)
+            {
+                var message = string.Format(CultureInfo.CurrentCulture, "The UserData of the type '{0}' is not correct initialized." +
+                    "Provide the System.Type info about the object under test with the {1} UserData key."
+                    , testClassDeclaration.Name, NStubConstants.UserDataClassTypeKey);
+                throw new KeyNotFoundException(message);
+            }
+
             var baseObjectFullname = this.testClassDeclaration.Name;
             baseKey = baseObjectFullname;
             if (testObjectType.IsGenericType)
@@ -120,8 +130,8 @@ namespace NStub.CSharp
             }
 
             // expand the test class namespace by ".Test"
-            this.testClassDeclaration.Name =
-                this.namespaceDetector.InsertAfterShortestNamespace(this.testClassDeclaration, ".Tests");
+            //this.testClassDeclaration.Name =
+            //    this.namespaceDetector.InsertAfterShortestNamespace(this.testClassDeclaration, ".Tests");
 
             // Add "Test" to the test classes name.
             this.testClassDeclaration.Name = Utility.GetUnqualifiedTypeName(this.testClassDeclaration.Name) + "Test";
@@ -132,18 +142,18 @@ namespace NStub.CSharp
             {
                 objectUnderTestName = objectUnderTestName + genericPart;
             }
-               
+
             this.setUpTestnameCalled = true;
             return objectUnderTestName;
         }
 
-            private string baseKey;
+        private string baseKey;
 
-            public string BaseKey
-            {
-                get { return baseKey; }
-               // set { baseKey = value; }
-            }
+        public string BaseKey
+        {
+            get { return baseKey; }
+            // set { baseKey = value; }
+        }
 
         public string FixForWriteFile(string name)
         {

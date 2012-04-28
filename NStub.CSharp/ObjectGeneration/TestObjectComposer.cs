@@ -257,9 +257,9 @@ namespace NStub.CSharp.ObjectGeneration
                 // if there a sub assignments to this parameter, add them
                 if (assignment.HasCreationAssignments)
                 {
-                    if (TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
+                    /*if (TestObjectMemberField.Type.BaseType == "DefaultMemberBuilderFactory")
                     {
-                    }
+                    }*/
 
                     foreach (var creationAssignment in assignment.CreateAssignments)
                     {
@@ -562,11 +562,14 @@ namespace NStub.CSharp.ObjectGeneration
 
             // BuildAssignmentInfoForConstructor
             var assignmentInfoCollection = new AssignmentInfoCollection { UsedConstructor = constructor };
-            var addTypesFrom = ctorParameterTypes.StandardTypes;
+            var addTypesFrom = ctorParameterTypes;
+            /*var addTypesFrom = ctorParameterTypes.StandardTypes;
+            
+            // Todo: do not use bindingAttr here, use the MemberVisibility enumeration
             if ((bindingAttr & BindingFlags.NonPublic) == BindingFlags.NonPublic)
             {
                 addTypesFrom = ctorParameterTypes;
-            }
+            }*/
 
             foreach (var paraInfo in addTypesFrom)
             {
@@ -591,7 +594,7 @@ namespace NStub.CSharp.ObjectGeneration
                     {
                     }
 
-                    if (typeof(IEnumerable<>).IsAssignableFrom(genericTypeDefinition))
+                    if (CheckForItemizable(paraInfo, genericTypeDefinition))
                     {
                         var genArgs = paraInfo.ParameterType.GetGenericArguments();
                         if (genArgs.Length == 1)
@@ -608,7 +611,7 @@ namespace NStub.CSharp.ObjectGeneration
                             var collectionFieldName = paraInfo.Name;
                             var collectionField = CreateMemberField(paraInfo.ParameterType.FullName, collectionFieldName);
                             var collectionAssignment = CodeMethodComposer.CreateAndInitializeCollectionField(
-                                paraInfo.ParameterType, collectionFieldName, memberFieldName);
+                                /*paraInfo.ParameterType,*/ collectionFieldName, memberFieldName);
                             var collection = new ConstructorAssignment(
                                 collectionFieldName, collectionAssignment, collectionField, paraInfo.ParameterType);
                             collection.CreateAssignments.Add(assignment);
@@ -627,6 +630,12 @@ namespace NStub.CSharp.ObjectGeneration
             }
 
             return assignmentInfoCollection;
+        }
+
+        private static bool CheckForItemizable(ParameterInfo paraInfo, Type genericTypeDefinition)
+        {
+            return typeof(IEnumerable<>).IsAssignableFrom(genericTypeDefinition) ||
+                                    typeof(IEnumerable).IsAssignableFrom(paraInfo.ParameterType);
         }
 
         private Dictionary<string, string> memberfieldNames = new Dictionary<string, string>();

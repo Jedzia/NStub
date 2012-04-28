@@ -198,5 +198,30 @@ namespace NStub.CSharp.Tests.ObjectGeneration
             Assert.Throws<ArgumentNullException>(() => testObject.TryFindConstructorAssignment(null, out ctorAssignment, false));
             Assert.Throws<ArgumentException>(() => testObject.TryFindConstructorAssignment(string.Empty, out ctorAssignment, false));
         }
+
+        [Test()]
+        public void EqualsTest()
+        {
+            var second = new TestObjectComposer(
+                this.buildData, 
+                this.setUpMethod, 
+                this.testObjectMemberField,
+                this.testObjectName,
+                this.testObjectType);
+
+            Assert.IsTrue(testObject.Equals(second));
+            Assert.IsTrue(second.GetHashCode() == testObject.GetHashCode());
+
+            second = new TestObjectComposer(
+                this.buildData,
+                this.setUpMethod,
+                this.testObjectMemberField,
+                this.testObjectName + "XYZ",
+                this.testObjectType);
+
+            Assert.IsFalse(testObject.Equals(second));
+            testObject.BuildTestObject(MemberVisibility.Public);
+            Assert.IsFalse(second.GetHashCode() == testObject.GetHashCode());
+        }
     }
 }

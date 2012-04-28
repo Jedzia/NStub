@@ -6,6 +6,7 @@ namespace NStub.CSharp.Tests.BuildContext
     using NStub.CSharp.ObjectGeneration;
     using Rhino.Mocks;
 
+    [Ignore]
     public partial class MemberBuildContextBaseTest
     {
 

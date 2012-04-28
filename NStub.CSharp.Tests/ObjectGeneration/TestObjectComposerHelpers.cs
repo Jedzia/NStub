@@ -27,8 +27,41 @@ namespace NStub.CSharp.Tests.ObjectGeneration
                 this.testObjectType);
         }
 
+        private static CodeObjectCreateExpression CheckObjectAssignment(
+            string testObjectInitializerName,
+            string typeOfOuT,
+            CodeAssignStatement curStm,
+            params string[] fieldnames)
+        {
+            Assert.IsInstanceOfType<CodeFieldReferenceExpression>(curStm.Left);
+            var expected = testObjectInitializerName; // OuT initializer.
+            var actualLeft = (CodeFieldReferenceExpression)curStm.Left;
+            Assert.AreEqual(expected, actualLeft.FieldName);
+            Assert.IsInstanceOfType<CodeObjectCreateExpression>(curStm.Right);
+            var expectedCreateType = typeOfOuT; // create new type of OuT.
+            var actualRight = (CodeObjectCreateExpression)curStm.Right;
+            Assert.AreEqual(expectedCreateType, actualRight.CreateType.BaseType);
+
+            // check the field references in the ctor parameters.
+            if (fieldnames == null)
+            {
+                Assert.Count(0, actualRight.Parameters);
+            }
+            else
+            {
+                Assert.Count(fieldnames.Length, actualRight.Parameters);
+                for (int i = 0; i < actualRight.Parameters.Count; i++)
+                {
+                    var actParameter = (CodeFieldReferenceExpression)actualRight.Parameters[i];
+                    var expectedFielRefName = fieldnames[i];
+                    Assert.AreEqual(expectedFielRefName, actParameter.FieldName);
+                }
+            }
+            return actualRight;
+        }
+
         private static CodeObjectCreateExpression CheckObjectUnderTestAssignment(
-            string typeOfOuT, 
+            string typeOfOuT,
             CodeAssignStatement curStm,
             params string[] fieldnames)
         {

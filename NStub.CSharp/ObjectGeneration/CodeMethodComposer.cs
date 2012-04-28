@@ -74,12 +74,15 @@ namespace NStub.CSharp.ObjectGeneration
         /// myType of type System.Type:
         /// <code>this.myType = typeof(System.Object);</code>.
         /// </remarks>
-        public static CodeAssignStatement CreateAndInitializeCollectionField(Type type, string memberCollectionField, params string[] collectionInitializers)
+        public static CodeAssignStatement CreateAndInitializeCollectionField(
+            //Type type, 
+            string memberCollectionField, 
+            params string[] collectionInitializers)
         {
-            if (type == typeof(object))
+            /*if (type == typeof(object))
             {
 
-            }
+            }*/
             var fieldRef1 = new CodeFieldReferenceExpression(new CodeThisReferenceExpression(), memberCollectionField);
             //CodeExpression assignExpr = CreateExpressionByType(type, memberCollectionField);
             var para = collectionInitializers.Aggregate((x, y) => x += "," + y); 

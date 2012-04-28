@@ -6,6 +6,7 @@ namespace NStub.CSharp.Tests
     using global::MbUnit.Framework;
     using NStub.CSharp;
     using System.CodeDom;
+    using NStub.Core;
     
     
     [TestFixture()]
@@ -13,15 +14,9 @@ namespace NStub.CSharp.Tests
     {
         
         private NStub.CSharp.NamespaceDetector namespaceDetector;
-        
         private System.CodeDom.CodeTypeDeclaration testClassDeclaration;
-
         private CodeTypeSetup testObject;
         private CodeTypeDeclarationCollection typeDeclarations;
-        
-        public CodeTypeSetupTest()
-        {
-        }
         
         [SetUp()]
         public void SetUp()
@@ -52,17 +47,49 @@ namespace NStub.CSharp.Tests
         [Test()]
         public void SetUpCodeNamespaceTest()
         {
-            // TODO: Implement unit test for SetUpCodeNamespace
-            // testObject.SetUpCodeNamespace(
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            var actual = testObject.SetUpCodeNamespace("Jedzia.Loves.Testing", new[] { "System.Fuck", "Rhino.Mocks" });
+            Assert.Count(2, actual.Imports);
+            Assert.AreEqual("Jedzia.Loves.Testing.Tests", actual.Name);
         }
-        
+
+        [Test()]
+        public void SetUpTestnameThrowsWithoutInit()
+        {
+            Assert.Throws<KeyNotFoundException>(() => testObject.SetUpTestname());
+        }
+
+        [Test()]
+        public void SetUpTestnameThrowsWithoutClassDeclarationName()
+        {
+            testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] = typeof(Guid);
+            Assert.Throws<ArgumentException>(() => testObject.SetUpTestname());
+        }
+
         [Test()]
         public void SetUpTestnameTest()
         {
-            // TODO: Implement unit test for SetUpTestname
+            /*this.typeDeclarations = new CodeTypeDeclarationCollection();
+            this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
+            typeDeclarations.Add(this.testClassDeclaration);*/
 
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] = typeof(NStub.CSharp.Tests.Stubs.InfoApe);
+            testClassDeclaration.Name = "NStub.CSharp.TopRootClass";
+            typeDeclarations.Add(this.testClassDeclaration);
+
+            testClassDeclaration.UserData[NStubConstants.UserDataClassTypeKey] = typeof(NStub.CSharp.Tests.Stubs.InfoApe);
+            testClassDeclaration.Name = "NStub.CSharp.BlaFasel.MyWorkClass";
+
+            this.namespaceDetector = new NStub.CSharp.NamespaceDetector(typeDeclarations);
+            this.testObject = new CodeTypeSetup(this.namespaceDetector, this.testClassDeclaration);
+            // testObject.SetUpCodeNamespace("NStub.CSharp", new[] { "System.Fuck", "Rhino.Mocks" });
+
+            var expected = "MyWorkClass";
+            var actual = testObject.SetUpTestname();
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual("NStub.CSharp.BlaFasel.MyWorkClass", testObject.BaseKey);
+            Assert.AreEqual("MyWorkClassTest", testClassDeclaration.Name);
+
+            // testObject.SetUpCodeNamespace("Jedzia.Loves.Testing", new[] { "System.Fuck", "Rhino.Mocks" });
         }
     }
 }

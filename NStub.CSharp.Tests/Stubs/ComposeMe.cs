@@ -62,6 +62,14 @@ namespace NStub.CSharp.Tests.Stubs
         }
     }
 
+    public class ComposeMeWithList
+    {
+        public ComposeMeWithList(List<Guid> para1)
+        {
+
+        }
+    }
+
     public class ComposeMeThreeCtor
     {
         public ComposeMeThreeCtor()
