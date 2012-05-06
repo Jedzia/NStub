@@ -72,6 +72,7 @@
     <Compile Include="BuildContext\IMemberPreBuildContext.cs" />
     <Compile Include="BuildContext\IMemberSetupContext.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownCreationContext.cs" />
+    <Compile Include="BuildContext\KeynameFixer.cs" />
     <Compile Include="BuildContext\MemberBuildContext.cs" />
     <Compile Include="BuildContext\MemberBuildContextBase.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownContext.cs" />

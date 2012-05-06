@@ -62,18 +62,19 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, context.TestClassDeclaration.Name);
             var propertyData = context.GetBuilderData(storageCategory);
 
+            if (context.TestClassDeclaration.Name == "VertexDataTest")
+            {
+                if (propertyName.Contains("PropertyItemNormalBehavior"))
+                {
+                }
+            }
+
             // var testName = DetermineTestName(context);
             // hmm Generate to generate new and compute to process existing !?!
             // var testObjectName = context.TestObjectName;
             const string TestObjectName = "testObject";
             this.ComputeCodeMemberProperty(typeMember as CodeMemberMethod, propertyData, TestObjectName, propertyName);
 
-            if (context.TestClassDeclaration.Name == "CodeGeneratorParametersBaseTest")
-            {
-                if (propertyName.Contains("PropertyOutputDirectoryNormalBehavior"))
-                {
-                }
-            }
             return true;
         }
 

@@ -63,7 +63,9 @@ namespace NStub.CSharp.BuildContext
             this.BuildResult = new MemberBuildResult();
 
             //this.TestKey = GetTestKey(codeNamespace, testClassDeclaration, typeMember);
-            this.TestKey = baseKey + "." + typeMember.Name;
+            var fixer = new KeynameFixer(codeNamespace, testClassDeclaration, typeMember);
+            var fixedName = fixer.Fix( typeMember.Name);
+            this.TestKey = baseKey + "." + fixedName;
         }
 
         /*private static string GetTestKey(CodeNamespace codeNamespace, CodeTypeDeclaration testClassDeclaration, CodeTypeMember typeMember)

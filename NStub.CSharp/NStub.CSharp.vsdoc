@@ -88,6 +88,7 @@
     <add key="VBdocman_comModules_BaseCSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...IMemberBuildContext.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...ISetupAndTearDownContext.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_BuildContext...KeynameFixer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...MemberBuildContext.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...MemberBuildContextBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...SetupAndTearDownContext.cs"><![CDATA[On]]></add>
@@ -104,7 +105,6 @@
     <add key="VBdocman_comModules_ObjectGeneration...BuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...BuilderConstants.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...Builders...BuilderSerializer.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...Builders...Copy of BuildParameters.Designer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...Builders...XMLSchema1.Designer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...CodeMethodComposer.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ConstructorAssignment.cs"><![CDATA[On]]></add>
@@ -112,11 +112,8 @@
     <add key="VBdocman_comModules_ObjectGeneration...IBuildHandler.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IBuilderData.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...IMemberBuilder.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...ITestObjectBuilder.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...MemberBuildResult.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ObjectGeneration...ParameterInfoCollection.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilder.cs"><![CDATA[On]]></add>
-    <add key="VBdocman_comModules_ObjectGeneration...TestObjectBuilderBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_ParameterDescriptionAttribute.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_Properties...AssemblyInfo.cs"><![CDATA[On]]></add>
   </appSettings>

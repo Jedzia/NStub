@@ -870,9 +870,9 @@ namespace NStub.CSharp
 
                 if (memberBuildContext.IsProperty)
                 {
-                    if (memberBuildContext.TestClassDeclaration.Name == "CodeGeneratorParametersBaseTest")
+                    if (memberBuildContext.TestClassDeclaration.Name == "VertexDataTest")
                     {
-                        if (composedTestName.Contains("PropertyOutputDirectory"))
+                        if (composedTestName.Contains("PropertyItem"))
                         {
                         }
                     }
