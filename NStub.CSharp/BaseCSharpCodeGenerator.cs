@@ -422,7 +422,7 @@ namespace NStub.CSharp
         /// <param name="setUpMethod">A reference to the test setup method.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
-        /// <param name="testObjectType">Type of the test object.</param>
+        /// <param name="testObjectType">Type of the object under test(OuT).</param>
         /// <returns>
         /// A test object creator for the object under test.
         /// Is <c>null</c>, when none is created.
@@ -438,14 +438,25 @@ namespace NStub.CSharp
                 buildData, setUpMethod, testObjectMemberField, testObjectName, testObjectType);
 
             //if (testObjectType.Name.StartsWith("TestObjectComposer"))
-                if (testObjectType.Name == "TestObjectComposer")
+            /*if (testObjectType.Name == "Dependency")
             {
 
+            }*/
+
+            // With a INotifyPropertyChanged based OuT, call base.Setup();
+            if (typeof(System.ComponentModel.INotifyPropertyChanged).IsAssignableFrom(testObjectType))
+            {
+                setUpMethod.Attributes = MemberAttributes.Override | MemberAttributes.Public;
+                var baseInvoker = new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), setUpMethod.Name);
+
+                setUpMethod.Statements.Add(baseInvoker);
             }
+
             // var testObjectConstructor = cr.BuildTestObject();
             // cr.AssignParameters(this.CurrentTestClassDeclaration, cr.TestObjectMemberFieldCreateExpression);
             objectBuilder.BuildTestObject(Configuration.MethodGeneratorLevelOfDetail);
             objectBuilder.AssignParameters(this.CurrentTestClassDeclaration);
+
 
             // return testObjectConstructor;
             return objectBuilder;
@@ -475,11 +486,21 @@ namespace NStub.CSharp
         /// <param name="teardownMethod">A reference to the TearDown method of the test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
+        /// <param name="testObjectType">Type of the object under test(OuT).</param>
         protected virtual void ComposeTestTearDownMethod(
             CodeMemberMethod teardownMethod,
             CodeMemberField testObjectMemberField,
-            string testObjectName)
+            string testObjectName,
+            Type testObjectType)
         {
+            // With a INotifyPropertyChanged based OuT, call base.TearDown();
+            if (typeof(System.ComponentModel.INotifyPropertyChanged).IsAssignableFrom(testObjectType))
+            {
+                teardownMethod.Attributes = MemberAttributes.Override | MemberAttributes.Public;
+                var baseInvoker = new CodeMethodInvokeExpression(new CodeBaseReferenceExpression(), teardownMethod.Name);
+
+                teardownMethod.Statements.Add(baseInvoker);
+            }
         }
 
         /// <summary>
@@ -749,7 +770,7 @@ namespace NStub.CSharp
 
             testClassDeclaration.Members.Add(setUpMethod);
             var tearDownMethod = this.CreateCustomCodeMemberMethodWithSameNameAsAttribute("TearDown");
-            this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName);
+            this.ComposeTestTearDownMethod(tearDownMethod, testObjectMemberField, testObjectName, testObjectType);
             testClassDeclaration.Members.Add(tearDownMethod);
 
             var result = new SetupAndTearDownContext(

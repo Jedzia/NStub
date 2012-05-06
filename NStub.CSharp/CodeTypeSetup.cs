@@ -16,6 +16,7 @@ namespace NStub.CSharp
     using System.Linq;
     using NStub.Core;
     using System.Globalization;
+    using System.ComponentModel;
 
     /// <summary>
     /// Setup Helper for <see cref="CodeTypeDeclaration"/>'s.
@@ -127,6 +128,14 @@ namespace NStub.CSharp
                 genericPart = "<string>";
                 currentIsGeneric = true;
                 this.testClassDeclaration.Name = newName;
+            }
+
+            if (testObjectType.IsAssignableFrom(typeof(INotifyPropertyChanged)))
+            {
+            }
+            if (typeof(INotifyPropertyChanged).IsAssignableFrom(testObjectType))
+            {
+                testClassDeclaration.BaseTypes.Add(new CodeTypeReference("CountingPropertyChangedEventFixture"));
             }
 
             // expand the test class namespace by ".Test"

@@ -16,6 +16,7 @@ namespace NStub.CSharp.MbUnit
     using NStub.Core;
     using NStub.CSharp.BuildContext;
     using NStub.CSharp.ObjectGeneration;
+    using System;
 
     /// <summary>
     /// The <see cref="CSharpMbUnitCodeGenerator"/> is responsible for the generation of the individual
@@ -58,10 +59,12 @@ namespace NStub.CSharp.MbUnit
         /// <param name="teardownMethod">A reference to the TearDown method of the test.</param>
         /// <param name="testObjectMemberField">The member field of the object under test.</param>
         /// <param name="testObjectName">The name of the object under test.</param>
+        /// <param name="testObjectType">Type of the object under test(OuT).</param>
         protected override void ComposeTestTearDownMethod(
             CodeMemberMethod teardownMethod, 
-            CodeMemberField testObjectMemberField, 
-            string testObjectName)
+            CodeMemberField testObjectMemberField,
+            string testObjectName,
+            Type testObjectType)
         {
             /*var invokeExpression = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
@@ -81,6 +84,7 @@ namespace NStub.CSharp.MbUnit
             // Creates a statement using a code expression.
             // var expressionStatement = new CodeExpressionStatement(fieldRef1);
             teardownMethod.Statements.Add(as1);
+            base.ComposeTestTearDownMethod(teardownMethod, testObjectMemberField, testObjectName, testObjectType);
         }
 
         /*/// <summary>

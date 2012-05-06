@@ -12,6 +12,7 @@ namespace NStub.CSharp.ObjectGeneration.Builders
 {
     using System.CodeDom;
     using NStub.CSharp.BuildContext;
+    using System;
 
     /// <summary>
     /// Test method generator for the 'set' part of property type members.
@@ -140,9 +141,28 @@ namespace NStub.CSharp.ObjectGeneration.Builders
             var invoke = new CodeAssignStatement(actualRef, testPropRef);
             typeMember.Statements.Add(invoke);
 
+            var assertionKind = "AreEqual";
+            var parameters = setAccessor.GetParameters();
+            if (parameters.Length > 0)
+            {
+                if (parameters[0].ParameterType.IsPrimitive)
+                {
+                }
+                else if (parameters[0].ParameterType == typeof(string))
+                {
+                }
+                else if (typeof(ValueType).IsAssignableFrom(parameters[0].ParameterType))
+                {
+                }
+                else
+                {
+                    assertionKind = "AreSame";
+                }
+            }
+
             var assertExpr = new CodeMethodInvokeExpression(
                 new CodeTypeReferenceExpression("Assert"),
-                "AreEqual",
+                assertionKind,
                 new CodeVariableReferenceExpression("expected"),
                 new CodeVariableReferenceExpression("actual"));
             typeMember.Statements.Add(assertExpr);
