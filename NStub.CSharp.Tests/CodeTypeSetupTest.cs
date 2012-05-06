@@ -7,6 +7,7 @@ namespace NStub.CSharp.Tests
     using NStub.CSharp;
     using System.CodeDom;
     using NStub.Core;
+    using NStub.CSharp.ObjectGeneration;
     
     
     [TestFixture()]
@@ -17,16 +18,18 @@ namespace NStub.CSharp.Tests
         private System.CodeDom.CodeTypeDeclaration testClassDeclaration;
         private CodeTypeSetup testObject;
         private CodeTypeDeclarationCollection typeDeclarations;
+        private  BuildDataDictionary buildData;
         
         [SetUp()]
         public void SetUp()
         {
+            buildData = new BuildDataDictionary();
             this.typeDeclarations = new CodeTypeDeclarationCollection();
             this.testClassDeclaration = new System.CodeDom.CodeTypeDeclaration();
             typeDeclarations.Add(this.testClassDeclaration);
 
             this.namespaceDetector = new NStub.CSharp.NamespaceDetector(typeDeclarations);
-            this.testObject = new CodeTypeSetup(this.namespaceDetector, this.testClassDeclaration);
+            this.testObject = new CodeTypeSetup(this.namespaceDetector, buildData, this.testClassDeclaration);
         }
         
         [TearDown()]
@@ -38,10 +41,11 @@ namespace NStub.CSharp.Tests
         [Test()]
         public void ConstructWithParametersNamespaceDetectorTestClassDeclarationTest()
         {
-            this.testObject = new CodeTypeSetup(this.namespaceDetector, this.testClassDeclaration);
+            this.testObject = new CodeTypeSetup(this.namespaceDetector, buildData, this.testClassDeclaration);
 
-            Assert.Throws<ArgumentNullException>(() => new CodeTypeSetup(null, this.testClassDeclaration));
-            Assert.Throws<ArgumentNullException>(() => new CodeTypeSetup(this.namespaceDetector, null));
+            Assert.Throws<ArgumentNullException>(() => new CodeTypeSetup(null, buildData, this.testClassDeclaration));
+            Assert.Throws<ArgumentNullException>(() => new CodeTypeSetup(this.namespaceDetector, null, this.testClassDeclaration));
+            Assert.Throws<ArgumentNullException>(() => new CodeTypeSetup(this.namespaceDetector, buildData, null));
         }
         
         [Test()]
@@ -80,7 +84,7 @@ namespace NStub.CSharp.Tests
             testClassDeclaration.Name = "NStub.CSharp.BlaFasel.MyWorkClass";
 
             this.namespaceDetector = new NStub.CSharp.NamespaceDetector(typeDeclarations);
-            this.testObject = new CodeTypeSetup(this.namespaceDetector, this.testClassDeclaration);
+            this.testObject = new CodeTypeSetup(this.namespaceDetector, buildData, this.testClassDeclaration);
             // testObject.SetUpCodeNamespace("NStub.CSharp", new[] { "System.Fuck", "Rhino.Mocks" });
 
             var expected = "MyWorkClass";

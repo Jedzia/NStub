@@ -17,6 +17,7 @@ namespace NStub.CSharp
     using NStub.Core;
     using System.Globalization;
     using System.ComponentModel;
+    using NStub.CSharp.ObjectGeneration;
 
     /// <summary>
     /// Setup Helper for <see cref="CodeTypeDeclaration"/>'s.
@@ -27,6 +28,7 @@ namespace NStub.CSharp
 
         private readonly NamespaceDetector namespaceDetector;
         private readonly CodeTypeDeclaration testClassDeclaration;
+        private readonly IBuildDataDictionary buildData;
         private bool setUpCodeNamespaceCalled;
         private bool setUpTestnameCalled;
 
@@ -38,11 +40,14 @@ namespace NStub.CSharp
         /// Initializes a new instance of the <see cref="CodeTypeSetup"/> class.
         /// </summary>
         /// <param name="namespaceDetector">The namespace detector.</param>
+        /// <param name="buildData">The build data properties.</param>
         /// <param name="testClassDeclaration">The class declaration of the object under test.</param>
-        public CodeTypeSetup(NamespaceDetector namespaceDetector, CodeTypeDeclaration testClassDeclaration)
+        public CodeTypeSetup(NamespaceDetector namespaceDetector, IBuildDataDictionary buildData, CodeTypeDeclaration testClassDeclaration)
         {
             Guard.NotNull(() => namespaceDetector, namespaceDetector);
             this.namespaceDetector = namespaceDetector;
+            Guard.NotNull(() => buildData, buildData);
+            this.buildData = buildData;
             Guard.NotNull(() => testClassDeclaration, testClassDeclaration);
             this.testClassDeclaration = testClassDeclaration;
             //result = SetUp();
@@ -135,7 +140,9 @@ namespace NStub.CSharp
             }
             if (typeof(INotifyPropertyChanged).IsAssignableFrom(testObjectType))
             {
-                testClassDeclaration.BaseTypes.Add(new CodeTypeReference("CountingPropertyChangedEventFixture"));
+                var bd = buildData.GeneralString(BuilderConstants.PropertyBaseClassOfINotifyPropertyChangedTest);
+                testClassDeclaration.BaseTypes.Add(new CodeTypeReference(bd));
+                //testClassDeclaration.BaseTypes.Add(new CodeTypeReference("CountingPropertyChangedEventFixture"));
             }
 
             // expand the test class namespace by ".Test"

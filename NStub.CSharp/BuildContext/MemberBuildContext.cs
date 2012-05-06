@@ -31,6 +31,8 @@ namespace NStub.CSharp.BuildContext
         /// <param name="typeMember">The current type to create a test method for.</param>
         /// <param name="buildData">The additional build data lookup.</param>
         /// <param name="setUpTearDownContext">Contains data specific to SetUp and TearDown test-methods.</param>
+        /// <param name="baseKey">The base string of the <see cref="MemberBuildContextBase.TestKey"/>. Is amended by the
+        /// <paramref name="codeNamespace"/> identifier, normalized and fixed by a <see cref="KeynameFixer"/>.</param>
         public MemberBuildContext(
             CodeNamespace codeNamespace,
             CodeTypeDeclaration testClassDeclaration,

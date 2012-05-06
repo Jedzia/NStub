@@ -643,14 +643,14 @@ namespace NStub.CSharp.ObjectGeneration
         private CodeMemberField CreateMemberField(string memberFieldType, string memberFieldName)
         {
             var fixedName = memberFieldName;
-            if (false)
+            /*if (false)
             {
                 while (memberfieldNames.ContainsKey(fixedName))
                 {
                     fixedName += "X";
                 }
                 memberfieldNames.Add(fixedName, memberFieldName);
-            }
+            }*/
             
             var codeMemberField = BaseCSharpCodeGenerator.CreateMemberField(
                 memberFieldType, fixedName);

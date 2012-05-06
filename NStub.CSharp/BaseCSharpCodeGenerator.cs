@@ -130,7 +130,8 @@ namespace NStub.CSharp
             {
                 if (this.buildProps == null)
                 {
-                    this.buildProps = new BuildDataDictionary();
+                    this.buildProps = new BuildDataDictionary(); // InitializeBuildProperties();
+                    InitializeBuildProperties(this.BuildProperties);
                 }
 
                 return this.buildProps;
@@ -144,9 +145,27 @@ namespace NStub.CSharp
                     throw new InvalidOperationException(
                         "Cannot set the BuildProperties twice or after access to it.");
                 }
-
+                // Todo maybe add the props here ?
                 this.buildProps = value;
+                InitializeBuildProperties(this.buildProps);
             }
+        }
+
+        /// <summary>
+        /// Initializes the build properties.
+        /// </summary>
+        /// <returns>A ready set of build properties.</returns>
+        protected virtual void InitializeBuildProperties(BuildDataDictionary props)
+        {
+            props.AddGeneralString(
+                BuilderConstants.PropertyBaseClassOfINotifyPropertyChangedTest,
+                GeneratorConstants.BaseClassOfINotifyPropertyChangedTest);
+
+            //props.AddDataItem(
+            //    BuilderConstants.PropertyGeneralCategory,
+            //    BuilderConstants.PropertyBaseClassOfINotifyPropertyChangedTest,
+           //     new StringConstantBuildParameter(GeneratorConstants.BaseClassOfINotifyPropertyChangedTest)
+            //    , false);
         }
 
         /// <summary>
@@ -284,7 +303,13 @@ namespace NStub.CSharp
         {
             // var asd = this.CodeNamespace.Types.OfType<CodeTypeDeclaration>().Any(e=>e.Name =="ddepp");
             // We want to write a separate file for each type
+            // this.BuildProperties.AddDataItem(
             var nd = new NamespaceDetector(this.CodeNamespace.Types);
+            foreach (var itemx in this.BuildProperties)
+            {
+
+            }
+
 
             foreach (CodeTypeDeclaration testClassDeclaration in this.CodeNamespace.Types)
             {
@@ -297,7 +322,7 @@ namespace NStub.CSharp
 
                 this.CurrentTestClassDeclaration = testClassDeclaration;
 
-                var cts = new CodeTypeSetup(nd, testClassDeclaration);
+                var cts = new CodeTypeSetup(nd, this.BuildProperties, testClassDeclaration);
 
                 var codeNamespace = cts.SetUpCodeNamespace(this.CodeNamespace.Name, this.RetrieveNamespaceImports());
                 var testObjectName = cts.SetUpTestname();
@@ -882,7 +907,7 @@ namespace NStub.CSharp
                 // Todo: hmmm, this was all about that IBuildData and property get/set detection ... and how to find out
                 // a way to store properties .... So IBuildData is code generator internal and IMemberBuilderParameters is
                 // for user setup. well. look into the usefullness of this. ... later
-                
+
                 // var storageCategory = "Property" + "." + this.CurrentTestClassDeclaration.Name;
                 //var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, memberBuildContext.TestClassDeclaration.Name);
                 var storageCategory = string.Format(BuilderConstants.PropertyStorageCategory, memberBuildContext.TestClassDeclaration.Name);

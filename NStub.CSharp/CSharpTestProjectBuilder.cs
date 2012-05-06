@@ -102,6 +102,7 @@ namespace NStub.CSharp
             }
 
             props.AddDataItem("DasGuuuut", new EmptyBuildParameters());
+            props.AddDataItem("EinTest", new StringConstantBuildParameter("Der Parameter!"));
 
             // Todo: !!!
             return props;

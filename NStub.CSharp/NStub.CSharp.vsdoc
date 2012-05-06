@@ -93,6 +93,7 @@
     <add key="VBdocman_comModules_BuildContext...MemberBuildContextBase.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...SetupAndTearDownContext.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_BuildContext...SetupAndTearDownContextBase.cs"><![CDATA[On]]></add>
+    <add key="VBdocman_comModules_BuilderConstants.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpCodeGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpProjectGenerator.cs"><![CDATA[On]]></add>
     <add key="VBdocman_comModules_CSharpTestProjectBuilder.cs"><![CDATA[On]]></add>

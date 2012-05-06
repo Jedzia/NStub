@@ -15,6 +15,7 @@ namespace NStub.CSharp.ObjectGeneration
     using System.Collections.Generic;
     using System.Linq;
     using NStub.Core;
+    using NStub.CSharp.ObjectGeneration.Builders;
 
     /// <summary>
     /// Lookup of <see cref="IBuilderData"/> organized as a dictionary of strings, categorized into main categories.
@@ -29,6 +30,11 @@ namespace NStub.CSharp.ObjectGeneration
         private readonly Dictionary<string, IBuilderData> generalData;
         private bool isDirty;
 
+        /// <summary>
+        /// The category key for the global 'General' category.
+        /// </summary>
+        public const string GeneralCategory = "General";
+
         #endregion
 
         #region Constructors
@@ -39,7 +45,7 @@ namespace NStub.CSharp.ObjectGeneration
         public BuildDataDictionary()
         {
             this.generalData = new Dictionary<string, IBuilderData>();
-            this.data.Add("General", this.generalData);
+            this.data.Add(GeneralCategory, this.generalData);
         }
 
         #endregion
@@ -167,7 +173,7 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="replace">if set to <c>true</c> replaces the data if present.</param>
         public void AddDataItem(string key, IBuilderData item, bool replace)
         {
-            this.AddDataItem("General", key, item, replace);
+            this.AddDataItem(GeneralCategory, key, item, replace);
         }
 
 
@@ -189,7 +195,26 @@ namespace NStub.CSharp.ObjectGeneration
         /// <param name="key">The key of the item.</param>
         /// <param name="item">The data item to add.</param>
         /// <param name="replace">if set to <c>true</c> replaces the data if present.</param>
+        /// <remarks>If the <paramref name="item"/> is already present, then the add operation throws an exception.</remarks>
         public void AddDataItem(string category, string key, IBuilderData item, bool replace)
+        {
+            AddDataItem(category, key, item, replace, false);
+        }
+
+        /// <summary>
+        /// Adds the specified data item to the specified category of this list.
+        /// </summary>
+        /// <param name="category">The category of the item.</param>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="item">The data item to add.</param>
+        /// <param name="replace">if set to <c>true</c> replaces the data if present.</param>
+        /// <param name="skip">if set to <c>true</c> skip already present items.</param>
+        /// <remarks>
+        /// If <paramref name="replace"/> is <c>true</c>, <paramref name="skip"/> is <c>true</c> 
+        /// and the <paramref name="item"/> is already present, then the add operation is skipped.
+        /// if <paramref name="skip"/> is <c>false</c> an exception is thrown.
+        /// </remarks>
+        public void AddDataItem(string category, string key, IBuilderData item, bool replace, bool skip)
         {
             IDictionary<string, IBuilderData> catLookup;
             var found = this.TryGetCategory(category, out catLookup);
@@ -202,12 +227,15 @@ namespace NStub.CSharp.ObjectGeneration
 
             if (!replace)
             {
+                // Todo: this changes the behavior .. already present items are skipped. reflect this in the unit test.
+                if (skip && catLookup.ContainsKey(key))
+                    return;
                 catLookup.Add(key, item);
                 isDirty = true;
             }
             else
             {
-                if(catLookup.ContainsKey(key))
+                if (catLookup.ContainsKey(key))
                 {
                     if (catLookup[key] != item)
                     {
@@ -274,6 +302,11 @@ namespace NStub.CSharp.ObjectGeneration
             return this.generalData.Values.GetEnumerator();
         }
 
+        /*public Dictionary<string, IBuilderData>.Enumerator GetEnumerator()
+        {
+            return this.generalData.GetEnumerator();
+        }*/
+
         // public abstract class mapCollection<T,K> : Gallio.Common.Collections.ReadOnlyDictionary<T,K>, ICollection<T> //where T : new()
         // {
         // }
@@ -302,9 +335,9 @@ namespace NStub.CSharp.ObjectGeneration
         // public IReadOnlyDictionary<string, IReadOnlyDictionary<string, IBuilderData>> Moep()
 
         /// <summary>
-        /// Gets the category associated with the specified key.
+        /// Gets the value out of the specified category, associated with the specified key.
         /// </summary>
-        /// <param name="category">The key of the value to get.</param>
+        /// <param name="category">The category of the value to get.</param>
         /// <param name="value">When this method returns, contains the value associated with the specified
         /// key, if the key is found; otherwise, the default value for the type of the
         /// value parameter. This parameter is passed uninitialized.</param>
@@ -317,7 +350,7 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Gets the value associated with the specified key.
+        /// Gets the value out of the general data set associated with the specified key.
         /// </summary>
         /// <param name="key">The key of the value to get.</param>
         /// <param name="value">When this method returns, contains the value associated with the specified
@@ -329,6 +362,68 @@ namespace NStub.CSharp.ObjectGeneration
         public bool TryGetValue(string key, out IBuilderData value)
         {
             return this.generalData.TryGetValue(key, out value);
+        }
+
+        /// <summary>
+        /// Gets the <see cref="NStub.CSharp.ObjectGeneration.Builders.StringConstantBuildParameter.Value"/> out 
+        /// of the general data set associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>
+        /// The requested string from the category 'General' and with the specified <paramref name="key"/> constant.
+        /// </returns>
+        public string GeneralString(string key)
+        {
+            IBuilderData value;
+            this.TryGetValue(key, out value);
+            var str = (StringConstantBuildParameter)value;
+            return str.Value;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="NStub.CSharp.ObjectGeneration.Builders.StringConstantBuildParameter.Value"/> out of 
+        /// the general data set associated with the specified key.
+        /// </summary>
+        /// <param name="category">The category of the value to get.</param>
+        /// <param name="key">The key of the value to get.</param>
+        /// <returns>
+        /// The requested string from the category 'General' and with the specified <paramref name="key"/> constant.
+        /// </returns>
+        public string GeneralString(string category, string key)
+        {
+            IBuilderData value;
+            this.TryGetValue(category, key, out value);
+            var str = (StringConstantBuildParameter)value;
+            return str.Value;
+        }
+
+        /// <summary>
+        /// Adds a <see cref="NStub.CSharp.ObjectGeneration.Builders.StringConstantBuildParameter.Value"/> to the
+        /// general category data set associated with the specified key.
+        /// </summary>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="value">The string value of the item.</param>
+        /// <remarks>
+        /// Already present items are skipped (not replaced) and no exception is thrown.
+        /// </remarks>
+        public void AddGeneralString(string key, string value)
+        {
+            this.AddDataItem(GeneralCategory, key, new StringConstantBuildParameter(value), false, true);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="NStub.CSharp.ObjectGeneration.Builders.StringConstantBuildParameter.Value"/> to the
+        /// specified category data set associated with the specified key.
+        /// </summary>
+        /// <param name="category">The category of the item.</param>
+        /// <param name="key">The key of the item.</param>
+        /// <param name="value">The string value of the item.</param>
+        /// <remarks>
+        /// Already present items are skipped (not replaced) and no exception is thrown.
+        /// </remarks>
+        public void AddGeneralString(string category, string key, string value)
+        {
+            this.AddDataItem(category, key, new StringConstantBuildParameter(value), false, true);
         }
 
         /// <summary>

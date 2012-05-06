@@ -77,6 +77,7 @@
     <Compile Include="BuildContext\MemberBuildContextBase.cs" />
     <Compile Include="BuildContext\ISetupAndTearDownContext.cs" />
     <Compile Include="BuildContext\SetupAndTearDownContextBase.cs" />
+    <Compile Include="GeneratorConstants.cs" />
     <Compile Include="CodeTypeSetup.cs" />
     <Compile Include="CSharpTestProjectBuilder.cs" />
     <Compile Include="NamespaceDetector.cs" />

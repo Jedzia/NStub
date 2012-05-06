@@ -23,8 +23,10 @@ using System.Collections.Generic;
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class. DeleteME
         /// </summary>
-        /// <param name="serializer">The serializer.</param>
-        /// <param name="handlers">The handlers.</param>
+        /// <param name="serializer">The serializer capable of serializing the registered <see cref="IMemberBuilder"/>'s to xml.</param>
+        /// <param name="handlers">The list of available build handlers holding the information how to 
+        /// create the associated <see cref="IMemberBuilder"/>.</param>
+        /// <param name="noWay">Just a private and not used differentiator.</param>
         private DefaultMemberBuilderFactory(IBuilderSerializer serializer, IEnumerable<IBuildHandler> handlers, string noWay)
             : base(serializer)
         {
@@ -38,7 +40,9 @@ using System.Collections.Generic;
         /// Initializes a new instance of the <see cref="DefaultMemberBuilderFactory"/> class
         /// for testing purposes.
         /// </summary>
-        /// <param name="serializer">The build parameter serializer.</param>
+        /// <param name="serializer">The serializer capable of serializing the registered <see cref="IMemberBuilder"/>'s to xml.</param>
+        /// <param name="handlers">The list of available build handlers holding the information how to
+        /// create the associated <see cref="IMemberBuilder"/>.</param>
         internal DefaultMemberBuilderFactory(IBuilderSerializer serializer, IEnumerable<IBuildHandler> handlers)
             : base(serializer)
         {

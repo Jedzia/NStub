@@ -61,18 +61,22 @@ namespace NStub.CSharp.ObjectGeneration
         }
 
         /// <summary>
-        /// Creates a reference to a member field and initializes it with a new instance of the specified parameter type.
+        /// Creates a reference to a collection based member field and initializes it with a new instance of the
+        /// specified parameter type and adds a collection item to it.
         /// Sample values are used as the initializing expression.
         /// </summary>
-        /// <param name="type">Defines the type of the new object.</param>
-        /// <param name="memberField">Name of the referenced member field.</param>
-        /// <returns>An assignment statement for the specified member field.</returns>
-        /// <remarks>With a custom Type, this method produces a statement with a initializer like: 
-        /// <code>this.project = new Microsoft.Build.BuildEngine.Project();</code>.
-        /// or let myInt be of type int:
-        /// <code>this.myInt = 1234;</code>.
+        /// <param name="memberCollectionField">Name of the referenced collection field.</param>
+        /// <param name="collectionInitializers">Defines the types of the new object list.</param>
+        /// <returns>
+        /// An assignment statement for the specified collection member field.
+        /// </returns>
+        /// <remarks>
+        /// With a custom Type, this method produces a statement with a initializer like:
+        /// <code>this.paths = new[] { pathsItem };</code>.
+        /// where the item is defined like:
+        /// <code>this.pathsItem = new PathItemType();</code>.
         /// myType of type System.Type:
-        /// <code>this.myType = typeof(System.Object);</code>.
+        /// <code>this.pathsItem = "An Item";</code>.
         /// </remarks>
         public static CodeAssignStatement CreateAndInitializeCollectionField(
             //Type type, 

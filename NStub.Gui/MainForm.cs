@@ -61,6 +61,13 @@ namespace NStub.Gui
 
             //buildData = new BuildDataDictionary();
             bpc.BuildProperties.AddDataItem("FromMainForm", new EmptyBuildParameters());
+            bpc.BuildProperties.AddDataItem("FromMainFormString", new StringConstantBuildParameter("Der Main Parameter!"));
+
+            // bpc.BuildProperties.AddDataItem(
+            //    BuilderConstants.PropertyBaseClassOfINotifyPropertyChangedTest,
+            //    //new StringConstantBuildParameter(GeneratorConstants.BaseClassOfINotifyPropertyChangedTest));
+            //    new StringConstantBuildParameter("HelloIamNerdy"));
+            // bpc.BuildProperties.AddGeneralString(BuilderConstants.PropertyBaseClassOfINotifyPropertyChangedTest, "HelloIamNerdy");
 
             bg = new LoadAssemblyWorker(sbs, bpc.BuildProperties, this)
             {
