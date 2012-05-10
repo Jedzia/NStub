@@ -31,3 +31,5 @@ StyleCop.Cache
 /BuildTools
 /output
 /.svn.rar
+/Docs/UML
+/Docs/UML/NStub.ump
